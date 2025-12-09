@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>펫 펜션 예약 달력</title>
+  <style>
+    body {
+      font-family: 'Noto Sans KR', sans-serif;
+      background: #f9f9f9;
+      padding: 20px;
+    }
+    h2 {
+      text-align: center;
+    }
+    .controls, .calendar, .admin {
+      max-width: 600px;
+      margin: 20px auto;
+    }
+    select, input, button {
+      padding: 10px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      margin-top: 10px;
+      width: 100%;
+    }
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, 1fr);
+      gap: 10px;
+    }
+    .day {
+      background: #fff;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .day.booked {
+      background-color: #ff6b6b;
+      color: white;
+      font-weight: bold;
+    }
+    .popup {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border-radius: 10px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.3);
+      padding: 20px;
+      width: 90%;
+      max-width: 400px;
+      z-index: 10;
+    }
+    .overlay {
+      position: fixed;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0,0,0,0.3);
+      z-index: 5;
+    }
+    .reservation-list, .monthly-summary {
+      margin-top: 10px;
+      max-height: 150px;
+      overflow-y: auto;
+      background: #f1f1f1;
+      padding: 10px;
+      border-radius: 6px;
+      font-size: 14px;
+    }
+    .reservation-item {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 4px 0;
+    }
+    .btn-sm {
+      margin-left: 5px;
+      padding: 4px 8px;
+      font-size: 12px;
+    }
+    .popup-date {
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: #444;
+    }
+  </style>
+</head>
+<body>
+
+<h2>펫 펜션 예약 달력</h2>
+
+<div class="controls">
+  <label>펜션 선택</label>
+  <select id="pensionSelect"></select>
+  <label>년도 선택</label>
+  <select id="yearSelect"></select>
+  <label>월 선택</label>
+  <select id="monthSelect"></select>
+</div>
+
+<div class="calendar" id="calendar"></div>
+<div class="monthly-summary" id="monthlySummary"></div>
+
+<div class="overlay" id="overlay" style="display:none;"></div>
+<div class="popup" id="popup" style="display:none;">
+  <h3>예약 등록</h3>
+  <div class="popup-date" id="popupDate"></div>
+  <input id="resName" placeholder="예약자 이름" />
+  <select id="resTime"></select>
+  <input id="resPeople" type="number" placeholder="동반 인원 수" />
+  <input id="resPets" type="number" placeholder="반려동물 수" />
+  <button onclick="submitReservation()">저장</button>
+  <div class="reservation-list" id="reservationList"></div>
+  <button onclick="closePopup()">닫기</button>
+</div>
+
+<script>
+const pensionNames = {
+  p1: "애견 힐링 하우스",
+  p2: "펫앤휴 리조트",
+  p3: "푸푸와 쉬는날",
+  p4: "멍냥 풀빌라",
+  p5: "강아지의 하루"
+};
+
+const reservationDB = JSON.parse(localStorage.getItem("reservationDB")) || {};
+for (let key in pensionNames) reservationDB[key] ||= {};
+
+let selectedPension = "p1";
+let selectedDate = null;
+let editIndex = null;
+
+const pensionSelect = document.getElementById("pensionSelect");
+const yearSelect = document.getElementById("yearSelect");
+const monthSelect = document.getElementById("monthSelect");
+const calendarEl = document.getElementById("calendar");
+const monthlySummary = document.getElementById("monthlySummary");
+const overlay = document.getElementById("overlay");
+const popup = document.getElementById("popup");
+const popupDate = document.getElementById("popupDate");
+const timeSelect = document.getElementById("resTime");
+const reservationListEl = document.getElementById("reservationList");
+
+Object.keys(pensionNames).forEach(p => {
+  pensionSelect.innerHTML += `<option value="${p}">${pensionNames[p]}</option>`;
+});
+
+const now = new Date();
+let currentYear = now.getFullYear();
+let currentMonth = now.getMonth();
+
+for (let y = currentYear - 2; y <= currentYear + 2; y++) {
+  yearSelect.innerHTML += `<option value="${y}" ${y === currentYear ? "selected" : ""}>${y}년</option>`;
+}
+for (let m = 0; m < 12; m++) {
+  monthSelect.innerHTML += `<option value="${m}" ${m === currentMonth ? "selected" : ""}>${m + 1}월</option>`;
+}
+for (let h = 9; h <= 17; h++) {
+  timeSelect.innerHTML += `<option value='${h}:00'>${h}:00</option><option value='${h}:30'>${h}:30</option>`;
+}
+
+pensionSelect.onchange = () => { selectedPension = pensionSelect.value; drawCalendar(); };
+yearSelect.onchange = () => { currentYear = +yearSelect.value; drawCalendar(); };
+monthSelect.onchange = () => { currentMonth = +monthSelect.value; drawCalendar(); };
+
+function drawCalendar() {
+  calendarEl.innerHTML = "";
+  const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+  const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+  for (let i = 0; i < firstDay; i++) {
+    calendarEl.innerHTML += `<div class='day' style='visibility:hidden'></div>`;
+  }
+
+  for (let i = 1; i <= daysInMonth; i++) {
+    const date = new Date(currentYear, currentMonth, i);
+    const dateStr = date.toISOString().split("T")[0];
+    const dayEl = document.createElement("div");
+    const dayName = ["일", "월", "화", "수", "목", "금", "토"][date.getDay()];
+    dayEl.className = "day";
+    dayEl.innerText = `${i} (${dayName})`;
+    if (reservationDB[selectedPension][dateStr]?.length) {
+      dayEl.classList.add("booked");
+      dayEl.style.backgroundColor = "#ff4d4d";
+      dayEl.style.color = "white";
+    }
+    dayEl.onclick = () => openPopup(dateStr);
+    calendarEl.appendChild(dayEl);
+  }
+  drawMonthlySummary();
+}
+
+function openPopup(dateStr) {
+  selectedDate = dateStr;
+  editIndex = null;
+  document.getElementById("resName").value = "";
+  document.getElementById("resTime").value = "09:00";
+  document.getElementById("resPeople").value = "";
+  document.getElementById("resPets").value = "";
+  popupDate.innerText = `선택 날짜: ${dateStr}`;
+  drawReservationList();
+  overlay.style.display = "block";
+  popup.style.display = "block";
+}
+
+function closePopup() {
+  overlay.style.display = "none";
+  popup.style.display = "none";
+}
+
+function submitReservation() {
+  const name = document.getElementById("resName").value;
+  const time = document.getElementById("resTime").value;
+  const people = document.getElementById("resPeople").value;
+  const pets = document.getElementById("resPets").value;
+
+  if (!name || !time) return alert("이름과 시간을 입력해주세요");
+
+  const list = reservationDB[selectedPension][selectedDate] || [];
+
+  if (editIndex === null && list.some(r => r.time === time)) return alert("해당 시간에 이미 예약이 있습니다!");
+
+  if (editIndex !== null) {
+    list[editIndex] = { name, time, people, pets };
+    editIndex = null;
+  } else {
+    list.push({ name, time, people, pets });
+  }
+  reservationDB[selectedPension][selectedDate] = list;
+  localStorage.setItem("reservationDB", JSON.stringify(reservationDB));
+  drawCalendar();
+  drawReservationList();
+}
+
+function deleteReservation(index) {
+  reservationDB[selectedPension][selectedDate].splice(index, 1);
+  localStorage.setItem("reservationDB", JSON.stringify(reservationDB));
+  drawCalendar();
+  drawReservationList();
+}
+
+function editReservation(index) {
+  const data = reservationDB[selectedPension][selectedDate][index];
+  document.getElementById("resName").value = data.name;
+  document.getElementById("resTime").value = data.time;
+  document.getElementById("resPeople").value = data.people;
+  document.getElementById("resPets").value = data.pets;
+  editIndex = index;
+}
+
+function drawReservationList() {
+  const list = reservationDB[selectedPension][selectedDate] || [];
+  reservationListEl.innerHTML = list.map((r, i) =>
+    `<div class='reservation-item'>
+      ${r.name} - ${r.time} (${r.people}명 / 🐶${r.pets}마리)
+      <div>
+        <button class='btn-sm' onclick='editReservation(${i})'>수정</button>
+        <button class='btn-sm' onclick='deleteReservation(${i})'>삭제</button>
+      </div>
+    </div>`
+  ).join('') || "<i>등록된 예약이 없습니다</i>";
+  drawMonthlySummary();
+}
+
+function drawMonthlySummary() {
+  let summary = [];
+  let totalCounts = {};
+  for (let key in reservationDB) {
+    for (let date in reservationDB[key]) {
+      const d = new Date(date);
+      if (d.getFullYear() === currentYear && d.getMonth() === currentMonth) {
+        const count = reservationDB[key][date].length;
+        totalCounts[key] = (totalCounts[key] || 0) + count;
+        summary.push(`${date} (${pensionNames[key]}): ${count}건 예약`);
+      }
+    }
+  }
+  const totals = Object.entries(totalCounts).map(([k, v]) => `${pensionNames[k]} 총 예약: ${v}건`).join("<br>");
+  monthlySummary.innerHTML = `<strong>월별 예약 현황:</strong><br>${summary.length ? summary.join("<br>") : "예약 내역 없음"}<hr>${totals}`;
+}
+
+drawCalendar();
+</script>
+
+</body>
+</html>

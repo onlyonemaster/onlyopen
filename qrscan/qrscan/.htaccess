@@ -1,0 +1,24 @@
+RewriteEngine On
+RewriteBase /
+
+# API 요청을 api.php로 리다이렉트
+RewriteRule ^api(/.*)?$ api.php [QSA,L]
+
+# PHP 파일 직접 접근 허용
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\.(js|css|png|jpg|jpeg|gif|svg)$
+RewriteRule ^(.*)$ index.php [QSA,L]
+
+# Redirect index.html to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^index\.html$ index.php [L]
+
+# PHP file handling
+<FilesMatch "\.php$">
+    SetHandler application/x-httpd-php
+</FilesMatch>
+
+# Default index file
+DirectoryIndex index.php 
