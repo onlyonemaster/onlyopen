@@ -48,6 +48,15 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
             display: block;
         }
         
+        /* Mobile User Menu */
+        #mobile-user-menu {
+            display: none;
+        }
+        
+        #mobile-user-menu.show {
+            display: block;
+        }
+        
         /* Smooth Scroll */
         html {
             scroll-behavior: smooth;
@@ -163,7 +172,7 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                 </div>
                 
                 <!-- Mobile Menu Button & Icons -->
-                <div class="md:hidden flex items-center space-x-3">
+                <div class="md:hidden flex items-center space-x-2">
                     <?php if ($is_logged_in): ?>
                         <!-- 관리자 아이콘 (모바일, 관리자만 표시) -->
                         <?php if ($is_admin): ?>
@@ -173,13 +182,18 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                         <?php endif; ?>
                         
                         <!-- 계정 아이콘 (모바일) -->
-                        <button id="mobile-user-menu-btn" class="text-gray-300 hover:text-white p-2 relative">
+                        <button id="mobile-user-menu-btn" type="button" class="text-gray-300 hover:text-white p-2 focus:outline-none">
                             <i class="fas fa-user-circle text-xl"></i>
                         </button>
+                    <?php else: ?>
+                        <!-- 로그인 버튼 (모바일, 비로그인 시) -->
+                        <a href="/?page=login" class="text-purple-400 hover:text-purple-300 px-3 py-1 text-sm font-medium">
+                            로그인
+                        </a>
                     <?php endif; ?>
                     
                     <!-- 햄버거 메뉴 버튼 -->
-                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white p-2">
+                    <button id="mobile-menu-btn" type="button" class="text-gray-300 hover:text-white p-2 focus:outline-none">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
