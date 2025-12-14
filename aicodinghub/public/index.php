@@ -3,7 +3,7 @@ require_once dirname(__DIR__) . '/config/config.php';
 
 // 간단한 라우팅
 $page = $_GET['page'] ?? 'home';
-$allowed_pages = ['home', 'about', 'business', 'platform', 'festival', 'board', 'contact', 'login', 'register', 'mypage', 'member', 'admin'];
+$allowed_pages = ['home', 'about', 'business', 'platform', 'festival', 'board', 'contact', 'login', 'register', 'mypage', 'profile', 'member', 'admin'];
 
 if (!in_array($page, $allowed_pages)) {
     $page = 'home';
