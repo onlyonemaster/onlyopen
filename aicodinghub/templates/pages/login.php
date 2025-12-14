@@ -163,7 +163,7 @@ function togglePassword() {
 }
 
 // Form Submission
-document.getElementById('loginForm')?.addEventListener('submit', function(e) {
+document.getElementById('loginForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // Show loading state
@@ -172,16 +172,44 @@ document.getElementById('loginForm')?.addEventListener('submit', function(e) {
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>로그인 중...';
     
-    // Simulate login (replace with actual API call)
-    setTimeout(() => {
-        // For demo: redirect to home
-        // window.location.href = '/';
+    try {
+        // Get form data
+        const formData = new FormData(this);
+        const data = {
+            email: formData.get('email'),
+            password: formData.get('password'),
+            remember: formData.get('remember') === 'on'
+        };
         
-        // Show error for demo
-        alert('로그인 API를 연결해주세요.');
+        // Call API
+        const response = await fetch('/api/auth/login.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Show success message
+            alert('로그인 성공! 메인 페이지로 이동합니다.');
+            
+            // Redirect to homepage
+            window.location.href = '/';
+        } else {
+            // Show error message
+            alert(result.message || '로그인에 실패했습니다.');
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    } catch (error) {
+        console.error('Login error:', error);
+        alert('로그인 중 오류가 발생했습니다. 다시 시도해주세요.');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
-    }, 2000);
+    }
 });
 </script>
 

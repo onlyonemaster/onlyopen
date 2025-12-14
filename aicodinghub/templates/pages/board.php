@@ -5,10 +5,22 @@ include dirname(__DIR__) . '/components/header.php';
 // DB 연결 및 게시글 가져오기
 try {
     $pdo = getDBConnection();
-    $stmt = $pdo->query("SELECT * FROM boards WHERE status = 'active' ORDER BY created_at DESC LIMIT 20");
+    $page = isset($_GET['p']) ? max(1, intval($_GET['p'])) : 1;
+    $limit = 20;
+    $offset = ($page - 1) * $limit;
+    
+    $stmt = $pdo->prepare("SELECT * FROM boards WHERE status = 'active' ORDER BY created_at DESC LIMIT ? OFFSET ?");
+    $stmt->execute([$limit, $offset]);
     $boards = $stmt->fetchAll();
+    
+    // Get total count
+    $countStmt = $pdo->query("SELECT COUNT(*) FROM boards WHERE status = 'active'");
+    $totalCount = $countStmt->fetchColumn();
+    $totalPages = ceil($totalCount / $limit);
 } catch (Exception $e) {
     $boards = [];
+    $totalPages = 1;
+    $page = 1;
 }
 ?>
 

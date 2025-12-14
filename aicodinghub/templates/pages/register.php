@@ -312,7 +312,7 @@ document.getElementById('agree_all')?.addEventListener('change', function() {
 });
 
 // Form Validation
-document.getElementById('registerForm')?.addEventListener('submit', function(e) {
+document.getElementById('registerForm')?.addEventListener('submit', async function(e) {
     e.preventDefault();
     
     // Password match validation
@@ -330,12 +330,51 @@ document.getElementById('registerForm')?.addEventListener('submit', function(e) 
     submitBtn.disabled = true;
     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>처리 중...';
     
-    // Simulate registration (replace with actual API call)
-    setTimeout(() => {
-        alert('회원가입 API를 연결해주세요.');
+    try {
+        // Get form data
+        const formData = new FormData(this);
+        const data = {
+            name: formData.get('name'),
+            email: formData.get('email'),
+            password: formData.get('password'),
+            member_type: formData.get('member_type'),
+            phone: formData.get('phone'),
+            agree_terms: formData.get('agree_terms') === 'on',
+            agree_privacy: formData.get('agree_privacy') === 'on',
+            agree_marketing: formData.get('agree_marketing') === 'on'
+        };
+        
+        // Call API
+        const response = await fetch('/api/auth/register.php', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        
+        if (result.success) {
+            // Show success message
+            alert('회원가입 성공! 이메일 인증 후 로그인해주세요.\n(개발 환경에서는 자동으로 활성화됩니다)');
+            
+            // Redirect to login page
+            window.location.href = '/?page=login';
+        } else {
+            // Show error message
+            const errorMsg = result.message || '회원가입에 실패했습니다.';
+            const errors = result.errors ? '\n\n' + Object.values(result.errors).join('\n') : '';
+            alert(errorMsg + errors);
+            submitBtn.disabled = false;
+            submitBtn.innerHTML = originalText;
+        }
+    } catch (error) {
+        console.error('Register error:', error);
+        alert('회원가입 중 오류가 발생했습니다. 다시 시도해주세요.');
         submitBtn.disabled = false;
         submitBtn.innerHTML = originalText;
-    }, 2000);
+    }
 });
 </script>
 
