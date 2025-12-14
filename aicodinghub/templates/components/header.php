@@ -270,15 +270,19 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
     </nav>
     
     <script>
+        console.log('🚀 header.php JavaScript loaded!');
+        
         // Wait for DOM to be fully loaded
         document.addEventListener('DOMContentLoaded', function() {
+            console.log('✅ DOMContentLoaded fired!');
+            
             // Mobile menu toggle
             const mobileMenuBtn = document.getElementById('mobile-menu-btn');
             const mobileMenu = document.getElementById('mobile-menu');
             const mobileUserMenu = document.getElementById('mobile-user-menu');
             const mobileUserMenuBtn = document.getElementById('mobile-user-menu-btn');
             
-            console.log('Mobile menu elements:', {
+            console.log('📱 Mobile menu elements:', {
                 mobileMenuBtn: !!mobileMenuBtn,
                 mobileMenu: !!mobileMenu,
                 mobileUserMenu: !!mobileUserMenu,
@@ -289,16 +293,26 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                 mobileMenuBtn.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    console.log('Mobile menu button clicked');
+                    console.log('🍔 Hamburger menu button CLICKED!');
+                    
+                    const wasVisible = mobileMenu.classList.contains('show');
                     mobileMenu.classList.toggle('show');
+                    const isNowVisible = mobileMenu.classList.contains('show');
+                    
+                    console.log('Menu state:', wasVisible ? 'visible → hidden' : 'hidden → visible');
+                    console.log('Menu has .show class:', isNowVisible);
+                    
                     // Close user menu when opening main menu
                     if (mobileUserMenu) {
                         mobileUserMenu.classList.remove('show');
                     }
                 });
-                console.log('Mobile menu event listener attached');
+                console.log('✅ Hamburger menu event listener attached!');
             } else {
-                console.error('Mobile menu elements not found');
+                console.error('❌ Mobile menu elements not found!', {
+                    mobileMenuBtn: !!mobileMenuBtn,
+                    mobileMenu: !!mobileMenu
+                });
             }
             
             // Mobile user menu toggle
