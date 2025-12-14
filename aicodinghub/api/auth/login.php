@@ -50,15 +50,15 @@ try {
     // Find user by email
     $stmt = $pdo->prepare("
         SELECT 
-            id, 
+            member_id, 
             name, 
             email, 
             password, 
             member_type, 
             phone,
             status,
-            email_verified_at,
-            created_at
+            created_at,
+            updated_at
         FROM members 
         WHERE email = ?
     ");
@@ -80,11 +80,11 @@ try {
         sendError('Account is inactive. Please contact support.', 403);
     }
     
-    // Check if email is verified (allow pending users to login but notify)
-    $emailVerified = !empty($user['email_verified_at']);
+    // Check account status (allow active and pending users)
+    $emailVerified = ($user['status'] === 'active');
     
     // Create session
-    setUserSession($user['id'], [
+    setUserSession($user['member_id'], [
         'email' => $user['email'],
         'name' => $user['name'],
         'member_type' => $user['member_type']
@@ -93,12 +93,12 @@ try {
     // Generate session token (for API-based auth)
     $sessionToken = generateToken();
     
-    // Update last login time
-    $stmt = $pdo->prepare("UPDATE members SET last_login_at = NOW() WHERE id = ?");
-    $stmt->execute([$user['id']]);
+    // Update timestamp
+    $stmt = $pdo->prepare("UPDATE members SET updated_at = NOW() WHERE member_id = ?");
+    $stmt->execute([$user['member_id']]);
     
     // Log activity
-    logError("User logged in: $email", ['user_id' => $user['id']]);
+    logError("User logged in: $email", ['member_id' => $user['member_id']]);
     
     // Remove sensitive data
     unset($user['password']);

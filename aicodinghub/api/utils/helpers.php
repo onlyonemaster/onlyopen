@@ -152,7 +152,9 @@ function getCurrentUserId() {
 
 // Set user session
 function setUserSession($userId, $userData = []) {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     $_SESSION['user_id'] = $userId;
     $_SESSION['user_email'] = $userData['email'] ?? '';
     $_SESSION['user_name'] = $userData['name'] ?? '';
@@ -162,7 +164,9 @@ function setUserSession($userId, $userData = []) {
 
 // Destroy user session
 function destroyUserSession() {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     session_unset();
     session_destroy();
 }
@@ -185,7 +189,9 @@ function logError($message, $context = []) {
 
 // Rate limiting check
 function checkRateLimit($identifier, $limit = 60, $window = 60) {
-    session_start();
+    if (session_status() === PHP_SESSION_NONE) {
+        session_start();
+    }
     
     $key = "rate_limit_$identifier";
     $now = time();
