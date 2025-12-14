@@ -115,7 +115,7 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                     <a href="/?page=platform" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">
                         허브플랫폼
                     </a>
-                    <a href="/?page=festival" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">
+                    <a href="/?page=festival" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">
                         페스티벌
                     </a>
                     <a href="/?page=board" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">
@@ -186,7 +186,7 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                 <a href="/?page=platform" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
                     허브플랫폼
                 </a>
-                <a href="/?page=festival" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+                <a href="/?page=festival" target="_blank" rel="noopener noreferrer" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
                     페스티벌
                 </a>
                 <a href="/?page=board" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">

@@ -1,6 +1,14 @@
 <?php
 $page_title = "AI 코딩 페스티벌 - 한국AI코딩허브협회";
 
+// 세션 확인 (header.php에서도 확인하지만 여기서도 확인)
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
+// 관리자 확인 (member_id == 1인 경우 관리자)
+$is_admin_festival = isset($_SESSION['user_id']) && $_SESSION['user_id'] == 1;
+
 // Extract styles from the festival page
 $festivalStyles = <<<'STYLES'
 <style>
@@ -190,6 +198,13 @@ echo $festivalStyles;
                         <a href="#contact" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">문의</a>
                     </div>
                     
+                    <?php if ($is_admin_festival): ?>
+                    <!-- 페스티벌 관리자 버튼 (관리자만 표시) -->
+                    <a href="/?page=admin&tab=festival" class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-user-shield mr-2"></i>페스티벌 관리
+                    </a>
+                    <?php endif; ?>
+                    
                     <!-- 데스크톱 지역센터 개설 버튼 (강조) -->
                     <a href="regional-center.html" class="bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 text-white px-5 py-2.5 rounded-lg text-sm font-bold transition-all transform hover:scale-105 shadow-lg">
                         <i class="fas fa-map-marker-alt mr-2"></i>지역센터 개설
@@ -198,6 +213,13 @@ echo $festivalStyles;
 
                 <!-- 모바일 메뉴 (md:hidden) - 조은님 요청: [문의] [대상▼] [지역센터개설] [☰] 순서 -->
                 <div class="md:hidden flex items-center space-x-2">
+                    <?php if ($is_admin_festival): ?>
+                    <!-- 페스티벌 관리자 버튼 (모바일, 관리자만 표시) -->
+                    <a href="/?page=admin&tab=festival" class="bg-gradient-to-r from-red-600 to-pink-600 hover:from-red-500 hover:to-pink-500 text-white px-2 py-2 rounded-lg text-xs font-bold transition-all transform hover:scale-105 shadow-lg">
+                        <i class="fas fa-user-shield"></i>
+                    </a>
+                    <?php endif; ?>
+                    
                     <!-- 1. 문의 버튼 -->
                     <a href="#contact" class="text-gray-300 hover:text-purple-400 px-2 py-2 rounded-md text-xs font-medium transition-all hover:bg-gray-800">
                         문의
