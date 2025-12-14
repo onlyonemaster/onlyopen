@@ -81,7 +81,7 @@ switch ($user['member_type']) {
                     <!-- Profile Card -->
                     <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700" data-aos="fade-right">
                         <div class="text-center mb-6">
-                            <?php if ($user['profile_image']): ?>
+                            <?php if (isset($user['profile_image']) && $user['profile_image']): ?>
                                 <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="Profile" class="w-24 h-24 rounded-full mx-auto mb-4 border-4 border-purple-500">
                             <?php else: ?>
                                 <div class="w-24 h-24 rounded-full mx-auto mb-4 bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-3xl font-bold">
@@ -94,11 +94,14 @@ switch ($user['member_type']) {
                             <!-- Rating -->
                             <div class="flex items-center justify-center gap-2 mb-4">
                                 <div class="flex text-yellow-400">
-                                    <?php for ($i = 0; $i < 5; $i++): ?>
-                                        <i class="fas fa-star<?php echo $i < floor($user['rating']) ? '' : ($i < $user['rating'] ? '-half-alt' : ' text-gray-600'); ?>"></i>
+                                    <?php 
+                                    $rating = isset($user['rating']) ? $user['rating'] : 0;
+                                    for ($i = 0; $i < 5; $i++): 
+                                    ?>
+                                        <i class="fas fa-star<?php echo $i < floor($rating) ? '' : ($i < $rating ? '-half-alt' : ' text-gray-600'); ?>"></i>
                                     <?php endfor; ?>
                                 </div>
-                                <span class="text-white font-bold"><?php echo number_format($user['rating'], 1); ?></span>
+                                <span class="text-white font-bold"><?php echo number_format($rating, 1); ?></span>
                             </div>
 
                             <!-- Badge -->
@@ -118,11 +121,11 @@ switch ($user['member_type']) {
                         <!-- Quick Stats -->
                         <div class="grid grid-cols-2 gap-4 mb-6">
                             <div class="bg-gray-900/50 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold text-purple-400"><?php echo $user['completed_projects']; ?></div>
+                                <div class="text-2xl font-bold text-purple-400"><?php echo isset($user['completed_projects']) ? $user['completed_projects'] : 0; ?></div>
                                 <div class="text-gray-400 text-sm">완료 프로젝트</div>
                             </div>
                             <div class="bg-gray-900/50 rounded-lg p-4 text-center">
-                                <div class="text-2xl font-bold text-green-400">₩<?php echo number_format($user['total_earnings'] / 1000000, 1); ?>M</div>
+                                <div class="text-2xl font-bold text-green-400">₩<?php echo isset($user['total_earnings']) ? number_format($user['total_earnings'] / 1000000, 1) : '0.0'; ?>M</div>
                                 <div class="text-gray-400 text-sm">총 수익</div>
                             </div>
                         </div>
@@ -262,9 +265,12 @@ switch ($user['member_type']) {
                         </div>
 
                         <div class="flex flex-wrap gap-3">
-                            <?php foreach ($user['skills'] as $skill): ?>
+                            <?php 
+                            $skills = isset($user['skills']) ? (is_array($user['skills']) ? $user['skills'] : explode(',', $user['skills'])) : ['PHP', 'JavaScript', 'Python'];
+                            foreach ($skills as $skill): 
+                            ?>
                             <span class="px-4 py-2 bg-gradient-to-r from-purple-600/20 to-pink-600/20 border border-purple-500 text-purple-400 rounded-full font-semibold">
-                                <?php echo htmlspecialchars($skill); ?>
+                                <?php echo htmlspecialchars(trim($skill)); ?>
                             </span>
                             <?php endforeach; ?>
                         </div>
@@ -314,7 +320,7 @@ switch ($user['member_type']) {
                         </div>
 
                         <p class="text-gray-300 leading-relaxed mb-6">
-                            <?php echo nl2br(htmlspecialchars($user['bio'])); ?>
+                            <?php echo nl2br(htmlspecialchars(isset($user['bio']) ? $user['bio'] : 'AI 코딩 플랫폼에서 활동하고 있는 회원입니다.')); ?>
                         </p>
 
                         <div class="grid grid-cols-2 gap-4 text-sm">

@@ -143,7 +143,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 </h2>
                 
                 <div class="flex items-center gap-6">
-                    <?php if ($user['profile_image']): ?>
+                    <?php if (isset($user['profile_image']) && $user['profile_image']): ?>
                         <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="Profile" class="w-32 h-32 rounded-full border-4 border-purple-500">
                     <?php else: ?>
                         <div class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold">
