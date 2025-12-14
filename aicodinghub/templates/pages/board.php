@@ -6,21 +6,32 @@ include dirname(__DIR__) . '/components/header.php';
 try {
     $pdo = getDBConnection();
     $page = isset($_GET['p']) ? max(1, intval($_GET['p'])) : 1;
+    $category = isset($_GET['category']) ? $_GET['category'] : 'all';
     $limit = 20;
     $offset = ($page - 1) * $limit;
     
-    $stmt = $pdo->prepare("SELECT * FROM boards WHERE status = 'active' ORDER BY created_at DESC LIMIT ? OFFSET ?");
-    $stmt->execute([$limit, $offset]);
+    // Build query based on category
+    if ($category === 'all') {
+        $stmt = $pdo->prepare("SELECT * FROM boards WHERE status = 'active' ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        $stmt->execute([$limit, $offset]);
+        $countStmt = $pdo->query("SELECT COUNT(*) FROM boards WHERE status = 'active'");
+    } else {
+        $stmt = $pdo->prepare("SELECT * FROM boards WHERE status = 'active' AND board_type = ? ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        $stmt->execute([$category, $limit, $offset]);
+        $countStmt = $pdo->prepare("SELECT COUNT(*) FROM boards WHERE status = 'active' AND board_type = ?");
+        $countStmt->execute([$category]);
+    }
     $boards = $stmt->fetchAll();
     
     // Get total count
-    $countStmt = $pdo->query("SELECT COUNT(*) FROM boards WHERE status = 'active'");
     $totalCount = $countStmt->fetchColumn();
-    $totalPages = ceil($totalCount / $limit);
+    $totalPages = max(1, ceil($totalCount / $limit));
 } catch (Exception $e) {
+    error_log("Board error: " . $e->getMessage());
     $boards = [];
     $totalPages = 1;
     $page = 1;
+    $category = 'all';
 }
 ?>
 
@@ -48,18 +59,18 @@ try {
 <section class="py-8 bg-gray-950 border-b border-gray-800">
     <div class="container mx-auto px-4">
         <div class="flex flex-wrap justify-center gap-4">
-            <button class="px-6 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all">
+            <a href="?page=board&category=all" class="px-6 py-2 <?php echo $category === 'all' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'bg-gray-800'; ?> text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all <?php echo $category !== 'all' ? 'border border-gray-700' : ''; ?>">
                 <i class="fas fa-th mr-2"></i>전체
-            </button>
-            <button class="px-6 py-2 bg-gray-800 text-gray-300 rounded-full font-semibold hover:bg-gray-700 transition-all border border-gray-700">
+            </a>
+            <a href="?page=board&category=notice" class="px-6 py-2 <?php echo $category === 'notice' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'bg-gray-800'; ?> text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all <?php echo $category !== 'notice' ? 'border border-gray-700' : ''; ?>">
                 <i class="fas fa-bullhorn mr-2"></i>공지사항
-            </button>
-            <button class="px-6 py-2 bg-gray-800 text-gray-300 rounded-full font-semibold hover:bg-gray-700 transition-all border border-gray-700">
+            </a>
+            <a href="?page=board&category=news" class="px-6 py-2 <?php echo $category === 'news' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'bg-gray-800'; ?> text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all <?php echo $category !== 'news' ? 'border border-gray-700' : ''; ?>">
                 <i class="fas fa-newspaper mr-2"></i>뉴스
-            </button>
-            <button class="px-6 py-2 bg-gray-800 text-gray-300 rounded-full font-semibold hover:bg-gray-700 transition-all border border-gray-700">
+            </a>
+            <a href="?page=board&category=qna" class="px-6 py-2 <?php echo $category === 'qna' ? 'bg-gradient-to-r from-purple-600 to-pink-600' : 'bg-gray-800'; ?> text-white rounded-full font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all <?php echo $category !== 'qna' ? 'border border-gray-700' : ''; ?>">
                 <i class="fas fa-question-circle mr-2"></i>Q&A
-            </button>
+            </a>
         </div>
     </div>
 </section>
@@ -139,21 +150,59 @@ try {
                 <!-- Pagination -->
                 <div class="mt-12 flex justify-center">
                     <div class="flex gap-2">
-                        <button class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">
+                        <?php if ($page > 1): ?>
+                        <a href="?page=board&category=<?php echo $category; ?>&p=<?php echo $page - 1; ?>" class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">
                             <i class="fas fa-chevron-left"></i>
-                        </button>
-                        <button class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold">
-                            1
-                        </button>
-                        <button class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">
-                            2
-                        </button>
-                        <button class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">
-                            3
-                        </button>
-                        <button class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">
+                        </a>
+                        <?php else: ?>
+                        <span class="px-4 py-2 bg-gray-800 text-gray-600 rounded-lg cursor-not-allowed">
+                            <i class="fas fa-chevron-left"></i>
+                        </span>
+                        <?php endif; ?>
+                        
+                        <?php
+                        // Calculate page range
+                        $start = max(1, $page - 2);
+                        $end = min($totalPages, $page + 2);
+                        
+                        // Show first page if not in range
+                        if ($start > 1): ?>
+                            <a href="?page=board&category=<?php echo $category; ?>&p=1" class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">1</a>
+                            <?php if ($start > 2): ?>
+                                <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg">...</span>
+                            <?php endif; ?>
+                        <?php endif; ?>
+                        
+                        <?php for ($i = $start; $i <= $end; $i++): ?>
+                            <?php if ($i == $page): ?>
+                                <span class="px-4 py-2 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold">
+                                    <?php echo $i; ?>
+                                </span>
+                            <?php else: ?>
+                                <a href="?page=board&category=<?php echo $category; ?>&p=<?php echo $i; ?>" class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">
+                                    <?php echo $i; ?>
+                                </a>
+                            <?php endif; ?>
+                        <?php endfor; ?>
+                        
+                        <?php 
+                        // Show last page if not in range
+                        if ($end < $totalPages): ?>
+                            <?php if ($end < $totalPages - 1): ?>
+                                <span class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg">...</span>
+                            <?php endif; ?>
+                            <a href="?page=board&category=<?php echo $category; ?>&p=<?php echo $totalPages; ?>" class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all"><?php echo $totalPages; ?></a>
+                        <?php endif; ?>
+                        
+                        <?php if ($page < $totalPages): ?>
+                        <a href="?page=board&category=<?php echo $category; ?>&p=<?php echo $page + 1; ?>" class="px-4 py-2 bg-gray-800 text-gray-400 rounded-lg hover:bg-gray-700 transition-all">
                             <i class="fas fa-chevron-right"></i>
-                        </button>
+                        </a>
+                        <?php else: ?>
+                        <span class="px-4 py-2 bg-gray-800 text-gray-600 rounded-lg cursor-not-allowed">
+                            <i class="fas fa-chevron-right"></i>
+                        </span>
+                        <?php endif; ?>
                     </div>
                 </div>
 
@@ -181,29 +230,29 @@ try {
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-4 gap-6 max-w-5xl mx-auto">
-            <div class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700" data-aos="fade-up" data-aos-delay="0">
+            <a href="#comments" class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700 hover:border-purple-500 hover:shadow-lg hover:shadow-purple-500/20 transition-all duration-300 cursor-pointer" data-aos="fade-up" data-aos-delay="0">
                 <div class="text-4xl mb-3">💬</div>
                 <h3 class="text-lg font-bold text-white mb-2">댓글 시스템</h3>
                 <p class="text-gray-400 text-sm">실시간 소통</p>
-            </div>
+            </a>
 
-            <div class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700" data-aos="fade-up" data-aos-delay="100">
+            <a href="#search" class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700 hover:border-blue-500 hover:shadow-lg hover:shadow-blue-500/20 transition-all duration-300 cursor-pointer" data-aos="fade-up" data-aos-delay="100">
                 <div class="text-4xl mb-3">🔍</div>
                 <h3 class="text-lg font-bold text-white mb-2">검색 기능</h3>
                 <p class="text-gray-400 text-sm">빠른 정보 찾기</p>
-            </div>
+            </a>
 
-            <div class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700" data-aos="fade-up" data-aos-delay="200">
+            <a href="#files" class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700 hover:border-green-500 hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 cursor-pointer" data-aos="fade-up" data-aos-delay="200">
                 <div class="text-4xl mb-3">📎</div>
                 <h3 class="text-lg font-bold text-white mb-2">파일 첨부</h3>
                 <p class="text-gray-400 text-sm">자료 공유</p>
-            </div>
+            </a>
 
-            <div class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700" data-aos="fade-up" data-aos-delay="300">
+            <a href="#notifications" class="bg-gray-800 rounded-xl p-6 text-center border border-gray-700 hover:border-pink-500 hover:shadow-lg hover:shadow-pink-500/20 transition-all duration-300 cursor-pointer" data-aos="fade-up" data-aos-delay="300">
                 <div class="text-4xl mb-3">🔔</div>
                 <h3 class="text-lg font-bold text-white mb-2">알림 기능</h3>
                 <p class="text-gray-400 text-sm">새 글 알림</p>
-            </div>
+            </a>
         </div>
     </div>
 </section>
@@ -223,7 +272,7 @@ try {
                     <i class="fas fa-user-plus mr-2"></i>
                     회원가입
                 </a>
-                <a href="/festival/" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/50 transform hover:-translate-y-1 transition-all">
+                <a href="?page=festival" class="px-8 py-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white rounded-full font-semibold hover:shadow-lg hover:shadow-blue-500/50 transform hover:-translate-y-1 transition-all">
                     <i class="fas fa-calendar-alt mr-2"></i>
                     페스티벌 참여
                 </a>
