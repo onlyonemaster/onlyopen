@@ -59,7 +59,7 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
         }
         
         #mobile-menu.show {
-            display: block;
+            display: block !important;
         }
         
         /* Mobile User Menu */
@@ -68,7 +68,7 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
         }
         
         #mobile-user-menu.show {
-            display: block;
+            display: block !important;
         }
         
         /* Smooth Scroll */
