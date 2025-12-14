@@ -186,15 +186,18 @@ $pageTitle = '게시판 관리';
                             <td class="px-6 py-4 whitespace-nowrap">
                                 <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full
                                     <?php 
-                                        switch($board['type']) {
+                                        switch($board['board_type']) {
                                             case 'notice': echo 'bg-red-600 text-red-100'; break;
                                             case 'news': echo 'bg-blue-600 text-blue-100'; break;
                                             case 'qna': echo 'bg-green-600 text-green-100'; break;
+                                            case 'free': echo 'bg-purple-600 text-purple-100'; break;
+                                            case 'project_recruit': echo 'bg-orange-600 text-orange-100'; break;
+                                            case 'study': echo 'bg-teal-600 text-teal-100'; break;
                                         }
                                     ?>">
                                     <?php 
-                                        $types = ['notice' => '공지', 'news' => '소식', 'qna' => '질문'];
-                                        echo $types[$board['type']] ?? $board['type'];
+                                        $types = ['notice' => '공지', 'news' => '소식', 'qna' => '질문', 'free' => '자유', 'project_recruit' => '프로젝트', 'study' => '스터디'];
+                                        echo $types[$board['board_type']] ?? $board['board_type'];
                                     ?>
                                 </span>
                             </td>
@@ -271,14 +274,33 @@ $pageTitle = '게시판 관리';
         }
 
         function editBoard(id) {
-            alert('게시글 수정 기능 (ID: ' + id + ')');
-            // TODO: Implement board edit
+            // Redirect to board edit page or open modal
+            window.location.href = '/?page=board&id=' + id + '&mode=edit';
         }
 
-        function deleteBoard(id) {
-            if (confirm('정말 이 게시글을 삭제하시겠습니까?')) {
-                alert('게시글 삭제 기능 (ID: ' + id + ')');
-                // TODO: Implement board delete
+        async function deleteBoard(id) {
+            if (!confirm('정말 이 게시글을 삭제하시겠습니까?')) {
+                return;
+            }
+            
+            try {
+                const response = await fetch(`/api/boards/delete.php?id=${id}`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    alert(result.message);
+                    location.reload();
+                } else {
+                    alert('오류: ' + result.message);
+                }
+            } catch (error) {
+                alert('삭제 중 오류가 발생했습니다: ' + error.message);
             }
         }
     </script>

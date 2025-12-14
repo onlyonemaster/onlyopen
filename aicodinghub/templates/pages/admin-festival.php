@@ -55,7 +55,7 @@ $stmt = $pdo->prepare("
     FROM festival_registrations fr
     LEFT JOIN festivals f ON fr.festival_id = f.festival_id
     WHERE {$whereClause}
-    ORDER BY fr.created_at DESC
+    ORDER BY fr.registered_at DESC
     LIMIT {$perPage} OFFSET {$offset}
 ");
 $stmt->execute($params);
@@ -280,7 +280,7 @@ $pageTitle = '페스티벌 관리';
                                 </span>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-300">
-                                <?php echo date('Y-m-d', strtotime($reg['created_at'])); ?>
+                                <?php echo date('Y-m-d', strtotime($reg['registered_at'])); ?>
                             </td>
                             <td class="px-6 py-4 whitespace-nowrap text-sm">
                                 <button onclick="viewRegistration(<?php echo $reg['registration_id']; ?>)" 
