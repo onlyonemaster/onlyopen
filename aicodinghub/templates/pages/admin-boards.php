@@ -4,7 +4,10 @@
  */
 
 // Check if user is logged in and is admin
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     header('Location: /?page=login');
     exit;
@@ -26,7 +29,7 @@ $where = ['1=1'];
 $params = [];
 
 if ($boardType !== 'all') {
-    $where[] = 'type = ?';
+    $where[] = 'board_type = ?';
     $params[] = $boardType;
 }
 
@@ -49,7 +52,7 @@ $totalPages = ceil($totalBoards / $perPage);
 $stmt = $pdo->prepare("
     SELECT b.*, m.name as author_name
     FROM boards b
-    LEFT JOIN members m ON b.author_id = m.member_id
+    LEFT JOIN members m ON b.author_member_id = m.member_id
     WHERE {$whereClause}
     ORDER BY b.created_at DESC
     LIMIT {$perPage} OFFSET {$offset}

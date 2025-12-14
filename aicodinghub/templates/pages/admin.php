@@ -4,7 +4,10 @@
  */
 
 // Check if user is logged in and is admin
-session_start();
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+
 if (!isset($_SESSION['user_id']) || $_SESSION['user_id'] != 1) {
     header('Location: /?page=login');
     exit;
@@ -33,9 +36,9 @@ $memberStats = $pdo->query("
 $boardStats = $pdo->query("
     SELECT 
         COUNT(*) as total,
-        SUM(CASE WHEN type = 'notice' THEN 1 ELSE 0 END) as notice,
-        SUM(CASE WHEN type = 'news' THEN 1 ELSE 0 END) as news,
-        SUM(CASE WHEN type = 'qna' THEN 1 ELSE 0 END) as qna,
+        SUM(CASE WHEN board_type = 'notice' THEN 1 ELSE 0 END) as notice,
+        SUM(CASE WHEN board_type = 'news' THEN 1 ELSE 0 END) as news,
+        SUM(CASE WHEN board_type = 'qna' THEN 1 ELSE 0 END) as qna,
         SUM(CASE WHEN DATE(created_at) = CURDATE() THEN 1 ELSE 0 END) as today
     FROM boards
 ")->fetch();
