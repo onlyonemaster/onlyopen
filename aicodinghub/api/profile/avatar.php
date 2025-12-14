@@ -50,12 +50,12 @@ try {
     $pdo = getDBConnection();
     
     // Get old avatar to delete
-    $stmt = $pdo->prepare("SELECT profile_image FROM members WHERE id = ?");
+    $stmt = $pdo->prepare("SELECT profile_image FROM members WHERE member_id = ?");
     $stmt->execute([$userId]);
     $oldAvatar = $stmt->fetchColumn();
     
     // Update profile image in database
-    $stmt = $pdo->prepare("UPDATE members SET profile_image = ? WHERE id = ?");
+    $stmt = $pdo->prepare("UPDATE members SET profile_image = ? WHERE member_id = ?");
     $stmt->execute([$uploadResult['path'], $userId]);
     
     // Delete old avatar file if exists

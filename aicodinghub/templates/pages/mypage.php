@@ -132,42 +132,42 @@ switch ($user['member_type']) {
 
                         <!-- Action Buttons -->
                         <div class="space-y-2">
-                            <button class="w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all">
+                            <a href="/?page=profile" class="block w-full px-4 py-3 bg-gradient-to-r from-purple-600 to-pink-600 text-white rounded-lg font-semibold hover:shadow-lg hover:shadow-purple-500/50 transition-all text-center">
                                 <i class="fas fa-edit mr-2"></i>
                                 프로필 수정
-                            </button>
-                            <button class="w-full px-4 py-3 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-600 transition-all">
+                            </a>
+                            <a href="/?page=profile" class="block w-full px-4 py-3 bg-gray-700 text-white rounded-lg font-semibold hover:bg-gray-600 transition-all text-center">
                                 <i class="fas fa-cog mr-2"></i>
                                 설정
-                            </button>
+                            </a>
                         </div>
                     </div>
 
                     <!-- Navigation Menu -->
                     <div class="bg-gradient-to-br from-gray-800 to-gray-900 rounded-2xl p-6 border border-gray-700" data-aos="fade-right" data-aos-delay="100">
                         <nav class="space-y-2">
-                            <a href="#overview" class="flex items-center px-4 py-3 bg-purple-600/20 border border-purple-500 text-purple-400 rounded-lg font-semibold transition-all">
+                            <a href="/?page=mypage" class="flex items-center px-4 py-3 bg-purple-600/20 border border-purple-500 text-purple-400 rounded-lg font-semibold transition-all">
                                 <i class="fas fa-th-large mr-3 w-5"></i>
                                 대시보드
                             </a>
-                            <a href="#projects" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 rounded-lg transition-all">
+                            <a href="/?page=projects" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all">
                                 <i class="fas fa-project-diagram mr-3 w-5"></i>
                                 내 프로젝트
                             </a>
-                            <a href="#applications" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 rounded-lg transition-all">
+                            <a href="/?page=applications" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all">
                                 <i class="fas fa-file-alt mr-3 w-5"></i>
                                 지원 현황
                             </a>
-                            <a href="#messages" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 rounded-lg transition-all">
+                            <a href="/?page=messages" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all">
                                 <i class="fas fa-envelope mr-3 w-5"></i>
                                 메시지
                                 <span class="ml-auto bg-red-500 text-white text-xs px-2 py-1 rounded-full">3</span>
                             </a>
-                            <a href="#portfolio" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 rounded-lg transition-all">
+                            <a href="/?page=portfolio" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all">
                                 <i class="fas fa-briefcase mr-3 w-5"></i>
                                 포트폴리오
                             </a>
-                            <a href="#payments" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 rounded-lg transition-all">
+                            <a href="/?page=payments" class="flex items-center px-4 py-3 hover:bg-gray-700 text-gray-300 hover:text-white rounded-lg transition-all">
                                 <i class="fas fa-wallet mr-3 w-5"></i>
                                 결제·정산
                             </a>

@@ -143,19 +143,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
                 </h2>
                 
                 <div class="flex items-center gap-6">
-                    <?php if (isset($user['profile_image']) && $user['profile_image']): ?>
-                        <img src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="Profile" class="w-32 h-32 rounded-full border-4 border-purple-500">
-                    <?php else: ?>
-                        <div class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold">
-                            <?php echo mb_substr($user['name'], 0, 1); ?>
-                        </div>
-                    <?php endif; ?>
+                    <div id="profile-image-container">
+                        <?php if (isset($user['profile_image']) && $user['profile_image']): ?>
+                            <img id="profile-image" src="<?php echo htmlspecialchars($user['profile_image']); ?>" alt="Profile" class="w-32 h-32 rounded-full border-4 border-purple-500 object-cover">
+                        <?php else: ?>
+                            <div id="profile-image" class="w-32 h-32 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white text-5xl font-bold">
+                                <?php echo mb_substr($user['name'], 0, 1); ?>
+                            </div>
+                        <?php endif; ?>
+                    </div>
                     
                     <div>
                         <p class="text-gray-300 mb-4">JPG, PNG 또는 GIF 형식, 최대 5MB</p>
-                        <button class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-all">
+                        <input type="file" id="avatar-upload" accept="image/jpeg,image/png,image/gif,image/webp" class="hidden">
+                        <button id="upload-btn" class="bg-purple-600 hover:bg-purple-700 text-white px-6 py-3 rounded-lg transition-all">
                             <i class="fas fa-upload mr-2"></i>사진 업로드
                         </button>
+                        <div id="upload-status" class="mt-2 text-sm"></div>
                     </div>
                 </div>
             </div>
@@ -275,5 +279,71 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['action'])) {
         </div>
     </div>
 </section>
+
+<script>
+// Profile image upload
+document.getElementById('upload-btn').addEventListener('click', function() {
+    document.getElementById('avatar-upload').click();
+});
+
+document.getElementById('avatar-upload').addEventListener('change', async function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/png', 'image/gif', 'image/webp'];
+    if (!allowedTypes.includes(file.type)) {
+        alert('JPG, PNG, GIF 또는 WEBP 형식만 업로드 가능합니다.');
+        return;
+    }
+    
+    // Validate file size (5MB)
+    if (file.size > 5 * 1024 * 1024) {
+        alert('파일 크기는 5MB를 초과할 수 없습니다.');
+        return;
+    }
+    
+    const statusDiv = document.getElementById('upload-status');
+    const uploadBtn = document.getElementById('upload-btn');
+    
+    // Show loading
+    uploadBtn.disabled = true;
+    uploadBtn.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>업로드 중...';
+    statusDiv.innerHTML = '<span class="text-yellow-400">업로드 중...</span>';
+    
+    try {
+        const formData = new FormData();
+        formData.append('avatar', file);
+        
+        const response = await fetch('/api/profile/avatar.php', {
+            method: 'POST',
+            body: formData,
+            credentials: 'same-origin'
+        });
+        
+        const data = await response.json();
+        
+        if (data.success) {
+            statusDiv.innerHTML = '<span class="text-green-400"><i class="fas fa-check-circle mr-1"></i>업로드 성공!</span>';
+            
+            // Update profile image
+            const imgContainer = document.getElementById('profile-image-container');
+            imgContainer.innerHTML = `<img id="profile-image" src="${data.data.avatar_url}" alt="Profile" class="w-32 h-32 rounded-full border-4 border-purple-500 object-cover">`;
+            
+            // Reload page after 1 second
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        } else {
+            throw new Error(data.message || '업로드 실패');
+        }
+    } catch (error) {
+        console.error('Upload error:', error);
+        statusDiv.innerHTML = '<span class="text-red-400"><i class="fas fa-times-circle mr-1"></i>' + error.message + '</span>';
+        uploadBtn.disabled = false;
+        uploadBtn.innerHTML = '<i class="fas fa-upload mr-2"></i>사진 업로드';
+    }
+});
+</script>
 
 <?php include dirname(__DIR__) . '/components/footer.php'; ?>
