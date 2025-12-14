@@ -162,9 +162,24 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                     <?php endif; ?>
                 </div>
                 
-                <!-- Mobile Menu Button -->
-                <div class="md:hidden">
-                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white">
+                <!-- Mobile Menu Button & Icons -->
+                <div class="md:hidden flex items-center space-x-3">
+                    <?php if ($is_logged_in): ?>
+                        <!-- 관리자 아이콘 (모바일, 관리자만 표시) -->
+                        <?php if ($is_admin): ?>
+                            <a href="/?page=admin" class="text-red-400 hover:text-red-300 p-2">
+                                <i class="fas fa-user-shield text-xl"></i>
+                            </a>
+                        <?php endif; ?>
+                        
+                        <!-- 계정 아이콘 (모바일) -->
+                        <button id="mobile-user-menu-btn" class="text-gray-300 hover:text-white p-2 relative">
+                            <i class="fas fa-user-circle text-xl"></i>
+                        </button>
+                    <?php endif; ?>
+                    
+                    <!-- 햄버거 메뉴 버튼 -->
+                    <button id="mobile-menu-btn" class="text-gray-300 hover:text-white p-2">
                         <i class="fas fa-bars text-2xl"></i>
                     </button>
                 </div>
@@ -196,55 +211,97 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                     문의
                 </a>
                 
-                <?php if ($is_logged_in): ?>
-                    <!-- 관리자 메뉴 (모바일) -->
-                    <?php if ($is_admin): ?>
-                        <a href="/?page=admin" class="bg-gradient-to-r from-red-600 to-pink-600 text-white block px-3 py-2 rounded-md text-base font-medium text-center">
-                            <i class="fas fa-user-shield mr-2"></i>관리자 페이지
-                        </a>
-                    <?php endif; ?>
-                    
+                <?php if (!$is_logged_in): ?>
                     <div class="border-t border-gray-700 my-2"></div>
-                    
-                    <div class="text-gray-400 px-3 py-2 text-sm">
-                        <i class="fas fa-user mr-2"></i><?php echo htmlspecialchars($user_name); ?>님
-                    </div>
-                    <a href="/?page=mypage" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
-                        <i class="fas fa-user mr-2"></i>마이페이지
-                    </a>
-                    <a href="/?page=profile" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
-                        <i class="fas fa-id-card mr-2"></i>프로필 설정
-                    </a>
-                    <a href="/api/auth/logout.php" class="text-red-400 hover:text-red-300 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
-                        <i class="fas fa-sign-out-alt mr-2"></i>로그아웃
-                    </a>
-                <?php else: ?>
                     <a href="/?page=login" class="bg-gradient-to-r from-purple-600 to-blue-600 text-white block px-3 py-2 rounded-md text-base font-medium text-center">
                         로그인
                     </a>
                 <?php endif; ?>
             </div>
         </div>
+        
+        <!-- Mobile User Menu (Separate) -->
+        <?php if ($is_logged_in): ?>
+        <div id="mobile-user-menu" class="md:hidden bg-gray-900 border-t border-gray-800">
+            <div class="px-2 pt-2 pb-3 space-y-1">
+                <div class="text-gray-400 px-3 py-2 text-sm border-b border-gray-700">
+                    <i class="fas fa-user mr-2"></i><?php echo htmlspecialchars($user_name); ?>님
+                </div>
+                <a href="/?page=mypage" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-user mr-2"></i>마이페이지
+                </a>
+                <a href="/?page=profile" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-id-card mr-2"></i>프로필 설정
+                </a>
+                <a href="/api/auth/logout.php" class="text-red-400 hover:text-red-300 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+                    <i class="fas fa-sign-out-alt mr-2"></i>로그아웃
+                </a>
+            </div>
+        </div>
+        <?php endif; ?>
     </nav>
     
     <script>
         // Mobile menu toggle
-        document.getElementById('mobile-menu-btn')?.addEventListener('click', function() {
-            document.getElementById('mobile-menu').classList.toggle('show');
-        });
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+        const mobileUserMenu = document.getElementById('mobile-user-menu');
+        const mobileUserMenuBtn = document.getElementById('mobile-user-menu-btn');
         
-        // User menu dropdown toggle
-        document.getElementById('user-menu-btn')?.addEventListener('click', function(e) {
-            e.stopPropagation();
-            document.getElementById('user-menu-dropdown').classList.toggle('show');
-        });
+        if (mobileMenuBtn && mobileMenu) {
+            mobileMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mobileMenu.classList.toggle('show');
+                // Close user menu when opening main menu
+                if (mobileUserMenu) {
+                    mobileUserMenu.classList.remove('show');
+                }
+            });
+        }
         
-        // Close dropdown when clicking outside
+        // Mobile user menu toggle
+        if (mobileUserMenuBtn && mobileUserMenu) {
+            mobileUserMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mobileUserMenu.classList.toggle('show');
+                // Close main menu when opening user menu
+                if (mobileMenu) {
+                    mobileMenu.classList.remove('show');
+                }
+            });
+        }
+        
+        // Desktop user menu dropdown toggle
+        const userMenuBtn = document.getElementById('user-menu-btn');
+        const userMenuDropdown = document.getElementById('user-menu-dropdown');
+        
+        if (userMenuBtn && userMenuDropdown) {
+            userMenuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                userMenuDropdown.classList.toggle('show');
+            });
+        }
+        
+        // Close all menus when clicking outside
         document.addEventListener('click', function(e) {
-            const dropdown = document.getElementById('user-menu-dropdown');
-            const button = document.getElementById('user-menu-btn');
-            if (dropdown && !dropdown.contains(e.target) && !button?.contains(e.target)) {
-                dropdown.classList.remove('show');
+            // Close desktop dropdown
+            if (userMenuDropdown && userMenuBtn && 
+                !userMenuDropdown.contains(e.target) && 
+                !userMenuBtn.contains(e.target)) {
+                userMenuDropdown.classList.remove('show');
+            }
+            
+            // Close mobile menus
+            if (mobileMenu && mobileMenuBtn && 
+                !mobileMenu.contains(e.target) && 
+                !mobileMenuBtn.contains(e.target)) {
+                mobileMenu.classList.remove('show');
+            }
+            
+            if (mobileUserMenu && mobileUserMenuBtn && 
+                !mobileUserMenu.contains(e.target) && 
+                !mobileUserMenuBtn.contains(e.target)) {
+                mobileUserMenu.classList.remove('show');
             }
         });
     </script>
