@@ -55,7 +55,7 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
         
         /* Mobile Menu Toggle */
         #mobile-menu {
-            display: none;
+            display: none !important;
         }
         
         #mobile-menu.show {
