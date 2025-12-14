@@ -256,67 +256,86 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
     </nav>
     
     <script>
-        // Mobile menu toggle
-        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
-        const mobileMenu = document.getElementById('mobile-menu');
-        const mobileUserMenu = document.getElementById('mobile-user-menu');
-        const mobileUserMenuBtn = document.getElementById('mobile-user-menu-btn');
-        
-        if (mobileMenuBtn && mobileMenu) {
-            mobileMenuBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                mobileMenu.classList.toggle('show');
-                // Close user menu when opening main menu
-                if (mobileUserMenu) {
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // Mobile menu toggle
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            const mobileUserMenu = document.getElementById('mobile-user-menu');
+            const mobileUserMenuBtn = document.getElementById('mobile-user-menu-btn');
+            
+            console.log('Mobile menu elements:', {
+                mobileMenuBtn: !!mobileMenuBtn,
+                mobileMenu: !!mobileMenu,
+                mobileUserMenu: !!mobileUserMenu,
+                mobileUserMenuBtn: !!mobileUserMenuBtn
+            });
+            
+            if (mobileMenuBtn && mobileMenu) {
+                mobileMenuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Mobile menu button clicked');
+                    mobileMenu.classList.toggle('show');
+                    // Close user menu when opening main menu
+                    if (mobileUserMenu) {
+                        mobileUserMenu.classList.remove('show');
+                    }
+                });
+                console.log('Mobile menu event listener attached');
+            } else {
+                console.error('Mobile menu elements not found');
+            }
+            
+            // Mobile user menu toggle
+            if (mobileUserMenuBtn && mobileUserMenu) {
+                mobileUserMenuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Mobile user menu button clicked');
+                    mobileUserMenu.classList.toggle('show');
+                    // Close main menu when opening user menu
+                    if (mobileMenu) {
+                        mobileMenu.classList.remove('show');
+                    }
+                });
+                console.log('Mobile user menu event listener attached');
+            }
+            
+            // Desktop user menu dropdown toggle
+            const userMenuBtn = document.getElementById('user-menu-btn');
+            const userMenuDropdown = document.getElementById('user-menu-dropdown');
+            
+            if (userMenuBtn && userMenuDropdown) {
+                userMenuBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    userMenuDropdown.classList.toggle('show');
+                });
+            }
+            
+            // Close all menus when clicking outside
+            document.addEventListener('click', function(e) {
+                // Close desktop dropdown
+                if (userMenuDropdown && userMenuBtn && 
+                    !userMenuDropdown.contains(e.target) && 
+                    !userMenuBtn.contains(e.target)) {
+                    userMenuDropdown.classList.remove('show');
+                }
+                
+                // Close mobile menus
+                if (mobileMenu && mobileMenuBtn && 
+                    !mobileMenu.contains(e.target) && 
+                    !mobileMenuBtn.contains(e.target)) {
+                    mobileMenu.classList.remove('show');
+                }
+                
+                if (mobileUserMenu && mobileUserMenuBtn && 
+                    !mobileUserMenu.contains(e.target) && 
+                    !mobileUserMenuBtn.contains(e.target)) {
                     mobileUserMenu.classList.remove('show');
                 }
             });
-        }
-        
-        // Mobile user menu toggle
-        if (mobileUserMenuBtn && mobileUserMenu) {
-            mobileUserMenuBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                mobileUserMenu.classList.toggle('show');
-                // Close main menu when opening user menu
-                if (mobileMenu) {
-                    mobileMenu.classList.remove('show');
-                }
-            });
-        }
-        
-        // Desktop user menu dropdown toggle
-        const userMenuBtn = document.getElementById('user-menu-btn');
-        const userMenuDropdown = document.getElementById('user-menu-dropdown');
-        
-        if (userMenuBtn && userMenuDropdown) {
-            userMenuBtn.addEventListener('click', function(e) {
-                e.stopPropagation();
-                userMenuDropdown.classList.toggle('show');
-            });
-        }
-        
-        // Close all menus when clicking outside
-        document.addEventListener('click', function(e) {
-            // Close desktop dropdown
-            if (userMenuDropdown && userMenuBtn && 
-                !userMenuDropdown.contains(e.target) && 
-                !userMenuBtn.contains(e.target)) {
-                userMenuDropdown.classList.remove('show');
-            }
-            
-            // Close mobile menus
-            if (mobileMenu && mobileMenuBtn && 
-                !mobileMenu.contains(e.target) && 
-                !mobileMenuBtn.contains(e.target)) {
-                mobileMenu.classList.remove('show');
-            }
-            
-            if (mobileUserMenu && mobileUserMenuBtn && 
-                !mobileUserMenu.contains(e.target) && 
-                !mobileUserMenuBtn.contains(e.target)) {
-                mobileUserMenu.classList.remove('show');
-            }
         });
     </script>
     
