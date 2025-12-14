@@ -234,20 +234,20 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
             </div>
         </div>
         
-        <!-- Mobile User Menu (Separate) -->
+        <!-- Mobile User Menu (Separate) - Right Aligned Dropdown -->
         <?php if ($is_logged_in): ?>
-        <div id="mobile-user-menu" class="md:hidden bg-gray-900 border-t border-gray-800">
-            <div class="px-2 pt-2 pb-3 space-y-1">
-                <div class="text-gray-400 px-3 py-2 text-sm border-b border-gray-700">
+        <div id="mobile-user-menu" class="md:hidden absolute right-0 mt-1 w-56 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50" style="display: none; top: 4rem;">
+            <div class="py-2">
+                <div class="text-gray-400 px-4 py-2 text-sm border-b border-gray-700">
                     <i class="fas fa-user mr-2"></i><?php echo htmlspecialchars($user_name); ?>님
                 </div>
-                <a href="/?page=mypage" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+                <a href="/?page=mypage" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-4 py-2 text-sm">
                     <i class="fas fa-user mr-2"></i>마이페이지
                 </a>
-                <a href="/?page=profile" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+                <a href="/?page=profile" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-4 py-2 text-sm">
                     <i class="fas fa-id-card mr-2"></i>프로필 설정
                 </a>
-                <a href="/api/auth/logout.php" class="text-red-400 hover:text-red-300 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
+                <a href="/api/auth/logout.php" class="text-red-400 hover:text-red-300 hover:bg-gray-800 block px-4 py-2 text-sm rounded-b-lg">
                     <i class="fas fa-sign-out-alt mr-2"></i>로그아웃
                 </a>
             </div>
