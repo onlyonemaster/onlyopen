@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>한국AI코딩허브협회 - <?php echo $page_title ?? 'AI코딩으로 일하고, 연결되고, 수익을 만드는'; ?></title>
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+<header>
+    <div class="container">
+        <div class="logo">
+            <h1><a href="/?page=home" style="color:white;text-decoration:none;">🚀 한국AI코딩허브협회</a></h1>
+        </div>
+        <nav>
+            <ul>
+                <li><a href="/?page=home">홈</a></li>
+                <li><a href="/?page=about">협회소개</a></li>
+                <li><a href="/?page=business">사업안내</a></li>
+                <li><a href="/?page=platform">허브플랫폼</a></li>
+                <li><a href="/?page=festival">페스티벌</a></li>
+                <li><a href="/?page=board">게시판</a></li>
+                <li><a href="/?page=contact">문의하기</a></li>
+                <li><a href="/?page=login">로그인</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+<main>

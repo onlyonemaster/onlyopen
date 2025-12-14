@@ -1,0 +1,1 @@
+<?php redirectTo('?page=login'); ?>

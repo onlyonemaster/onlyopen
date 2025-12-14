@@ -1,0 +1,14 @@
+</main>
+<footer>
+    <div class="container">
+        <p>&copy; 2025 한국AI코딩허브협회. All rights reserved.</p>
+        <p>AI코딩으로 일하고, 연결되고, 수익을 만드는 대한민국 AI코딩 허브 생태계의 중심</p>
+        <p style="margin-top: 1rem;">
+            <a href="/?page=about" style="color: white; margin: 0 10px;">협회소개</a> |
+            <a href="/?page=business" style="color: white; margin: 0 10px;">사업안내</a> |
+            <a href="/?page=contact" style="color: white; margin: 0 10px;">문의하기</a>
+        </p>
+    </div>
+</footer>
+</body>
+</html>
