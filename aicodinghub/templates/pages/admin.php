@@ -49,7 +49,7 @@ $festivalStats = $pdo->query("
         COUNT(*) as total,
         SUM(CASE WHEN status = 'pending' THEN 1 ELSE 0 END) as pending,
         SUM(CASE WHEN status = 'approved' THEN 1 ELSE 0 END) as approved,
-        SUM(CASE WHEN DATE(created_at) = CURDATE() THEN 1 ELSE 0 END) as today
+        SUM(CASE WHEN DATE(registered_at) = CURDATE() THEN 1 ELSE 0 END) as today
     FROM festival_registrations
 ")->fetch();
 
@@ -63,7 +63,7 @@ $recentMembers = $pdo->query("
 
 // Recent boards (last 5)
 $recentBoards = $pdo->query("
-    SELECT board_id, title, type, views, created_at
+    SELECT board_id, title, board_type, views, created_at
     FROM boards
     ORDER BY created_at DESC
     LIMIT 5
@@ -289,7 +289,7 @@ $pageTitle = '관리자 대시보드';
                             <div class="flex items-center space-x-3 mt-1">
                                 <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full
                                     <?php 
-                                        switch($board['type']) {
+                                        switch($board['board_type']) {
                                             case 'notice': echo 'bg-red-600 text-red-100'; break;
                                             case 'news': echo 'bg-blue-600 text-blue-100'; break;
                                             case 'qna': echo 'bg-green-600 text-green-100'; break;
@@ -297,7 +297,7 @@ $pageTitle = '관리자 대시보드';
                                     ?>">
                                     <?php 
                                         $boardTypes = ['notice' => '공지', 'news' => '소식', 'qna' => '질문'];
-                                        echo $boardTypes[$board['type']] ?? $board['type'];
+                                        echo $boardTypes[$board['board_type']] ?? $board['board_type'];
                                     ?>
                                 </span>
                                 <span class="text-gray-400 text-xs">
