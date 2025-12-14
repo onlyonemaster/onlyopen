@@ -67,6 +67,7 @@ $stmt->execute($params);
 $members = $stmt->fetchAll();
 
 $pageTitle = '회원 관리';
+$currentSection = 'members';
 ?>
 
 <!DOCTYPE html>
@@ -80,41 +81,7 @@ $pageTitle = '회원 관리';
     <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="bg-gray-900 text-gray-100">
-    
-    <!-- Admin Navigation -->
-    <nav class="bg-gray-800 border-b border-gray-700">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex">
-                    <div class="flex-shrink-0 flex items-center">
-                        <i class="fas fa-shield-alt text-cyan-400 text-2xl mr-3"></i>
-                        <span class="text-xl font-bold text-white">관리자 페이지</span>
-                    </div>
-                    <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
-                        <a href="/?page=admin" class="border-transparent text-gray-300 hover:border-gray-300 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            <i class="fas fa-home mr-2"></i> 대시보드
-                        </a>
-                        <a href="/?page=admin&section=members" class="border-cyan-500 text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            <i class="fas fa-users mr-2"></i> 회원 관리
-                        </a>
-                        <a href="/?page=admin&section=boards" class="border-transparent text-gray-300 hover:border-gray-300 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            <i class="fas fa-clipboard-list mr-2"></i> 게시판 관리
-                        </a>
-                        <a href="/?page=admin&section=festival" class="border-transparent text-gray-300 hover:border-gray-300 hover:text-white inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium">
-                            <i class="fas fa-trophy mr-2"></i> 페스티벌 관리
-                        </a>
-                    </div>
-                </div>
-                <div class="flex items-center">
-                    <a href="/" class="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                        <i class="fas fa-external-link-alt mr-2"></i>사이트로 이동
-                    </a>
-                    <a href="/?page=logout" class="ml-4 text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium">
-                        <i class="fas fa-sign-out-alt mr-2"></i>로그아웃
-                    </a>
-                </div>
-            </div>
-        </div>
+    <?php include __DIR__ . '/../components/admin-nav.php'; ?>
     </nav>
 
     <!-- Main Content -->
