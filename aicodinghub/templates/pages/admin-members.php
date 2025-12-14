@@ -74,6 +74,7 @@ $pageTitle = '회원 관리';
     <title><?php echo $pageTitle; ?> - 한국AI코딩허브협회</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/admin.css">
 </head>
 <body class="bg-gray-900 text-gray-100">
     
@@ -333,5 +334,6 @@ $pageTitle = '회원 관리';
         }
     </script>
 
+    <script src="/js/admin.js"></script>
 </body>
 </html>
