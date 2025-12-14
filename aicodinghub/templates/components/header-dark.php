@@ -14,12 +14,26 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
 <html lang="ko">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title><?php echo $page_title ?? '한국AI코딩허브협회'; ?> - AI코딩으로 일하고, 연결되고, 수익을 만드는</title>
     <meta name="description" content="한국AI코딩허브협회 - AI코딩 생태계의 중심, 교육-실전-수익을 하나로 연결합니다">
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {},
+                screens: {
+                    'sm': '640px',
+                    'md': '900px',  // Changed from 768px to 900px to handle wider mobile viewports
+                    'lg': '1024px',
+                    'xl': '1280px',
+                    '2xl': '1536px',
+                }
+            }
+        }
+    </script>
     
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
