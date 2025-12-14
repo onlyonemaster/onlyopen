@@ -1,27 +1,54 @@
 <?php 
-$page_title = "마이페이지 - 한국AI코딩허브협회"; 
-include dirname(__DIR__) . '/components/header.php'; 
-
-// Check login
-if (!isLoggedIn()) {
-    redirectTo('?page=login');
+// Check login BEFORE including header
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
 }
 
-// Get user data (demo data for now)
-$user = getCurrentUser() ?? [
-    'id' => 1,
-    'name' => '홍길동',
-    'email' => 'demo@example.com',
-    'member_type' => 'individual',
-    'phone' => '010-1234-5678',
-    'created_at' => date('Y-m-d H:i:s'),
-    'profile_image' => null,
-    'bio' => 'AI 코딩으로 세상을 변화시키는 개발자입니다.',
-    'skills' => ['Python', 'JavaScript', 'React', 'FastAPI'],
-    'rating' => 4.8,
-    'completed_projects' => 12,
-    'total_earnings' => 12500000
-];
+if (!isset($_SESSION['user_id'])) {
+    header('Location: /?page=login');
+    exit;
+}
+
+$page_title = "마이페이지 - 한국AI코딩허브협회"; 
+include dirname(__DIR__) . '/components/header.php';
+
+// Get real user data from database
+require_once __DIR__ . '/../../config/database.php';
+$pdo = getDBConnection();
+
+$stmt = $pdo->prepare("SELECT * FROM members WHERE member_id = ?");
+$stmt->execute([$_SESSION['user_id']]);
+$user = $stmt->fetch();
+
+if (!$user) {
+    header('Location: /?page=login');
+    exit;
+}
+
+// Get profile data based on member type
+$profileData = null;
+switch ($user['member_type']) {
+    case 'individual':
+        $stmt = $pdo->prepare("SELECT * FROM developer_profiles WHERE member_id = ?");
+        $stmt->execute([$user['member_id']]);
+        $profileData = $stmt->fetch();
+        break;
+    case 'company':
+        $stmt = $pdo->prepare("SELECT * FROM company_profiles WHERE member_id = ?");
+        $stmt->execute([$user['member_id']]);
+        $profileData = $stmt->fetch();
+        break;
+    case 'education':
+        $stmt = $pdo->prepare("SELECT * FROM education_profiles WHERE member_id = ?");
+        $stmt->execute([$user['member_id']]);
+        $profileData = $stmt->fetch();
+        break;
+    case 'team':
+        $stmt = $pdo->prepare("SELECT * FROM teams WHERE leader_member_id = ?");
+        $stmt->execute([$user['member_id']]);
+        $profileData = $stmt->fetch();
+        break;
+}
 ?>
 
 <!-- Hero Section -->
