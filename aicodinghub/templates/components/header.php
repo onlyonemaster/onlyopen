@@ -289,6 +289,16 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                 mobileUserMenuBtn: !!mobileUserMenuBtn
             });
             
+            // CRITICAL: 초기 상태 강제 설정 (모든 메뉴 숨김)
+            if (mobileMenu) {
+                mobileMenu.classList.remove('show');
+                console.log('🔧 Initial state: mobile-menu .show class removed');
+            }
+            if (mobileUserMenu) {
+                mobileUserMenu.classList.remove('show');
+                console.log('🔧 Initial state: mobile-user-menu .show class removed');
+            }
+            
             if (mobileMenuBtn && mobileMenu) {
                 mobileMenuBtn.addEventListener('click', function(e) {
                     e.preventDefault();
