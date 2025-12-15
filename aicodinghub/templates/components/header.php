@@ -215,7 +215,7 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
         </div>
         
         <!-- Mobile Menu -->
-        <div id="mobile-menu" class="bg-gray-900 border-t border-gray-800">
+        <div id="mobile-menu" class="absolute right-0 mt-1 w-64 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50" style="top: 4rem;">
             <div class="px-2 pt-2 pb-3 space-y-1">
                 <a href="/?page=home" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
                     홈

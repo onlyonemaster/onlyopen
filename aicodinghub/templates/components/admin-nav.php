@@ -119,7 +119,7 @@ $is_logged_in = isset($_SESSION['user_id']);
     </div>
     
     <!-- Mobile Full Menu Dropdown (Hamburger) -->
-    <div id="admin-mobile-menu" class="md:hidden bg-gray-900 border-t border-gray-800">
+    <div id="admin-mobile-menu" class="md:hidden absolute right-0 mt-1 w-64 bg-gray-900 border border-gray-700 rounded-lg shadow-xl z-50" style="top: 4rem;">
         <div class="px-2 pt-2 pb-3 space-y-1">
             <a href="/" class="text-gray-300 hover:text-purple-400 hover:bg-gray-800 block px-3 py-2 rounded-md text-base font-medium">
                 <i class="fas fa-home mr-2"></i>홈
