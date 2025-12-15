@@ -292,26 +292,31 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
             // CRITICAL: 초기 상태 강제 설정 (모든 메뉴 숨김)
             if (mobileMenu) {
                 mobileMenu.classList.remove('show');
-                console.log('🔧 Initial state: mobile-menu .show class removed');
+                console.log('🔧 Initial state (immediate): mobile-menu .show class removed');
                 
-                // 🔍 MutationObserver: 누가 .show를 추가하는지 추적
-                const observer = new MutationObserver(function(mutations) {
-                    mutations.forEach(function(mutation) {
-                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
-                            const hasShow = mobileMenu.classList.contains('show');
-                            console.log('🔍 MutationObserver detected class change!');
-                            console.log('   - Has .show class:', hasShow);
-                            console.log('   - New classes:', mobileMenu.className);
-                            console.log('   - Stack trace:', new Error().stack);
-                        }
-                    });
-                });
-                observer.observe(mobileMenu, { attributes: true, attributeFilter: ['class'] });
-                console.log('🔍 MutationObserver installed on mobile-menu');
+                // 🚀 FIX: setTimeout으로 다른 모든 JavaScript 실행 후 다시 제거
+                setTimeout(function() {
+                    if (mobileMenu.classList.contains('show')) {
+                        console.log('⚠️ WARNING: .show class was re-added! Removing again...');
+                        mobileMenu.classList.remove('show');
+                        console.log('✅ .show class forcefully removed (delayed)');
+                    } else {
+                        console.log('✅ .show class still removed (no re-addition detected)');
+                    }
+                }, 100);
             }
             if (mobileUserMenu) {
                 mobileUserMenu.classList.remove('show');
-                console.log('🔧 Initial state: mobile-user-menu .show class removed');
+                console.log('🔧 Initial state (immediate): mobile-user-menu .show class removed');
+                
+                // 🚀 FIX: setTimeout으로 다른 모든 JavaScript 실행 후 다시 제거
+                setTimeout(function() {
+                    if (mobileUserMenu.classList.contains('show')) {
+                        console.log('⚠️ WARNING: .show class was re-added on mobile-user-menu! Removing again...');
+                        mobileUserMenu.classList.remove('show');
+                        console.log('✅ .show class forcefully removed (delayed)');
+                    }
+                }, 100);
             }
             
             if (mobileMenuBtn && mobileMenu) {
