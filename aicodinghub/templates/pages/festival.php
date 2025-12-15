@@ -143,6 +143,26 @@ $festivalStyles = <<<'STYLES'
     background: var(--accent-purple);
     box-shadow: 0 0 10px var(--accent-purple);
 }
+
+/* Responsive Badge Layout - Auto wrap to 2-3 lines on mobile */
+@media (max-width: 640px) {
+    .flex-wrap > span {
+        flex: 0 0 calc(50% - 0.5rem); /* 2 items per row on small mobile */
+        min-width: 0;
+    }
+}
+
+@media (min-width: 641px) and (max-width: 768px) {
+    .flex-wrap > span {
+        flex: 0 0 calc(50% - 0.5rem); /* 2 items per row on medium mobile */
+    }
+}
+
+@media (min-width: 769px) {
+    .flex-wrap > span {
+        flex: 0 0 auto; /* Auto layout on desktop */
+    }
+}
 </style>
 STYLES;
 
@@ -167,6 +187,7 @@ echo $festivalStyles;
                 <div class="hidden md:flex items-center space-x-4">
                     <div class="ml-10 flex items-baseline space-x-4">
                         <a href="#home" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">홈</a>
+                        <a href="/?page=about" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">협회</a>
                         <a href="#about" class="text-gray-300 hover:text-purple-400 px-3 py-2 rounded-md text-sm font-medium transition-all hover:bg-gray-800">소개</a>
                         
                         <!-- 대상 드롭다운 메뉴 -->
@@ -263,6 +284,9 @@ echo $festivalStyles;
                             <a href="#home" class="block px-4 py-3 text-gray-300 hover:bg-purple-900/50 hover:text-white transition-colors border-b border-gray-800">
                                 <i class="fas fa-home text-purple-400 mr-2"></i>홈으로가기
                             </a>
+                            <a href="/?page=about" class="block px-4 py-3 text-gray-300 hover:bg-indigo-900/50 hover:text-white transition-colors border-b border-gray-800">
+                                <i class="fas fa-building text-indigo-400 mr-2"></i>협회
+                            </a>
                             <a href="#about" class="block px-4 py-3 text-gray-300 hover:bg-blue-900/50 hover:text-white transition-colors border-b border-gray-800">
                                 <i class="fas fa-info-circle text-blue-400 mr-2"></i>페스티벌소개
                             </a>
@@ -297,16 +321,16 @@ echo $festivalStyles;
             
             <div data-aos="fade-up" data-aos-delay="200" class="mb-12">
                 <div class="flex flex-wrap justify-center gap-4 text-sm md:text-base">
-                    <span class="bg-gradient-to-r from-pink-500 to-purple-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all">
+                    <span class="bg-gradient-to-r from-pink-500 to-purple-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all whitespace-nowrap">
                         <i class="fas fa-calendar mr-2"></i>매주 정기 세미나 진행
                     </span>
-                    <span class="bg-gradient-to-r from-blue-500 to-cyan-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all">
+                    <span class="bg-gradient-to-r from-blue-500 to-cyan-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all whitespace-nowrap">
                         <i class="fas fa-users mr-2"></i>즉석 팀 매칭
                     </span>
-                    <span class="bg-gradient-to-r from-green-500 to-teal-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all">
+                    <span class="bg-gradient-to-r from-green-500 to-teal-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all whitespace-nowrap">
                         <i class="fas fa-trophy mr-2"></i>현장 계약 시스템
                     </span>
-                    <span class="bg-gradient-to-r from-orange-500 to-red-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all">
+                    <span class="bg-gradient-to-r from-orange-500 to-red-600 backdrop-blur-sm px-4 py-2 rounded-full border border-white/30 transform hover:scale-105 transition-all whitespace-nowrap">
                         <i class="fas fa-gift mr-2"></i>1주일 내 실무 적용
                     </span>
                 </div>
