@@ -305,9 +305,25 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                     e.stopPropagation();
                     console.log('🍔 Hamburger menu button CLICKED!');
                     
+                    // 클릭 전 상태 상세 확인
+                    const beforeClick = {
+                        hasShowClass: mobileMenu.classList.contains('show'),
+                        displayStyle: window.getComputedStyle(mobileMenu).display,
+                        allClasses: mobileMenu.className
+                    };
+                    console.log('⚠️ BEFORE click:', beforeClick);
+                    
                     const wasVisible = mobileMenu.classList.contains('show');
                     mobileMenu.classList.toggle('show');
                     const isNowVisible = mobileMenu.classList.contains('show');
+                    
+                    // 클릭 후 상태 상세 확인
+                    const afterClick = {
+                        hasShowClass: isNowVisible,
+                        displayStyle: window.getComputedStyle(mobileMenu).display,
+                        allClasses: mobileMenu.className
+                    };
+                    console.log('⚠️ AFTER click:', afterClick);
                     
                     console.log('Menu state:', wasVisible ? 'visible → hidden' : 'hidden → visible');
                     console.log('Menu has .show class:', isNowVisible);
