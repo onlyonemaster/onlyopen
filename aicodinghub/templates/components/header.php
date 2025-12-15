@@ -293,6 +293,21 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
             if (mobileMenu) {
                 mobileMenu.classList.remove('show');
                 console.log('🔧 Initial state: mobile-menu .show class removed');
+                
+                // 🔍 MutationObserver: 누가 .show를 추가하는지 추적
+                const observer = new MutationObserver(function(mutations) {
+                    mutations.forEach(function(mutation) {
+                        if (mutation.type === 'attributes' && mutation.attributeName === 'class') {
+                            const hasShow = mobileMenu.classList.contains('show');
+                            console.log('🔍 MutationObserver detected class change!');
+                            console.log('   - Has .show class:', hasShow);
+                            console.log('   - New classes:', mobileMenu.className);
+                            console.log('   - Stack trace:', new Error().stack);
+                        }
+                    });
+                });
+                observer.observe(mobileMenu, { attributes: true, attributeFilter: ['class'] });
+                console.log('🔍 MutationObserver installed on mobile-menu');
             }
             if (mobileUserMenu) {
                 mobileUserMenu.classList.remove('show');
