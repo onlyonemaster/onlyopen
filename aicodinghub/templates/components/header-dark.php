@@ -290,33 +290,16 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
             });
             
             // CRITICAL: 초기 상태 강제 설정 (모든 메뉴 숨김)
+            // 🚀 NEW APPROACH: style.display를 직접 제어
             if (mobileMenu) {
                 mobileMenu.classList.remove('show');
-                console.log('🔧 Initial state (immediate): mobile-menu .show class removed');
-                
-                // 🚀 FIX: setTimeout으로 다른 모든 JavaScript 실행 후 다시 제거
-                setTimeout(function() {
-                    if (mobileMenu.classList.contains('show')) {
-                        console.log('⚠️ WARNING: .show class was re-added! Removing again...');
-                        mobileMenu.classList.remove('show');
-                        console.log('✅ .show class forcefully removed (delayed)');
-                    } else {
-                        console.log('✅ .show class still removed (no re-addition detected)');
-                    }
-                }, 100);
+                mobileMenu.style.display = 'none';
+                console.log('🔧 Initial state: mobile-menu hidden (classList + style.display)');
             }
             if (mobileUserMenu) {
                 mobileUserMenu.classList.remove('show');
-                console.log('🔧 Initial state (immediate): mobile-user-menu .show class removed');
-                
-                // 🚀 FIX: setTimeout으로 다른 모든 JavaScript 실행 후 다시 제거
-                setTimeout(function() {
-                    if (mobileUserMenu.classList.contains('show')) {
-                        console.log('⚠️ WARNING: .show class was re-added on mobile-user-menu! Removing again...');
-                        mobileUserMenu.classList.remove('show');
-                        console.log('✅ .show class forcefully removed (delayed)');
-                    }
-                }, 100);
+                mobileUserMenu.style.display = 'none';
+                console.log('🔧 Initial state: mobile-user-menu hidden (classList + style.display)');
             }
             
             if (mobileMenuBtn && mobileMenu) {
@@ -325,32 +308,30 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                     e.stopPropagation();
                     console.log('🍔 Hamburger menu button CLICKED!');
                     
-                    // 클릭 전 상태 상세 확인
-                    const beforeClick = {
-                        hasShowClass: mobileMenu.classList.contains('show'),
-                        displayStyle: window.getComputedStyle(mobileMenu).display,
-                        allClasses: mobileMenu.className
-                    };
-                    console.log('⚠️ BEFORE click:', beforeClick);
+                    // 🚀 NEW APPROACH: style.display를 직접 확인
+                    const currentDisplay = mobileMenu.style.display;
+                    const isCurrentlyVisible = (currentDisplay === 'block');
                     
-                    const wasVisible = mobileMenu.classList.contains('show');
-                    mobileMenu.classList.toggle('show');
-                    const isNowVisible = mobileMenu.classList.contains('show');
+                    console.log('⚠️ BEFORE click: style.display =', currentDisplay);
                     
-                    // 클릭 후 상태 상세 확인
-                    const afterClick = {
-                        hasShowClass: isNowVisible,
-                        displayStyle: window.getComputedStyle(mobileMenu).display,
-                        allClasses: mobileMenu.className
-                    };
-                    console.log('⚠️ AFTER click:', afterClick);
+                    if (isCurrentlyVisible) {
+                        // 현재 보임 → 숨김
+                        mobileMenu.style.display = 'none';
+                        mobileMenu.classList.remove('show');
+                        console.log('✅ Menu hidden (style.display = none)');
+                    } else {
+                        // 현재 숨김 → 보임
+                        mobileMenu.style.display = 'block';
+                        mobileMenu.classList.add('show');
+                        console.log('✅ Menu visible (style.display = block)');
+                    }
                     
-                    console.log('Menu state:', wasVisible ? 'visible → hidden' : 'hidden → visible');
-                    console.log('Menu has .show class:', isNowVisible);
+                    console.log('⚠️ AFTER click: style.display =', mobileMenu.style.display);
                     
                     // Close user menu when opening main menu
                     if (mobileUserMenu) {
                         mobileUserMenu.classList.remove('show');
+                        mobileUserMenu.style.display = 'none';
                     }
                 });
                 console.log('✅ Hamburger menu event listener attached!');
@@ -367,10 +348,19 @@ $is_admin = ($user_member_id == 1); // member_id가 1인 경우 관리자
                     e.preventDefault();
                     e.stopPropagation();
                     console.log('Mobile user menu button clicked');
-                    mobileUserMenu.classList.toggle('show');
+                    // 🚀 NEW APPROACH: style.display 직접 제어
+                    const isUserMenuVisible = (mobileUserMenu.style.display === 'block');
+                    if (isUserMenuVisible) {
+                        mobileUserMenu.style.display = 'none';
+                        mobileUserMenu.classList.remove('show');
+                    } else {
+                        mobileUserMenu.style.display = 'block';
+                        mobileUserMenu.classList.add('show');
+                    }
                     // Close main menu when opening user menu
                     if (mobileMenu) {
                         mobileMenu.classList.remove('show');
+                        mobileMenu.style.display = 'none';
                     }
                 });
                 console.log('Mobile user menu event listener attached');
