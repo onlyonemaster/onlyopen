@@ -61,12 +61,14 @@ strong {
     background: var(--gradient-primary);
     color: var(--white);
     text-align: center;
-    padding: 60px 20px;
+    padding: 80px 20px 100px 20px;
 }
 
 .hero-content {
     max-width: 900px;
     margin: 0 auto;
+    position: relative;
+    z-index: 5;
 }
 
 .hero-title {
@@ -91,7 +93,7 @@ strong {
 
 .hero-description {
     font-size: clamp(18px, 3vw, 24px);
-    margin-bottom: 48px;
+    margin-bottom: 56px;
     opacity: 0.9;
     line-height: 1.6;
 }
@@ -101,7 +103,7 @@ strong {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 20px;
-    margin: 48px 0;
+    margin: 56px 0 64px 0;
 }
 
 .stat-card {
@@ -144,7 +146,9 @@ strong {
     cursor: pointer;
     transition: all 0.3s ease;
     box-shadow: var(--shadow-xl);
-    margin: 32px 0;
+    margin: 48px 0 32px 0;
+    position: relative;
+    z-index: 10;
 }
 
 .cta-button:hover {
@@ -156,7 +160,8 @@ strong {
 .hero-notice {
     font-size: clamp(13px, 2vw, 15px);
     opacity: 0.8;
-    margin-top: 16px;
+    margin-top: 24px;
+    margin-bottom: 40px;
 }
 
 .scroll-indicator {
@@ -176,13 +181,14 @@ strong {
 
 /* Sections */
 .section {
-    padding: 80px 20px;
+    padding: 100px 20px;
+    position: relative;
 }
 
 .section-title {
     font-size: clamp(28px, 5vw, 42px);
     text-align: center;
-    margin-bottom: 48px;
+    margin-bottom: 56px;
     color: var(--dark-color);
     line-height: 1.4;
 }
