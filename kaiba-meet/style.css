@@ -193,6 +193,12 @@ strong {
     text-align: left;
 }
 
+/* Event Info Dark Version (for dark background) */
+.event-info-dark {
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.25);
+}
+
 .hero-notice {
     font-size: clamp(13px, 2vw, 15px);
     opacity: 0.8;
@@ -600,7 +606,7 @@ strong {
     background: var(--gradient-dark);
     color: var(--white);
     text-align: center;
-    padding: 100px 20px;
+    padding: 120px 20px;
 }
 
 .cta-content {
@@ -645,7 +651,7 @@ strong {
     flex-wrap: wrap;
     justify-content: center;
     gap: 24px;
-    margin: 48px 0;
+    margin: 48px 0 32px 0;
     font-size: clamp(15px, 2vw, 18px);
 }
 
