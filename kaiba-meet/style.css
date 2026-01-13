@@ -154,11 +154,50 @@ strong {
     box-shadow: 0 25px 35px rgba(220, 38, 38, 0.3);
 }
 
+/* Event Info */
+.event-info {
+    background: rgba(255, 255, 255, 0.15);
+    backdrop-filter: blur(10px);
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-radius: 16px;
+    padding: 32px 24px;
+    margin: 32px auto 24px auto;
+    max-width: 600px;
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+}
+
+.event-info-item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    margin-bottom: 16px;
+    font-size: clamp(15px, 2.5vw, 18px);
+    line-height: 1.6;
+}
+
+.event-info-item:last-child {
+    margin-bottom: 0;
+}
+
+.event-info-label {
+    font-weight: 700;
+    opacity: 0.95;
+    min-width: 80px;
+    text-align: right;
+}
+
+.event-info-value {
+    font-weight: 600;
+    opacity: 0.9;
+    text-align: left;
+}
+
 .hero-notice {
     font-size: clamp(13px, 2vw, 15px);
     opacity: 0.8;
-    margin-top: 24px;
-    margin-bottom: 40px;
+    margin-top: 16px;
+    margin-bottom: 60px;
 }
 
 .scroll-indicator {
@@ -722,5 +761,26 @@ strong {
     .cta-button-large {
         width: 100%;
         padding: 18px 24px;
+    }
+    
+    .event-info {
+        padding: 24px 16px;
+        margin: 24px 16px;
+    }
+    
+    .event-info-item {
+        flex-direction: column;
+        gap: 4px;
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    
+    .event-info-label {
+        min-width: auto;
+        text-align: center;
+    }
+    
+    .event-info-value {
+        text-align: center;
     }
 }
