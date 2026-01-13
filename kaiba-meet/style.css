@@ -61,7 +61,7 @@ strong {
     background: var(--gradient-primary);
     color: var(--white);
     text-align: center;
-    padding: 80px 20px 200px 20px;
+    padding: 80px 20px 250px 20px;
 }
 
 .hero-content {
@@ -203,7 +203,7 @@ strong {
     font-size: clamp(13px, 2vw, 15px);
     opacity: 0.8;
     margin-top: 16px;
-    margin-bottom: 120px;
+    margin-bottom: 170px;
 }
 
 .scroll-indicator {
