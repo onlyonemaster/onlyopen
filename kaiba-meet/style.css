@@ -62,14 +62,15 @@ strong {
     color: var(--white);
     text-align: center;
     padding: 80px 20px 100px 20px;
-    z-index: 1;
+    z-index: 10;
+    isolation: isolate;
 }
 
 .hero-content {
     max-width: 900px;
     margin: 0 auto;
     position: relative;
-    z-index: 10;
+    z-index: 50;
 }
 
 .hero-title {
@@ -149,7 +150,7 @@ strong {
     box-shadow: var(--shadow-xl);
     margin: 48px 0 32px 0;
     position: relative;
-    z-index: 100;
+    z-index: 999;
 }
 
 .cta-button:hover {
@@ -184,7 +185,7 @@ strong {
 .section {
     padding: 100px 20px;
     position: relative;
-    z-index: 2;
+    z-index: 1;
 }
 
 .section-title {
