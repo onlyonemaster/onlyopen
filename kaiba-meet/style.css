@@ -175,7 +175,7 @@ strong {
 
 /* CTA Button */
 .cta-button {
-    display: inline-block;
+    display: none; /* 임시 숨김 */
     padding: 20px 48px;
     font-size: clamp(16px, 2.5vw, 20px);
     font-weight: 700;
@@ -668,7 +668,7 @@ strong {
 }
 
 .cta-button-large {
-    display: inline-block;
+    display: none; /* 임시 숨김 */
     padding: 24px 64px;
     font-size: clamp(18px, 3vw, 24px);
     font-weight: 700;
