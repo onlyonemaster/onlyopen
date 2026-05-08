@@ -1,0 +1,16 @@
+[
+  {
+    "from": "1.0.0",
+    "to": "1.0.1",
+    "type": "patch",
+    "date": "2026-05-02T09:48:02.259879",
+    "note": "Initial version with AIvote renamed to Onlyone"
+  },
+  {
+    "from": "1.0.1",
+    "to": "1.1.0",
+    "type": "minor",
+    "date": "2026-05-02T09:48:15.452382",
+    "note": "\uc2e0\uaddc \uba54\uc2dc\uc9c0 \uc608\uc57d \uae30\ub2a5 \ucd94\uac00"
+  }
+]

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>디버 업데이터 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">DB 수집 (온리원디버)</div>
+      <a href="/manual/diver/" class="sb-link">🔍 DB 수집 소개</a>
+      <a href="/manual/diver/install.html" class="sb-link">💿 설치 및 시작하기</a>
+      <a href="/manual/diver/search.html" class="sb-link">🔎 검색 기술 가이드</a>
+      <a href="/manual/diver/collect.html" class="sb-link">📊 디비 수집 방법</a>
+      <a href="/manual/diver/utilize.html" class="sb-link">📤 수집 DB 활용하기</a>
+      <a href="/manual/diver/updater.html" class="sb-link active">🔄 디버 업데이터</a>
+      <a href="/manual/diver/troubleshoot.html" class="sb-link">🛠️ 문제 해결</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/diver/">DB 수집(온리원디버)</a><span class="sep">›</span>
+      <span>디버 업데이터</span>
+    </div>
+    <h1>🔄 디버 업데이터 (DberUpdater)</h1>
+    <p class="page-desc">바탕화면의 드럼통 아이콘이 바로 디버 업데이터입니다. 프로그램의 자동 업데이트 시스템 구조와 ChromeDriver 관리 방식을 상세히 설명합니다.</p>
+
+    <!-- 업데이터 개요 -->
+    <h2 id="what">디버 업데이터란?</h2>
+    <p><strong>디버 업데이터(DberUpdater)</strong>는 온리원디버의 자동 업데이트 관리 프로그램입니다. 버전 <strong>1.0.1.0</strong>, <strong>온리원연구소</strong>에서 개발했으며 .NET Framework 4.5 기반의 Windows Forms 애플리케이션입니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">📋</span>
+        <div class="tn">update.xml 체크</div>
+        <div class="td">서버에서 최신 파일 목록을 받아와 로컬 파일과 비교</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔐</span>
+        <div class="tn">MD5 무결성 검증</div>
+        <div class="td">각 파일의 MD5 해시를 비교하여 변조·손상 여부 확인</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">⬇️</span>
+        <div class="tn">순차적 다운로드</div>
+        <div class="td">변경된 파일만 순차적으로 다운로드하여 효율적 업데이트</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🌐</span>
+        <div class="tn">ChromeDriver 관리</div>
+        <div class="td">PC의 Chrome 버전에 맞는 ChromeDriver 자동 다운로드</div>
+      </div>
+    </div>
+
+    <!-- 시스템 구조 -->
+    <h2 id="architecture">시스템 구조</h2>
+    <table class="m-table">
+      <thead><tr><th>구성 요소</th><th>파일</th><th>역할</th></tr></thead>
+      <tbody>
+        <tr><td><strong>메인 진입점</strong></td><td><code>Sequential_File_Downloader/Program.cs</code></td><td>애플리케이션 시작. FormDownloader 폼 실행</td></tr>
+        <tr><td><strong>업데이터 폼</strong></td><td><code>DberUpdater/FormDownloader.cs</code></td><td>전체 업데이트 로직 (618줄, 19개 메서드)</td></tr>
+        <tr><td><strong>작업표시줄</strong></td><td><code>DberUpdater/TaskbarProgress.cs</code></td><td>Windows 작업 표시줄 진행률 표시 (Win7+)</td></tr>
+        <tr><td><strong>리소스</strong></td><td><code>DberUpdater.Properties/Resources.cs</code></td><td>아이콘·이미지 등 리소스 관리</td></tr>
+        <tr><td><strong>설정</strong></td><td><code>DberUpdater.Properties/Settings.cs</code></td><td>사용자 설정 관리</td></tr>
+        <tr><td><strong>어셈블리 정보</strong></td><td><code>Properties/AssemblyInfo.cs</code></td><td>프로그램 메타데이터 (버전·회사·저작권)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 업데이트 프로세스 -->
+    <h2 id="process">업데이트 프로세스 (5단계)</h2>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">update.xml 다운로드</div>
+          <div class="step-desc">서버 URL <code>https://www.kiam.kr/downloads/update.xml</code>에서 최신 파일 목록 XML을 다운로드</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">파일별 비교 (GetUpdateInfo)</div>
+          <div class="step-desc">파일 존재 여부 확인 → 있으면 MD5 해시 비교 / 없으면 다운로드 목록에 추가<br>
+          ChromeDriver는 특별 처리: 버전 비교 후 필요 시 업데이트</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">기존 프로세스 종료 (KillMainProcesses)</div>
+          <div class="step-desc">실행 중인 <strong>온리원.exe</strong> 프로세스를 강제 종료하여 파일 잠금 해제</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">순차적 파일 다운로드</div>
+          <div class="step-desc">다운로드 목록의 파일을 순서대로 다운로드. 개별 파일 진행률 + 전체 진행률 동시 표시</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">업데이트 완료 → 온리원.exe 실행</div>
+          <div class="step-desc">모든 파일 다운로드 완료 후 메인 디버 프로그램(온리원.exe) 자동 실행</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- update.xml 구조 -->
+    <h2 id="update-xml">update.xml 파일 구조</h2>
+    <p>서버의 <code>https://www.kiam.kr/downloads/update.xml</code> 파일이 배포 파일 목록을 관리합니다.</p>
+    <div class="code-block">
+&lt;root&gt;<br>
+&nbsp;&nbsp;&lt;file path="파일경로" hash="MD5해시값" /&gt;<br>
+&nbsp;&nbsp;&lt;file path="chromedriver.exe" hash="abc123..." /&gt;<br>
+&nbsp;&nbsp;...<br>
+&lt;/root&gt;
+    </div>
+    <table class="m-table">
+      <thead><tr><th>속성</th><th>설명</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td><strong>path</strong></td><td>파일의 상대 경로</td><td><code>chromedriver.exe</code>, <code>data/config.xml</code></td></tr>
+        <tr><td><strong>hash</strong></td><td>파일의 MD5 해시값 (소문자 16진수 32자리)</td><td><code>d41d8cd98f00b204e9800998ecf8427e</code></td></tr>
+      </tbody>
+    </table>
+
+    <!-- MD5 검증 -->
+    <h2 id="md5">MD5 해시 검증 방식</h2>
+    <p>다운로드된 파일의 무결성을 <strong>MD5 해시</strong>로 검증합니다.</p>
+    <div class="code-block">
+      <strong>CalculateMD5(filename)</strong>:<br>
+      1. MD5.Create()로 해시 객체 생성<br>
+      2. 파일을 FileStream으로 열기<br>
+      3. ComputeHash()로 해시 계산<br>
+      4. BitConverter로 16진수 문자열 변환 (대시 제거, 소문자)
+    </div>
+    <p>파일이 이미 존재하면 로컬 파일의 MD5를 계산하여 update.xml의 hash 값과 비교:</p>
+    <ul style="list-style:disc;padding-left:24px;line-height:2;">
+      <li><strong>일치</strong> → 파일 건너뜀 (이미 최신)</li>
+      <li><strong>불일치</strong> → 다운로드 목록에 추가 (업데이트 필요)</li>
+    </ul>
+
+    <!-- ChromeDriver 관리 -->
+    <h2 id="chromedriver">ChromeDriver 자동 관리</h2>
+    <p>디버 업데이터의 가장 중요한 기능 중 하나는 <strong>ChromeDriver 자동 업데이트</strong>입니다. PC에 설치된 Chrome 브라우저 버전과 호환되는 ChromeDriver를 자동으로 찾아 다운로드합니다.</p>
+
+    <h3>Chrome 버전 확인 (GetChromeVersion)</h3>
+    <p>Windows 레지스트리에서 Chrome 설치 경로를 읽어 버전 정보를 가져옵니다.</p>
+    <div class="code-block">
+      레지스트리 경로: <code>HKEY_LOCAL_MACHINE\SOFTWARE\Microsoft\Windows\CurrentVersion\App Paths\chrome.exe</code>
+    </div>
+
+    <h3>현재 ChromeDriver 버전 확인 (GetCurrentChromeDriverVersion)</h3>
+    <p>기존 chromedriver.exe를 <code>--version</code> 인자로 실행하여 현재 설치된 버전을 확인합니다.</p>
+
+    <h3>ChromeDriver 다운로드 URL 획득 (GetChromeDriverLink)</h3>
+    <p>Chrome 버전에 따라 두 가지 API를 사용합니다:</p>
+    <table class="m-table">
+      <thead><tr><th>Chrome 버전</th><th>사용 API</th><th>방식</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Chrome 115 이상</strong></td>
+          <td>Google Chrome for Testing API</td>
+          <td>JSON 응답에서 정규식으로 다운로드 URL 추출</td>
+        </tr>
+        <tr>
+          <td><strong>Chrome 114 이하</strong></td>
+          <td>Chromedriver Storage API (레거시)</td>
+          <td>LATEST_RELEASE_버전 경로로 직접 다운로드</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>Chrome 115+ API 상세</h3>
+    <div class="code-block">
+      API URL: <code>https://googlechromelabs.github.io/chrome-for-testing/known-good-versions-with-downloads.json</code><br><br>
+      정규식 패턴: <code>https://storage.googleapis.com/chrome-for-testing-public/{version}/win32/chromedriver-win32.zip</code><br><br>
+      버전을 상위에서 하위로 줄여가며 매칭 시도 (예: 120.0.6099.109 → 120.0.6099 → 120.0 → 120)
+    </div>
+
+    <h3>ChromeDriver 설치 절차</h3>
+    <ol style="padding-left:24px;line-height:2;">
+      <li>기존 ChromeDriver 프로세스 강제 종료 (KillAllChromeDriverProcesses)</li>
+      <li>ZIP 파일 다운로드 → 압축 해제 → chromedriver-win32 폴더의 파일들을 실행 경로로 복사</li>
+      <li>임시 폴더 정리 및 ZIP 파일 삭제</li>
+    </ol>
+
+    <!-- UI & 진행률 -->
+    <h2 id="ui">UI 및 진행률 표시</h2>
+    <table class="m-table">
+      <thead><tr><th>UI 요소</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ProgressBarDownloading</strong></td><td>현재 다운로드 중인 파일의 진행률 (0~100%)</td></tr>
+        <tr><td><strong>ProgressBarSequence</strong></td><td>전체 파일 중 완료된 비율 (예: 3/10 → 30%)</td></tr>
+        <tr><td><strong>LabelDownloadingUrl</strong></td><td>현재 다운로드 중인 파일명 표시</td></tr>
+        <tr><td><strong>LabelProgress</strong></td><td>"완료건수 / 전체건수" 형식 텍스트</td></tr>
+        <tr><td><strong>LabelStatus</strong></td><td>상태 메시지 ("업데이트 정보를 불러오고 있습니다..." → "업데이트 진행중..." → "업데이트 완료 N")</td></tr>
+        <tr><td><strong>TaskbarProgress</strong></td><td>Windows 작업 표시줄에 진행률 녹색 바 표시 (Win7+ 호환)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 실행 시 유의사항 -->
+    <h2 id="notes">실행 시 유의사항</h2>
+    <div class="notice">
+      📌 <strong>관리자 권한 필요</strong>: 디버 업데이터는 <code>requestedExecutionLevel: requireAdministrator</code>로 설정되어 있습니다. 실행 시 관리자 권한 요청이 나타나면 반드시 [예]를 선택하세요.
+    </div>
+    <div class="notice">
+      📌 <strong>SSL 인증서 검증</strong>: Chrome 115+ API 호출 시 모든 SSL 인증서를 신뢰하도록 설정되어 있습니다 (<code>ServerCertificateValidationCallback = (...) => true</code>). 이는 다양한 네트워크 환경에서의 호환성을 위한 설정입니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/diver/utilize.html"><span class="nav-label">← 이전</span><span class="nav-title">📤 수집 DB 활용하기</span></a>
+      <a href="/manual/diver/troubleshoot.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🛠️ 문제 해결</span></a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">디버 업데이터란?</a></li>
+      <li><a href="#architecture">시스템 구조</a></li>
+      <li><a href="#process">업데이트 프로세스 (5단계)</a></li>
+      <li><a href="#update-xml">update.xml 구조</a></li>
+      <li><a href="#md5">MD5 해시 검증</a></li>
+      <li><a href="#chromedriver">ChromeDriver 자동 관리</a></li>
+      <li><a href="#ui">UI 및 진행률</a></li>
+      <li><a href="#notes">실행 시 유의사항</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

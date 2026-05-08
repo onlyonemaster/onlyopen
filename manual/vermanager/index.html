@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>버전 관리 시스템 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">버전 관리 시스템</div>
+      <a href="/manual/vermanager/" class="sb-link active">🔄 시스템 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/vermanager/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/vermanager/sites.html" class="sb-link">🌐 사이트 관리</a>
+      <a href="/manual/vermanager/release.html" class="sb-link">🚀 버전 릴리즈</a>
+      <a href="/manual/vermanager/history.html" class="sb-link">📜 릴리즈 이력</a>
+      <a href="/manual/vermanager/improvements.html" class="sb-link">💡 소스 개선사항</a>
+      <a href="/manual/vermanager/changelog.html" class="sb-link">📝 체인지로그</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/vermanager/remote.html" class="sb-link">🖥️ 원격 서버 연동</a>
+      <a href="/manual/vermanager/git.html" class="sb-link">🔧 Git/GitHub 자동화</a>
+      <a href="/manual/vermanager/settings.html" class="sb-link">⚙️ 설정 관리</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">관련 시스템</div>
+      <a href="/manual/source-improvements/" class="sb-link">📋 소스 개선 관리</a>
+    </div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">시스템 개요</a>
+    <a href="#semver" class="toc-link">SemVer 체계</a>
+    <a href="#architecture" class="toc-link">시스템 아키텍처</a>
+    <a href="#data-flow" class="toc-link">데이터 흐름</a>
+    <a href="#roadmap" class="toc-link">구현 로드맵 (Phase 1~6)</a>
+    <a href="#specs" class="toc-link">시스템 사양</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">🔄 Onlyone 통합 버전 관리 시스템</h1>
+    <p class="lead"><strong>다중 사이트·다중 서버</strong> 환경에서 모든 소프트웨어 버전을 통합 관리하는 시스템입니다. SemVer(시맨틱 버저닝) 기반의 릴리즈 관리, 원격 서버 SSH 연동, Git/GitHub CI/CD 자동화까지 완비되어 있습니다.</p>
+
+    <div class="info-box"><strong>🔗 접속:</strong> <a href="https://kiam.kr/vermanager/" target="_blank">https://kiam.kr/vermanager/</a><br><strong>📁 설치 경로:</strong> <code>/home/vermanager/</code> (Apache Alias: /vermanager → /home/vermanager)</div>
+
+    <h2 id="semver">SemVer (Semantic Versioning) 체계</h2>
+    <pre class="code-block"><code>  MAJOR . MINOR . PATCH
+     │       │       │
+     │       │       └─ 버그 수정, 작은 개선 (하위 호환)
+     │       │          예: 1.0.0 → 1.0.1 (patch)
+     │       │
+     │       └───────── 기능 추가 (하위 호환)
+     │                  예: 1.0.0 → 1.1.0 (minor)
+     │
+     └───────────────── 대규모 변경 (하위 호환 깨짐)
+                        예: 1.0.0 → 2.0.0 (major)</code></pre>
+
+    <div class="card-grid-2">
+      <div class="info-card"><strong>🟢 PATCH</strong><p>버그 수정, 작은 개선, 문서 업데이트. 기존 기능에 영향 없음. 현재 버전: <strong>v1.0.1</strong></p></div>
+      <div class="info-card"><strong>🟡 MINOR</strong><p>새 기능 추가. 하위 호환성 유지. 기존 사용자 영향 없음.</p></div>
+      <div class="info-card"><strong>🔴 MAJOR</strong><p>대규모 변경, API 변경, 하위 호환성 깨짐. 신중한 계획 필요.</p></div>
+    </div>
+
+    <h2 id="architecture">시스템 아키텍처</h2>
+    <pre class="code-block"><code>┌──────────────────────────────────────────────────────────────┐
+│                   Onlyone 통합 버전 관리 시스템                   │
+├──────────────────────────────────────────────────────────────┤
+│  📡 API 레이어 (8개 엔드포인트)                                  │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ version.php │ release.php │ history.php │ improvements │  │
+│  │ sites.php   │ remote.php  │ git.php      │ (RESTful)   │  │
+│  └────────────────────────────────────────────────────────┘  │
+├──────────────────────────────────────────────────────────────┤
+│  🖥️ UI 레이어 (10개 페이지)                                     │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ dashboard │ sites │ site-detail │ release │ history    │  │
+│  │ improvements │ changelog │ settings │ remote │ git    │  │
+│  └────────────────────────────────────────────────────────┘  │
+├──────────────────────────────────────────────────────────────┤
+│  💾 데이터 레이어 (JSON 파일 DB)                                │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ data/site-registry.json          ← 사이트 등록부          │  │
+│  │ data/sites/{site-id}/package.json     ← 버전 정보         │  │
+│  │ data/sites/{site-id}/version_history.json ← 릴리즈 이력   │  │
+│  │ data/sites/{site-id}/changelog.json     ← 변경 사항       │  │
+│  │ data/sites/{site-id}/improvements.json  ← 개선 사항       │  │
+│  └────────────────────────────────────────────────────────┘  │
+├──────────────────────────────────────────────────────────────┤
+│  🔗 연동 시스템                                                │
+│  ┌────────────────────────────────────────────────────────┐  │
+│  │ MySQL (source_improvements) ← DB 기반 개선사항 연동       │  │
+│  │ SSH (원격 서버)              ← 원격 배포/동기화            │  │
+│  │ Git/GitHub                   ← CI/CD 자동화              │  │
+│  └────────────────────────────────────────────────────────┘  │
+└──────────────────────────────────────────────────────────────┘</code></pre>
+
+    <h2 id="data-flow">데이터 흐름</h2>
+    <pre class="code-block"><code>1. 사이트 등록 → site-registry.json
+2. 사이트별 데이터 폴더 자동 생성 → data/sites/{id}/
+3. 개선사항 등록 → improvements.json + MySQL DB
+4. 릴리즈 실행 → package.json 버전 범핑
+                → version_history.json 기록
+                → changelog.json 갱신
+                → 개선사항 released_in 업데이트
+5. 원격 배포 → SSH로 운영 서버 전송
+6. Git 자동화 → 커밋 + 푸시 + 태그</code></pre>
+
+    <h2 id="roadmap">구현 로드맵 (Phase 1~6) — ✅ 전체 완료</h2>
+    <div class="timeline">
+      <div class="tl-item done"><span class="tl-dot done"></span><strong>Phase 1</strong> 기본 버전 관리 시스템 구축 (API+UI+JSON DB)</div>
+      <div class="tl-item done"><span class="tl-dot done"></span><strong>Phase 2</strong> 다중 사이트·다중 서버 설계 (site-registry 패턴)</div>
+      <div class="tl-item done"><span class="tl-dot done"></span><strong>Phase 3</strong> 전체 통합 구현 (+3,875라인, 26파일) — <a href="https://github.com/onlyonemaster/onlyopen/commit/d5203e8" target="_blank">d5203e8</a></div>
+      <div class="tl-item done"><span class="tl-dot done"></span><strong>Phase 4</strong> 원격 서버 SSH 연동 (api/remote.php, pages/remote.php)</div>
+      <div class="tl-item done"><span class="tl-dot done"></span><strong>Phase 5</strong> Git/GitHub CI/CD 자동화 (api/git.php, pages/git.php)</div>
+      <div class="tl-item done"><span class="tl-dot done"></span><strong>Phase 6</strong> 통합 테스트 및 최종 검증 완료 — <a href="https://github.com/onlyonemaster/onlyopen/commit/1cbf11c" target="_blank">1cbf11c</a></div>
+    </div>
+
+    <h2 id="specs">시스템 사양</h2>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>사양</th></tr></thead>
+      <tbody>
+        <tr><td>API 엔드포인트</td><td>8개 (version, release, history, improvements, sites, remote, git)</td></tr>
+        <tr><td>UI 페이지</td><td>10개 (dashboard, sites, site-detail, release, history, improvements, changelog, settings, remote, git)</td></tr>
+        <tr><td>등록 사이트</td><td>2개 (kiam-prod 운영, kiam-dev 개발)</td></tr>
+        <tr><td>서버</td><td>main-server (127.0.0.1:22)</td></tr>
+        <tr><td>기술 스택</td><td>PHP 8.2 + Apache 2.4 + JSON 파일 DB + MySQL + SSH</td></tr>
+        <tr><td>CSS</td><td>356라인 (CSS 변수, 반응형, 다크모드)</td></tr>
+        <tr><td>PR</td><td><a href="https://github.com/onlyonemaster/onlyopen/pull/1" target="_blank">onlyonemaster/onlyopen#1</a></td></tr>
+      </tbody>
+    </table>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/auto-register.html" class="next-link">← 이전: AI 자동 등록</a>
+      <a href="/manual/vermanager/dashboard.html" class="next-link">다음: 대시보드 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.info-box{background:var(--blue-bg);border-left:4px solid var(--brand);padding:16px 20px;border-radius:8px;margin-bottom:24px;font-size:14px;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:11px;line-height:1.5;overflow-x:auto;margin-bottom:24px;white-space:pre;font-family:monospace;}
+.m-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:28px;}
+.m-table th{background:var(--bg3);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);}
+.m-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.card-grid-2{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin-bottom:28px;}
+.info-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;}
+.info-card strong{display:block;font-size:14px;margin-bottom:6px;}
+.info-card p{font-size:13px;color:var(--text2);line-height:1.6;}
+.timeline{margin-bottom:28px;}
+.tl-item{display:flex;align-items:center;gap:14px;padding:10px 0;font-size:13px;color:var(--text2);}
+.tl-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0;background:var(--border);}
+.tl-dot.done{background:var(--green);}
+.tl-item.done{color:var(--text);}
+.tl-item strong{margin-right:6px;}
+.prev-next{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+@media(max-width:768px){.card-grid-2{grid-template-columns:1fr;}}
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

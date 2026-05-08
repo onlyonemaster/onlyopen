@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공유콜백 상세 설정 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">공유콜백</div>
+      <a href="/manual/sharecallback/" class="sb-link">🔗 공유콜백 소개</a>
+      <a href="/manual/sharecallback/setup.html" class="sb-link">공유콜백 설정하기</a>
+      <a href="/manual/sharecallback/manage.html" class="sb-link">공유콜백 관리</a>
+      <a href="/manual/sharecallback/share.html" class="sb-link">콜백 공유하기</a>
+      <a href="/manual/sharecallback/settings.html" class="sb-link active">공유콜백 상세 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/callback/" class="sb-link">IAM 콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sharecallback/">공유콜백</a> › 공유콜백 상세 설정</nav>
+    <h1 class="page-title">🔧 공유콜백 상세 설정 및 기술 레퍼런스</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#architecture">시스템 구조</a></li>
+        <li><a href="#myinfo">내정보 드롭다운 구조</a></li>
+        <li><a href="#functions">주요 함수 레퍼런스</a></li>
+        <li><a href="#sharing">공유 시스템 연관 기능</a></li>
+        <li><a href="#permissions">권한 및 접근 제어</a></li>
+        <li><a href="#bestpractice">모범 사례</a></li>
+      </ul>
+    </div>
+    <section id="architecture">
+      <h2>시스템 구조</h2>
+      <p>공유콜백 시스템은 <strong>웹-앱 하이브리드 구조</strong>로 설계되어 있습니다:</p>
+      <table class="m-table">
+        <thead><tr><th>계층</th><th>구성 요소</th><th>역할</th><th>위치</th></tr></thead>
+        <tbody>
+          <tr><td><strong>웹 프론트엔드</strong></td><td><code>kiam.kr/m</code> (HTML + jQuery + Bootstrap)</td><td>콜백 메시지 CRUD, 리스트 조회, SNS 공유</td><td>웹 브라우저</td></tr>
+          <tr><td><strong>앱 프론트엔드</strong></td><td>온리원문자 앱 (AppScript 인터페이스)</td><td>콜백등록관리, 공유콜백 설정, 부재중 전화 감지</td><td>Android 앱 (WebView)</td></tr>
+          <tr><td><strong>앱-웹 브릿지</strong></td><td><code>callAppBridge()</code>, <code>AppScript.*</code></td><td>웹 ↔ 앱 간 통신 인터페이스</td><td>WebView JavaScript</td></tr>
+          <tr><td><strong>백엔드 API</strong></td><td>PHP 스크립트 (/ajax, /admin/ajax)</td><td>데이터 저장, 조회, 수정, 삭제</td><td>서버 (Apache/PHP)</td></tr>
+          <tr><td><strong>데이터베이스</strong></td><td>MySQL (추정)</td><td>콜백 메시지, 회원, 공유 관계 데이터 저장</td><td>서버 DB</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="myinfo">
+      <h2>내정보 드롭다운 상세 구조</h2>
+      <p><code>mypage-modalwindow</code> 모달의 각 메뉴와 연결된 함수/URL을 상세히 정리합니다:</p>
+      <table class="m-table">
+        <thead><tr><th>메뉴명</th><th>클릭 핸들러</th><th>대상 URL / 함수</th><th>앱 필요</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr><td><strong>통합계정관리</strong></td><td><code>goOnlyOneApp()</code></td><td><code>AppScript.goOnlyOneApp('')</code></td><td>✅</td><td>앱 미설치 시 플레이스토어 안내</td></tr>
+          <tr><td><strong>마이페이지</strong></td><td><code>location.href</code></td><td><code>/iam/mypage.php</code></td><td>❌</td><td>웹에서 직접 접근 가능</td></tr>
+          <tr><td><strong>결제정보</strong></td><td><code>location.href</code></td><td><code>/?cur_win=payment</code></td><td>❌</td><td>쿼리스트링 기반 페이지 전환</td></tr>
+          <tr><td><strong>굿마켓</strong></td><td><code>gwc_tab()</code></td><td>쿠키+location.href 조합</td><td>❌</td><td>굿마켓 상품 목록</td></tr>
+          <tr><td><strong>콜이야</strong></td><td><code>callya_tab()</code></td><td>쿠키+쿼리스트링 조합</td><td>❌</td><td>콜이야 콘텐츠</td></tr>
+          <tr><td><strong>위드유</strong></td><td><code>openShop()</code></td><td>별도 JavaScript 함수</td><td>❌</td><td>위드유 샵</td></tr>
+          <tr><td style="background:#eff6ff;"><strong>콜백등록관리 ★</strong></td><td style="background:#eff6ff;"><code>goCallbackList()</code></td><td style="background:#eff6ff;"><code>AppScript.callbackList()</code></td><td style="background:#eff6ff;">✅</td><td style="background:#eff6ff;">공유콜백 진입점</td></tr>
+          <tr><td><strong>공지/푸쉬 알림</strong></td><td><code>location.href</code></td><td><code>/?cur_win=unread_push</code></td><td>❌</td><td>읽지 않은 알림 확인</td></tr>
+          <tr><td><strong>AI로 자동 카드 만들기</strong></td><td><code>create_auto_card()</code></td><td>모달 닫기 → 추가 처리</td><td>❌</td><td>AI 기반 IAM 생성</td></tr>
+          <tr><td><strong>AI명함프로필관리</strong></td><td><code>window.open()</code></td><td><code>/m/ai_card_profile_list.php</code></td><td>❌</td><td>새 창에서 열림</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="functions">
+      <h2>주요 함수 레퍼런스</h2>
+      <h3>콜백 / 공유콜백 관련 함수</h3>
+      <table class="m-table">
+        <thead><tr><th>함수명</th><th>정의 위치</th><th>파라미터</th><th>기능</th></tr></thead>
+        <tbody>
+          <tr><td><code>goCallbackApp()</code></td><td>HTML 인라인 (2곳)</td><td>없음</td><td>[콜백발송] 진입 → AppScript 연동</td></tr>
+          <tr><td><code>goCallbackList()</code></td><td>HTML 인라인 + index.js</td><td>없음</td><td>콜백등록관리 진입 → AppScript.callbackList()</td></tr>
+          <tr><td><code>goCallbackCamerapApp()</code></td><td>HTML 인라인</td><td>없음</td><td>카메라 앱 연동 (Android 전용)</td></tr>
+          <tr><td><code>callback_list()</code></td><td>HTML 인라인</td><td>없음</td><td>AJAX로 콜백 리스트 로드 및 모달 표시</td></tr>
+          <tr><td><code>form_save_call()</code></td><td>index.js</td><td>없음</td><td>콜백 메시지 저장 (AJAX multipart)</td></tr>
+          <tr><td><code>share_callback()</code></td><td>HTML 인라인</td><td>없음</td><td>콜백 공유 (현재 주석 처리)</td></tr>
+          <tr><td><code>send_msg_applist()</code></td><td>별도 정의</td><td>type ('callback'/'daily')</td><td>선택된 회원에게 메시지 전송</td></tr>
+          <tr><td><code>app_set_list()</code></td><td>별도 정의</td><td>mode ('self'/'push'), type</td><td>발송 방식 선택 (셀프폰/푸시)</td></tr>
+          <tr><td><code>save_call_edit_ev()</code></td><td>index.js</td><td>없음</td><td>콜백 메시지 수정 저장</td></tr>
+          <tr><td><code>goback()</code></td><td>별도 정의</td><td>from_page 문자열</td><td>이전 모달/페이지로 이동</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:20px;">SNS 공유 관련 함수</h3>
+      <table class="m-table">
+        <thead><tr><th>함수명</th><th>기능</th><th>상태</th></tr></thead>
+        <tbody>
+          <tr><td><code>showSNSModal()</code></td><td>SNS 공유 팝업 열기</td><td>활성</td></tr>
+          <tr><td><code>daily_send_pop()</code></td><td>데일리발송 안내 팝업</td><td>활성</td></tr>
+          <tr><td><code>sns_sendSMS()</code></td><td>SMS 문자 공유</td><td>활성</td></tr>
+          <tr><td><code>sns_copyContacts()</code></td><td>주소 복사</td><td>활성</td></tr>
+          <tr><td><code>sns_shareKakaoTalk()</code></td><td>카톡 공유</td><td>비활성 (주석)</td></tr>
+          <tr><td><code>sns_shareFaceBook()</code></td><td>페이스북 공유</td><td>비활성 (주석)</td></tr>
+          <tr><td><code>share_callback()</code></td><td>콜백 공유</td><td>비활성 (주석)</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="sharing">
+      <h2>공유 시스템 연관 기능</h2>
+      <h3>포인트 쉐어하기 (sharepoint_modal)</h3>
+      <p>플랫폼 내에서는 포인트도 회원 간 공유할 수 있습니다. 콜백 메시지 설정 시 비용이 발생하므로, 포인트 공유 시스템과 연계됩니다:</p>
+      <div class="code-block">
+        <pre><code>// sharepoint_modal — 포인트 쉐어하기 팝업
+// - share_id: 공유받을 회원 아이디
+// - share_cash: 공유할 캐시포인트 금액
+// - share_point: 공유할 씨드포인트 금액
+// - start_sharing(): 실제 공유 실행
+
+// 호출 트리거:
+// onclick="sharepoint" data="callback_msg_modal" → 포인트 쉐어하기</code></pre>
+      </div>
+      <h3 style="margin-top:20px;">카드/콘텐츠 공유 전송</h3>
+      <table class="m-table">
+        <thead><tr><th>기능</th><th>모달</th><th>공유 방식</th><th>포인트</th></tr></thead>
+        <tbody>
+          <tr><td><strong>카드 전송</strong></td><td><code>card_send_modal</code></td><td>알림형 / 수신함 / 공유전송</td><td>포인트 차감</td></tr>
+          <tr><td><strong>콘텐츠 전송</strong></td><td><code>contents_send_modal</code></td><td>알림형 / 수신함</td><td>포인트 차감</td></tr>
+          <tr><td><strong>공지 전송</strong></td><td><code>notice_send_modal</code></td><td>알림형</td><td>포인트 차감</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;">모든 전송 기능은 <code>show_share_user_list()</code> 함수를 통해 <strong>전송할 친구 선택하기</strong> 버튼으로 수신자를 지정합니다.</p>
+    </section>
+    <section id="permissions">
+      <h2>권한 및 접근 제어</h2>
+      <table class="m-table">
+        <thead><tr><th>제어 계층</th><th>메커니즘</th><th>상세</th></tr></thead>
+        <tbody>
+          <tr><td><strong>플랫폼 제한</strong></td><td>User-Agent 검사</td><td><code>navigator.userAgent.toLocaleLowerCase().search("android")</code></td></tr>
+          <tr><td><strong>앱 설치 확인</strong></td><td><code>AppScript</code> 존재 여부</td><td><code>typeof AppScript !== 'undefined'</code></td></tr>
+          <tr><td><strong>로그인 확인</strong></td><td>세션 기반 <code>mem_id</code></td><td>비로그인 시 로그인/회원가입 유도</td></tr>
+          <tr><td><strong>포인트 확인</strong></td><td>보유 포인트 표시</td><td>부족 시 충전 유도</td></tr>
+          <tr><td><strong>메시지 상태</strong></td><td>유지/해지 (ON/OFF)</td><td>OFF 상태 메시지는 발송 불가</td></tr>
+        </tbody>
+      </table>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📌 보안 참고사항</strong>: 앱(AppScript) 연동 기능은 Android WebView 내에서만 동작합니다. 외부 브라우저(Chrome, Samsung Internet 등)에서는 <code>AppScript</code> 객체가 존재하지 않으므로 <code>callAppBridge()</code> 또는 앱 설치 안내로 대체 처리됩니다.
+      </div>
+    </section>
+    <section id="bestpractice">
+      <h2>공유콜백 모범 사례</h2>
+      <h3>팀/조직에서 공유콜백 활용 시나리오</h3>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>관리자가 표준 메시지 작성</strong>: 팀장이 모든 팀원이 사용할 표준 콜백 메시지를 작성하고 등록합니다.</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>팀원에게 공유</strong>: 콜백등록관리(앱)에서 팀원들의 아이디를 선택하여 메시지를 공유합니다.</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>팀원이 승인 및 적용</strong>: 각 팀원이 공유된 메시지를 확인하고 기본 콜백 메시지로 설정합니다.</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>메시지 업데이트 시 재공유</strong>: 관리자가 메시지를 수정하면, 변경사항을 팀원들에게 다시 공유하거나 알립니다.</div></li>
+      </ol>
+      <h3 style="margin-top:20px;">주의사항</h3>
+      <ul>
+        <li>공유된 메시지는 <strong>수신자가 임의로 수정할 수 없습니다</strong>. (원본 보호)</li>
+        <li>메시지를 복사하여 <strong>나만의 버전</strong>으로 새로 등록하는 것은 가능합니다.</li>
+        <li>공유 해제 시 수신자의 기본 콜백 메시지가 자동으로 변경되지 않으므로, <strong>수신자에게 사전 통보</strong>하는 것이 좋습니다.</li>
+        <li>동일한 메시지를 여러 번 공유해도 중복 등록되지 않습니다.</li>
+      </ul>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/sharecallback/share.html" class="btn-prev">← 콜백 공유하기</a>
+      <a href="/manual/callback/" class="btn-next">IAM 콜백 매뉴얼 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#architecture">시스템 구조</a></li>
+      <li><a href="#myinfo">내정보 드롭다운 구조</a></li>
+      <li><a href="#functions">주요 함수 레퍼런스</a></li>
+      <li><a href="#sharing">공유 시스템 연관 기능</a></li>
+      <li><a href="#permissions">권한 및 접근 제어</a></li>
+      <li><a href="#bestpractice">모범 사례</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

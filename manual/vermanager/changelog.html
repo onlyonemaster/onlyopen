@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>체인지로그 — 버전 관리 시스템 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">🔄 시스템 소개</a></div>
+    <div class="sb-section"><div class="sb-section-title">핵심 기능</div><a href="/manual/vermanager/dashboard.html" class="sb-link">📊 대시보드</a><a href="/manual/vermanager/sites.html" class="sb-link">🌐 사이트 관리</a><a href="/manual/vermanager/release.html" class="sb-link">🚀 버전 릴리즈</a><a href="/manual/vermanager/history.html" class="sb-link">📜 릴리즈 이력</a><a href="/manual/vermanager/improvements.html" class="sb-link">💡 소스 개선사항</a><a href="/manual/vermanager/changelog.html" class="sb-link active">📝 체인지로그</a></div>
+    <div class="sb-section"><div class="sb-section-title">고급 기능</div><a href="/manual/vermanager/remote.html" class="sb-link">🖥️ 원격 서버 연동</a><a href="/manual/vermanager/git.html" class="sb-link">🔧 Git/GitHub 자동화</a><a href="/manual/vermanager/settings.html" class="sb-link">⚙️ 설정 관리</a></div>
+  </nav>
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">체인지로그 개요</a>
+    <a href="#structure" class="toc-link">changelog.json 구조</a>
+    <a href="#auto-gen" class="toc-link">릴리즈 시 자동 생성</a>
+    <a href="#grouping" class="toc-link">버전별 그룹화</a>
+    <a href="#display" class="toc-link">UI 표시 방식</a>
+  </nav>
+  <main class="m-content">
+    <h1 id="overview">📝 체인지로그</h1>
+    <p class="lead">각 릴리즈마다 어떤 변경사항이 포함되었는지 버전별로 그룹화하여 보여줍니다. 릴리즈 실행 시 자동으로 생성됩니다.</p>
+
+    <h2 id="structure">changelog.json 데이터 구조</h2>
+    <pre class="code-block"><code>[
+  {
+    "id": "cl_69f557e96c59e",
+    "version": "1.0.1",
+    "date": "2026-05-02",
+    "type": "patch",
+    "note": "테스트 자동 릴리즈",
+    "changes": [
+      "메시지 발송 속도 최적화 [성능]",
+      "AIvote → Onlyone 브랜드 변경 [UI]"
+    ]
+  }
+]</code></pre>
+
+    <h2 id="auto-gen">릴리즈 시 자동 생성 로직</h2>
+    <p><code>api/release.php</code> 내에서 changelog 항목을 자동 생성합니다:</p>
+    <pre class="code-block"><code>// 릴리즈 처리 후 changelog.json에 추가
+$changelog = site_get_changelog($site_id);
+$entry = [
+    'id'      => 'cl_' . uniqid(),
+    'version' => $new_version['raw'],
+    'date'    => date('Y-m-d'),
+    'type'    => $type,
+    'note'    => $note,
+    'changes' => [],
+];
+
+// linked improvements에서 변경 내역 추출
+foreach ($linked_improvements as $imp_id) {
+    $imp = find_improvement($site_id, $imp_id);
+    if ($imp) {
+        $entry['changes'][] = "{$imp['title']} [{$imp['category']}]";
+    }
+}
+
+$changelog[] = $entry;
+site_write_json($site_id, 'changelog.json', $changelog);</code></pre>
+
+    <h2 id="grouping">버전별 변경사항 그룹화</h2>
+    <p>UI에서는 각 버전을 독립된 섹션으로 표시합니다:</p>
+    <div class="cl-demo">
+      <div class="cl-section">
+        <div class="cl-header"><span class="cl-version">v1.0.1</span><span class="cl-date">2026-05-02</span><span class="cl-badge patch">PATCH</span></div>
+        <p class="cl-note">테스트 자동 릴리즈</p>
+        <ul class="cl-changes">
+          <li>🔧 메시지 발송 속도 최적화 [성능]</li>
+          <li>🎨 AIvote → Onlyone 브랜드 변경 [UI]</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2 id="display">UI 표시 방식</h2>
+    <p>체인지로그 페이지(<code>/vermanager/changelog?site=kiam-prod</code>)에서는:</p>
+    <ul class="feature-list">
+      <li>사이트 선택기로 사이트 전환 가능</li>
+      <li>최신 버전이 상단에 표시 (내림차순)</li>
+      <li>각 버전 섹션에 릴리즈 노트 + 변경사항 목록 포함</li>
+      <li>변경사항은 카테고리 아이콘과 함께 표시</li>
+    </ul>
+
+    <div class="prev-next"><a href="/manual/vermanager/improvements.html" class="next-link">← 이전: 소스 개선사항</a><a href="/manual/vermanager/remote.html" class="next-link">다음: 원격 서버 연동 →</a></div>
+  </main>
+</div>
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.feature-list{margin-bottom:20px;padding-left:20px;}
+.feature-list li{margin-bottom:8px;font-size:14px;}
+.cl-demo{margin-bottom:28px;}
+.cl-section{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px;}
+.cl-header{display:flex;align-items:center;gap:12px;margin-bottom:10px;}
+.cl-version{font-size:18px;font-weight:800;color:var(--brand);}
+.cl-date{font-size:12px;color:var(--text3);}
+.cl-badge{display:inline-block;padding:2px 10px;border-radius:4px;font-size:11px;font-weight:700;}
+.cl-badge.patch{background:#dcfce7;color:#16a34a;}
+.cl-badge.minor{background:#fef9c3;color:#ca8a04;}
+.cl-badge.major{background:#fee2e2;color:#dc2626;}
+.cl-note{font-size:13px;color:var(--text2);margin-bottom:10px;}
+.cl-changes{list-style:none;padding:0;}
+.cl-changes li{font-size:13px;padding:6px 0;border-bottom:1px solid var(--border);}
+.cl-changes li:last-child{border-bottom:none;}
+.prev-next{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+</style>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

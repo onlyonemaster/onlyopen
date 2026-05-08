@@ -1,0 +1,62 @@
+[
+    {
+        "id": 1,
+        "date": "2026-04-25",
+        "category": "UI",
+        "title": "햄버거 메뉴 아이콘 추가",
+        "description": "좌측 상단 햄버거 메뉴 아이콘을 추가하여 모바일 네비게이션 구현",
+        "status": "완료",
+        "developer": "아리",
+        "related_version": "1.0.0"
+    },
+    {
+        "id": 2,
+        "date": "2026-04-26",
+        "category": "기능",
+        "title": "AI 아바타 채팅 ON\/OFF 전환",
+        "description": "AI 아바타의 실시간 응답을 토글할 수 있는 스위치 기능 추가",
+        "status": "완료",
+        "developer": "아리",
+        "related_version": "1.0.0"
+    },
+    {
+        "id": 3,
+        "date": "2026-04-28",
+        "category": "보안",
+        "title": "로그인 세션 보안 강화",
+        "description": "세션 타임아웃 30분 설정 및 JWT 토큰 갱신 로직 추가",
+        "status": "완료",
+        "developer": "아리",
+        "related_version": "1.0.0"
+    },
+    {
+        "id": 4,
+        "date": "2026-05-01",
+        "category": "성능",
+        "title": "메시지 발송 속도 최적화",
+        "description": "대량 문자 발송 시 배치 처리 도입으로 속도 3배 향상",
+        "status": "완료",
+        "developer": "아리",
+        "related_version": null
+    },
+    {
+        "id": 5,
+        "date": "2026-05-02",
+        "category": "UI",
+        "title": "AIvote → Onlyone 브랜드 변경",
+        "description": "햄버거 메뉴 하단 버전 표시 텍스트를 AIvote OneChat에서 Onlyone OneChat으로 변경",
+        "status": "완료",
+        "developer": "아리",
+        "related_version": null
+    },
+    {
+        "id": 6,
+        "date": "2026-05-03",
+        "category": "기능",
+        "title": "관리자 매뉴얼 관리 페이지 전면 구축",
+        "description": "AdminLTE 기반 매뉴얼 통합 관리 시스템 구축: 카테고리 아코디언, 공개\/비공개 토글, 디스크 동기화, HTML 편집기, 편집 이력 관리. 4개 신규 파일(1,512줄), 3개 DB 테이블, 15개 카테고리·127개 페이지 시드.",
+        "status": "완료",
+        "developer": "아리",
+        "related_version": "1.1.0"
+    }
+]

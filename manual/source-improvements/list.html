@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개선 항목 조회·필터링 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">📋 소개 및 개요</a></div>
+    <div class="sb-section"><div class="sb-section-title">기본 사용법</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">📊 대시보드 화면 구성</a><a href="/manual/source-improvements/list.html" class="sb-link active">🔍 개선 항목 조회·필터링</a><a href="/manual/source-improvements/register.html" class="sb-link">✏️ 새 개선 항목 등록</a><a href="/manual/source-improvements/detail.html" class="sb-link">👁️ 상세보기 및 수정</a></div>
+    <div class="sb-section"><div class="sb-section-title">심화</div><a href="/manual/source-improvements/lifecycle.html" class="sb-link">🔄 상태 라이프사이클</a><a href="/manual/source-improvements/notice.html" class="sb-link">📢 공지사항 연동</a><a href="/manual/source-improvements/auto-register.html" class="sb-link">🤖 AI 자동 등록</a></div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">필터링 개요</a>
+    <a href="#filter-ui" class="toc-link">필터 UI 구성</a>
+    <a href="#filter-types" class="toc-link">필터 유형별 설명</a>
+    <a href="#table" class="toc-link">결과 테이블</a>
+    <a href="#pagination" class="toc-link">페이지네이션</a>
+    <a href="#query" class="toc-link">SQL 쿼리 구조</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">🔍 개선 항목 조회 및 필터링</h1>
+    <p class="lead">대시보드 아래에 위치한 필터 패널과 결과 테이블로, 등록된 모든 개선 항목을 다양한 조건으로 검색하고 조회할 수 있습니다.</p>
+
+    <h2 id="filter-ui">필터 UI 구성</h2>
+    <div class="info-box"><strong>위치:</strong> 대시보드 차트 패널과 결과 테이블 사이</div>
+    <p>필터 패널은 5개의 입력 컨트롤로 구성된 2단 구조입니다:</p>
+    <ol class="feature-list">
+      <li><strong>1단 (가로 배치, grid 5열):</strong> 시작날짜 / 종료날짜 / 프로젝트 선택 / 상태 선택 / 검색 버튼</li>
+      <li><strong>2단 (전체 폭):</strong> 제목·설명 키워드 검색 입력창</li>
+    </ol>
+
+    <h2 id="filter-types">필터 유형별 상세 설명</h2>
+    
+    <h3>📅 날짜 필터</h3>
+    <pre class="code-block"><code>$filter_date_from = $_GET['date_from'] ?? date('Y-m-d', strtotime('-30 days'));
+$filter_date_to   = $_GET['date_to']   ?? date('Y-m-d');</code></pre>
+    <p>기본값은 <strong>최근 30일</strong>입니다. 시작일과 종료일을 각각 선택할 수 있습니다.</p>
+
+    <h3>📁 프로젝트 필터</h3>
+    <p>5개 프로젝트 중 선택: <span class="tag">아이엠플랫폼</span> <span class="tag">SMS</span> <span class="tag">ainote</span> <span class="tag">nalara</span> <span class="tag">기타</span></p>
+
+    <h3>🔄 상태 필터</h3>
+    <p>5가지 상태 중 선택: <span class="tag">개발중</span> <span class="tag">완료</span> <span class="tag">테스트중</span> <span class="tag">배포됨</span> <span class="tag">롤백</span></p>
+
+    <h3>🔎 키워드 검색</h3>
+    <pre class="code-block"><code>WHERE (title LIKE '%{$filter_search}%'
+       OR description LIKE '%{$filter_search}%')</code></pre>
+    <p>제목과 상세 설명 모두에서 키워드를 검색합니다.</p>
+
+    <h2 id="table">결과 테이블 (8개 컬럼)</h2>
+    <table class="m-table">
+      <thead><tr><th>컬럼</th><th>출력 내용</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td>날짜</td><td><code>substr($row['date'], 5)</code></td><td>MM-DD 형식</td></tr>
+        <tr><td>제목</td><td><code>substr($row['title'], 0, 30)</code></td><td>최대 30자까지</td></tr>
+        <tr><td>프로젝트</td><td>원문 그대로</td><td></td></tr>
+        <tr><td>카테고리</td><td>원문 그대로</td><td>버그수정/기능추가/성능개선/보안/리팩토링/문서화</td></tr>
+        <tr><td>상태</td><td>색상 뱃지</td><td>개발중(파랑)/완료(초록)/테스트중(노랑)/배포됨(초록)/롤백(빨강)</td></tr>
+        <tr><td>영향도</td><td>색상 뱃지</td><td>낮음(초록)/중간(노랑)/높음(빨강)/긴급(진한빨강)</td></tr>
+        <tr><td>파일</td><td><code>$row['files_changed'] . '개'</code></td><td>수정된 파일 수</td></tr>
+        <tr><td>액션</td><td>버튼 3종</td><td>보기 / 수정 / 공지</td></tr>
+      </tbody>
+    </table>
+
+    <h3>액션 버튼</h3>
+    <div class="card-grid-2">
+      <div class="info-card"><strong>🔵 보기</strong><p><code>admin_source_improvements_form.php?id=X&action=view</code> → 읽기 전용 상세 페이지</p></div>
+      <div class="info-card"><strong>🟡 수정</strong><p><code>admin_source_improvements_form.php?id=X&action=edit</code> → 편집 모드로 열기</p></div>
+      <div class="info-card"><strong>🟢 공지</strong><p><code>notice_ai-write.php?source_id=X</code> → 공지사항으로 발행 (notice_id 없을 때만 표시)</p></div>
+    </div>
+
+    <h2 id="pagination">페이지네이션</h2>
+    <p>페이지당 <strong>20건</strong>씩 표시됩니다.</p>
+    <pre class="code-block"><code>$per_page = 20;
+$offset = ($page - 1) * $per_page;
+$list_sql = "SELECT SQL_CALC_FOUND_ROWS *
+FROM source_improvements {$where}
+ORDER BY date DESC, id DESC
+LIMIT {$offset}, {$per_page}";</code></pre>
+    <p>페이지네이션 UI: 「처음」「이전」 [현재±2 숫자] 「다음」「마지막」<br>하단 요약: "총 N건 (현재페이지/전체페이지)"</p>
+
+    <h2 id="query">전체 SQL 쿼리 구조</h2>
+    <pre class="code-block"><code>// WHERE 절 동적 구성
+$where = "WHERE 1=1";
+if ($filter_date_from) $where .= " AND date >= '{$filter_date_from}'";
+if ($filter_date_to)   $where .= " AND date <= '{$filter_date_to}'";
+if ($filter_project)   $where .= " AND project = '{$filter_project}'";
+if ($filter_status)    $where .= " AND status = '{$filter_status}'";
+if ($filter_search)    $where .= " AND (title LIKE '%{$filter_search}%'
+                           OR description LIKE '%{$filter_search}%')";
+
+// 총 건수
+$count_sql = "SELECT COUNT(*) as cnt
+              FROM source_improvements {$where}";
+
+// 목록 (최신순)
+$list_sql = "SELECT SQL_CALC_FOUND_ROWS *
+             FROM source_improvements {$where}
+             ORDER BY date DESC, id DESC
+             LIMIT {$offset}, {$per_page}";</code></pre>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/dashboard.html" class="next-link">← 이전: 대시보드 화면 구성</a>
+      <a href="/manual/source-improvements/register.html" class="next-link">다음: 새 개선 항목 등록 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead { font-size:17px; color:var(--text2); margin-bottom:24px; line-height:1.8; }
+.info-box { background:var(--blue-bg); border-left:4px solid var(--brand); padding:16px 20px; border-radius:8px; margin-bottom:20px; }
+.code-block { background:var(--bg3); padding:20px; border-radius:8px; font-size:12px; line-height:1.6; overflow-x:auto; margin-bottom:20px; white-space:pre; font-family:monospace; }
+.m-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:28px; }
+.m-table th { background:var(--bg3); padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid var(--border); }
+.m-table td { padding:9px 12px; border-bottom:1px solid var(--border); }
+.card-grid-2 { display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:20px; }
+.info-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:18px; }
+.info-card strong { display:block; font-size:14px; margin-bottom:6px; }
+.info-card p { font-size:12px; color:var(--text2); word-break:break-all; }
+.feature-list { margin-bottom:20px; padding-left:20px; }
+.feature-list li { margin-bottom:8px; font-size:14px; }
+.tag { display:inline-block; background:var(--bg3); color:var(--text2); padding:2px 8px; border-radius:4px; font-size:12px; margin:0 2px; }
+.prev-next { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:20px; border-top:1px solid var(--border); }
+.next-link { color:var(--brand); text-decoration:none; font-weight:600; font-size:14px; }
+.next-link:hover { text-decoration:underline; }
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

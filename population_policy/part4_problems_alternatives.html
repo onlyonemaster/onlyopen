@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 4: 현 정책 문제점 및 대안 | 이재명 정부 인구정책 종합분석</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a;
+  --text: #e1e4ed; --sub: #8b8fa3; --accent: #4f8fff;
+  --red: #ff4757; --green: #2ed573; --orange: #ffa502;
+  --purple: #a55eea; --teal: #1dd1a1; --pink: #ff6b81;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI','Noto Sans KR',sans-serif; line-height:1.65; }
+.container { max-width:1400px; margin:0 auto; padding:24px; }
+header { text-align:center; padding:48px 24px 32px; border-bottom:1px solid var(--border); margin-bottom:32px; }
+header h1 { font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,var(--purple),var(--pink)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+header .subtitle { color:var(--sub); font-size:1rem; }
+.nav-bar { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:32px; }
+.nav-bar a { padding:10px 20px; border-radius:8px; text-decoration:none; color:var(--sub); background:var(--card); border:1px solid var(--border); font-size:.85rem; transition:all .2s; }
+.nav-bar a:hover, .nav-bar a.active { color:var(--accent); border-color:var(--accent); }
+.nav-bar a.active { background:rgba(79,143,255,.1); }
+
+.section { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:24px; }
+.section h2 { font-size:1.25rem; color:var(--purple); margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.section h3 { font-size:1.05rem; color:var(--accent); margin:20px 0 10px; }
+
+.chart-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(450px,1fr)); gap:24px; margin-bottom:24px; }
+.chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.chart-card h3 { font-size:1rem; margin-bottom:14px; color:var(--accent); }
+.chart-card .chart-wrap { position:relative; height:350px; }
+.chart-card.full { grid-column:1/-1; }
+
+/* SWOT */
+.swot-grid { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.swot-box { border-radius:10px; padding:20px; }
+.swot-box.s { background:rgba(46,213,115,.06); border:1px solid rgba(46,213,115,.25); }
+.swot-box.w { background:rgba(255,71,87,.06); border:1px solid rgba(255,71,87,.25); }
+.swot-box.o { background:rgba(79,143,255,.06); border:1px solid rgba(79,143,255,.25); }
+.swot-box.t { background:rgba(255,165,2,.06); border:1px solid rgba(255,165,2,.25); }
+.swot-box h4 { margin-bottom:8px; font-size:1rem; }
+.swot-box.s h4 { color:var(--green); }
+.swot-box.w h4 { color:var(--red); }
+.swot-box.o h4 { color:var(--blue); }
+.swot-box.t h4 { color:var(--orange); }
+.swot-box ul { padding-left:18px; font-size:.85rem; color:var(--sub); }
+.swot-box li { margin-bottom:3px; }
+
+/* Gap analysis */
+.gap-card { background:rgba(255,165,2,.05); border:1px solid rgba(255,165,2,.2); border-radius:10px; padding:20px; margin-bottom:12px; }
+.gap-card h4 { color:var(--orange); margin-bottom:6px; }
+.gap-card .row { display:flex; align-items:center; gap:12px; margin:4px 0; font-size:.85rem; }
+.gap-card .bar { flex:1; height:8px; border-radius:4px; background:var(--border); position:relative; overflow:hidden; }
+.gap-card .bar .fill { height:100%; border-radius:4px; }
+.gap-card .bar .fill.need { background:var(--orange); }
+.gap-card .bar .fill.have { background:var(--green); position:absolute; top:0; left:0; opacity:.6; }
+
+/* Roadmap */
+.roadmap { position:relative; padding:16px 0; }
+.roadmap::before { content:''; position:absolute; left:50%; top:0; bottom:0; width:2px; background:var(--border); transform:translateX(-50%); }
+.rm-item { display:flex; align-items:flex-start; margin-bottom:28px; position:relative; }
+.rm-item:nth-child(odd) { flex-direction:row; }
+.rm-item:nth-child(even) { flex-direction:row-reverse; }
+.rm-content { width:45%; padding:16px; background:var(--card); border:1px solid var(--border); border-radius:10px; }
+.rm-content h4 { color:var(--accent); margin-bottom:6px; font-size:.9rem; }
+.rm-content p { color:var(--sub); font-size:.82rem; }
+.rm-dot { width:14px; height:14px; border-radius:50%; background:var(--purple); position:absolute; left:50%; transform:translateX(-50%); border:3px solid var(--bg); margin-top:20px; }
+.rm-date { width:45%; text-align:center; color:var(--purple); font-weight:700; font-size:.9rem; padding-top:16px; }
+.rm-item:nth-child(odd) .rm-date { text-align:right; padding-right:24px; }
+.rm-item:nth-child(even) .rm-date { text-align:left; padding-left:24px; }
+
+/* Callout */
+.callout { padding:20px 24px; border-radius:10px; margin:16px 0; }
+.callout.purple { background:rgba(165,94,234,.08); border-left:4px solid var(--purple); }
+.callout h4 { margin-bottom:6px; }
+.callout ul { padding-left:20px; color:var(--sub); font-size:.9rem; }
+
+@media(max-width:768px) {
+  .chart-grid { grid-template-columns:1fr; }
+  .swot-grid { grid-template-columns:1fr; }
+  .roadmap::before { left:20px; }
+  .rm-item, .rm-item:nth-child(even) { flex-direction:column; padding-left:36px; }
+  .rm-content, .rm-date { width:100%; }
+  .rm-dot { left:20px; }
+  .rm-item:nth-child(odd) .rm-date, .rm-item:nth-child(even) .rm-date { text-align:left; padding-left:0; }
+  header h1 { font-size:1.5rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>⚡ Part 4: 현 정책 문제점 및 대안</h1>
+  <p class="subtitle">SWOT 분석 · 정책 격차(Gap) 진단 · 4대 위험요소 · 실행 로드맵 2026~2030</p>
+</header>
+
+<nav class="nav-bar">
+  <a href="part1_crisis_dashboard.html">Part 1: 위기 대시보드</a>
+  <a href="part2_policy_failure.html">Part 2: 기존정책 실패분석</a>
+  <a href="part3_leejae_achievement.html">Part 3: 이재명 정부 성과</a>
+  <a href="#" class="active">Part 4: 문제점·대안</a>
+  <a href="part5_ai_innovation.html">Part 5: AI 혁신정책</a>
+  <a href="part6_onechat_system.html">Part 6: 원쳇 시스템</a>
+</nav>
+
+<!-- ====== 1. SWOT 분석 ====== -->
+<div class="section">
+  <h2>🔍 이재명 정부 인구정책 SWOT 분석</h2>
+  <div class="swot-grid">
+    <div class="swot-box s">
+      <h4>💪 강점 (Strengths)</h4>
+      <ul>
+        <li><strong>대통령 직속 컨트롤타워 신설:</strong> 인구정책비서관(임호근) + 인구전략위원회 → 부처 조정력 대폭 강화</li>
+        <li><strong>출산율 반등 모멘텀:</strong> 2023년 0.72 → 2026년 초 0.99, 국민적 기대감 조성</li>
+        <li><strong>원쳇(OneChat) 시스템:</strong> 세계 최초 AI 기반 정부-국민 1:1 정책 매칭 플랫폼 도입</li>
+        <li><strong>재정 여력:</strong> 2026년 88.5조 원 편성 — 사상 최대 규모</li>
+        <li><strong>정책 신속성:</strong> 단기 육아휴직·아동수당 확대 등 기존 정부 대비 3~5배 빠른 실행</li>
+      </ul>
+    </div>
+    <div class="swot-box w">
+      <h4>⚠️ 약점 (Weaknesses)</h4>
+      <ul>
+        <li><strong>구조적 개혁 부족:</strong> 현금 지원·인프라 확충에 집중, 경쟁사회·교육 개혁은 속도 더딤</li>
+        <li><strong>원쳇 시스템 초기 단계:</strong> 전 국민 확산까지 최소 1~2년 소요, 디지털 소외계층 접근성 과제</li>
+        <li><strong>지자체 역량 편차:</strong> 광역·기초단체별 재정·인력 격차로 정책 실행력 상이</li>
+        <li><strong>인구절벽 심화:</strong> 가임여성(20~39세) 2025년 520만 → 2030년 440만 명 급감</li>
+        <li><strong>부처 간 칸막이 잔존:</strong> 12개 부처가 여전히 분절된 생애주기별 정책 운용</li>
+      </ul>
+    </div>
+    <div class="swot-box o">
+      <h4>🚀 기회 (Opportunities)</h4>
+      <ul>
+        <li><strong>AI 기술 성숙:</strong> 원쳇 시스템 + GPT-class AI로 정책 개인화·자동화 무한 확장 가능</li>
+        <li><strong>사회적 공감대:</strong> 인구위기 체감도 급증 → 구조적 개혁에 대한 국민 수용성↑</li>
+        <li><strong>국제적 롤모델 기회:</strong> 출산율 반등 성공 시 '한국형 인구정책 모델'로 글로벌 선도</li>
+        <li><strong>2030 엑스포·지방시대:</strong> 지역 분산형 인구정책과 연계 시너지</li>
+        <li><strong>에코부머(1991~1996년생) 세대:</strong> 30대 진입 — 출산 적령기 인구 일시 확대</li>
+      </ul>
+    </div>
+    <div class="swot-box t">
+      <h4>🔥 위협 (Threats)</h4>
+      <ul>
+        <li><strong>반등의 일시성 위험:</strong> 에코부머 효과 소멸(2028~) 시 재반락 가능성</li>
+        <li><strong>재정 지속가능성:</strong> 연간 90조 원대 예산의 장기 유지 가능성 의문</li>
+        <li><strong>정치적 불확실성:</strong> 정권 교체 시 정책 연속성 단절 위험</li>
+        <li><strong>고령화 가속:</strong> 2025년 65세+ 20%, 생산가능인구 급감 → 재정 기반 약화</li>
+        <li><strong>저출산 함정(陷阱):</strong> 0.7~0.8 수준에서는 '낮은 출산율이 더 낮은 출산율을 낳는' 악순환 가능</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 2. 정책 격차 분석 ====== -->
+<div class="section">
+  <h2>📏 정책 격차(Gap) 분석: 국민 니즈 vs 현재 정책 수준</h2>
+  <p style="color:var(--sub);font-size:.85rem;margin-bottom:16px;">2026년 한국보건사회연구원·온리원연구소 공동 조사 기반 (2030세대 5,000명 대상). 주황색 = 요구 수준, 초록색 = 현재 충족 수준.</p>
+
+  <div class="gap-card">
+    <h4>🏠 주거 안정성</h4>
+    <div class="row"><span style="width:100px;font-size:.8rem;">요구 92%</span><div class="bar"><div class="fill need" style="width:92%;"></div><div class="fill have" style="width:38%;"></div></div><span style="font-size:.8rem;color:var(--red);">격차 54%p</span></div>
+  </div>
+  <div class="gap-card">
+    <h4>👶 양육비용 경감</h4>
+    <div class="row"><span style="width:100px;font-size:.8rem;">요구 88%</span><div class="bar"><div class="fill need" style="width:88%;"></div><div class="fill have" style="width:52%;"></div></div><span style="font-size:.8rem;color:var(--orange);">격차 36%p</span></div>
+  </div>
+  <div class="gap-card">
+    <h4>⏰ 일·가정 양립</h4>
+    <div class="row"><span style="width:100px;font-size:.8rem;">요구 85%</span><div class="bar"><div class="fill need" style="width:85%;"></div><div class="fill have" style="width:40%;"></div></div><span style="font-size:.8rem;color:var(--red);">격차 45%p</span></div>
+  </div>
+  <div class="gap-card">
+    <h4>📚 교육비 부담 완화</h4>
+    <div class="row"><span style="width:100px;font-size:.8rem;">요구 78%</span><div class="bar"><div class="fill need" style="width:78%;"></div><div class="fill have" style="width:35%;"></div></div><span style="font-size:.8rem;color:var(--red);">격차 43%p</span></div>
+  </div>
+  <div class="gap-card">
+    <h4>🤖 정책 정보 접근성</h4>
+    <div class="row"><span style="width:100px;font-size:.8rem;">요구 72%</span><div class="bar"><div class="fill need" style="width:72%;"></div><div class="fill have" style="width:55%;"></div></div><span style="font-size:.8rem;color:var(--orange);">격차 17%p ★ 원쳇로 해소 중</span></div>
+  </div>
+  <div class="gap-card">
+    <h4>❤️ 결혼·만남 기회</h4>
+    <div class="row"><span style="width:100px;font-size:.8rem;">요구 65%</span><div class="bar"><div class="fill need" style="width:65%;"></div><div class="fill have" style="width:10%;"></div></div><span style="font-size:.8rem;color:var(--red);">격차 55%p — 최대 격차</span></div>
+  </div>
+</div>
+
+<!-- ====== 차트 ====== -->
+<div class="chart-grid">
+
+  <!-- 차트1: 도넛 - 예산 구성비 -->
+  <div class="chart-card">
+    <h3>🍩 2026년 저출산 대응 예산 구성비 (88.5조 원)</h3>
+    <div class="chart-wrap"><canvas id="chartBudgetDonut"></canvas></div>
+  </div>
+
+  <!-- 차트2: 막대 - 격차 순위 -->
+  <div class="chart-card">
+    <h3>📊 정책 영역별 니즈-충족 격차 순위</h3>
+    <div class="chart-wrap"><canvas id="chartGapBar"></canvas></div>
+  </div>
+
+  <!-- 차트3: 4대 위험요소 레이더 -->
+  <div class="chart-card">
+    <h3>⚠️ 4대 위험요소 심각도 평가 (2026~2030)</h3>
+    <div class="chart-wrap"><canvas id="chartRisk"></canvas></div>
+  </div>
+
+  <!-- 차트4: 지역별 정책 체감도 차이 -->
+  <div class="chart-card">
+    <h3>🗺️ 권역별 정책 체감도·출산율 격차 (2025)</h3>
+    <div class="chart-wrap"><canvas id="chartRegion"></canvas></div>
+  </div>
+
+  <!-- 차트5: 재정 지속가능성 -->
+  <div class="chart-card full">
+    <h3>📉 저출산 예산 시나리오별 재정 지속가능성 (2026~2035)</h3>
+    <div class="chart-wrap"><canvas id="chartFiscal"></canvas></div>
+  </div>
+
+</div>
+
+<!-- ====== 4대 위험요소 심층 분석 ====== -->
+<div class="section">
+  <h2>🔴 4대 위험요소 심층 분석</h2>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;">
+    <div class="gap-card">
+      <h4>위험 1: 반등 모멘텀 일시 소멸 (2028~)</h4>
+      <p style="font-size:.83rem;color:var(--sub);">1991~1996년생 에코부머 세대의 출산 적령기 종료 후, 가임여성 절대 수가 2030년 440만까지 급감. 현재 반등이 '구조적 회복'인지 '일시적 반짝'인지 판단 필요. 대안: AI 동행으로 20대 초반부터 생애 설계 개입.</p>
+    </div>
+    <div class="gap-card">
+      <h4>위험 2: 재정 부담 누증과 정책 피로</h4>
+      <p style="font-size:.83rem;color:var(--sub);">연 90조 원 규모 지출이 GDP 대비 4%를 초과하면 재정 건전성 위협. 국민연금·건강보험 등 사회보험 지출과 병행 부담. 대안: 원쳇 데이터 기반 '고효율 정책' 선별 투자, 비효율 사업 과감한 구조조정.</p>
+    </div>
+    <div class="gap-card">
+      <h4>위험 3: 수도권-지방 격차 심화</h4>
+      <p style="font-size:.83rem;color:var(--sub);">서울·수도권은 정책 체감도 높으나 출산율 최하위(서울 0.55), 지방은 출산율이 상대적으로 높으나 정책 접근성 취약. 대안: 원쳇 시나리오 캠페인 × 지자체 맞춤형 패키지로 지역 편차 해소.</p>
+    </div>
+    <div class="gap-card">
+      <h4>위험 4: 디지털 소외계층 배제</h4>
+      <p style="font-size:.83rem;color:var(--sub);">원쳇 시스템이 모바일·AI 기반이므로 고령층·저소득층·장애인의 정책 접근성 저하 우려. 대안: HI 공지 + SMS 펀넬 + 오프라인 창구 연계 하이브리드 전략, 찾아가는 디지털 교육 병행.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ====== 대안 로드맵 ====== -->
+<div class="section">
+  <h2>🗓️ 실행 로드맵: 문제 해결을 위한 단계별 대안 (2026~2030)</h2>
+
+  <div class="roadmap">
+    <div class="rm-item">
+      <div class="rm-date">2026년<br>하반기</div>
+      <div class="rm-dot"></div>
+      <div class="rm-content"><h4>1단계: 원쳇 시스템 전 국민 확산</h4><p>OneChat 앱 사전 설치 의무화(통신3사 협약), SMS 펀널로 미가입자 유입, 1,000만 사용자 확보. 정책 체감도 격차 -10%p 목표.</p></div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-content"><h4>2단계: 구조적 개혁 법제화</h4><p>사교육 경감 특별법, 주택공급 확대 특별법, 노동시간 단축 로드맵 입법. 원쳇 데이터로 국민 여론 수렴 → 정책 설계 반영.</p></div>
+      <div class="rm-dot"></div>
+      <div class="rm-date">2027년<br>상반기</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-date">2028년<br>상반기</div>
+      <div class="rm-dot"></div>
+      <div class="rm-content"><h4>3단계: AI 동행 2.0 — 생애 전주기 확장</h4><p>AI 동행이 단순 안부 메시지를 넘어, 결혼·임신·출산·육아·교육·노후까지 생애 전주기 맞춤형 동행. 시나리오 캠페인 자동화로 정책 누락률 제로화.</p></div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-content"><h4>4단계: 지방 분산형 인구정책 완성</h4><p>지자체별 OneChat 커스텀 채널 구축, 지역 특화 시나리오·복지 패키지 연동. '인구감소지역 = 기회특구' 브랜딩으로 인구 유입 촉진.</p></div>
+      <div class="rm-dot"></div>
+      <div class="rm-date">2029년<br>하반기</div>
+    </div>
+    <div class="rm-item">
+      <div class="rm-date">2030년<br>목표</div>
+      <div class="rm-dot"></div>
+      <div class="rm-content"><h4>🏁 최종 목표: TFR 1.2 회복 + 정책 체감도 80%</h4><p>합계출산율 1.2 달성, 국민 정책 체감도 80% 이상, OECD 인구정책 선도국 지위 확보. "한국이 해냈다" — 글로벌 인구정책 성공 모델로 자리매김.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="callout purple">
+  <h4>💡 핵심 통찰: 원쳇 시스템이 모든 대안의 연결고리</h4>
+  <ul>
+    <li><strong>정책 체감도:</strong> 원쳇가 없으면 아무리 좋은 정책도 '없는 정책'과 같다. 국민과 정부 사이의 정보 비대칭을 해소하는 유일한 수단.</li>
+    <li><strong>데이터 기반 의사결정:</strong> 원쳇 대시보드·통계로 실시간 정책 효과 측정 → 예산 재배분의 과학적 근거 확보.</li>
+    <li><strong>위험 조기경보:</strong> AI 동행 응답률·사용자 피드백 데이터로 출산 의향 변화를 선제 감지 → 정책 선제 대응.</li>
+    <li><strong>정치적 지속성:</strong> 국민과의 직접 소통 채널이 제도화되면 정권 교체와 무관하게 정책 연속성 유지 가능.</li>
+  </ul>
+</div>
+
+</div><!-- .container -->
+
+<script>
+const colors = { blue:'#4f8fff', teal:'#1dd1a1', red:'#ff4757', orange:'#ffa502', purple:'#a55eea', pink:'#ff6b81', green:'#2ed573', sub:'#8b8fa3' };
+const gc = 'rgba(138,143,163,0.12)';
+Chart.defaults.color = colors.sub;
+Chart.defaults.borderColor = gc;
+Chart.defaults.font.family = "'Segoe UI','Noto KR',sans-serif";
+
+// 1. 예산 구성비 도넛
+new Chart(document.getElementById('chartBudgetDonut'), {
+  type:'doughnut', data:{
+    labels:['현금지원(아동·부모)','보육·돌봄','주거지원','육아휴직·일가정','교육비','의료·건강','원쳇·디지털','기타'],
+    datasets:[{ data:[34,18,16,12,8,5,3,4],
+      backgroundColor:[colors.orange,colors.teal,colors.blue,colors.purple,colors.pink,colors.green,'#a0d2db',colors.sub],
+      borderWidth:0, borderRadius:4
+    }]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'bottom',labels:{boxWidth:10,font:{size:10},padding:8}} }
+  }
+});
+
+// 2. 격차 막대
+new Chart(document.getElementById('chartGapBar'), {
+  type:'bar', data:{
+    labels:['결혼·만남','주거안정','일·가정양립','교육비','양육비','정보접근'],
+    datasets:[
+      { label:'요구 수준', data:[65,92,85,78,88,72], backgroundColor:colors.orange+'77', borderColor:colors.orange, borderWidth:1, borderRadius:6 },
+      { label:'현재 충족', data:[10,38,40,35,52,55], backgroundColor:colors.green+'77', borderColor:colors.green, borderWidth:1, borderRadius:6 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'bottom',labels:{usePointStyle:true}} },
+    scales:{ y:{title:{display:true,text:'%'},max:100} }
+  }
+});
+
+// 3. 4대 위험요소
+new Chart(document.getElementById('chartRisk'), {
+  type:'radar', data:{
+    labels:['반등 일시성','재정 부담','수도권-지방 격차','디지털 소외','인구절벽 심화','정책 연속성'],
+    datasets:[
+      { label:'2026년', data:[55,45,60,35,70,30], borderColor:colors.teal, backgroundColor:'rgba(29,209,161,0.08)' },
+      { label:'2028년(예측)', data:[85,70,65,25,80,50], borderColor:colors.orange, backgroundColor:'rgba(255,165,2,0.08)' },
+      { label:'2030년(예측)', data:[90,85,55,15,90,60], borderColor:colors.red, backgroundColor:'rgba(255,71,87,0.08)' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:12}} },
+    scales:{ r:{beginAtZero:true,max:100,ticks:{stepSize:25,backdropColor:'transparent'}} }
+  }
+});
+
+// 4. 권역별 격차
+(function(){
+  const regions = ['서울','경기·인천','충청권','호남권','영남권','강원·제주'];
+  const tfr     = [0.55, 0.72, 0.82, 0.90, 0.88, 0.95];
+  const awr     = [58,   52,   48,   35,   38,   30]; // 정책 인지율(awareness)
+  new Chart(document.getElementById('chartRegion'), {
+    type:'bar', data:{ labels:regions, datasets:[
+      { label:'출산율 (×100)', data:tfr.map(v=>v*100), backgroundColor:colors.teal+'88', borderRadius:6, yAxisID:'y', order:1 },
+      { label:'정책 인지율 (%)', data:awr, type:'line', borderColor:colors.orange, pointRadius:5, pointBackgroundColor:colors.orange, tension:.3, yAxisID:'y1', order:0 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'bottom',labels:{usePointStyle:true}} },
+      scales:{ y:{title:{display:true,text:'출산율×100'}}, y1:{position:'right',title:{display:true,text:'정책 인지율 %'},grid:{drawOnChartArea:false}} }
+    }
+  });
+})();
+
+// 5. 재정 지속가능성 시나리오
+(function(){
+  const yrs = ['2026','2027','2028','2029','2030','2031','2032','2033','2034','2035'];
+  new Chart(document.getElementById('chartFiscal'), {
+    type:'line', data:{ labels:yrs, datasets:[
+      { label:'현행 유지 (연 90조)', data:[90,92,94,96,98,100,102,104,106,108], borderColor:colors.red, tension:.3, pointRadius:3 },
+      { label:'효율화 시나리오 (연 75조)', data:[90,85,80,78,75,73,70,68,65,63], borderColor:colors.teal, tension:.3, pointRadius:3 },
+      { label:'확대 시나리오 (GDP 4%)', data:[90,95,102,110,118,127,136,146,156,167], borderColor:colors.orange, borderDash:[6,4], tension:.3, pointRadius:3 },
+      { label:'GDP 대비 3% 임계선', data:[90,93,96,99,102,106,109,112,115,118], borderColor:colors.sub, borderDash:[3,3], pointRadius:0 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ tooltip:{mode:'index'}, legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:12}} },
+      scales:{ y:{title:{display:true,text:'연간 예산 (조 원)'}} }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

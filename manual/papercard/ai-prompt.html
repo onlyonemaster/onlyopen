@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프롬프트 설정 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout"><nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link active">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>프롬프트 설정</span></div>
+<h1>✍️ 프롬프트 설정 & 자동생성 완전 분석</h1>
+<p class="page-desc">AI가 메시지를 생성할 때 사용하는 프롬프트(지시문) 시스템의 모든 로직을 분석합니다. 자동 생성기부터 직접 입력, 예약/실시간 생성 모드까지.</p>
+
+<h2 id="prompt-types">두 가지 프롬프트 종류</h2>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+<tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">프롬프트</th><th style="padding:8px 12px;border:1px solid var(--border);">길이 제한</th><th style="padding:8px 12px;border:1px solid var(--border);">역할</th></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><strong>시스템 프롬프트</strong></td><td style="padding:8px 12px;border:1px solid var(--border);">500자</td><td style="padding:8px 12px;border:1px solid var(--border);">AI의 역할, 말투, 성격 정의 (예: "당신은 친절한 비즈니스 컨설턴트입니다...")</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><strong>유저 프롬프트</strong></td><td style="padding:8px 12px;border:1px solid var(--border);">2000자</td><td style="padding:8px 12px;border:1px solid var(--border);">구체적인 메시지 내용과 방향 지시 (예: "상대방에게 우리 회사의 장점을 소개하는 문자를 작성해줘...")</td></tr>
+</table>
+
+<h2 id="auto-gen">🤖 프롬프트 자동 생성기</h2>
+<p>사용자가 직접 프롬프트를 작성하기 어려울 때, <strong>원하는 메시지 예시만 입력</strong>하면 AI가 알아서 프롬프트를 생성해줍니다.</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 사용자 입력:
+//   ① 메시지예시: "안녕하세요, ABC컴퍼니 홍길동입니다. 귀사의 성장을 응원합니다."
+//   ② 추가 요청사항(선택): "더 친근한 말투로"
+
+// 서버 처리 (AJAX) — generate_prompt()
+// POST → [내부API]/[프롬프트생성]
+// 보내는 데이터: { message_example, extra_request }
+// AI(LLM)이 다음을 자동 생성:
+//   - 시스템 프롬프트: AI 역할과 말투 정의
+//   - 유저 프롬프트: 메시지 방향과 포함할 내용
+
+// 응답을 받으면:
+$('#user_gpt_sysprompt').val(response.sys_prompt);   // 자동 채움
+$('#gpt_userprompt').val(response.user_prompt);       // 자동 채움
+$('#sysprompt_count').text(response.sys_prompt.length);
+$('#userprompt_count').text(response.user_prompt.length);
+</pre>
+
+<h2 id="manual-input">✏️ 직접 입력 모드</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 입력 필드에 keyup 이벤트로 실시간 글자수 카운트:
+
+$('#user_gpt_sysprompt').on('keyup', function() {
+    var len = $(this).val().length;
+    $('#sysprompt_count').text(len);
+    if (len > 500) {
+        $('#sysprompt_count').css('color', 'red');      // 초과 시 빨간색
+    } else {
+        $('#sysprompt_count').css('color', '');
+    }
+});
+
+$('#gpt_userprompt').on('keyup', function() {
+    var len = $(this).val().length;
+    $('#userprompt_count').text(len);
+    if (len > 2000) {
+        $('#userprompt_count').css('color', 'red');
+    } else {
+        $('#userprompt_count').css('color', '');
+    }
+});
+</pre>
+
+<h2 id="generation-mode">📅 메시지 생성 방식</h2>
+<p>두 가지 생성 모드가 있습니다 (<code>generationMode</code> 전역 변수로 관리):</p>
+
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+<tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">모드</th><th style="padding:8px 12px;border:1px solid var(--border);">장점</th><th style="padding:8px 12px;border:1px solid var(--border);">단점</th><th style="padding:8px 12px;border:1px solid var(--border);">사용 시기</th></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><strong>예약 생성</strong> (기본)</td><td style="padding:8px 12px;border:1px solid var(--border);">AI가 지금 바로 30회치 메시지를 한 번에 생성·저장<br>빠르게 시작 가능</td><td style="padding:8px 12px;border:1px solid var(--border);">이후 발신자 정보 변경사항이 반영되지 않음</td><td style="padding:8px 12px;border:1px solid var(--border);">정보가 확정된 경우</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><strong>실시간 생성</strong></td><td style="padding:8px 12px;border:1px solid var(--border);">발송 시점마다 AI가 새로 생성<br>항상 최신 정보 반영</td><td style="padding:8px 12px;border:1px solid var(--border);">매번 API 호출 비용 발생<br>응답 지연 가능</td><td style="padding:8px 12px;border:1px solid var(--border);">정보가 자주 바뀌는 경우</td></tr>
+</table>
+
+<h2 id="toggle-function">toggle_generation_mode()</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function toggle_generation_mode() {
+    if (generationMode === 'realtime') {
+        // 실시간 모드 UI
+        $('#reservation_mode_section').hide();
+        $('#realtime_mode_section').show();
+        $('#gen_mode_reservation').removeClass('active');
+        $('#gen_mode_realtime').addClass('active');
+    } else {
+        // 예약 모드 UI (기본값)
+        $('#reservation_mode_section').show();
+        $('#realtime_mode_section').hide();
+        $('#gen_mode_realtime').removeClass('active');
+        $('#gen_mode_reservation').addClass('active');
+    }
+}
+
+// 사용자가 라디오 버튼 클릭:
+// $('input[name=generation_mode]').on('change', function() {
+//     generationMode = $(this).val(); // 'reservation' or 'realtime'
+//     toggle_generation_mode();
+// });
+</pre>
+
+<h2 id="preview">메시지 미리보기</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function preview_aiprompt() {
+    $.ajax({
+        type: "POST",
+        url: "[내부API]/[프롬프트미리보기]",
+        data: {
+            sys_prompt: $('#user_gpt_sysprompt').val(),
+            user_prompt: $('#gpt_userprompt').val(),
+            generation_mode: generationMode,
+            vendor_name: $('#vendor_name').val(),
+            sender_name: $('#sender_name').val(),
+            sender_position: $('#sender_position').val(),
+            sender_introduction: $('#sender_introduction').val()
+        },
+        success: function(html) {
+            $('#preview_aiprompt_content').html(html);
+            $('#paper_sender_edit_modal').modal('hide');
+            $('#preview_aiprompt_modal').modal('show');
+        }
+    });
+}
+// 미리보기 모달에서 "프롬프트 다시 수정" 버튼 클릭 시:
+// $('#paper_sender_edit_modal').modal('show');
+</pre>
+
+<h2 id="prompt-badge">프롬프트 탭 뱃지 시스템</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function update_prompt_badge() {
+    var sysp = $('#user_gpt_sysprompt').val() || '';
+    var userp = $('#gpt_userprompt').val() || '';
+    var badge = $('#prompt_tab_badge');
+
+    if (sysp.trim() || userp.trim()) {
+        badge.show();  // 프롬프트가 입력되어 있으면 ● 표시
+    } else {
+        badge.hide();  // 비어있으면 숨김
+    }
+}
+// <span id="prompt_tab_badge" style="display:none;color:#1a73e8;font-size:11px;">●</span>
+</pre>
+
+<div class="tip"><strong>💡 초등학생을 위한 비유:</strong> 프롬프트는 마치 AI 로봇에게 주는 '역할극 대본'이에요. 시스템 프롬프트는 "너는 친절한 우체부야"라고 역할을 정해주는 거고, 유저 프롬프트는 "동네 사람들에게 안부 편지를 써줘"라고 구체적인 임무를 주는 거예요. 자동 생성기는 네가 "이런 편지가 좋아"라고 예시만 보여주면 AI가 알아서 역할과 임무를 만들어주는 똑똑한 도우미예요!</div>
+</main></div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

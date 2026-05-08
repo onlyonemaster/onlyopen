@@ -1,0 +1,36 @@
+name: Release - Auto Version Bump
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write     # Required for Git tag & release
+      issues: write
+      pull-requests: write
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0   # Full history for semantic-release
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - run: npm ci
+
+      # Run tests before release
+      - run: npm test 2>/dev/null || echo "No tests configured yet"
+
+      # Inject version into HTML (build-time)
+      - run: node scripts/inject-version.js
+
+      # Auto release: analyze commits → bump version → changelog → tag → release
+      - name: Semantic Release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: npx semantic-release

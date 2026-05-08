@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>IAM 콜백 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">IAM 콜백</div>
+      <a href="/manual/callback/" class="sb-link active">📞 IAM 콜백 소개</a>
+      <a href="/manual/callback/create.html" class="sb-link">콜백 메시지 만들기</a>
+      <a href="/manual/callback/list.html" class="sb-link">콜백 리스트 관리</a>
+      <a href="/manual/callback/send.html" class="sb-link">콜백 발송하기</a>
+      <a href="/manual/callback/settings.html" class="sb-link">콜백 설정 상세</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sharecallback/" class="sb-link">공유콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › IAM 콜백</nav>
+    <h1 class="page-title">📞 IAM 콜백 — 부재중 전화 자동 문자 발송</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">IAM 콜백이란?</a></li>
+        <li><a href="#flow">콜백 발송 전체 흐름</a></li>
+        <li><a href="#prereq">시작하기 전 준비사항</a></li>
+        <li><a href="#quickstart">빠른 시작</a></li>
+      </ul>
+    </div>
+    <section id="what">
+      <h2>IAM 콜백이란?</h2>
+      <p><strong>IAM 콜백</strong>은 내 스마트폰에 부재중 전화가 왔을 때, <strong>상대방에게 자동으로 문자 메시지를 발송</strong>해주는 서비스입니다.</p>
+      <p style="margin-top:12px;">예를 들어 회의 중이라 전화를 못 받았을 때, "지금 회의 중입니다. 곧 연락드리겠습니다" 같은 메시지를 자동으로 보내드립니다. 상대방이 받은 문자 안에는 <strong>내 IAM 명함 링크</strong>가 포함되어 있어, 자연스럽게 내 프로필을 공유할 수 있습니다.</p>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📌 핵심 포인트</strong>: 콜백발송은 <strong>온리원문자 앱(Android)</strong>이 설치된 스마트폰에서만 동작합니다. 앱이 부재중 전화를 감지하면, 미리 등록해둔 콜백 메시지를 자동 발송하는 구조입니다.
+      </div>
+    </section>
+    <section id="flow">
+      <h2>콜백 발송 전체 흐름</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>콜백 메시지 등록</strong> — 발송할 메시지 내용(타이틀, 본문, 이미지, 링크)을 미리 만들어둡니다. → <a href="/manual/callback/create.html">콜백 메시지 만들기 →</a></div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>앱 연동 (자동)</strong> — 온리원문자 앱이 설치된 폰에서 부재중 전화가 발생하면 콜백 시스템이 자동 감지합니다.</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>메시지 자동 발송</strong> — 등록된 콜백 메시지 중 기본(default)으로 설정된 메시지가 상대방에게 문자로 전송됩니다.</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>수신 확인</strong> — 발송 내역과 수신 여부를 발신내역/수신내역에서 확인할 수 있습니다.</div></li>
+      </ol>
+    </section>
+    <section id="prereq">
+      <h2>시작하기 전 준비사항</h2>
+      <table class="m-table">
+        <thead><tr><th>준비 항목</th><th>설명</th><th>필수 여부</th></tr></thead>
+        <tbody>
+          <tr><td><strong>kiam.kr 회원가입</strong></td><td>아이엠(IAM) 계정이 있어야 콜백 메시지를 등록할 수 있습니다.</td><td>✅ 필수</td></tr>
+          <tr><td><strong>온리원문자 앱 설치</strong></td><td>Android 전용 앱. Google Play에서 "온리원문자" 검색 후 설치하세요.</td><td>✅ 필수</td></tr>
+          <tr><td><strong>포인트 충전</strong></td><td>콜백 메시지 설정 시 1건당 300포인트가 차감됩니다. 미리 캐시포인트를 충전해두세요.</td><td>✅ 필수</td></tr>
+          <tr><td><strong>발신번호 등록</strong></td><td>문자 발송에 사용할 본인 휴대폰 번호를 등록해야 합니다.</td><td>✅ 필수</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="quickstart">
+      <h2>빠른 시작 (5분 만에 끝내기)</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>kiam.kr/m 접속</strong> → 하단 [문자발송관리] 영역에서 <strong>[콜백발송]</strong> 아이콘 클릭</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>콜백 메시지 설정하기</strong> 팝업에서 <strong>[콜백 메시지 설정하기]</strong> 버튼 클릭</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>콜백 메시지 등록하기</strong> 화면에서 제목, 메시지 내용, 이미지, 링크주소 입력 후 <strong>[등록하기]</strong></div></li>
+        <li><div class="step-num">4</div><div class="step-body">등록 완료! 이제 부재중 전화가 오면 자동으로 메시지가 발송됩니다.</div></li>
+      </ol>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>💡 팁</strong>: 콜백 메시지를 여러 개 등록해두고, <strong>콜백리스트</strong>에서 상황에 맞는 메시지를 기본값으로 선택할 수 있습니다.
+      </div>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/" class="btn-prev">← 매뉴얼 홈</a>
+      <a href="/manual/callback/create.html" class="btn-next">콜백 메시지 만들기 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">IAM 콜백이란?</a></li>
+      <li><a href="#flow">콜백 발송 전체 흐름</a></li>
+      <li><a href="#prereq">시작하기 전 준비사항</a></li>
+      <li><a href="#quickstart">빠른 시작</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

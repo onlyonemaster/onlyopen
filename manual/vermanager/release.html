@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>버전 릴리즈 — 버전 관리 시스템 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">🔄 시스템 소개</a></div>
+    <div class="sb-section"><div class="sb-section-title">핵심 기능</div><a href="/manual/vermanager/dashboard.html" class="sb-link">📊 대시보드</a><a href="/manual/vermanager/sites.html" class="sb-link">🌐 사이트 관리</a><a href="/manual/vermanager/release.html" class="sb-link active">🚀 버전 릴리즈</a><a href="/manual/vermanager/history.html" class="sb-link">📜 릴리즈 이력</a><a href="/manual/vermanager/improvements.html" class="sb-link">💡 소스 개선사항</a><a href="/manual/vermanager/changelog.html" class="sb-link">📝 체인지로그</a></div>
+    <div class="sb-section"><div class="sb-section-title">고급 기능</div><a href="/manual/vermanager/remote.html" class="sb-link">🖥️ 원격 서버 연동</a><a href="/manual/vermanager/git.html" class="sb-link">🔧 Git/GitHub 자동화</a><a href="/manual/vermanager/settings.html" class="sb-link">⚙️ 설정 관리</a></div>
+  </nav>
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">릴리즈 개요</a>
+    <a href="#api" class="toc-link">릴리즈 API (POST)</a>
+    <a href="#bump-logic" class="toc-link">버전 범핑(Bump) 로직</a>
+    <a href="#checklist" class="toc-link">미릴리즈 개선사항 체크리스트</a>
+    <a href="#side-effects" class="toc-link">릴리즈 부수 효과</a>
+    <a href="#example" class="toc-link">실행 예시</a>
+  </div>
+  <main class="m-content">
+    <h1 id="overview">🚀 버전 릴리즈</h1>
+    <p class="lead">릴리즈 페이지(<code>/vermanager/release?site=kiam-prod</code>)에서 새 버전을 배포합니다. SemVer 규칙에 따라 MAJOR/MINOR/PATCH 타입을 선택하고, 포함할 개선사항을 지정합니다.</p>
+
+    <h2 id="api">릴리즈 API (api/release.php)</h2>
+    <pre class="code-block"><code>POST /vermanager/api/release
+Content-Type: application/json
+
+{
+  "site": "kiam-prod",
+  "type": "patch",
+  "note": "버그 수정 및 성능 개선",
+  "improvements": ["imp_4", "imp_5"]
+}</code></pre>
+    <table class="m-table">
+      <thead><tr><th>필드</th><th>필수</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><code>site</code></td><td>예</td><td>대상 사이트 ID (기본값: 현재 선택된 사이트)</td></tr>
+        <tr><td><code>type</code></td><td>예</td><td>major / minor / patch</td></tr>
+        <tr><td><code>note</code></td><td>선택</td><td>릴리즈 노트 (버전 이력에 기록됨)</td></tr>
+        <tr><td><code>improvements</code></td><td>선택</td><td>연결할 개선사항 ID 배열</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="bump-logic">버전 범핑(Bump) 로직</h2>
+    <pre class="code-block"><code>function bump_version(array $current, string $type): array {
+    $next = ['major'=>$current['major'], 'minor'=>$current['minor'], 'patch'=>$current['patch']];
+    switch ($type) {
+        case 'major': $next['major']++; $next['minor']=0; $next['patch']=0; break;
+        case 'minor': $next['minor']++; $next['patch']=0; break;
+        case 'patch': $next['patch']++; break;
+    }
+    $next['raw'] = "{$next['major']}.{$next['minor']}.{$next['patch']}";
+    return $next;
+}</code></pre>
+
+    <h2 id="checklist">미릴리즈 개선사항 체크리스트</h2>
+    <p>릴리즈 페이지에는 아직 릴리즈되지 않은(<code>released_in == null</code>) 개선사항들이 체크리스트로 표시됩니다. 체크박스로 포함할 항목을 선택할 수 있습니다.</p>
+
+    <h2 id="side-effects">릴리즈 실행 시 일어나는 일</h2>
+    <ol class="feature-list">
+      <li><strong>package.json</strong> 업데이트 — <code>version</code> 필드와 <code>lastRelease</code> 타임스탬프 갱신</li>
+      <li><strong>version_history.json</strong> 추가 — 새 릴리즈 항목 기록 (from/to/type/date/note/linked_improvements)</li>
+      <li><strong>changelog.json</strong> 갱신 — 새 버전의 변경사항 그룹 추가</li>
+      <li><strong>improvements.json</strong> 업데이트 — 선택된 개선사항의 <code>released_in</code> 필드를 새 버전으로 설정</li>
+    </ol>
+
+    <h2 id="example">실행 예시</h2>
+    <pre class="code-block"><code>// 요청
+POST /vermanager/api/release
+{"site":"kiam-prod", "type":"patch", "note":"테스트 자동 릴리즈", "improvements":["imp_4","imp_5"]}
+
+// 응답
+{
+  "ok": true,
+  "message": "✅ kiam-prod: 1.0.0 → 1.0.1 (patch)",
+  "old_version": "1.0.0",
+  "new_version": "1.0.1",
+  "history_id": "rel_69f557e96c558"
+}</code></pre>
+
+    <div class="prev-next"><a href="/manual/vermanager/sites.html" class="next-link">← 이전: 사이트 관리</a><a href="/manual/vermanager/history.html" class="next-link">다음: 릴리즈 이력 →</a></div>
+  </main>
+</div>
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.m-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:28px;}
+.m-table th{background:var(--bg3);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);}
+.m-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.feature-list{margin-bottom:20px;padding-left:20px;}
+.feature-list li{margin-bottom:8px;font-size:14px;}
+.prev-next{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+</style>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

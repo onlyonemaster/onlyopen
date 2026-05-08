@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>유틸리티 함수 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link active">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>유틸리티 함수</span></div>
+<h1>🧰 유틸리티 함수 — 완전 분석</h1>
+<p class="page-desc">페이지 곳곳에서 재사용되는 공통 함수들을 분석합니다. 이 함수들이 명함 프로필의 기반 인프라입니다.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#resize">resizeImg() — 이미지 크기 조정</a></li>
+<li><a href="#addslashes">addslashes() — 특수문자 처리</a></li>
+<li><a href="#refresh">refresh_page() — 페이지 갱신</a></li>
+<li><a href="#cookie">쿠키 관리 함수들</a></li>
+<li><a href="#format">숫자/문자 포맷 함수</a></li>
+<li><a href="#drag">드래그 & 드롭</a></li>
+<li><a href="#browser">브라우저 감지</a></li>
+<li><a href="#follow">따라하기</a></li>
+</ul>
+</div>
+
+<h2 id="resize">🖼️ resizeImg() — 이미지 크기 자동 조정</h2>
+<p>이 함수는 body의 onclick에 연결되어 있어요. 페이지 어디든 클릭하면 실행됩니다!</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// body onclick="resizeImg()" — 페이지 어디든 클릭할 때마다 실행!
+
+function resizeImg() {
+    var maxWidth = 400;   // 최대 너비 400px
+    var maxHeight = 300;  // 최대 높이 300px
+
+    // 1. width 기준 조정
+    var width = $("#card_logo").width();   // 현재 이미지 너비
+    var height = $("#card_logo").height(); // 현재 이미지 높이
+
+    if (width > maxWidth) {
+        var ratio = maxWidth / width;             // 축소 비율 계산
+        $("#card_logo").css("width", maxWidth);   // 너비를 max로
+        $("#card_logo").css("height", height * ratio); // 높이도 비율대로
+    }
+
+    // 2. height 기준 조정
+    width = $("#card_logo").width();
+    height = $("#card_logo").height();
+
+    if (height > maxHeight) {
+        var ratio = maxHeight / height;             // 축소 비율 계산
+        $("#card_logo").css("height", maxHeight);   // 높이를 max로
+        $("#card_logo").css("width", width * ratio); // 너비도 비율대로
+    }
+}
+
+// 동작 예시:
+// 800×600 이미지 → 400×300 으로 축소
+// 200×500 이미지 → 120×300 으로 축소 (height 기준)
+// 300×200 이미지 → 그대로 유지 (둘 다 max 이하)
+</pre>
+
+<h2 id="addslashes">📝 addslashes() — 특수문자 이스케이프</h2>
+<p>문자열에 포함된 특수문자들을 안전하게 처리합니다. 주로 AJAX로 데이터를 보내기 전에 사용해요.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function addslashes(str) {
+    // JavaScript에서 PHP의 addslashes()를 흉내 낸 함수
+    str = str.replace(/\\/g, '\\\\');  // \ → \\
+    str = str.replace(/'/g, "\\'");    // ' → \'
+    str = str.replace(/"/g, '\\"');    // " → \"
+    str = str.replace(/\0/g, '\\0');   // NULL → \0
+    return str;
+}
+
+// 사용 예:
+// 입력:  "안녕하세요 '홍길동'입니다."
+// 출력:  "안녕하세요 \'홍길동\'입니다."
+// → 이렇게 하면 SQL 인젝션, JSON 파싱 오류 방지!
+</pre>
+
+<h2 id="refresh">🔄 refresh_page() — 만능 새로고침</h2>
+<p>페이지 전체를 새로고침하지 않고, AJAX로 필요한 데이터만 다시 불러옵니다. 파일 전체에서 <strong>40번 이상</strong> 호출되는 가장 중요한 함수예요.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function refresh_page() {
+    // 1. 로딩 표시
+    $("#ajax_loading").show();
+
+    // 2. 모든 데이터 다시 불러오기 (병렬 AJAX)
+    getIamContact('[사용자ID]', '[관리자ID]', '', '0', 1, 1);  // 연락처
+    getIamPaper();       // 종이명함 목록
+    getIamFriends();     // 친구 목록
+    get_request_list();  // 요청 목록
+    get_recom_list();    // 추천 목록
+    displayMall();       // 몰 상품
+
+    // 3. UI 상태 초기화
+    busy = false;
+    $("#ajax_loading").hide();
+}
+
+// 호출되는 상황들:
+// - 페이지 첫 로딩 시
+// - 명함 등록/수정/삭제 완료 후
+// - 발송 완료 후
+// - 결제 완료 후
+// - 설정 변경 후
+// → 거의 모든 작업 후에 호출!
+</pre>
+
+<div class="tip-box">
+<div class="tip-title">💡 refresh_page()가 중요한 이유</div>
+<p>일반 웹사이트라면 <code>location.reload()</code>로 페이지 전체를 새로고침하겠지만, 이 페이지는 <strong>SPA(Single Page Application)</strong>처럼 동작합니다. 전체 페이지를 다시 로드하지 않고 필요한 데이터만 AJAX로 가져와서 DOM의 일부만 교체해요. 덕분에 화면 깜빡임 없이 부드럽게 갱신됩니다!</p>
+</div>
+
+<h2 id="cookie">🍪 쿠키 관리 함수들</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 쿠키 설정
+function setCookie(name, value, days) {
+    var expires = "";
+    if (days) {
+        var date = new Date();
+        date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+        expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = name + "=" + (value || "") + expires + "; path=/";
+}
+
+// 쿠키 읽기
+function getCookie(name) {
+    var nameEQ = name + "=";
+    var ca = document.cookie.split(';');
+    for (var i = 0; i < ca.length; i++) {
+        var c = ca[i].trim();
+        if (c.indexOf(nameEQ) === 0) return c.substring(nameEQ.length, c.length);
+    }
+    return null;
+}
+
+// 쿠키 삭제
+function eraseCookie(name) {
+    document.cookie = name + '=; Max-Age=-99999999; path=/';
+}
+
+// 사용 사례:
+// - 언어 설정 저장: setCookie('lang', 'ko', 365)
+// - 로그인 상태 유지
+// - UI 설정 (다크모드, 레이아웃 등)
+</pre>
+
+<h2 id="format">🔢 숫자/문자 포맷 함수</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 세 자리마다 콤마 찍기
+function number_format(num) {
+    return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}
+// 사용: number_format(1234567) → "1,234,567"
+
+// 전화번호 자동 포맷
+function phone_format(num) {
+    num = num.replace(/[^0-9]/g, '');  // 숫자만 남기기
+    if (num.length === 11) {
+        return num.replace(/(\d{3})(\d{4})(\d{4})/, '$1-$2-$3');
+        // 01012345678 → 010-1234-5678
+    } else if (num.length === 10) {
+        return num.replace(/(\d{2,3})(\d{3,4})(\d{4})/, '$1-$2-$3');
+        // 0212345678 → 02-1234-5678
+    }
+    return num;
+}
+
+// 우편번호 검색 (다음 주소 API 연동)
+function search_address() {
+    new daum.Postcode({
+        oncomplete: function(data) {
+            $("#paper_address").val(data.address);
+        }
+    }).open();
+}
+</pre>
+
+<h2 id="drag">↕️ 드래그 & 드롭 — 명함 순서 변경</h2>
+<p>Sortable.js를 사용해서 종이명함의 표시 순서를 마우스 드래그로 바꿀 수 있어요.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// Sortable 초기화 (HTML에 sortable.js 포함됨)
+var sortable = Sortable.create(document.getElementById('card_list'), {
+    animation: 150,          // 드래그 애니메이션 150ms
+    ghostClass: 'sortable-ghost',  // 드래그 중인 아이템 스타일
+    onEnd: function(evt) {
+        // 순서 변경 완료 → 서버에 저장
+        var card_ids = [];
+        $('#card_list .card-item').each(function() {
+            card_ids.push($(this).data('card-id'));
+        });
+
+        $.ajax({
+            url: "[내부API]/[순서변경]",
+            type: "POST",
+            data: { card_ids: card_ids },
+            success: function() {
+                refresh_page();  // 저장 후 갱신
+            }
+        });
+    }
+});
+</pre>
+
+<h2 id="browser">🌐 브라우저 & 디바이스 감지</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 모바일 기기 감지
+function isMobile() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i
+        .test(navigator.userAgent);
+}
+
+// 안드로이드 앱 환경 감지
+function isAndroidApp() {
+    return navigator.userAgent.indexOf('[앱식별자]') > -1;
+}
+
+// iOS 앱 환경 감지
+function isIOSApp() {
+    return navigator.userAgent.indexOf('[앱식별자-iOS]') > -1;
+}
+
+// 앱 환경 여부
+function isApp() {
+    return isAndroidApp() || isIOSApp();
+}
+
+// 사용 사례:
+// if (isApp()) {
+//     // 앱 내 웹뷰 → callAppBridge() 사용
+// } else {
+//     // 일반 브라우저 → 일반 AJAX 사용
+// }
+</pre>
+
+<h2 id="follow">🎓 초등학생도 따라하는 함수 추적법</h2>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Console 열기</strong><br>F12 → Console 탭</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>직접 함수 호출해보기</strong><br><code>number_format(12345678)</code> 치고 Enter → "12,345,678" 나옴!</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>함수 소스 보기</strong><br><code>resizeImg.toString()</code> 치면 함수 전체 코드가 나와요.</div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>전역변수 확인</strong><br><code>cur_win_name</code> 치면 현재 페이지 이름 "paper_card" 출력</div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>함수 몽키패칭</strong><br>임시로 함수 바꿔치기 가능:<br><code>var orig = refresh_page; refresh_page = function(){ console.log('호출됨!'); orig(); }</code></div></div>
+</div>
+
+<div class="nav-bottom"><a href="/manual/papercard/source-ajax.html" class="nav-prev">← 이전: AJAX 통신</a><a href="/manual/papercard/source-payment.html" class="nav-next">다음: 결제 시스템 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

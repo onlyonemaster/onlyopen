@@ -1,0 +1,359 @@
+{
+  "_meta": {
+    "sample_id": "sample1",
+    "sample_name": "청담한의원",
+    "industry": "한의원",
+    "lang": "ko"
+  },
+
+  "company": {
+    "name": "청담한의원",
+    "brand_name": "청담한의원",
+    "name_short": "청담",
+    "avatar_emoji": "🌿",
+    "avatar_color": "#2E7D32,#43A047",
+    "insta_username": "cheongdam_oriental",
+    "insta_location": "청담한의원 · 스폰서",
+    "banner_tag": "마이크로 비즈니스를 위한 지능형 환자 관리 솔루션",
+    "banner_badge": "원챗 데모",
+    "page_title": "원챗(OneChat) × 청담한의원 — 고객사 브리핑"
+  },
+
+  "funnel_steps": [
+    { "id": 1, "label": "광고", "screen_id": "scr-insta" },
+    { "id": 2, "label": "진단", "screen_id": "scr-chat" },
+    { "id": 3, "label": "신뢰", "screen_id": "scr-trust" },
+    { "id": 4, "label": "예약", "screen_id": "scr-book" },
+    { "id": 5, "label": "사후", "screen_id": "scr-post" },
+    { "id": 6, "label": "회복", "screen_id": "scr-after" },
+    { "id": 7, "label": "대시", "screen_id": "scr-dash" },
+    { "id": 8, "label": "노쇼", "screen_id": "scr-noshow" },
+    { "id": 9, "label": "요약", "screen_id": "scr-summary" }
+  ],
+
+  "screen_insta": {
+    "ad_visual": {
+      "bg_gradient": "linear-gradient(135deg,#1B5E20,#2E7D32,#43A047,#66BB6A,#81C784,#A5D6A7)",
+      "deco_top_left": "🌿",
+      "deco_bottom_right": "💆",
+      "copy_main": "허리 통증,\n참지 마세요",
+      "copy_highlight": "참지 마세요",
+      "copy_sub": "AI가 알려주는 3분 맞춤 건강 체크",
+      "copy_badge": "🌿 진단 참여자 전용 한방차 레시피 제공"
+    },
+    "stories": [
+      { "label": "청담한의원", "emoji": "🌿", "gradient": "#B2D9F0,#81c784" },
+      { "label": "허리케어", "emoji": "💚", "gradient": "#c8e6c9,#a5d6a7" },
+      { "label": "한방차", "emoji": "🍵", "gradient": "#e8f5e9,#81c784" },
+      { "label": "스트레칭", "emoji": "🧘", "gradient": "#a5d6a7,#4caf50" },
+      { "label": "AI진단", "emoji": "📋", "gradient": "#66bb6a,#43a047" }
+    ],
+    "metrics": {
+      "likes": 847,
+      "comments": 126,
+      "shares": 203,
+      "ctr_pct": "37.5%",
+      "industry_avg_pct": "1.2%",
+      "ctr_multiplier": 31,
+      "monthly_impressions": 8000,
+      "chatbot_entries": 336
+    },
+    "caption_text": "허리 통증, 참지 마세요 🌿 청담한의원 X 원챗 AI 진단. 지금 바로 무료로 증상을 체크해보세요.",
+    "insight_pill": "원챗 퍼널 1단계: 인스타 광고 → AI 챗봇 진단. 클릭률 <b>37.5%</b> (업계 평균 1.2% 대비 31배). 월 8,000 노출 → 336 챗봇 진입.",
+    "cta_text": "🌿 AI 진단 시작하기"
+  },
+
+  "screen_chat": {
+    "header": {
+      "title": "청담한의원 AI 진단",
+      "sub": "증상 분석 중 · 맞춤 문진 챗봇",
+      "avatar_emoji": "청",
+      "avatar_color": "#2E7D32,#43A047",
+      "badges": [
+        { "type": "myai", "label": "MY AI" },
+        { "type": "user", "label": "나" },
+        { "type": "state", "label": "진단중" },
+        { "type": "aimode", "label": "AI" }
+      ]
+    },
+    "green_bar": {
+      "emoji": "🤖",
+      "main": "AI 증상 분석 중",
+      "sub": "신체 부위를 선택하시면 자동으로 문진이 시작됩니다"
+    },
+    "ai_first_message": "어디가 가장 불편하신가요?\n아래 신체 부위를 클릭해 주세요.",
+    "body_regions": [
+      { "region": "목", "code": "N01", "shape": "rect", "x": 98, "y": 56, "w": 24, "h": 14, "rx": 6 },
+      { "region": "오른쪽 어깨", "code": "S02", "shape": "ellipse", "cx": 82, "cy": 80, "rx": 20, "ry": 12 },
+      { "region": "왼쪽 어깨", "code": "S01", "shape": "ellipse", "cx": 138, "cy": 80, "rx": 20, "ry": 12 },
+      { "region": "등/허리", "code": "L01", "shape": "rect", "x": 86, "y": 72, "w": 48, "h": 102, "rx": 14 },
+      { "region": "오른팔", "code": "A02", "shape": "rect", "x": 56, "y": 82, "w": 16, "h": 82, "rx": 8 },
+      { "region": "왼팔", "code": "A01", "shape": "rect", "x": 148, "y": 82, "w": 16, "h": 82, "rx": 8 },
+      { "region": "오른손/손목", "code": "W02", "shape": "ellipse", "cx": 64, "cy": 172, "rx": 9, "ry": 7 },
+      { "region": "왼손/손목", "code": "W01", "shape": "ellipse", "cx": 156, "cy": 172, "rx": 9, "ry": 7 },
+      { "region": "골반", "code": "P01", "shape": "rect", "x": 86, "y": 174, "w": 48, "h": 30, "rx": 10 },
+      { "region": "오른쪽 다리", "code": "LG02", "shape": "rect", "x": 84, "y": 204, "w": 22, "h": 112, "rx": 10 },
+      { "region": "왼쪽 다리", "code": "LG01", "shape": "rect", "x": 114, "y": 204, "w": 22, "h": 112, "rx": 10 },
+      { "region": "오른쪽 무릎", "code": "KN02", "shape": "ellipse", "cx": 95, "cy": 316, "rx": 11, "ry": 9 },
+      { "region": "왼쪽 무릎", "code": "KN01", "shape": "ellipse", "cx": 125, "cy": 316, "rx": 11, "ry": 9 },
+      { "region": "오른발", "code": "F02", "shape": "ellipse", "cx": 95, "cy": 364, "rx": 13, "ry": 7 },
+      { "region": "왼발", "code": "F01", "shape": "ellipse", "cx": 125, "cy": 364, "rx": 13, "ry": 7 }
+    ],
+    "choice_quick_replies": [
+      "통증 강도: 7/10",
+      "2주 이상 지속",
+      "앉을 때 악화"
+    ],
+    "diagnosis_complete_message": "진단이 완료되었습니다 ✅\n허리 통증 (L01) — 추나요법 적합.\n\n내일부터 맞춤 콘텐츠를 보내드릴게요 🌿"
+  },
+
+  "screen_trust": {
+    "header": {
+      "title": "청담한의원 AI 동행",
+      "sub": "맞춤 건강 콘텐츠 · Day +1",
+      "avatar_emoji": "청",
+      "avatar_color": "#66BB6A,#43A047",
+      "badges": [
+        { "type": "myai", "label": "MY AI" },
+        { "type": "user", "label": "나" },
+        { "type": "state", "label": "케어중" },
+        { "type": "aimode", "label": "AI" }
+      ]
+    },
+    "green_bar": {
+      "emoji": "🌿",
+      "main": "맞춤 건강 콘텐츠 발송 중",
+      "sub": "진단 직후부터 AI가 자동으로 개인 맞춤 정보를 제공합니다"
+    },
+    "date_label": "2026-05-05 · Day +1",
+    "avatar_emoji": "🌿",
+    "content_cards": [
+      {
+        "icon_bg": "#e3f2fd",
+        "icon_emoji": "▶️",
+        "title": "🎥 3분 허리 스트레칭 가이드",
+        "desc": "앉아서 따라 하는 초간단 스트레칭 · 청담한의원 원장 직강",
+        "btn_text": "시청하기"
+      },
+      {
+        "icon_bg": "#fff3e0",
+        "icon_emoji": "🍵",
+        "title": "🍵 허리 통증 완화 한방차 레시피",
+        "desc": "계피·생강·대추 — 집에서 5분 완성",
+        "btn_text": "레시피 보기"
+      }
+    ],
+    "ai_messages": [
+      "허리 통증에 도움이 되는 정보를 모아봤어요 😊",
+      "무리한 운동보다 가벼운 스트레칭이 오히려 효과적이라는 거 아셨나요?",
+      "매일 짧은 스트레칭과 따뜻한 차 한 잔으로도 통증이 많이 완화될 수 있어요.\n\n더 자세한 상담을 원하시면 언제든 말씀해 주세요 🙌"
+    ],
+    "insight_pill": "원챗 전략: 진단 후 예약 강요 없이 맞춤 건강 정보 제공 → 자연스럽게 신뢰 형성. 직원 개입 불필요."
+  },
+
+  "screen_book": {
+    "header": {
+      "title": "청담한의원 AI 상담",
+      "sub": "맞춤 치료 추천 · Day +3",
+      "avatar_emoji": "청",
+      "avatar_color": "#66BB6A,#2E7D32",
+      "badges": [
+        { "type": "myai", "label": "MY AI" },
+        { "type": "user", "label": "나" },
+        { "type": "state", "label": "추천중" },
+        { "type": "aimode", "label": "AI" }
+      ]
+    },
+    "date_label": "2026-05-07 · Day +3",
+    "avatar_emoji_intro": "💉",
+    "intro_message": "지난 진단 결과를 바탕으로, 허리 통증에 가장 효과적인 치료법을 안내해 드릴게요 📋",
+    "treatment": {
+      "emoji": "🤲",
+      "name": "추나요법",
+      "desc": "틀어진 척추와 관절을 바로잡는 한방 수기 치료",
+      "effectiveness": "통증 완화율 80%",
+      "why_me": "허리 통증(L01) + 장시간 좌식 생활 · 추나요법이 디스크·척추 정렬에 가장 효과적"
+    },
+    "booking": {
+      "date_label": "2026년 5월 9일 (토) — 청담한의원",
+      "slots": ["오전 10:00", "오후 2:00", "오후 3:30", "오후 5:00"],
+      "confirm_btn": "예약 확정하기",
+      "success_date": "5월 9일 (토)"
+    },
+    "manager": {
+      "emoji": "👩‍⚕️",
+      "name": "청담 매니저",
+      "role": "AI 사후 관리 · 진료 안내"
+    },
+    "manager_messages": [
+      "예약해 주셔서 감사합니다! 🙌\n진료 전까지 꼭 필요한 정보들을 차근차근 보내드릴게요.\n청담 매니저가 끝까지 함께합니다 💪",
+      "진료 전 알림:\n• 진료 5일 전: 첫 안내 메시지\n• 진료 3일 전: 맞춤 건강팁\n• 진료 1일 전: 최종 확인 알림\n\n언제든 질문 있으시면 편하게 물어봐 주세요!",
+      "어제 보내주신 진단 데이터를 바탕으로, 원장님께서 미리 준비 중이십니다.\n진료 시간 30분 전에 도착하시면 접수부터 치료까지 가장 빠르게 진행됩니다 😊"
+    ],
+    "insight_pill": "원챗 핵심: 치료 추천 + 예약을 한 화면에서. 전환율 41% (전화 예약 4.8% 대비 8.5배). 336명 참여 → 40명 예약."
+  },
+
+  "screen_post": {
+    "header": {
+      "title": "청담 매니저",
+      "sub": "AI 사후 관리 · 노쇼 방지 · 진료 D-6",
+      "avatar_emoji": "매",
+      "avatar_color": "#F59E0B,#D97706",
+      "badges": [
+        { "type": "manager", "label": "매니저" },
+        { "type": "user", "label": "나" },
+        { "type": "state", "label": "케어중" },
+        { "type": "aimode", "label": "AI" }
+      ]
+    },
+    "green_bar": {
+      "emoji": "📋",
+      "main": "AI 매니저 케어 중",
+      "sub": "진료 전까지 자동 안내 메시지를 발송합니다",
+      "style": "background:linear-gradient(90deg,#3D1D0A,#5D3A1A)",
+      "main_color": "#F59E0B"
+    },
+    "date_label": "2026-05-03 · 진료 D-6",
+    "avatar_emoji": "📋",
+    "messages": [
+      "안녕하세요, 청담 매니저입니다 😊\n5월 9일 진료까지 필요한 정보를 차근차근 안내해 드릴게요!",
+      "진료 하루 전에 다시 한번 알림 드릴게요!\n궁금하신 점은 언제든 물어봐 주세요 🙌"
+    ],
+    "promise_cards": [
+      {
+        "emoji": "🗺️",
+        "title": "오시는 길 & 주차 안내",
+        "desc": "서울 강남구 청담동 123번지 청담빌딩 3층 | 지하 주차장 무료 (2시간)"
+      },
+      {
+        "emoji": "📝",
+        "title": "진료 전 준비사항",
+        "desc": "편안한 복장으로 방문해 주세요\n과거 진료 기록·영상자료 지참\n진료 30분 전 가벼운 식사만"
+      }
+    ],
+    "d1_reminder": {
+      "date_label": "··· D-1 ···",
+      "avatar_emoji": "📋",
+      "message": "내일 진료 예정입니다! 💡\n🕐 5월 9일 (토) 오후 3시 30분\n📍 청담한의원 (청담동 123번지 3층)\n\n혹시 일정 변경이 필요하시면 지금 말씀해 주세요."
+    },
+    "insight_pill": "원챗 핵심: AI 매니저 자동 알림 → 노쇼율 22% → 7% 감소. 월 200건 기준 약 30건 추가 매출 + 직원 업무 월 90시간 절감."
+  },
+
+  "screen_after": {
+    "header": {
+      "title": "청담 매니저",
+      "sub": "진료 후 사후 관리 · Day +1",
+      "avatar_emoji": "청",
+      "avatar_color": "#2E7D32,#22C55E",
+      "badges": [
+        { "type": "manager", "label": "매니저" },
+        { "type": "user", "label": "나" },
+        { "type": "state", "label": "회복중" },
+        { "type": "aimode", "label": "AI" }
+      ]
+    },
+    "date_label": "2026-05-10 · Day +1",
+    "avatar_emoji": "💚",
+    "messages": [
+      "어제 진료는 어떠셨나요?\n추나요법 후 가벼운 통증이나 뻐근함은 정상입니다.",
+      "통증이 어떻게 변화했는지 알려주세요:",
+      "정말 다행이에요! 꾸준한 관리가 가장 중요합니다."
+    ],
+    "recovery_card": {
+      "emoji": "🧘",
+      "title": "가정 회복 가이드",
+      "desc": "온찜질: 아침/저녁 15분 | 스트레칭: 하루 2회 | 수분: 8잔 이상 | 무거운 물건 금지 (3일)"
+    },
+    "choice_buttons": ["훨씬 좋아졌어요", "조금 좋아졌어요", "비슷해요", "더 아파요"],
+    "user_reply": "처음보다 허리가 훨씬 편해졌어요!",
+    "insight_pill": "원챗 핵심: AI 사후 관리로 환자 만족도 +35%, 재방문율 +65%. 직원 개입 불필요."
+  },
+
+  "screen_dash": {
+    "section_label": "7단계: Dashboard",
+    "kpi_title": "핵심 KPI (월 기준)",
+    "kpi_values": [
+      { "val": "336", "color": "green", "label": "진단 참여" },
+      { "val": "218", "color": "", "label": "진단 완료" },
+      { "val": "98", "color": "green", "label": "고관심 환자" },
+      { "val": "40", "color": "", "label": "예약 완료" },
+      { "val": "37", "color": "green", "label": "실제 내원" },
+      { "val": "7%", "color": "amber", "label": "노쇼율" }
+    ],
+    "funnel_title": "전환 퍼널",
+    "funnel_data": [
+      { "label": "노출", "val": 8000, "color": "#0E6BA8" },
+      { "label": "진단 참여", "val": 336, "color": "#1A85CC" },
+      { "label": "진단 완료", "val": 218, "color": "#48CAE4" },
+      { "label": "고관심 환자", "val": 98, "color": "#22C55E" },
+      { "label": "예약 완료", "val": 40, "color": "#4DB6AC" },
+      { "label": "실제 내원", "val": 37, "color": "#66BB6A" }
+    ],
+    "trust_title": "환자 신뢰 점수",
+    "trust_scores": [
+      { "name": "이OO", "pct": 72 },
+      { "name": "김OO", "pct": 65 },
+      { "name": "박OO", "pct": 58 },
+      { "name": "최OO", "pct": 51 },
+      { "name": "정OO", "pct": 44 }
+    ],
+    "compare_title": "도입 전·후 비교",
+    "compare_headers": ["지표", "도입 전", "도입 후", "변화"],
+    "compare_rows": [
+      { "metric": "월 신규 환자", "before": "9명", "after": "37명", "change": "+311%" },
+      { "metric": "예약 전환율", "before": "5%", "after": "41%", "change": "+720%" },
+      { "metric": "노쇼율", "before": "22%", "after": "7%", "change": "-68%" },
+      { "metric": "직원 상담시간", "before": "120h", "after": "30h", "change": "-75%" },
+      { "metric": "수집 데이터", "before": "2개", "after": "12개", "change": "+500%" }
+    ]
+  },
+
+  "screen_noshow": {
+    "section_label": "8단계: No-Show Prevention",
+    "algorithm_title": "노쇼 위험 평가 알고리즘",
+    "algorithm_headers": ["평가 요소", "가중치", "측정 방식"],
+    "algorithm_rows": [
+      { "factor": "과거 노쇼 이력", "weight": "0.30", "method": "최근 6개월" },
+      { "factor": "예약까지 남은 기간", "weight": "0.20", "method": "D-day 간격" },
+      { "factor": "거주지 거리", "weight": "0.15", "method": "km" },
+      { "factor": "진단 완성도", "weight": "0.15", "method": "완료율" },
+      { "factor": "콘텐츠 반응도", "weight": "0.10", "method": "클릭 여부" },
+      { "factor": "초진/재진 구분", "weight": "0.10", "method": "첫 방문" }
+    ],
+    "risk_tiers_title": "위험 구간별 자동 대응",
+    "risk_headers": ["위험 구간", "점수", "자동 알림", "방지 효과"],
+    "risk_rows": [
+      { "zone": "안전", "zone_color": "#22C55E", "score": "0~30%", "alert": "D-1 리마인드", "effect": "3% 미만" },
+      { "zone": "주의", "zone_color": "var(--gold)", "score": "31~60%", "alert": "D-3 정보 + D-1", "effect": "8% 미만" },
+      { "zone": "위험", "zone_color": "var(--danger)", "score": "61%+", "alert": "D-5 + D-2 + D-1", "effect": "15% 미만" }
+    ],
+    "current_risks_title": "현재 예약 환자 노쇼 위험도",
+    "current_risks": [
+      { "name": "이OO", "risk": 22, "color": "#22C55E" },
+      { "name": "김OO", "risk": 35, "color": "#22C55E" },
+      { "name": "박OO", "risk": 48, "color": "var(--gold)" },
+      { "name": "최OO", "risk": 62, "color": "var(--danger)" },
+      { "name": "정OO", "risk": 71, "color": "var(--danger)" }
+    ]
+  },
+
+  "screen_summary": {
+    "section_label": "9단계: Summary",
+    "title": "원챗(OneChat) × 청담한의원",
+    "subtitle": "AI 환자 관리 솔루션 — 핵심 가치 요약",
+    "brief_items": [
+      { "emoji": "🎯", "title": "정밀 데이터 수집", "desc": "환자당 12개 증상 데이터 포인트 자동 수집 (500% 증가)" },
+      { "emoji": "🤝", "title": "신뢰 기반 접근", "desc": "예약 강요 없는 맞춤 콘텐츠. 전환율 41%" },
+      { "emoji": "📅", "title": "원클릭 예약", "desc": "치료 추천+예약 한 화면. 전화 대비 8.5배" },
+      { "emoji": "🚫", "title": "노쇼 방지", "desc": "6단계 알고리즘. 22% → 7%" },
+      { "emoji": "💼", "title": "업무 경감", "desc": "월 90시간 절감. 진료에 집중" },
+      { "emoji": "📊", "title": "데이터 자산화", "desc": "인터랙션 데이터 축적. 개선 기반" }
+    ],
+    "roi": {
+      "label": "예상 월간 ROI",
+      "value": "300%+",
+      "desc": "월 30건 추가 진료 (약 1,500만원) · 월 90시간 절감 · 신규 환자 9→37명 (+311%)"
+    },
+    "cta_text": "처음부터 다시 보기"
+  }
+}

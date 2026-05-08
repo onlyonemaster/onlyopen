@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>디버 설치 및 시작하기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">DB 수집 (온리원디버)</div>
+      <a href="/manual/diver/" class="sb-link">🔍 DB 수집 소개</a>
+      <a href="/manual/diver/install.html" class="sb-link active">💿 설치 및 시작하기</a>
+      <a href="/manual/diver/search.html" class="sb-link">🔎 검색 기술 가이드</a>
+      <a href="/manual/diver/collect.html" class="sb-link">📊 디비 수집 방법</a>
+      <a href="/manual/diver/utilize.html" class="sb-link">📤 수집 DB 활용하기</a>
+      <a href="/manual/diver/updater.html" class="sb-link">🔄 디버 업데이터</a>
+      <a href="/manual/diver/troubleshoot.html" class="sb-link">🛠️ 문제 해결</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/diver/">DB 수집(온리원디버)</a><span class="sep">›</span>
+      <span>설치 및 시작하기</span>
+    </div>
+    <h1>💿 디버 설치 및 시작하기</h1>
+    <p class="page-desc">온리원디버의 작동 환경 확인, 회원가입, 결제, 프로그램 설치, 실행까지 모든 준비 과정을 안내합니다.</p>
+
+    <!-- 작동 환경 -->
+    <h2 id="environment">작동 환경 안내</h2>
+    <table class="m-table">
+      <thead><tr><th>구분</th><th>요구 사항</th><th>상세</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>① 윈도우 버전</strong></td>
+          <td>Windows 10 이상 + 64비트</td>
+          <td>Windows 7은 2020년 1월 14일 지원 종료. 반드시 Windows 10 64비트 이상 환경에서 사용</td>
+        </tr>
+        <tr>
+          <td><strong>② 인터넷 환경</strong></td>
+          <td>안정적인 인터넷 연결</td>
+          <td>와이파이 불안정 시 페이지 패스 → 수집 누락. 여러 명이 같은 와이파이 사용 시 접속 제한 가능</td>
+        </tr>
+        <tr>
+          <td><strong>③ 브라우저</strong></td>
+          <td>Chrome 브라우저 설치 필수</td>
+          <td>온리원디버는 크롬 기반 수집. 미설치 시 자동 설치 안내</td>
+        </tr>
+        <tr>
+          <td><strong>④ 컴퓨터 접속</strong></td>
+          <td>무제한 버전 외 모든 컴퓨터에서 작동</td>
+          <td>무제한 버전은 계약된 PC에서만 사용 가능</td>
+        </tr>
+        <tr>
+          <td><strong>⑤ 컴퓨터 속도</strong></td>
+          <td>적절한 처리 속도</td>
+          <td>컴퓨터가 느리면 페이지 검색 지연 → 수집 누락. 페이지 수는 증가하는데 수집 건수가 안 늘면 속도 문제</td>
+        </tr>
+        <tr>
+          <td><strong>⑥ MS Excel</strong></td>
+          <td>Microsoft Excel 설치</td>
+          <td>수집 결과를 xls/csv로 저장하므로 Excel 프로그램 필요</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="notice">
+      💡 <strong>권장 사양</strong>: Windows 10/11 64비트, 8GB 이상 RAM, 안정적인 유선 인터넷, 최신 Chrome 브라우저, MS Excel 2010 이상
+    </div>
+
+    <!-- 회원가입 -->
+    <h2 id="signup">① 회원가입 및 로그인</h2>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">온리원셀링솔루션 접속</div>
+          <span class="step-url">https://kiam.kr/ma.php</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">회원가입 (신규 회원)</div>
+          <div class="step-desc">아직 회원이 아니면 가입 페이지에서 정보 입력 후 가입 완료</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">로그인</div>
+          <div class="step-desc">가입된 계정으로 로그인합니다. 로그인 상태에서만 결제·설치 가능</div>
+        </div>
+      </li>
+    </ol>
+
+    <!-- 결제 -->
+    <h2 id="payment">② 요금제 결제하기</h2>
+    <p>로그인 상태에서 상단 메뉴 마지막의 <strong>[결제페이지]</strong>를 클릭합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>결제 유형</th><th>설명</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>약정결제</strong></td>
+          <td>일정 기간 약정으로 할인된 요금</td>
+          <td>장기 사용자 추천</td>
+        </tr>
+        <tr>
+          <td><strong>정기결제</strong></td>
+          <td>매월 자동 결제</td>
+          <td>꾸준히 사용하는 경우</td>
+        </tr>
+        <tr>
+          <td><strong>디버별도</strong></td>
+          <td>DB 수집 기능만 단독 결제</td>
+          <td>디비 수집만 필요한 경우</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      💡 <strong>무료체험</strong>: <a href="https://kiam.kr/sub_2.php" target="_blank">디버 소개 페이지</a>에서 무료체험 신청 가능. 300건 무료 제공 (로그인 필요)
+    </div>
+
+    <!-- 무료체험 신청 (소스 기반) -->
+    <h2 id="free-trial">③ 무료체험 신청</h2>
+    <p><a href="https://kiam.kr/sub_2.php" target="_blank">https://kiam.kr/sub_2.php</a> 페이지에서 무료체험을 신청할 수 있습니다.</p>
+    <div class="flow-steps">
+      <div class="flow-step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">로그인 필수</div>
+          <div class="step-desc">비로그인 상태에서 신청 시 "로그인 이후에 이용이 가능합니다" 알림</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">신청 확인</div>
+          <div class="step-desc">"온리원 디버 무료체험 신청하시겠습니까? 300건의 무료 건수가 제공됩니다." 확인창</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">AJAX 처리</div>
+          <div class="step-desc">POST /ajax/crawler_request.php 호출 → "신청되었습니다. 디버 다운로드 후 이용해주세요."</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 설치 -->
+    <h2 id="download">④ 디버 프로그램 다운로드 및 설치</h2>
+    <p>결제 완료 후 아래 주소에서 설치 파일을 다운로드합니다.</p>
+    <div class="step-url">https://kiam.kr/cliente_list.php?status=1&one_no=85</div>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[온리원디버 정규판 다운로드]</strong> 버튼 클릭</div>
+          <div class="step-desc">설치 파일 다운로드 시작</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">설치 파일 실행</div>
+          <div class="step-desc">다운로드된 설치 파일을 실행하여 설치 진행</div>
+        </div>
+      </li>
+    </ol>
+
+    <!-- 보안 경고 -->
+    <h3 id="security">설치 시 PC 보호 알림 대처법</h3>
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>대처 방법</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Windows Defender 경고</strong></td>
+          <td>화면의 [추가 정보] 클릭 → 하단 [계속 설치] 선택</td>
+        </tr>
+        <tr>
+          <td><strong>기타 보안 프로그램 차단</strong></td>
+          <td>해당 컴퓨터의 보안 장치를 <strong>잠시 중지</strong>하고 설치 후 다시 활성화</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="warn">
+      ⚠️ <strong>주의</strong>: 온리원디버는 관리자 권한(requestedExecutionLevel: requireAdministrator)으로 실행됩니다. 설치 중 권한 요청이 나타나면 [예]를 선택하세요.
+    </div>
+
+    <!-- 실행 방법 -->
+    <h2 id="run">⑤ 디버 실행 방법</h2>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">바탕화면에서 <strong>드럼통 아이콘</strong> 찾기</div>
+          <div class="step-desc">설치 완료 후 바탕화면에 드럼통 모양 아이콘이 생성됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>드럼통 아이콘 더블클릭</strong>으로 실행</div>
+          <div class="step-desc">드럼통 아이콘 = 디버 업데이터(DberUpdater). 항상 이 아이콘으로 실행해야 합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">업데이트 확인 자동 진행</div>
+          <div class="step-desc">실행 시 <a href="https://www.kiam.kr/downloads/update.xml" target="_blank">https://www.kiam.kr/downloads/update.xml</a>에서 최신 파일 목록을 받아와 MD5 해시 비교 후 필요한 파일만 자동 다운로드</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">업데이트 완료 → <strong>온리원.exe</strong> 자동 실행</div>
+          <div class="step-desc">모든 파일이 최신 상태이면 메인 디버 프로그램(온리원.exe)이 자동으로 실행됩니다.</div>
+        </div>
+      </li>
+    </ol>
+
+    <!-- 드럼통 아이콘이 중요한 이유 -->
+    <h3 id="drum-icon">왜 드럼통 아이콘으로 실행해야 하나요?</h3>
+    <div class="notice">
+      🥁 드럼통 아이콘은 <strong>디버 업데이터(DberUpdater)</strong>입니다. 이 프로그램이 하는 일:
+    </div>
+    <ul style="list-style:disc;padding-left:24px;line-height:2;">
+      <li><strong>ChromeDriver 버전 확인 및 자동 업데이트</strong> — PC에 설치된 Chrome 브라우저 버전을 읽고 호환되는 ChromeDriver를 자동 다운로드</li>
+      <li><strong>프로그램 파일 무결성 검증</strong> — MD5 해시로 모든 프로그램 파일의 변조·손상 여부 확인</li>
+      <li><strong>구버전 프로세스 종료</strong> — 기존에 실행 중인 온리원.exe를 종료하고 새 버전으로 교체</li>
+    </ul>
+    <div class="warn">
+      ⚠️ 온리원.exe를 직접 실행하면 ChromeDriver 불일치로 수집 오류가 발생할 수 있습니다. <strong>반드시 드럼통 아이콘으로 실행</strong>하세요.
+    </div>
+
+    <!-- 이용 범위 및 건수 -->
+    <h2 id="usage-limit">⑥ 이용 범위 및 수집 건수 확인</h2>
+    <table class="m-table">
+      <thead><tr><th>권한</th><th>이용 범위</th><th>건수 제한</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>일반 결제자</strong></td>
+          <td>디버 모든 기능 이용 가능</td>
+          <td>결제한 종량제 수집건수 내</td>
+        </tr>
+        <tr>
+          <td><strong>무제한 버전</strong></td>
+          <td>디버 모든 기능 이용 가능</td>
+          <td>기간 내 무제한 (본사 협의 필요)</td>
+        </tr>
+        <tr>
+          <td><strong>무료체험</strong></td>
+          <td>기본 수집 기능</td>
+          <td>300건</td>
+        </tr>
+        <tr>
+          <td><strong>추가 충전</strong></td>
+          <td>-</td>
+          <td>1,000건당 10,000원 (건당 10원). 관리자에게 문의</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 화면 구성 -->
+    <h2 id="screen">⑦ 디버 메인 화면 구성</h2>
+    <table class="m-table">
+      <thead><tr><th>영역</th><th>위치</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td><strong>웹종류 선택</strong></td><td>상단 왼쪽</td><td>지도·블로그·카페·뉴스·포스트·N쇼핑·G쇼핑·웹사이트 중 선택. 지도 선택 시 별도 창</td></tr>
+        <tr><td><strong>검색 키워드</strong></td><td>중앙</td><td>검색어 입력. 우측 물음표(?) 클릭 시 <a href="/manual/diver/search.html">네이버 검색지침</a> 안내</td></tr>
+        <tr><td><strong>수집건수 제한</strong></td><td>왼쪽 중앙</td><td>원하는 건수 입력 시 해당 건수 도달 시 자동 중지</td></tr>
+        <tr><td><strong>이름 수집</strong></td><td>왼쪽 하단</td><td>사람이름 / 단체이름 구분 선택. 정확도(1~3) 조정 가능</td></tr>
+        <tr><td><strong>승인 잔량</strong></td><td>우측 상단</td><td>폰건수·종료일·이메일 종료일 표시. 수집 시 실시간 차감</td></tr>
+        <tr><td><strong>카페 주소</strong></td><td>우측 박스</td><td>단일 카페 이메일 수집 시 카페 URL 입력</td></tr>
+        <tr><td><strong>검색 기간</strong></td><td>검색창 주변</td><td>시작일·종료일 입력 (예: 20190101)</td></tr>
+        <tr><td><strong>검색 간격</strong></td><td>하단 옵션</td><td>1초 = 3배 빠르지만 과도 시 네이버 IP 차단</td></tr>
+        <tr><td><strong>로그인/로그아웃</strong></td><td>우측 하단</td><td>kiam.kr 계정 로그인 상태 관리</td></tr>
+        <tr><td><strong>저장 확장자</strong></td><td>저장 옵션</td><td>xls (Excel 97-2003) / csv 선택 가능</td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/diver/"><span class="nav-label">← 이전</span><span class="nav-title">🔍 DB 수집 소개</span></a>
+      <a href="/manual/diver/search.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🔎 검색 기술 가이드</span></a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#environment">작동 환경 안내</a></li>
+      <li><a href="#signup">① 회원가입 및 로그인</a></li>
+      <li><a href="#payment">② 요금제 결제하기</a></li>
+      <li><a href="#free-trial">③ 무료체험 신청</a></li>
+      <li><a href="#download">④ 프로그램 설치</a></li>
+      <li><a href="#security">보안 경고 대처법</a></li>
+      <li><a href="#run">⑤ 디버 실행 방법</a></li>
+      <li><a href="#drum-icon">드럼통 아이콘 중요성</a></li>
+      <li><a href="#usage-limit">⑥ 이용 범위 및 건수</a></li>
+      <li><a href="#screen">⑦ 디버 메인 화면 구성</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

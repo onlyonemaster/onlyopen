@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>메인 초기화 소스 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link active">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>메인 초기화</span></div>
+<h1>🚀 메인 초기화 로직 — 완전 분석</h1>
+<p class="page-desc">페이지가 열리는 순간부터 모든 준비가 끝날 때까지, 어떤 코드가 어떤 순서로 실행되는지 분석합니다.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#startup">시작 시퀀스 (타임라인)</a></li>
+<li><a href="#variables">핵심 전역변수</a></li>
+<li><a href="#domready">$(function()) 초기화</a></li>
+<li><a href="#hidden">숨은 input 값들</a></li>
+<li><a href="#onscroll">스크롤 이벤트</a></li>
+<li><a href="#follow">초등학생도 따라하기</a></li>
+</ul>
+</div>
+
+<h2 id="startup">⏱️ 시작 시퀀스 — 시간 순서대로</h2>
+<p>브라우저가 <code>[서비스URL]/?cur_win=paper_card</code> 주소를 열었을 때, 어떤 일이 순서대로 일어나는지 살펴볼게요.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.8;">
+시간순      무슨 일이?                           코드 위치
+──────────────────────────────────────────────────────────────────
+T+0ms     HTML 파싱 시작                        &lt;!DOCTYPE html&gt;
+T+1ms     &lt;head&gt; 내 CSS 파일 다운로드 시작       bootstrap.min.css, iam.css...
+T+10ms    &lt;head&gt; 내 JS 파일 다운로드 시작        jquery, bootstrap, main.js...
+T+50ms    DOM 트리 구성 (body 파싱)              body onclick="resizeImg()"
+T+80ms    숨은 input 값들 메모리에 저장            mem_id, send_ids, exp_status...
+T+100ms   body 태그 onclick 등록                 resizeImg() 바인딩
+T+150ms   스크립트 실행 시작 (인라인 JS)          var cur_win_name = "paper_card";
+T+160ms   전역변수 정의                          defaults, contextarray, busy...
+T+180ms   함수 정의 (수십 개)                     add_paper_card, settlement...
+T+200ms   DOMContentLoaded 이벤트                문서 준비 완료
+T+210ms   $(function() { ... }) 실행 ★★★        refresh_page() 첫 호출!
+T+220ms   refresh_page() → AJAX 요청들 시작      getIamContact(), getIamPaper()...
+T+250ms   첫 AJAX 응답 도착 → .sample_main 채움   HTML 렌더링
+T+300ms   이미지 로딩 & resizeImg() 실행           card_logo 크기 조정
+T+500ms   모든 AJAX 완료 → 페이지 완전 로딩        busy = false
+──────────────────────────────────────────────────────────────────
+T+500ms~  사용자 인터랙션 대기                    클릭, 스크롤, 입력...
+</pre>
+
+<h2 id="variables">📦 핵심 전역변수 — 페이지의 두뇌</h2>
+
+<table class="data-table">
+<thead><tr><th>변수명</th><th>초기값</th><th>역할</th></tr></thead>
+<tbody>
+<tr><td><code>cur_win_name</code></td><td><code>"paper_card"</code></td><td>현재 화면 이름 (보안패치로 XSS 방지)</td></tr>
+<tr><td><code>busy</code></td><td><code>false</code></td><td>AJAX 중복 요청 방지 플래그</td></tr>
+<tr><td><code>contextarray</code></td><td><code>[]</code></td><td>AI 대화 컨텍스트 저장 배열</td></tr>
+<tr><td><code>defaults</code></td><td><code>{h:...}</code></td><td>기본 설정값 객체</td></tr>
+<tr><td><code>site</code></td><td>도메인 문자열</td><td>사이트 구분 ([앱식별자1] vs [앱식별자2])</td></tr>
+</tbody>
+</table>
+
+<h2 id="domready">⚡ $(function()) 초기화 블록 — 진짜 시작점</h2>
+<p>이 부분이 페이지의 <strong>진짜 엔진 시동</strong>입니다. 593번 줄부터 시작돼요.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;overflow-x:auto;">
+$(function() {                          // ← DOM 준비 완료!
+    // 1. 언어 설정 확인
+    var current_url = window.location.href;
+    if (current_url.indexOf('lang=') > -1) {
+        // URL에 lang 파라미터 있으면 해당 언어로 설정
+        var lang_idx = getParam('lang');
+        setLanguage(lang_idx);
+    }
+
+    // 2. 푸터 메뉴 활성화
+    //    paper_card 페이지이므로 "명함관리" 아이콘이 active 상태
+
+    // 3. 초기 데이터 로딩 ★
+    refresh_page();
+    // → 이 한 줄이 아래 모든 걸 실행:
+    //   getIamContact()  - 연락처 목록
+    //   getIamFriends()  - 친구 목록
+    //   getIamPaper()    - 종이명함 목록
+    //   get_request_list() - 요청 목록
+    //   get_recom_list()   - 추천 목록
+    //   displayMall()      - 몰 상품 목록
+    //   show_comment()     - 코멘트 불러오기
+
+    // 4. 이벤트 리스너 등록
+    //    - 스크롤 이벤트 → .panel-group 클래스 토글
+    //    - 리사이즈 이벤트 → resizeImg()
+    //    - 키보드 이벤트 → enterkey()
+});
+</pre>
+
+<h2 id="hidden">🔒 숨은 input 값들 — 페이지의 비밀 메모</h2>
+<p>이 값들은 화면에 보이지 않지만, 모든 AJAX 요청에 실려서 서버로 전달돼요.</p>
+
+<table class="data-table">
+<thead><tr><th>ID</th><th>값 예시</th><th>용도</th></tr></thead>
+<tbody>
+<tr><td><code>#mem_id</code></td><td>로그인 ID</td><td>사용자 식별. 모든 요청에 포함</td></tr>
+<tr><td><code>#send_ids</code></td><td>선택된 대상 ID들</td><td>발송 대상 목록. ,로 구분</td></tr>
+<tr><td><code>#exp_status</code></td><td>체험판 여부</td><td>무료체험 기능 제한 판단</td></tr>
+<tr><td><code>#Gn_contents_limit</code></td><td><code>200</code></td><td>콘텐츠 표시 개수 제한</td></tr>
+<tr><td><code>#card_url</code></td><td>명함 URL</td><td>발송 시 포함될 명함 링크</td></tr>
+<tr><td><code>#card_send_mode</code></td><td>0 또는 ""</td><td>발송모드 (clone/share)</td></tr>
+</tbody>
+</table>
+
+<h2 id="onscroll">📜 스크롤 이벤트 — UI 동적 제어</h2>
+<p>main.js에 정의된 스크롤 핸들러가 paper_card 페이지에서도 작동합니다:</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// main.js 스크롤 로직
+$(window).scroll(function() {
+    var scrollTop = $(this).scrollTop();
+
+    // .panel-group: 일정 스크롤 이상이면 'scrolled' 클래스 추가
+    if (scrollTop > 100) {
+        $('.panel-group').addClass('scrolled');
+    } else {
+        $('.panel-group').removeClass('scrolled');
+    }
+
+    // .mall-group: 스크롤 위치에 따라 awake/sleep 상태 전환
+    if (scrollTop > 300) {
+        $('.mall-group').addClass('awake').removeClass('sleep');
+    } else {
+        $('.mall-group').addClass('sleep').removeClass('awake');
+    }
+});
+</pre>
+
+<h2 id="follow">🎓 초등학생도 따라하는 분석법</h2>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>크롬 개발자도구 열기</strong><br>F12 키 누르기 → "Sources" 탭 클릭</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>소스코드 찾기</strong><br>왼쪽 파일 목록에서 [서비스도메인] → 펼쳐서 파일들 보기</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>중단점 찍기</strong><br>593번 줄 근처 $(function() 부분 클릭 → 파란색 표시</div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>새로고침</strong><br>F5 누르면 중단점에서 멈춤! 코드가 한 줄씩 어떻게 실행되는지 볼 수 있어요.</div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>한 줄씩 실행 (F10)</strong><br>F10 누르면 한 줄씩 실행돼요. 변수 값은 오른쪽 패널에서 확인!</div></div>
+<div class="step-item"><div class="step-num">6</div><div class="step-text"><strong>Network 탭 보기</strong><br>AJAX 요청이 어떻게 가는지 Network 탭에서 실시간 확인!</div></div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">💡 개발자 꿀팁</div>
+<p><code>console.log(cur_win_name)</code> 을 콘솔에 치면 현재 페이지가 "paper_card"라고 출력돼요. 이 변수 하나로 페이지의 모든 분기 로직이 결정됩니다. 페이지마다 이 값만 바뀌고 나머지 로직은 공유돼요!</p>
+</div>
+
+<h3>📁 관련 파일 목록</h3>
+<table class="data-table">
+<thead><tr><th>파일</th><th>역할</th></tr></thead>
+<tbody>
+<tr><td><code>main.js</code></td><td>메뉴 토글, 스크롤, 설정 팝업</td></tr>
+<tr><td><code>rlatjd_fun.js</code></td><td>지역 데이터, UI 유틸리티</td></tr>
+<tr><td><code>rlatjd.js</code></td><td>로그인, 회원가입, 비번 검증</td></tr>
+<tr><td><code>chat.js</code></td><td>AI 채팅 컨텍스트 관리</td></tr>
+<tr><td><code>iam.css</code></td><td>카드, 버튼, 반응형 스타일</td></tr>
+</tbody>
+</table>
+
+<div class="nav-bottom"><a href="/manual/papercard/ai-channel.html" class="nav-prev">← 이전: 퍼널발송채널</a><a href="/manual/papercard/source-ajax.html" class="nav-next">다음: AJAX 통신 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+[
+  {"title":"원챗 (OneChat)","url":"/manual/onechat/","h1":"원챗 (OneChat)","category":"원챗","desc":"AI 아바타 챗봇으로 고객과 자동 대화","keywords":"챗봇,AI,대화,자동응답,아바타","sections":"시작하기,대화관리,발신탭,수신탭,DM채팅,AI아바타,AI동행,시나리오캠페인"},
+  {"title":"AI 메시지","url":"/manual/aimessage/","h1":"AI 메시지","category":"AI 메시지","desc":"AI가 고객 데이터를 분석해 개인화된 문자를 자동 생성하고 발송","keywords":"문자,SMS,AI메시지,퍼널,자동발송","sections":"AI메시지,퍼널,발송채널,폰문자,웹문자"},
+  {"title":"AI 아바타 학습","url":"/manual/avatar/","h1":"AI 아바타 학습","category":"AI 아바타","desc":"일기,텍스트,음성,파일로 나만의 AI 아바타를 학습시키는 방법","keywords":"아바타,학습,AI,음성,텍스트","sections":"학습방법,일기,텍스트,음성,파일업로드"},
+  {"title":"명함 관리","url":"/manual/namecard/","h1":"명함 관리","category":"명함 관리","desc":"디지털 명함 등록,연락처 관리,챗봇 링크 공유까지","keywords":"명함,디지털명함,연락처,등록","sections":"명함등록,명함수정,연락처관리"},
+  {"title":"명함 프로필","url":"/manual/papercard/","h1":"명함 프로필 (종이명함)","category":"명함 관리","desc":"종이명함 등록/수정/삭제, 명함이미지 OCR 인식, AI 명함퍼널 발신자 설정, 콘텐츠 연락처 관리 등 모든 명함 프로필 기능 총정리","keywords":"종이명함,paper_card,OCR,명함이미지,AI명함퍼널,발신자정보","sections":"종이명함소개,시작하기,명함등록,명함수정,명함삭제,명함이미지,AIOOCR,AI명함퍼널,발신자정보,프롬프트설정,퍼널발송채널,연락처관리,검색,정렬,체크박스,결제시스템,모바일앱,데이터흐름,소스코드분석"},
+  {"title":"대시보드 & 분석","url":"/manual/dashboard/","h1":"대시보드 & 분석","category":"대시보드","desc":"대화 통계,클릭률,응답 패턴 등 데이터 기반 분석 활용법","keywords":"대시보드,통계,분석,데이터,클릭률","sections":"통계,분석,데이터"},
+  {"title":"계정 & 설정","url":"/manual/account/","h1":"계정 & 설정","category":"계정 관리","desc":"회원가입,로그인,프로필 설정,요금제 관리","keywords":"회원가입,로그인,프로필,설정,요금제","sections":"회원가입,로그인,프로필,요금제"},
+  {"title":"VoiceGen AI","url":"/manual/voicegen/","h1":"VoiceGen AI","category":"음성AI","desc":"AI 음성 합성 API,음성 클로닝,요금제 및 사용량 관리","keywords":"음성,합성,클로닝,API,TTS","sections":"시작하기,API키,클로닝,요금제"},
+  {"title":"VAG 영상팩토리","url":"/manual/vag/","h1":"VAG 영상팩토리","category":"영상제작","desc":"AI가 스크립트·이미지·음성·영상을 자동 생성","keywords":"영상,비디오,AI,자동생성,TTS","sections":"영상제작,스크립트,AI엔진,TTS"}
+]

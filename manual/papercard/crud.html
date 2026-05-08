@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>등록·수정·삭제 (CRUD) — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link active">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>CRUD</span></div>
+<h1>📇 종이명함 등록·수정·삭제 (CRUD) 완전 분석</h1>
+<p class="page-desc">종이명함을 등록(Create), 수정(Update), 삭제(Delete)하는 모든 함수와 데이터 흐름을 상세히 분석합니다.</p>
+
+<h2 id="overview">전체 CRUD 개요</h2>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+<tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">작업</th><th style="padding:8px 12px;border:1px solid var(--border);">트리거</th><th style="padding:8px 12px;border:1px solid var(--border);">함수</th><th style="padding:8px 12px;border:1px solid var(--border);">모달</th><th style="padding:8px 12px;border:1px solid var(--border);">AJAX</th></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">📸 앱 카메라 등록</td><td style="padding:8px 12px;border:1px solid var(--border);">+ 버튼 (앱)</td><td style="padding:8px 12px;border:1px solid var(--border);">add_paper_card()</td><td style="padding:8px 12px;border:1px solid var(--border);">-</td><td style="padding:8px 12px;border:1px solid var(--border);">- (네이티브)</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">✏️ 직접 입력 등록</td><td style="padding:8px 12px;border:1px solid var(--border);">create_paper() 호출</td><td style="padding:8px 12px;border:1px solid var(--border);">create_paper() → save_paper()</td><td style="padding:8px 12px;border:1px solid var(--border);">#paper_list_edit_modal</td><td style="padding:8px 12px;border:1px solid var(--border);">POST [내부API]/[명함관리]</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">🔧 수정</td><td style="padding:8px 12px;border:1px solid var(--border);">리스트 항목 클릭</td><td style="padding:8px 12px;border:1px solid var(--border);">(리스트 항목 data 로드) → save_paper()</td><td style="padding:8px 12px;border:1px solid var(--border);">#paper_list_edit_modal</td><td style="padding:8px 12px;border:1px solid var(--border);">POST [내부API]/[명함관리]</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">🗑️ 개별 삭제</td><td style="padding:8px 12px;border:1px solid var(--border);">리스트 삭제 아이콘</td><td style="padding:8px 12px;border:1px solid var(--border);">delete_paper(id)</td><td style="padding:8px 12px;border:1px solid var(--border);">-</td><td style="padding:8px 12px;border:1px solid var(--border);">POST [내부API]/[명함관리]</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">🗑️ 일괄 삭제</td><td style="padding:8px 12px;border:1px solid var(--border);">체크박스 선택 + 삭제버튼</td><td style="padding:8px 12px;border:1px solid var(--border);">paper_del()</td><td style="padding:8px 12px;border:1px solid var(--border);">-</td><td style="padding:8px 12px;border:1px solid var(--border);">POST [내부API]/[연락처처리]</td></tr>
+</table>
+
+<h2 id="create">1. 등록 (Create)</h2>
+
+<h3>방법 A: 앱 카메라 등록 — add_paper_card()</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function add_paper_card() {
+    try {
+        callAppBridge('goCardCamera');   // Android: AppScript.goCardCamera()
+    } catch (e) {                       // iOS: webkit.messageHandlers['goCardCamera']
+        alert("휴대폰에서 이용해주세요.");
+    }
+}
+</pre>
+<p>이 함수는 <strong>오직 앱(Android/iOS WebView)에서만 동작</strong>합니다. 데스크탑에서는 alert만 표시됩니다. 앱 내에서 실행되면 네이티브 카메라를 열어 명함을 촬영하고, 촬영된 이미지는 서버로 전송되어 OCR 처리됩니다.</p>
+<p><strong>#paper_plus 버튼</strong>은 기본적으로 <code>display:none</code>이며, 앱 환경에서만 표시됩니다.</p>
+
+<h3>방법 B: 직접 입력 등록 — create_paper() → save_paper()</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function create_paper() {
+    // 1. 모든 입력 필드 초기화 (빈 값으로)
+    $("#paper_name").val("");       // 이름
+    $("#paper_job").val("");        // 직책
+    $("#paper_org").val("");        // 기관명
+    $("#paper_addr").val("");       // 주소
+    $("#paper_phone1").val("");     // 전화1
+    $("#paper_phone2").val("");     // 전화2
+    $("#paper_mobile").val("");     // 휴대폰
+    $("#paper_fax").val("");        // 팩스
+    $("#paper_email1").val("");     // 이메일
+    $("#paper_email2").val("");     // 홈페이지
+    $("#paper_memo").val("");       // 메모
+    $("#paper_contact_idx").val("");// 연락처 인덱스
+    $("#paper_display_top").prop("checked", false); // 내 명함등록 체크 해제
+
+    // 2. AI 알림 숨김
+    var n = document.getElementById('paper_ai_notice');
+    if (n) n.style.display = 'none';
+
+    // 3. 모달 표시
+    $("#paper_list_edit_modal").modal("show");
+}
+</pre>
+
+<h3>save_paper() — 실제 저장 함수</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function save_paper() {
+    // 1. 중복 저장 방지 (세마포어)
+    if (window._saving_paper) return;
+    window._saving_paper = true;
+
+    // 2. 모든 입력값 수집
+    var data = {
+        seq: $("#paper_seq").val(),       // 수정 시 기존 ID
+        name: $("#paper_name").val(),
+        job: $("#paper_job").val(),
+        org_name: $("#paper_org").val(),
+        address: $("#paper_addr").val(),
+        phone1: $("#paper_phone1").val(),
+        phone2: $("#paper_phone2").val(),
+        mobile: $("#paper_mobile").val(),
+        fax: $("#paper_fax").val(),
+        email: $("#paper_email1").val(),
+        website: $("#paper_email2").val(),  // 홈페이지는 email2 필드 사용
+        memo: $("#paper_memo").val(),
+        display_top: $("#paper_display_top").prop("checked") ? 1 : 0,
+        img_url: $("#paper_img_url").val()
+    };
+
+    // 3. AJAX POST 전송
+    $.ajax({
+        type: "POST",
+        url: "[내부API]/[명함관리]",
+        data: data,
+        dataType: "json",
+        success: function(resp) {
+            alert("저장되었습니다.");
+            $("#paper_list_edit_modal").modal("hide");
+            refresh_page(); // 페이지 새로고침
+        }
+    });
+}
+</pre>
+
+<h2 id="update">2. 수정 (Update)</h2>
+<p>수정은 리스트의 각 항목을 클릭할 때 발생합니다. 각 리스트 항목에는 data-* 속성으로 모든 정보가 저장되어 있고, 클릭 시 이 데이터를 모달의 입력 필드에 채워 넣습니다. 이후 save_paper()가 호출되면 seq 값이 있으므로 서버에서 UPDATE 쿼리가 실행됩니다.</p>
+
+<h2 id="delete">3. 삭제 (Delete)</h2>
+
+<h3>개별 삭제 — delete_paper(id)</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function delete_paper(id) {
+    if (confirm('삭제하시겠습니까?')) {
+        $.ajax({
+            type: "POST",
+            url: "[내부API]/[명함관리]",
+            dataType: "json",
+            data: { seq: id, del: 'Y' },
+            success: function(data) {
+                if (checkMobile()) callAppBridge('setClearCache'); // 앱 캐시 삭제
+                alert('삭제되었습니다.');
+                $("#paper_list_" + id).remove(); // DOM에서 제거
+                if ($(".paper_list").length == 0) {
+                    $("#papercard_list").html("<p>종이명함이 없습니다.</p>");
+                }
+            }
+        });
+    }
+}
+</pre>
+
+<h3>일괄 삭제 — paper_del()</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function paper_del() {
+    var formData = new FormData();
+    formData.append('mode', "del");
+    // 체크된 모든 명함의 ID 수집
+    for (i = 0; i < $("input[name=paper_chk]:checked").length; i++) {
+        formData.append('contact_idx[]', $("input[name=paper_chk]:checked").eq(i).val());
+    }
+    $.ajax({
+        type: "POST",
+        url: "[내부API]/[연락처처리]",
+        data: formData,
+        contentType: false,
+        processData: false,
+        success: function(data) {
+            alert(data);
+            // DOM에서 삭제된 항목들 제거
+            var del_count = $("input[name=paper_chk]:checked").length;
+            for (i = 0; i < del_count; i++) {
+                $("input[name=paper_chk]:checked").eq(0).parents(".list-item").remove();
+            }
+        }
+    });
+}
+</pre>
+
+<div class="warn"><strong>⚠️ 주의사항:</strong> 삭제는 되돌릴 수 없습니다! 삭제 전에 반드시 <code>confirm()</code> 대화상자로 사용자 확인을 받습니다. 또한 앱 환경에서는 <code>callAppBridge('setClearCache')</code>를 호출해 로컬 캐시도 함께 삭제합니다.</div>
+
+<h2 id="full-flow">초등학생을 위한 CRUD 설명</h2>
+<ul class="step-list">
+<li class="step-item"><div class="step-num">C</div><div class="step-body"><div class="step-title">만들기 (Create)</div><div class="step-desc">마치 종이에 새 명함을 쓰는 것처럼, 스마트폰으로 찍거나 직접 이름과 전화번호를 입력해서 새 명함을 만들어요. 이 정보는 인터넷 서버에 저장돼서 언제든지 다시 볼 수 있어요.</div></div></li>
+<li class="step-item"><div class="step-num">R</div><div class="step-body"><div class="step-title">읽기 (Read)</div><div class="step-desc">저장된 명함들을 리스트로 쭉 볼 수 있어요. 검색창에 이름을 입력하면 원하는 명함만 골라서 볼 수도 있고, 이름순이나 회사명순으로 정렬할 수도 있어요.</div></div></li>
+<li class="step-item"><div class="step-num">U</div><div class="step-body"><div class="step-title">수정하기 (Update)</div><div class="step-desc">명함의 내용을 바꾸고 싶을 때 사용해요. 예를 들어 친구의 전화번호가 바뀌었다면, 그 명함을 클릭해서 새 번호로 고치고 저장하면 돼요. 컴퓨터가 알아서 서버의 정보를 새 정보로 바꿔줘요.</div></div></li>
+<li class="step-item"><div class="step-num">D</div><div class="step-body"><div class="step-title">삭제하기 (Delete)</div><div class="step-desc">더 이상 필요 없는 명함을 지우는 거예요. 하나씩 지울 수도 있고, 여러 개를 선택해서 한 번에 지울 수도 있어요. 컴퓨터가 "정말 지울까요?"라고 물어보니까 실수로 지우는 일은 없어요.</div></div></li>
+</ul>
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

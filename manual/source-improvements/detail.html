@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상세보기 및 수정 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">📋 소개 및 개요</a></div>
+    <div class="sb-section"><div class="sb-section-title">기본 사용법</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">📊 대시보드 화면 구성</a><a href="/manual/source-improvements/list.html" class="sb-link">🔍 개선 항목 조회·필터링</a><a href="/manual/source-improvements/register.html" class="sb-link">✏️ 새 개선 항목 등록</a><a href="/manual/source-improvements/detail.html" class="sb-link active">👁️ 상세보기 및 수정</a></div>
+    <div class="sb-section"><div class="sb-section-title">심화</div><a href="/manual/source-improvements/lifecycle.html" class="sb-link">🔄 상태 라이프사이클</a><a href="/manual/source-improvements/notice.html" class="sb-link">📢 공지사항 연동</a><a href="/manual/source-improvements/auto-register.html" class="sb-link">🤖 AI 자동 등록</a></div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#view-mode" class="toc-link">상세보기 모드 (view)</a>
+    <a href="#edit-mode" class="toc-link">수정 모드 (edit)</a>
+    <a href="#mode-detection" class="toc-link">모드 감지 로직</a>
+    <a href="#prefill" class="toc-link">기존 데이터 프리필</a>
+    <a href="#save-edit" class="toc-link">수정 저장 프로세스</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="view-mode">👁️ 상세보기 및 수정</h1>
+    <p class="lead"><code>admin_source_improvements_form.php</code>는 3가지 모드로 동작합니다. <code>action</code> 파라미터로 읽기 전용 상세보기와 편집 모드를 구분합니다.</p>
+
+    <h2>3가지 액션 모드</h2>
+    <table class="m-table">
+      <thead><tr><th>URL</th><th>모드</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><code>?id=5&action=view</code></td><td><strong>보기</strong></td><td>읽기 전용. 모든 필드는 비활성화(disabled). 하단에 「수정하기」「목록으로」 버튼</td></tr>
+        <tr><td><code>?id=5&action=edit</code></td><td><strong>수정</strong></td><td>편집 모드. 기존 데이터가 프리필됨. 하단에 「수정」버튼</td></tr>
+        <tr><td><code>(파라미터 없음)</code></td><td><strong>신규 등록</strong></td><td>빈 폼. 하단에 「등록」버튼</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="mode-detection">모드 감지 로직</h2>
+    <pre class="code-block"><code>$id = isset($_GET['id']) ? intval($_GET['id']) : 0;
+$mode = $id ? 'edit' : 'create';
+
+if ($mode == 'edit') {
+    $sql = "SELECT * FROM source_improvements WHERE id = {$id}";
+    $result = mysqli_query($self_con, $sql);
+    $data = mysqli_fetch_array($result);
+    if (!$data) {
+        echo '&lt;script&gt;alert("존재하지 않는 항목입니다.");history.back();&lt;/script&gt;';
+        exit;
+    }
+}</code></pre>
+
+    <h2 id="prefill">기존 데이터 프리필 방식</h2>
+    <p>수정 모드에서는 <code>$data</code> 배열에서 값을 읽어 각 input의 <code>value</code> 속성에 채워넣습니다.</p>
+    <pre class="code-block"><code>// 일반 텍스트 필드
+value="&lt;?php echo htmlspecialchars($data['title']); ?&gt;"
+
+// 셀렉트 박스 (selected 비교)
+&lt;?php echo $data['project'] == $p ? 'selected' : ''; ?&gt;
+
+// 체크박스 (쉼표 분리된 environments 파싱)
+$selected_envs = explode(',', $data['environments']);
+&lt;?php echo in_array($env, $selected_envs) ? 'checked' : ''; ?&gt;
+
+// datetime-local (공백→T 변환)
+value="&lt;?php echo str_replace(' ', 'T', $data['deployed_date']); ?&gt;"</code></pre>
+
+    <h2 id="save-edit">수정 저장 프로세스</h2>
+    <p>수정과 신규 등록은 <strong>동일한 AJAX 엔드포인트</strong>를 사용합니다. 숨겨진 <code>action</code> 필드로 구분:</p>
+    <pre class="code-block"><code>&lt;input type="hidden" name="id" value="&lt;?php echo $id; ?&gt;"&gt;
+&lt;input type="hidden" name="action"
+       value="&lt;?php echo $mode=='edit' ? 'update' : 'create'; ?&gt;"&gt;</code></pre>
+
+    <p>서버 측(<code>source_improvements_save.php</code>)에서 <code>action=update</code>면 UPDATE 쿼리, <code>action=create</code>면 INSERT 쿼리 실행.</p>
+
+    <div class="tip-box"><strong>💡 참고:</strong> 수정 완료 후에도 목록 페이지로 리다이렉트됩니다. <code>updated_at</code> 컬럼이 자동 갱신되어 최종 수정 시점을 추적할 수 있습니다.</div>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/register.html" class="next-link">← 이전: 새 개선 항목 등록</a>
+      <a href="/manual/source-improvements/lifecycle.html" class="next-link">다음: 상태 라이프사이클 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.m-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:28px;}
+.m-table th{background:var(--bg3);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);}
+.m-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.tip-box{background:var(--green-bg);border-left:4px solid var(--green);padding:14px 18px;border-radius:8px;margin-bottom:28px;font-size:14px;}
+.prev-next{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,1237 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>온리원디버 (OnlyoneDBer) 초등 설계 기획서</title>
+    <style>
+        :root {
+            --bg: #f8f9fb;
+            --card-bg: #ffffff;
+            --text: #2c3e50;
+            --text-secondary: #5a6c7d;
+            --border: #e2e8f0;
+            --accent: #1a73e8;
+            --accent-light: #e8f0fe;
+            --accent-dark: #1557b0;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --success: #10b981;
+            --code-bg: #1e293b;
+            --code-text: #e2e8f0;
+            --table-stripe: #f8fafc;
+            --table-hover: #f1f5f9;
+            --shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+            --shadow: 0 4px 6px rgba(0,0,0,0.07), 0 2px 4px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px rgba(0,0,0,0.1), 0 4px 6px rgba(0,0,0,0.05);
+            --radius: 8px;
+            --radius-lg: 12px;
+            --transition: 0.2s ease;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans KR', 'Apple SD Gothic Neo', 'Malgun Gothic', 'Segoe UI', sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.75;
+            font-size: 15px;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* ── 헤더 ──────────────────────────────── */
+        .header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            color: #ffffff;
+            padding: 48px 32px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+        .header::before {
+            content: "";
+            position: absolute;
+            top: -60px; right: -60px;
+            width: 280px; height: 280px;
+            background: radial-gradient(circle, rgba(255,255,255,0.06) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .header::after {
+            content: "";
+            position: absolute;
+            bottom: -40px; left: -40px;
+            width: 200px; height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.04) 0%, transparent 70%);
+            border-radius: 50%;
+        }
+        .header h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+            margin-bottom: 8px;
+            position: relative;
+            z-index: 1;
+        }
+        .header .subtitle {
+            font-size: 1rem;
+            color: rgba(255,255,255,0.7);
+            position: relative;
+            z-index: 1;
+        }
+        .header .meta-row {
+            display: flex;
+            justify-content: center;
+            gap: 24px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+            position: relative;
+            z-index: 1;
+        }
+        .header .meta-badge {
+            background: rgba(255,255,255,0.12);
+            border: 1px solid rgba(255,255,255,0.18);
+            border-radius: 20px;
+            padding: 5px 16px;
+            font-size: 0.85rem;
+            color: rgba(255,255,255,0.85);
+            backdrop-filter: blur(4px);
+        }
+
+        /* ── 레이아웃 ──────────────────────────── */
+        .wrapper {
+            max-width: 1060px;
+            margin: 0 auto;
+            padding: 0 24px 60px;
+            display: flex;
+            gap: 28px;
+            align-items: flex-start;
+        }
+
+        /* ── 사이드바 (목차) ──────────────────── */
+        .sidebar {
+            width: 240px;
+            flex-shrink: 0;
+            position: sticky;
+            top: 24px;
+            max-height: calc(100vh - 48px);
+            overflow-y: auto;
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 20px 16px;
+            font-size: 0.84rem;
+            margin-top: -36px;
+        }
+        .sidebar h3 {
+            font-size: 0.78rem;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--text-secondary);
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+        }
+        .sidebar a {
+            display: block;
+            padding: 6px 10px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            border-radius: 6px;
+            transition: var(--transition);
+            margin-bottom: 2px;
+        }
+        .sidebar a:hover,
+        .sidebar a:focus {
+            background: var(--accent-light);
+            color: var(--accent);
+        }
+        .sidebar a.sub { padding-left: 22px; font-size: 0.81rem; }
+
+        /* ── 메인 콘텐츠 ──────────────────────── */
+        .main {
+            flex: 1;
+            min-width: 0;
+        }
+        .section {
+            background: var(--card-bg);
+            border-radius: var(--radius-lg);
+            box-shadow: var(--shadow);
+            padding: 32px 36px;
+            margin-bottom: 24px;
+        }
+        .section h2 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--accent);
+            color: var(--accent-dark);
+            letter-spacing: -0.3px;
+        }
+        .section h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            margin: 24px 0 12px;
+            color: #1e3a5f;
+        }
+        .section h4 {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin: 16px 0 8px;
+            color: #334155;
+        }
+        .section p { margin-bottom: 12px; }
+
+        /* ── 테이블 ──────────────────────────── */
+        .table-wrap {
+            overflow-x: auto;
+            margin: 16px 0 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--border);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+        thead th {
+            background: #f1f5f9;
+            color: #475569;
+            font-weight: 700;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 10px 14px;
+            text-align: left;
+            border-bottom: 2px solid #cbd5e1;
+        }
+        tbody td {
+            padding: 9px 14px;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+        tbody tr:nth-child(even) { background: var(--table-stripe); }
+        tbody tr:hover { background: var(--table-hover); }
+        .stars { color: var(--warning); font-family: monospace; letter-spacing: 1px; }
+
+        /* ── 코드 블록 ──────────────────────── */
+        pre {
+            background: var(--code-bg);
+            color: var(--code-text);
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.85rem;
+            line-height: 1.65;
+            margin: 16px 0 20px;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.2);
+        }
+        pre.sql     { border-left: 3px solid #f59e0b; }
+        pre.csharp  { border-left: 3px solid #3b82f6; }
+        pre.plain   { border-left: 3px solid #8b5cf6; }
+
+        code {
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.87em;
+        }
+        :not(pre) > code {
+            background: #f1f5f9;
+            padding: 2px 7px;
+            border-radius: 4px;
+            color: #e11d48;
+            border: 1px solid #e2e8f0;
+        }
+
+        /* ── 흐름도 / ASCII 도식 ─────────────── */
+        .ascii-block {
+            background: #0f172a;
+            color: #94a3b8;
+            border-radius: var(--radius);
+            padding: 20px 24px;
+            overflow-x: auto;
+            font-family: 'JetBrains Mono', 'Fira Code', 'Consolas', 'Monaco', monospace;
+            font-size: 0.8rem;
+            line-height: 1.55;
+            margin: 16px 0 20px;
+        }
+
+        /* ── 강조 박스 ──────────────────────── */
+        .info-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-left: 4px solid #3b82f6;
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin: 16px 0 20px;
+        }
+        .warn-box {
+            background: #fffbeb;
+            border: 1px solid #fde68a;
+            border-left: 4px solid #f59e0b;
+            border-radius: var(--radius);
+            padding: 14px 18px;
+            margin: 16px 0 20px;
+        }
+
+        /* ── 심각도 뱃지 ────────────────────── */
+        .severity { display: inline-block; padding: 2px 10px; border-radius: 12px; font-size: 0.78rem; font-weight: 700; letter-spacing: 0.3px; }
+        .sev-high   { background: #fee2e2; color: #b91c1c; }
+        .sev-medium { background: #fef3c7; color: #92400e; }
+        .sev-low    { background: #dcfce7; color: #166534; }
+
+        /* ── 구현 단계 ──────────────────────── */
+        .phase-list { list-style: none; }
+        .phase-list li {
+            padding: 10px 16px;
+            border-left: 3px solid var(--accent);
+            margin-bottom: 8px;
+            background: var(--accent-light);
+            border-radius: 0 var(--radius) var(--radius) 0;
+        }
+        .phase-list li strong { color: var(--accent-dark); }
+        .phase-list .sub-task { padding-left: 24px; font-size: 0.88rem; color: var(--text-secondary); border-left-color: #93c5fd; }
+
+        /* ── 푸터 ──────────────────────────── */
+        .footer {
+            text-align: center;
+            padding: 24px;
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            border-top: 1px solid var(--border);
+            margin-top: 8px;
+        }
+
+        /* ── 반응형 ────────────────────────── */
+        @media (max-width: 900px) {
+            .wrapper { flex-direction: column; padding: 0 12px 40px; }
+            .sidebar {
+                width: 100%;
+                position: static;
+                max-height: none;
+                margin-top: 20px;
+                order: 2;
+            }
+            .main { order: 1; }
+            .section { padding: 24px 20px; }
+            .header { padding: 32px 20px 28px; }
+            .header h1 { font-size: 1.5rem; }
+            .header .meta-row { gap: 10px; }
+        }
+
+        @media print {
+            .sidebar { display: none; }
+            .header { background: #1a1a2e !important; -webkit-print-color-adjust: exact; }
+            .section { box-shadow: none; border: 1px solid #ddd; break-inside: avoid; }
+            pre { background: #f5f5f5; color: #333; border: 1px solid #ddd; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- ════════════════════════════════════════════════ HEADER ════ -->
+<header class="header">
+    <h1>온리원디버 (OnlyoneDBer) 초등 설계 기획서</h1>
+    <p class="subtitle">네이버 데이터 수집기 — 통합 분석 및 구현 청사진</p>
+    <div class="meta-row">
+        <span class="meta-badge">📄 문서 버전 1.0</span>
+        <span class="meta-badge">📅 작성일 2026-05-06</span>
+        <span class="meta-badge">📂 소스: 210531크롬버전업 + source_recovered</span>
+    </div>
+</header>
+
+<!-- ════════════════════════════════════════════════ LAYOUT ════ -->
+<div class="wrapper">
+
+    <!-- ── 사이드바 (목차) ── -->
+    <nav class="sidebar">
+        <h3>📑 목차</h3>
+        <a href="#s1">1. 개요 및 목적</a>
+        <a href="#s2">2. 시스템 아키텍처</a>
+        <a href="#s3">3. 소스코드 통합 분석</a>
+        <a href="#s4">4. 주요 기능 상세 설계</a>
+        <a href="#s5">5. 데이터베이스 설계</a>
+        <a href="#s6">6. 크롤러 모듈 설계</a>
+        <a href="#s7">7. 통합 빌드 방안</a>
+        <a href="#s8">8. 구현 로드맵</a>
+        <a href="#s9">9. 위험 요소 및 대응 방안</a>
+        <a href="#s10">10. 품질 검증 계획</a>
+        <a href="#appendix-a">부록 A: 주요 상수 및 설정값</a>
+        <a href="#appendix-b">부록 B: Selenium 3→4 마이그레이션 가이드</a>
+    </nav>
+
+    <!-- ── 메인 콘텐츠 ── -->
+    <main class="main">
+
+        <!-- ═══════════ 1. 개요 및 목적 ═══════════ -->
+        <article class="section" id="s1">
+            <h2>1. 개요 및 목적</h2>
+
+            <h3>1.1 프로젝트 개요</h3>
+            <p><strong>온리원디버(OnlyoneDBer)</strong>는 네이버의 다양한 서비스(블로그, 카페, 지도, 쇼핑, 웹사이트, 포스트, 뉴스, 동영상)에서 휴대폰 번호(010)와 이메일 주소를 자동으로 수집하는 Windows Forms 기반의 데이터 수집 도구이다.</p>
+            <p>개발자 김지광이 2021년 2월부터 개발하였으며, 온리원연구소(obmms.net)에서 서비스하는 상용 솔루션이다.</p>
+
+            <h3>1.2 시스템 구성</h3>
+            <p>전체 시스템은 두 개의 실행 파일로 구성된다:</p>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>구성요소</th><th>파일명</th><th>역할</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>온리원디버 업데이터</strong></td><td><code>onlyonedber.exe</code></td><td>자동 업데이트, ChromeDriver 관리, 메인 프로그램 실행</td></tr>
+                    <tr><td><strong>온리원 메인 프로그램</strong></td><td><code>온리원.exe</code></td><td>실제 네이버 데이터 수집(크롤링) 수행</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>1.3 분석 대상 소스</h3>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>디렉토리</th><th>설명</th><th>상태</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>decompiled/210531크롬버전업/</code></td><td>2021년 5월 31일 크롬 버전업 대응 버전, 원본 디컴파일 소스</td><td><strong>핵심 소스</strong> - 풀 소스코드</td></tr>
+                    <tr><td><code>decompiled/source_recovered/</code></td><td>onlyonedber.exe에서 ILSpy로 복구한 업데이터 소스</td><td>빌드 가능하나 부분적 (95.2%)</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>1.4 설계 목표</h3>
+            <ol>
+                <li>두 소스 디렉토리의 모든 중요 파일을 통합 분석</li>
+                <li>다이버 매뉴얼에서 요구하는 모든 기능을 완전히 구현</li>
+                <li>.NET 8.0 / .NET Framework 4.6.2 이상에서 빌드 및 실행 가능한 솔루션 제공</li>
+                <li>상용 라이선스 관리, 광고 시스템, 자동 업데이트를 포함한 완전한 제품 구현</li>
+            </ol>
+        </article>
+
+        <!-- ═══════════ 2. 시스템 아키텍처 ═══════════ -->
+        <article class="section" id="s2">
+            <h2>2. 시스템 아키텍처</h2>
+
+            <h3>2.1 전체 시스템 구성도</h3>
+            <div class="ascii-block">
+┌─────────────────────────────────────────────────────────────────┐
+│                    온리원디버 전체 시스템                          │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  ┌──────────────────────┐    ┌──────────────────────────────┐   │
+│  │  onlyonedber.exe     │    │        온리원.exe             │   │
+│  │  (업데이터)           │───▶│     (메인 수집기)             │   │
+│  │                      │    │                              │   │
+│  │  - update.xml 다운로드│    │  - Form1.cs (메인 UI)        │   │
+│  │  - MD5 검증          │    │  - FrmMap.cs (지도 수집)      │   │
+│  │  - 파일 순차 다운로드  │    │  - Form2.cs (검색 도움말)    │   │
+│  │  - ChromeDriver 업뎃  │    │  - Form3.cs (옵션)           │   │
+│  │  - 온리원.exe 실행    │    │  - Form4.cs (블로그 옵션)     │   │
+│  │  - 작업표시줄 진행률   │    │  - Popup.cs (광고 팝업)      │   │
+│  │                      │    │  - FrmMapGuide.cs (지도안내)  │   │
+│  └──────────┬───────────┘    └──────────────┬───────────────┘   │
+│             │                               │                   │
+│             ▼                               ▼                   │
+│  ┌──────────────────────┐    ┌──────────────────────────────┐   │
+│  │    외부 서버 연동      │    │      크롤러 엔진              │   │
+│  │                      │    │                              │   │
+│  │  - kiam.kr (업데이트) │    │  - NaverBlogCrawler          │   │
+│  │  - obmms.net (광고)  │    │  - NaverCafeCrawler           │   │
+│  │  - chromedriver API  │    │  - NaverMapCrawler            │   │
+│  │                      │    │  - NaverShoppingCrawler       │   │
+│  └──────────────────────┘    │  - NaverPostCrawler           │   │
+│                              │  - NaverWebsiteCrawler        │   │
+│                              │  - NaverBlogWriterEmailCrawler │   │
+│                              │  - NaverBlogReaderEmailCrawler │   │
+│                              │  - NaverCafeEmailCrawler      │   │
+│                              └──────────────────────────────┘   │
+│                                             │                   │
+│                                             ▼                   │
+│                              ┌──────────────────────────────┐   │
+│                              │      MySQL 데이터베이스        │   │
+│                              │                              │   │
+│                              │  서버: 175.118.126.178        │   │
+│                              │  DB: ilearning3               │   │
+│                              │  사용자: ilearning3_db        │   │
+│                              │                              │   │
+│                              │  - crawler_member_real (회원) │   │
+│                              │  - crawler_data (수집데이터)   │   │
+│                              │  - gn_dber_version (버전)     │   │
+│                              │  - crawler_ad_manager (광고)  │   │
+│                              └──────────────────────────────┘   │
+└─────────────────────────────────────────────────────────────────┘
+            </div>
+
+            <h3>2.2 레이어 아키텍처</h3>
+            <div class="ascii-block">
+┌──────────────────────────────────────────────────────────────┐
+│                    프레젠테이션 레이어                          │
+│  Form1, Form2, Form3, Form4, FrmMap, FrmMapGuide, Popup      │
+├──────────────────────────────────────────────────────────────┤
+│                    비즈니스 로직 레이어                         │
+│  VersionManager, RegexLogic, Address, OnlyoneDBerEntityMapper │
+├──────────────────────────────────────────────────────────────┤
+│                    크롤러 레이어                               │
+│  ICrawler → NaverBlogCrawler, NaverCafeCrawler,               │
+│  NaverMapCrawler, NaverShoppingCrawler, NaverPostCrawler,     │
+│  NaverWebsiteCrawler, NaverBlogWriterEmailCrawler,            │
+│  NaverBlogReaderEmailCrawler, NaverCafeEmailCrawler           │
+├──────────────────────────────────────────────────────────────┤
+│                    인프라스트럭처 레이어                        │
+│  OnlyoneDBerDatabase, ChromeDriverProvider, Win32 API,        │
+│  TaskbarProgress, SHDocVw (IE COM)                            │
+├──────────────────────────────────────────────────────────────┤
+│                    데이터 레이어                               │
+│  DataDTO, AddressDTO, VersionDTO (엔티티)                     │
+│  MySQL (MySql.Data 8.0.13)                                    │
+├──────────────────────────────────────────────────────────────┤
+│                    외부 의존성                                 │
+│  Selenium WebDriver 3.141.0, ChromeDriver 89.x,               │
+│  AutoMapper 3.1.1, Newtonsoft.Json 12.0.3,                   │
+│  Microsoft.Office.Interop.Excel 15.0                           │
+└──────────────────────────────────────────────────────────────┘
+            </div>
+        </article>
+
+        <!-- ═══════════ 3. 소스코드 통합 분석 ═══════════ -->
+        <article class="section" id="s3">
+            <h2>3. 소스코드 통합 분석</h2>
+
+            <h3>3.1 파일 인벤토리 (핵심 파일)</h3>
+
+            <h4>3.1.1 210531크롬버전업 디렉토리 (메인 수집기)</h4>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>파일 경로</th><th>라인</th><th>역할</th><th>중요도</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><code>OnlyoneDBer/Form1.cs</code></td>
+                        <td>3,945</td>
+                        <td><strong>메인 폼</strong> - 전체 UI, 수집 제어, 로그인, 저장, 광고</td>
+                        <td><span class="stars">★★★★★</span></td>
+                    </tr>
+                    <tr><td><code>OnlyoneDBer/Form1.Designer.cs</code></td><td>-</td><td>메인 폼 디자이너 코드</td><td><span class="stars">★★★★</span></td></tr>
+                    <tr>
+                        <td><code>OnlyoneDBer/FrmMap.cs</code></td>
+                        <td>2,070</td>
+                        <td><strong>지도 수집 폼</strong> - 네이버 지도 크롤링 전용</td>
+                        <td><span class="stars">★★★★★</span></td>
+                    </tr>
+                    <tr><td><code>OnlyoneDBer/FrmMap.Designer.cs</code></td><td>-</td><td>지도 폼 디자이너</td><td><span class="stars">★★★</span></td></tr>
+                    <tr><td><code>OnlyoneDBer/FrmMapGuide.cs</code></td><td>-</td><td>지도 사용 안내 폼</td><td><span class="stars">★★</span></td></tr>
+                    <tr><td><code>OnlyoneDBer/Program.cs</code></td><td>61</td><td>진입점 - 관리자 권한 체크, Form1 실행</td><td><span class="stars">★★★★</span></td></tr>
+                    <tr><td><code>OnlyoneDBer/Form2.cs</code></td><td>-</td><td>검색 도움말 폼</td><td><span class="stars">★★</span></td></tr>
+                    <tr><td><code>OnlyoneDBer/Form3.cs</code></td><td>-</td><td>옵션 설정 폼</td><td><span class="stars">★★</span></td></tr>
+                    <tr><td><code>OnlyoneDBer/Form4.cs</code></td><td>-</td><td>블로그 수집 옵션 폼</td><td><span class="stars">★★</span></td></tr>
+                    <tr><td><code>OnlyoneDBer/Popup.cs</code></td><td>-</td><td>광고 팝업 폼</td><td><span class="stars">★★</span></td></tr>
+                    <tr><td><code>OnlyoneDBer/Temp.cs</code></td><td>-</td><td>임시 파일</td><td><span class="stars">★</span></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h4>3.1.2 서비스 레이어</h4>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>파일 경로</th><th>역할</th><th>중요도</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>Services/Database/OnlyoneDBerDatabase.cs</code></td><td>MySQL DB 연결 관리</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Services/VersionManager.cs</code></td><td>자동 업데이트 관리</td><td><span class="stars">★★★★</span></td></tr>
+                    <tr><td><code>Services/RegexLogic.cs</code></td><td>전화번호/이메일 정규식 추출 알고리즘</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Services/Address.cs</code></td><td>주소 처리 로직</td><td><span class="stars">★★★</span></td></tr>
+                    <tr><td><code>Services/Entities/DataDTO.cs</code></td><td>수집 데이터 전송 객체</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Services/Entities/AddressDTO.cs</code></td><td>주소 정보 DTO</td><td><span class="stars">★★★</span></td></tr>
+                    <tr><td><code>Services/Entities/VersionDTO.cs</code></td><td>버전 정보 DTO</td><td><span class="stars">★★★</span></td></tr>
+                    <tr><td><code>Services/Entities/OnlyoneDBerEntityMapper.cs</code></td><td>DB→DTO 매핑 (AutoMapper)</td><td><span class="stars">★★★</span></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h4>3.1.3 크롤러 구현체</h4>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>파일 경로</th><th>수집 대상</th><th>방식</th><th>중요도</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>Crawler/ICrawler.cs</code></td><td>인터페이스 정의</td><td>-</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/ChromeDriverProvider.cs</code></td><td>ChromeDriver 팩토리</td><td>Headless/Option</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverBlogCrawler.cs</code></td><td>블로그 (전화번호+이메일)</td><td>Selenium</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverCafeCrawler.cs</code></td><td>카페 (전화번호+이메일)</td><td>Selenium</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverMapCrawler.cs</code></td><td>지도 (전화번호)</td><td>HTTP API + GraphQL</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverShoppingCrawler.cs</code></td><td>쇼핑몰 (전화번호+이메일)</td><td>Selenium</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverPostCrawler.cs</code></td><td>포스트 (전화번호+이메일)</td><td>Selenium</td><td><span class="stars">★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverWebsiteCrawler.cs</code></td><td>웹사이트 (전화번호+이메일)</td><td>Selenium</td><td><span class="stars">★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverBlogWriterEmailCrawler.cs</code></td><td>블로그 게시자 이메일 (고속)</td><td>Selenium</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverBlogReaderEmailCrawler.cs</code></td><td>블로그 검색자 이메일 (고속)</td><td>Selenium</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>Crawler/NaverCafeEmailCrawler.cs</code></td><td>카페 이메일 (고속)</td><td>Selenium + EUC-KR</td><td><span class="stars">★★★★★</span></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h4>3.1.4 source_recovered 디렉토리 (업데이터)</h4>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>파일 경로</th><th>역할</th><th>중요도</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>DberUpdater/FormDownloader.cs</code></td><td>업데이터 메인 폼 (618라인)</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>DberUpdater/TaskbarProgress.cs</code></td><td>작업표시줄 진행률 (COM Interop)</td><td><span class="stars">★★★★★</span></td></tr>
+                    <tr><td><code>DberUpdater.Properties/Resources.cs</code></td><td>리소스 관리</td><td><span class="stars">★★★</span></td></tr>
+                    <tr><td><code>DberUpdater.Properties/Settings.cs</code></td><td>설정 관리</td><td><span class="stars">★★★</span></td></tr>
+                    <tr><td><code>Sequential_File_Downloader/Program.cs</code></td><td>진입점</td><td><span class="stars">★★★★</span></td></tr>
+                    <tr><td><code>Properties/AssemblyInfo.cs</code></td><td>어셈블리 메타데이터</td><td><span class="stars">★★★</span></td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>3.2 통합 필요성 분석</h3>
+            <p>두 소스 디렉토리는 서로 다른 실행 파일을 구성한다:</p>
+            <ul>
+                <li><strong>210531크롬버전업</strong> → <code>온리원.exe</code> (메인 수집기): 원본 소스코드 전체 보유</li>
+                <li><strong>source_recovered</strong> → <code>onlyonedber.exe</code> (업데이터): ILSpy 복구본, 빌드 성공 확인됨</li>
+            </ul>
+            <div class="info-box">
+                <strong>통합 전략</strong>: 하나의 Visual Studio 솔루션(<code>.sln</code>) 아래에 두 개의 프로젝트(<code>.csproj</code>)로 구성한다.
+            </div>
+        </article>
+
+        <!-- ═══════════ 4. 주요 기능 상세 설계 ═══════════ -->
+        <article class="section" id="s4">
+            <h2>4. 주요 기능 상세 설계</h2>
+
+            <h3>4.1 사용자 인증 및 라이선스 관리</h3>
+
+            <h4>4.1.1 로그인 프로세스</h4>
+            <div class="ascii-block">
+사용자 입력 (ID/PW)
+    │
+    ▼
+MySQL 서버 연결 (175.118.126.178)
+    │
+    ▼
+서버 시간 조회 (NOW())
+    │
+    ▼
+crawler_member_real 테이블 조회
+    │
+    ▼
+검증 체인:
+  ① ID 존재 확인
+  ② 비밀번호 MD5 해시 비교
+  ③ 사용 기간 확인 (term >= 서버시간)
+  ④ 상태 확인 (status = 'Y')
+  ⑤ 시리얼(MAC 주소) 인증
+     ├─ serial이 비어있으면 → 현재 MAC 등록 후 승인
+     ├─ use_cnt != 0 → 승인 (레거시 호환)
+     ├─ MAC 주소 일치 → 승인
+     └─ 불일치 → "인증된 컴퓨터가 아닙니다"
+    │
+    ▼
+쇼핑 권한 확인 (shopping_yn, shopping_end_date)
+검색메일 권한 확인
+    │
+    ▼
+로그인 성공 → 버전명 업데이트, UI 전환
+            </div>
+
+            <h4>4.1.2 라이선스 등급</h4>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>등급</th><th>조건</th><th>권한</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>체험</strong></td><td>비로그인 상태</td><td>지도 수집만 가능</td></tr>
+                    <tr><td><strong>정규</strong></td><td>일반 사용자 로그인</td><td>블로그, 카페, 뉴스, 동영상, 포스트, 웹사이트 수집</td></tr>
+                    <tr><td><strong>관리자</strong></td><td>ID: onlymkmain, andgallery, onlymain</td><td>모든 기능 + 크롬 show 옵션 + 관리 기능</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>4.2 데이터 수집 엔진</h3>
+
+            <h4>4.2.1 수집 가능 채널</h4>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>채널</th><th>체크박스</th><th>수집 대상</th><th>크롤러 클래스</th><th>방식</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>블로그</td><td><code>check_blog</code></td><td>전화번호(010)</td><td>NaverBlogCrawler</td><td>Selenium + 상세페이지</td></tr>
+                    <tr><td>카페</td><td><code>check_cafe</code></td><td>전화번호(010)</td><td>NaverCafeCrawler</td><td>Selenium + iframe</td></tr>
+                    <tr><td>지도</td><td><code>check_map</code></td><td>전화번호</td><td>NaverMapCrawler</td><td>GraphQL API (HTTP 직접호출)</td></tr>
+                    <tr><td>쇼핑</td><td><code>check_shop</code></td><td>전화번호+이메일</td><td>NaverShoppingCrawler</td><td>Selenium + 스마트스토어</td></tr>
+                    <tr><td>웹사이트</td><td><code>check_website</code></td><td>전화번호+이메일</td><td>NaverWebsiteCrawler</td><td>Selenium + 일반사이트</td></tr>
+                    <tr><td>포스트</td><td><code>check_post</code></td><td>전화번호+이메일</td><td>NaverPostCrawler</td><td>Selenium 모바일</td></tr>
+                    <tr><td>뉴스</td><td><code>check_news</code></td><td>전화번호+이메일</td><td>(구현예정)</td><td>-</td></tr>
+                    <tr><td>동영상</td><td><code>check_video</code></td><td>전화번호(이메일불가)</td><td>(구현예정)</td><td>-</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h4>4.2.2 이메일 고속 수집 채널</h4>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>채널</th><th>체크박스</th><th>수집 대상</th><th>크롤러 클래스</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>블로그 게시자</td><td><code>check_blog_writer_mail</code></td><td>이메일</td><td>NaverBlogWriterEmailCrawler</td></tr>
+                    <tr><td>블로그 검색자</td><td><code>check_blog_reader_mail</code></td><td>이메일 (공감 리스트)</td><td>NaverBlogReaderEmailCrawler</td></tr>
+                    <tr><td>카페 이메일</td><td><code>check_cafe_mail</code></td><td>이메일</td><td>NaverCafeEmailCrawler</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h4>4.2.3 수집 제한 규칙</h4>
+            <div class="ascii-block">
+1. 블로그/카페: "010"이 검색어에 포함되어야 함 (휴대폰 수집 전용)
+2. 동영상: 이메일 수집 불가
+3. 카페 유료 이메일: 다른 이메일 기능과 동시 사용 불가
+4. 블로그 유료 이메일: 다른 이메일 기능과 동시 사용 불가
+5. 지도: 다른 수집 기능과 동시 사용 불가
+6. 유료 이메일 수집: 검색어에 "010" 포함 불가
+7. 월간 수집 건수 제한 있음
+            </div>
+
+            <h4>4.2.4 수집 흐름도</h4>
+            <div class="ascii-block">
+[시작] → [조건 검증] → [스레드 생성] → [각 채널별 크롤링]
+                                             │
+                    ┌────────────────────────┼────────────────────────┐
+                    ▼                        ▼                        ▼
+            CrawlingNaverBlog        CrawlingNaverCafe        CrawlingNaverMap
+                    │                        │                        │
+                    ▼                        ▼                        ▼
+            ICrawler.SetKeyword       ICrawler.SetKeyword      ICrawler.SetKeyword
+            ICrawler.SetDate          ICrawler.SetDate         ICrawler.SetKeyword
+                    │                        │                        │
+                    ▼                        ▼                        ▼
+            crawler.Next()            crawler.Next()           crawler.Next()
+                    │                        │                        │
+                    ▼                        ▼                        ▼
+            foreach DataDTO:          foreach DataDTO:         foreach DataDTO:
+              중복체크 (HashSet)        중복체크 (HashSet)       전화번호 형식 검증
+              → AddData()              → AddData()             → AddData()
+              → sendData()             → sendData()            → sendData()
+                    │                        │                        │
+                    ▼                        ▼                        ▼
+            UpdateRemainTime()        UpdateRemainTime()       UpdateRemainTime()
+            ExitIfExeedLimit()        ExitIfExeedLimit()       ExitIfExeedLimit()
+                    │                        │                        │
+                    └────────────────────────┼────────────────────────┘
+                                             ▼
+                                      [수집 완료]
+                                             │
+                                             ▼
+                              [엑셀 저장] 또는 [텍스트 저장]
+            </div>
+
+            <h3>4.3 데이터 저장</h3>
+
+            <h4>4.3.1 수집 데이터 구조 (DataDTO 필드 매핑)</h4>
+            <div class="ascii-block">
+dataList 항목 인덱스 → DataDTO 속성
+ [0] → ServiceName     (웹종류: 블로그, 카페, 지도, 쇼핑...)
+ [1] → PageTitle       (페이지 제목)
+ [2] → CellNumber      (전화번호)
+ [3] → Email           (이메일)
+ [4] → Name            (이름/대표자)
+ [5] → SearchKeyword   (검색어/소그룹명)
+ [6] → CompanyName     (상호명)
+ [7] → Address         (주소)
+ [8] → Url             (웹링크)
+            </div>
+
+            <h4>4.3.2 엑셀 저장 처리</h4>
+            <div class="ascii-block">
+1. 바탕화면에 파일 생성
+   파일명: {시작일}_{종료일}_{채널}_{키워드}_{건수}_건.xls
+2. Microsoft.Office.Interop.Excel 사용
+3. 이메일 수집 모드: 8개 컬럼
+4. 전화번호 수집 모드: 9개 컬럼
+5. 텍스트 파일 저장 옵션 (text_file_save 체크박스)
+6. 저장 완료 후 DB 사용량 업데이트 (updateCountForDB)
+            </div>
+
+            <h3>4.4 광고 시스템</h3>
+            <div class="ascii-block">
+API 호출 → http://obmms.net/api/ad_manager.php
+   ├─ ad_position=app → 앱 내 배너 광고 (pictureBox21)
+   └─ ad_position=window → 팝업 광고 (Popup 폼)
+
+앱 광고: 5분 간격으로 순환
+팝업 광고: 설정된 display_time에 맞춰 표시
+            </div>
+
+            <h3>4.5 자동 업데이트 시스템</h3>
+            <div class="ascii-block">
+VersionManager
+   │
+   ├─ GetCurrentVersion() → App.config의 Version 키
+   │
+   ├─ GetLatestVersion() → gn_dber_version 테이블 (최신버전)
+   │
+   ├─ CompareVersion() → 버전 비교
+   │
+   ├─ 필수 업데이트(Required > 0): 확인 누르지 않으면 프로그램 종료
+   │
+   ├─ 선택 업데이트: Yes/No 다이얼로그
+   │
+   └─ StartDownload(version)
+        │
+        ├─ WebClient.DownloadFileAsync()
+        ├─ 경로: ~/Downloads/온리원_{버전}.exe
+        └─ 완료 → Process.Start() → 프로그램 종료
+            </div>
+
+            <h3>4.6 남은 시간 예측 알고리즘</h3>
+            <pre class="csharp">// UpdateRemainTime(minimumDataCount)
+// minimumDataCount: 예측 시작 최소 건수 (보통 10~20건)
+
+if (dataList.Count &lt; minimumDataCount):
+    표시 = "계산중"
+else:
+    elapsedTime = stopwatch.ElapsedMilliseconds
+    averageTimePerData = elapsedTime / dataList.Count / 1000  // 초 단위
+    remainCount = min(userMailLimit - dataList.Count, totalSearchCount)
+    remainTime = averageTimePerData * remainCount
+    hour = remainTime / 3600
+    min = (remainTime % 3600) / 60
+    표시 = "{hour}시간 {min}분"</pre>
+        </article>
+
+        <!-- ═══════════ 5. 데이터베이스 설계 ═══════════ -->
+        <article class="section" id="s5">
+            <h2>5. 데이터베이스 설계</h2>
+
+            <h3>5.1 접속 정보</h3>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>항목</th><th>값</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>서버 주소</td><td>175.118.126.178 (기존 114.207.244.67에서 변경됨)</td></tr>
+                    <tr><td>데이터베이스명</td><td>ilearning3</td></tr>
+                    <tr><td>사용자</td><td>ilearning3_db</td></tr>
+                    <tr><td>비밀번호</td><td>new2016obmm3</td></tr>
+                    <tr><td>MySQL 버전</td><td>8.0.13</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>5.2 주요 테이블 구조</h3>
+
+            <h4>5.2.1 crawler_member_real (회원 정보)</h4>
+            <pre class="sql">CREATE TABLE crawler_member_real (
+    user_id VARCHAR(50),        -- 사용자 ID
+    password VARCHAR(64),       -- MD5 해시된 비밀번호
+    term DATETIME,              -- 이용 종료일
+    status CHAR(1),             -- 상태 (Y/N)
+    serial VARCHAR(50),         -- 등록된 MAC 주소
+    use_cnt INT,                -- 사용 횟수
+    shopping_yn CHAR(1),        -- 쇼핑 수집 권한
+    shopping_end_date DATETIME, -- 쇼핑 수집 종료일
+    shopping_use_cnt INT        -- 쇼핑 수집 사용량
+);</pre>
+
+            <h4>5.2.2 crawler_data (수집 데이터)</h4>
+            <pre class="sql">CREATE TABLE crawler_data (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id VARCHAR(50),        -- 수집한 사용자
+    keyword VARCHAR(200),       -- 검색 키워드
+    data_type VARCHAR(20),      -- 서비스 타입
+    cell VARCHAR(20),           -- 전화번호
+    email VARCHAR(100),         -- 이메일
+    ceo VARCHAR(50),            -- 대표자명
+    company_name VARCHAR(100),  -- 상호명
+    company_type VARCHAR(50),   -- 업종
+    address VARCHAR(200),       -- 주소
+    url VARCHAR(500),           -- 출처 URL
+    regdate DATETIME            -- 등록일
+);</pre>
+
+            <h4>5.2.3 gn_dber_version (버전 관리)</h4>
+            <pre class="sql">CREATE TABLE gn_dber_version (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    version VARCHAR(20),        -- 버전 문자열 (예: 1.0.1.0)
+    description TEXT,           -- 업데이트 설명
+    required INT,               -- 필수 여부 (0: 선택, 1: 필수)
+    url VARCHAR(500)            -- 다운로드 URL
+);</pre>
+
+            <h4>5.2.4 crawler_ad_manager (광고 관리)</h4>
+            <pre class="sql">CREATE TABLE crawler_ad_manager (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ad_position VARCHAR(20),    -- 광고 위치 (app/window)
+    img_url VARCHAR(500),       -- 이미지 URL
+    move_url VARCHAR(500),      -- 클릭 시 이동 URL
+    display_time VARCHAR(50),   -- 표시 시간대 (예: "09,12,18,20")
+    view_time VARCHAR(10),      -- 표시 지속 시간 (초)
+    use_yn CHAR(1)              -- 사용 여부
+);</pre>
+        </article>
+
+        <!-- ═══════════ 6. 크롤러 모듈 설계 ═══════════ -->
+        <article class="section" id="s6">
+            <h2>6. 크롤러 모듈 설계</h2>
+
+            <h3>6.1 ICrawler 인터페이스</h3>
+            <pre class="csharp">interface ICrawler
+{
+    void SetKeyword(String keyword);          // 검색 키워드 설정
+    void SetDate(String from, String to);     // 검색 기간 설정
+    void SetDelayTime(int seconds);           // 지연 시간 설정
+    int Count { get; }                       // 전체 검색 결과 수
+    IEnumerable&lt;DataDTO&gt; Next();             // 데이터 순차 반환 (yield)
+    void Close();                            // 리소스 정리
+}</pre>
+
+            <h3>6.2 ChromeDriver 팩토리</h3>
+            <pre class="csharp">class ChromeDriverProvider
+{
+    static ChromeDriver CreateDriver()
+    {
+        // 1. ChromeDriverService 생성 (콘솔 창 숨김)
+        // 2. SHOW_FLAG=false → headless 모드
+        // 3. SHOW_FLAG=true → 브라우저 표시 (관리자 전용)
+    }
+}</pre>
+
+            <h3>6.3 크롤러별 특징 비교</h3>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>크롤러</th><th>검색 URL</th><th>상세 접근 방식</th><th>전화번호 추출</th><th>이메일 추출</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><strong>NaverBlogCrawler</strong></td><td>search.naver.com?where=blog</td><td>iframe 내 블로그 본문</td><td>RegexLogic</td><td>블로그ID@naver.com</td></tr>
+                    <tr><td><strong>NaverCafeCrawler</strong></td><td>search.naver.com?where=article</td><td>cafe_main iframe</td><td>RegexLogic</td><td>memberid@naver.com</td></tr>
+                    <tr><td><strong>NaverMapCrawler</strong></td><td>pcmap-api.place.naver.com/graphql</td><td>GraphQL 직접 호출</td><td>JSON 파싱</td><td>-</td></tr>
+                    <tr><td><strong>NaverShoppingCrawler</strong></td><td>search.shopping.naver.com</td><td>smartstore.naver.com</td><td>"고객센터" 파싱</td><td>"e-mail" 파싱</td></tr>
+                    <tr><td><strong>NaverPostCrawler</strong></td><td>m.post.naver.com</td><td>포스트 본문 + 프로필</td><td>RegexLogic</td><td>memberNo@naver.com</td></tr>
+                    <tr><td><strong>NaverWebsiteCrawler</strong></td><td>search.naver.com?where=web</td><td>직접 URL 접근</td><td>RegexLogic</td><td>페이지 소스 + daum</td></tr>
+                    <tr><td><strong>NaverBlogWriterEmailCrawler</strong></td><td>search.naver.com?where=blog</td><td>검색 결과만 (고속)</td><td>-</td><td>sub_thumb@naver.com</td></tr>
+                    <tr><td><strong>NaverBlogReaderEmailCrawler</strong></td><td>search.naver.com?where=blog</td><td>SympathyHistoryList (공감리스트)</td><td>-</td><td>공감자@naver.com</td></tr>
+                    <tr><td><strong>NaverCafeEmailCrawler</strong></td><td>cafe.naver.com</td><td>게시판 목록 + onclick 파싱</td><td>-</td><td>EUC-KR 인코딩 처리</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>6.4 RegexLogic 알고리즘 상세</h3>
+
+            <h4>전화번호-대표자 매칭 알고리즘</h4>
+            <div class="ascii-block">
+입력: HTML 소스, 검색어, 사람이름/단체이름 여부, 검색범위
+
+1. HTML 태그 제거, 공백 정규화
+2. 검색어에서 "010" 제외한 실질 키워드 추출
+3. 검색 범위 설정 (30/60/90자)
+4. 전처리: "010-XXXX-XXXX" 패턴 앞뒤 N자 범위 스캔
+5. 사람이름 모드: 검색어 앞 2~3글자 한글 → 이름
+6. 단체이름 모드: 검색어 앞 1~10글자 한글 → 단체명
+7. 전화번호만 모드: 중복 제거된 모든 010 패턴 수집
+            </div>
+
+            <h4>이메일 추출 알고리즘</h4>
+            <div class="ascii-block">
+입력: HTML 소스
+정규식: (\w+\.)*\w+@(\w+\.)+[A-Za-z]+
+→ 중복 제거 (HashSet)
+            </div>
+
+            <h3>6.5 EUC-KR 인코딩 처리 (카페 이메일)</h3>
+            <pre class="csharp">// NaverCafeEmailCrawler 전용
+private string euckr(string str) {
+    Encoding euckr = Encoding.GetEncoding(51949);  // EUC-KR 코드페이지
+    byte[] tmp = euckr.GetBytes(str);
+    // 각 바이트를 %XX 형식으로 변환 (공백은 +로)
+}</pre>
+        </article>
+
+        <!-- ═══════════ 7. 통합 빌드 방안 ═══════════ -->
+        <article class="section" id="s7">
+            <h2>7. 통합 빌드 방안</h2>
+
+            <h3>7.1 솔루션 구조</h3>
+            <div class="ascii-block">
+OnlyoneDBer.sln
+├── OnlyoneDBer.csproj         (메인 수집기 - 온리원.exe)
+│   ├── TargetFramework: net48 (또는 net462)
+│   ├── OutputType: WinExe
+│   ├── AssemblyName: 온리원
+│   └── NuGet 패키지:
+│       ├── Selenium.WebDriver 4.x (업그레이드)
+│       ├── Selenium.Support 4.x
+│       ├── MySql.Data 8.x
+│       ├── Newtonsoft.Json 13.x
+│       ├── AutoMapper 12.x
+│       ├── Microsoft.Office.Interop.Excel
+│       └── Tulpep.NotificationWindow
+│
+├── DberUpdater.csproj         (업데이터 - onlyonedber.exe)
+│   ├── TargetFramework: net462
+│   ├── OutputType: WinExe
+│   └── NuGet 패키지:
+│       └── System.Resources.Extensions 8.0.0
+            </div>
+
+            <h3>7.2 NuGet 패키지 업그레이드 전략</h3>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>패키지</th><th>현재 버전</th><th>권장 버전</th><th>사유</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>Selenium.WebDriver</td><td>3.141.0</td><td>4.25+</td><td>Chrome 115+ 대응 필수</td></tr>
+                    <tr><td>ChromeDriver</td><td>89.x</td><td>최신 안정 버전</td><td>보안 + 호환성</td></tr>
+                    <tr><td>Newtonsoft.Json</td><td>12.0.3</td><td>13.0.3</td><td>보안 취약점 패치</td></tr>
+                    <tr><td>AutoMapper</td><td>3.1.1</td><td>12.0+</td><td>API 변경 대응</td></tr>
+                    <tr><td>MySql.Data</td><td>8.0.13</td><td>8.3+</td><td>TLS 1.3 지원</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>7.3 빌드 환경</h3>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>항목</th><th>요구사항</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>IDE</td><td>Visual Studio 2022 또는 JetBrains Rider</td></tr>
+                    <tr><td>SDK</td><td>.NET SDK 8.0+</td></tr>
+                    <tr><td>OS</td><td>Windows 10/11 (x64)</td></tr>
+                    <tr><td>기타</td><td>Microsoft Office (엑셀 저장 기능)</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </article>
+
+        <!-- ═══════════ 8. 구현 로드맵 ═══════════ -->
+        <article class="section" id="s8">
+            <h2>8. 구현 로드맵</h2>
+
+            <h3>8단계 구현 계획</h3>
+            <div class="ascii-block">
+1단계: 프로젝트 구조 확정 및 초기화
+  ├─ 솔루션/프로젝트 생성
+  ├─ NuGet 패키지 복원
+  ├─ 소스코드 통합 배치
+  └─ 빌드 확인 (오류 수정)
+
+2단계: 데이터베이스 연결 계층 복원
+  ├─ OnlyoneDBerDatabase.cs 검증
+  ├─ 엔티티 클래스 정비 (DataDTO, VersionDTO, AddressDTO)
+  ├─ AutoMapper 매핑 설정
+  └─ 테스트 DB 연결 확인
+
+3단계: 크롤러 엔진 재구축
+  ├─ ICrawler 인터페이스 유지
+  ├─ ChromeDriverProvider 현대화
+  ├─ 각 크롤러 구현체 Selenium 4.x 마이그레이션
+  ├─ headless 모드 검증
+  └─ NaverMapCrawler GraphQL API 검증
+
+4단계: 메인 UI (Form1) 복원
+  ├─ Form1.Designer.cs 복원 (리소스 이미지 포함)
+  ├─ 수집 제어 로직 (시작/일시정지/중지)
+  ├─ 이벤트 핸들러 복원
+  ├─ ListView 데이터 표시
+  └─ 진행률/남은시간 표시
+
+5단계: 사용자 인증 및 라이선스
+  ├─ Login() 메서드 정비
+  ├─ MD5 인증 유지 (향후 SHA256 전환 권장)
+  ├─ MAC 주소 인증 로직
+  └─ 체험/정규/관리자 버전 구분
+
+6단계: 데이터 저장 기능
+  ├─ 엑셀 저장 (Interop.Excel)
+  ├─ 텍스트 파일 저장
+  ├─ DB 전송 (crawler_data)
+  └─ 수집 건수 업데이트
+
+7단계: 부가 기능
+  ├─ 광고 시스템 (API 연동)
+  ├─ 팝업 광고 (Tulpep.NotificationWindow)
+  ├─ 자동 업데이트 (VersionManager)
+  ├─ FrmMap 지도 수집 폼
+  └─ 도움말/가이드 폼
+
+8단계: 테스트 및 최종 검증
+  ├─ 통합 테스트
+  ├─ 네이버 서비스별 수집 테스트
+  ├─ 예외 처리 검증
+  ├─ 성능 최적화
+  └─ 배포 패키지 구성
+            </div>
+        </article>
+
+        <!-- ═══════════ 9. 위험 요소 및 대응 방안 ═══════════ -->
+        <article class="section" id="s9">
+            <h2>9. 위험 요소 및 대응 방안</h2>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>위험 요소</th><th>심각도</th><th>대응 방안</th></tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>네이버 HTML 구조 변경</strong></td>
+                        <td><span class="severity sev-high">높음</span></td>
+                        <td>CSS 선택자 기반 크롤링 유지, 정기적 패치 필요</td>
+                    </tr>
+                    <tr>
+                        <td><strong>ChromeDriver 버전 불일치</strong></td>
+                        <td><span class="severity sev-high">높음</span></td>
+                        <td>ChromeDriverProvider에 자동 버전 매칭 로직 포함</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Selenium 3→4 마이그레이션</strong></td>
+                        <td><span class="severity sev-medium">중간</span></td>
+                        <td><code>FindElementByCssSelector</code> → <code>FindElement(By.CssSelector())</code> 일괄 변경</td>
+                    </tr>
+                    <tr>
+                        <td><strong>네이버 IP 차단</strong></td>
+                        <td><span class="severity sev-medium">중간</span></td>
+                        <td>DelayTime 설정, User-Agent 로테이션, 프록시 지원 검토</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MySQL 연결 불안정</strong></td>
+                        <td><span class="severity sev-medium">중간</span></td>
+                        <td>연결 재시도 로직, Connection Pool 활용</td>
+                    </tr>
+                    <tr>
+                        <td><strong>MS Office 미설치 환경</strong></td>
+                        <td><span class="severity sev-low">낮음</span></td>
+                        <td>텍스트 파일 저장 대체 옵션 제공</td>
+                    </tr>
+                    <tr>
+                        <td><strong>SSL 인증서 무시 (보안)</strong></td>
+                        <td><span class="severity sev-medium">중간</span></td>
+                        <td><code>ServerCertificateValidationCallback = true</code> → 올바른 검증으로 변경</td>
+                    </tr>
+                    <tr>
+                        <td><strong>EUC-KR 인코딩 이슈</strong></td>
+                        <td><span class="severity sev-low">낮음</span></td>
+                        <td>카페 크롤러 전용 인코딩 처리 유지</td>
+                    </tr>
+                </tbody>
+            </table>
+            </div>
+        </article>
+
+        <!-- ═══════════ 10. 품질 검증 계획 ═══════════ -->
+        <article class="section" id="s10">
+            <h2>10. 품질 검증 계획</h2>
+
+            <h3>10.1 단위 테스트 대상</h3>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>테스트 대상</th><th>검증 내용</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td><code>RegexLogic.GetCaptainAndPhone()</code></td><td>전화번호+이름 추출 정확도</td></tr>
+                    <tr><td><code>RegexLogic.GetEmail()</code></td><td>이메일 추출 정확도</td></tr>
+                    <tr><td><code>OnlyoneDBerDatabase</code></td><td>연결/조회/삽입 정상 동작</td></tr>
+                    <tr><td><code>VersionManager</code></td><td>버전 비교, 다운로드 로직</td></tr>
+                    <tr><td><code>ChromeDriverProvider</code></td><td>드라이버 생성, headless 모드</td></tr>
+                </tbody>
+            </table>
+            </div>
+
+            <h3>10.2 통합 테스트 시나리오</h3>
+            <div class="ascii-block">
+시나리오 1: 정규 사용자 로그인 → 블로그 수집 → 엑셀 저장
+시나리오 2: 지도 수집 → 전화번호만 필터링
+시나리오 3: 블로그 게시자 이메일 고속 수집 → 중복 제거
+시나리오 4: 쇼핑몰 수집 → 상호명+전화번호+이메일
+시나리오 5: 카페 이메일 수집 (특정 카페)
+시나리오 6: 수집 건수 초과 → 자동 중지
+시나리오 7: 네트워크 끊김 → 오류 메시지 + 복구
+시나리오 8: 자동 업데이트 → 다운로드 → 신버전 실행
+            </div>
+
+            <h3>10.3 성능 기준</h3>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>항목</th><th>목표</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>블로그 수집 속도</td><td>페이지당 2~3초 (DelayTime=1 기준)</td></tr>
+                    <tr><td>중복 제거율</td><td>100% (HashSet 기반)</td></tr>
+                    <tr><td>엑셀 저장</td><td>1000건/초 이내</td></tr>
+                    <tr><td>메모리 사용량</td><td>500MB 이하 (10만건 수집 기준)</td></tr>
+                    <tr><td>빌드 시간</td><td>10초 이내</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </article>
+
+        <!-- ═══════════ 부록 A ═══════════ -->
+        <article class="section" id="appendix-a">
+            <h2>부록 A: 주요 상수 및 설정값</h2>
+            <div class="table-wrap">
+            <table>
+                <thead>
+                    <tr><th>상수</th><th>값</th><th>설명</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>DB 서버</td><td>175.118.126.178</td><td>MySQL 서버 주소</td></tr>
+                    <tr><td>DB명</td><td>ilearning3</td><td>데이터베이스 이름</td></tr>
+                    <tr><td>업데이트 URL</td><td>http://obmms.net</td><td>기술지원 사이트</td></tr>
+                    <tr><td>광고 API</td><td>http://obmms.net/api/ad_manager.php</td><td>광고 관리 API</td></tr>
+                    <tr><td>지원 URL</td><td>http://3key.co.kr/pages/page_3209.php</td><td>검색 기술 페이지</td></tr>
+                    <tr><td>버전명</td><td>DBer V210301</td><td>현재 버전 식별자</td></tr>
+                    <tr><td>기본 DelayTime</td><td>1초</td><td>검색 간격 (numericUpDown1)</td></tr>
+                    <tr><td>리스트 제한</td><td>50건</td><td>ListView 페이지당 표시 건수</td></tr>
+                    <tr><td>남은시간 계산</td><td>10~20건</td><td>최소 샘플링 건수</td></tr>
+                </tbody>
+            </table>
+            </div>
+        </article>
+
+        <!-- ═══════════ 부록 B ═══════════ -->
+        <article class="section" id="appendix-b">
+            <h2>부록 B: Selenium 3→4 마이그레이션 가이드</h2>
+            <pre class="csharp">// Selenium 3.x (현재 코드)
+Driver.FindElementByCssSelector(".selector")
+Driver.FindElementsByCssSelector(".selector")
+Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3);
+
+// Selenium 4.x (변경 필요)
+Driver.FindElement(By.CssSelector(".selector"))
+Driver.FindElements(By.CssSelector(".selector"))
+Driver.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(3); // 동일</pre>
+        </article>
+
+        <!-- ═══════════ 문서 종료 ═══════════ -->
+        <article class="section">
+            <div style="text-align:center; padding: 24px 0; color: var(--text-secondary);">
+                <p style="font-size:1.05rem; font-weight:600; margin-bottom:8px;">📋 문서 종료</p>
+                <p style="font-size:0.9rem; line-height:1.7;">
+                    이 초등 설계 기획서는 <code>decompiled/210531크롬버전업</code>과 <code>decompiled/source_recovered</code>의<br>
+                    모든 중요 소스 파일을 분석하여 작성되었으며, 다이버 매뉴얼에서 요구하는 전체 기능을<br>
+                    완전히 구현하기 위한 청사진을 제공합니다.
+                </p>
+            </div>
+        </article>
+
+    </main>
+</div>
+
+<footer class="footer">
+    © 온리원디버 초등 설계 기획서 · 2026-05-06 · HTML 버전
+</footer>
+
+</body>
+</html>

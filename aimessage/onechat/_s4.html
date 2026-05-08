@@ -1,0 +1,41 @@
+<div class="screen" id="screen1">
+  <div class="section-head">
+    <span class="badge">STEP 2</span>
+    <h2>AI 진단 — 인터랙티브 증상 분석</h2>
+    <p class="desc">환자가 직접 신체 부위를 선택하고, AI가 단계별 문진을 통해 증상을 정밀하게 수집합니다.</p>
+  </div>
+  <div class="chat-container" style="max-width:520px;">
+    <div class="chat-header">
+      <div class="chat-header-logo">🔍</div>
+      <div class="chat-header-info"><div class="chat-header-name">청담한의원 AI 진단</div><div class="chat-header-desc">증상 분석 중</div></div>
+    </div>
+    <div class="chat-body">
+      <div class="bubble ai">어디가 가장 불편하신가요?<br>아래 신체 부위를 <strong>클릭</strong>해 주세요.</div>
+      <div class="body-model-wrap">
+        <svg width="220" height="400" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+          <rect x="98" y="56" width="24" height="14" rx="6" class="body-region" data-region="목" data-code="N01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="82" cy="80" rx="20" ry="12" class="body-region" data-region="오른쪽 어깨" data-code="S02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="138" cy="80" rx="20" ry="12" class="body-region" data-region="왼쪽 어깨" data-code="S01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="86" y="72" width="48" height="102" rx="14" class="body-region" data-region="등/허리" data-code="L01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="56" y="82" width="16" height="82" rx="8" class="body-region" data-region="오른팔" data-code="A02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="148" y="82" width="16" height="82" rx="8" class="body-region" data-region="왼팔" data-code="A01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="64" cy="172" rx="9" ry="7" class="body-region" data-region="오른손/손목" data-code="W02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="156" cy="172" rx="9" ry="7" class="body-region" data-region="왼손/손목" data-code="W01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="86" y="174" width="48" height="30" rx="10" class="body-region" data-region="골반" data-code="P01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="84" y="204" width="22" height="112" rx="10" class="body-region" data-region="오른쪽 다리" data-code="LG02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="114" y="204" width="22" height="112" rx="10" class="body-region" data-region="왼쪽 다리" data-code="LG01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="95" cy="316" rx="11" ry="9" class="body-region" data-region="오른쪽 무릎" data-code="KN02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="125" cy="316" rx="11" ry="9" class="body-region" data-region="왼쪽 무릎" data-code="KN01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="95" cy="364" rx="13" ry="7" class="body-region" data-region="오른발" data-code="F02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="125" cy="364" rx="13" ry="7" class="body-region" data-region="왼발" data-code="F01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div id="selectedArea" style="display:none;text-align:center;margin:6px 0;">
+        <div id="regionBubble" class="bubble user" style="display:inline-block;max-width:90%;"></div>
+      </div>
+      <div id="diagFollowUp"></div>
+      <div class="choice-row" id="diagButtons"></div>
+    </div>
+  </div>
+  <div class="briefing-point" style="margin-top:20px;">💡 <strong>핵심 가치:</strong> 환자당 최대 <strong>12개 데이터 포인트</strong> 자동 수집 (전화 문진 대비 3배 이상). 진단 완료율 <strong>65%</strong>로 업계 최고 수준.</div>
+</div>

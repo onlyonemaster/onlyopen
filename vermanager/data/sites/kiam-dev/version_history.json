@@ -1,0 +1,13 @@
+[
+    {
+        "id": "rel_kiam_dev_init",
+        "from": "1.0.0",
+        "to": "1.0.1-dev",
+        "type": "minor",
+        "date": "2026-05-03T00:00:00+09:00",
+        "note": "개발 환경 초기 설정",
+        "linked_improvements": [],
+        "imp_count": 0,
+        "imp_summary": []
+    }
+]

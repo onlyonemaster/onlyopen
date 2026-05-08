@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CSS 스타일 분석 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link active">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>CSS 분석</span></div>
+<h1>🎨 CSS 스타일 — 완전 분석</h1>
+<p class="page-desc">명함 프로필 페이지를 꾸미는 모든 CSS 파일과 핵심 스타일 규칙을 분석합니다.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#files">CSS 파일 구성</a></li>
+<li><a href="#iam">iam.css — 핵심 스타일</a></li>
+<li><a href="#bootstrap">Bootstrap 커스터마이징</a></li>
+<li><a href="#responsive">반응형 디자인</a></li>
+<li><a href="#card-style">종이명함 카드 스타일</a></li>
+<li><a href="#layout">레이아웃 구조</a></li>
+<li><a href="#follow">따라하기</a></li>
+</ul>
+</div>
+
+<h2 id="files">📁 CSS 파일 구성</h2>
+
+<table class="data-table">
+<thead><tr><th>파일</th><th>경로</th><th>역할</th><th>크기</th></tr></thead>
+<tbody>
+<tr><td><strong>bootstrap.min.css</strong></td><td><code>[내부경로]/[부트스트랩]/</code></td><td>기본 UI 프레임워크</td><td>~150KB</td></tr>
+<tr><td><strong>iam.css</strong></td><td><code>[내부경로]/[스타일]/</code></td><td>IAM 전용 스타일 ★핵심</td><td>~8KB</td></tr>
+<tr><td><strong>slick.css</strong></td><td>CDN</td><td>슬라이더/캐러셀</td><td>~5KB</td></tr>
+<tr><td><strong>slick-theme.css</strong></td><td>CDN</td><td>슬라이더 테마</td><td>~3KB</td></tr>
+<tr><td><strong>인라인 스타일</strong></td><td>HTML 내부</td><td>페이지별 커스텀 스타일</td><td>다수</td></tr>
+</tbody>
+</table>
+
+<h2 id="iam">🎯 iam.css — 핵심 스타일 완전 분석</h2>
+
+<h3>기본 레이아웃</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+/* === 메인 컨텐츠 영역 === */
+.content {
+    /* 중앙 정렬, 최대 너비 768px */
+    max-width: 768px;
+    margin: 0 auto;
+    padding: 16px;
+}
+
+.content2 {
+    /* 2단 레이아웃용 */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* === 샘플 카드 (종이명함 표시 영역) === */
+.sample_card {
+    background: white;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.12);
+}
+
+/* === 정사각형 비율 유지 트릭 === */
+.square {
+    position: relative;
+    width: 100%;
+    padding-bottom: 100%;  /* ★ 핵심: padding을 %로 주면
+                               부모 width 기준으로 계산됨 */
+}
+
+.square > img {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;  /* 비율 유지하며 꽉 채우기 */
+}
+</pre>
+
+<h3>명함 카드 스타일</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+/* === mall-img — 상품/명함 이미지 === */
+.mall-img {
+    width: 100%;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.mall-img img {
+    width: 100%;
+    display: block;
+}
+
+/* === mall-content — 상품/명함 텍스트 === */
+.mall-content {
+    padding: 8px 4px;
+}
+
+.mall-content .title {
+    font-size: 14px;
+    font-weight: bold;
+    margin-bottom: 4px;
+}
+
+.mall-content .desc {
+    font-size: 12px;
+    color: #666;
+}
+</pre>
+
+<h3>버튼 & 인터랙션</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+/* === 기본 버튼 === */
+button, .btn {
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.btn-primary {
+    background: #007bff;
+    color: white;
+}
+
+.btn-danger {
+    background: #dc3545;
+    color: white;
+}
+
+/* === 드롭다운 메뉴 === */
+.dropdown-menu {
+    display: none;          /* 기본 숨김 */
+    position: absolute;
+    background: white;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+    z-index: 1000;
+}
+
+.dropdown-menu.show {
+    display: block;         /* JS로 토글 */
+}
+</pre>
+
+<h2 id="responsive">📱 반응형 디자인 — 모바일 대응</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+/* === iam.css의 미디어 쿼리 === */
+
+/* 768px 이하 (태블릿/모바일) */
+@media (max-width: 768px) {
+    .content {
+        padding: 8px;
+        max-width: 100%;
+    }
+
+    .content2 {
+        flex-direction: column;  /* 세로로 쌓기 */
+    }
+
+    .sample_card {
+        width: 100%;
+    }
+
+    button {
+        font-size: 12px;
+        padding: 6px 12px;
+    }
+}
+
+/* 480px 이하 (작은 모바일) */
+@media (max-width: 480px) {
+    .title {
+        font-size: 16px;
+    }
+
+    .desc {
+        font-size: 11px;
+    }
+}
+
+/* 367px 이하 (아주 작은 화면) */
+@media (max-width: 367px) {
+    /* 초소형 화면 대응 */
+    .mall-content .title {
+        font-size: 12px;
+    }
+}
+</pre>
+
+<h2 id="card-style">🃏 종이명함 카드 — 시각적 디자인</h2>
+
+<p>종이명함은 실제 명함과 비슷한 비율(약 9:5)로 표시됩니다:</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;">
+┌────────────────────────────────────────────┐
+│  ┌──────────────────────────────────┐      │   ← sample_card
+│  │  ┌──────┐                        │      │
+│  │  │ 로고 │  회사명                 │      │   ← card_logo (이미지)
+│  │  └──────┘                        │      │
+│  │                                   │      │
+│  │  홍길동     대표이사              │      │   ← 이름, 직책
+│  │                                   │      │
+│  │  📞 010-1234-5678                │      │   ← 연락처
+│  │  ✉️  hong@example.com             │      │   ← 이메일
+│  │  🏠  서울시 강남구...            │      │   ← 주소
+│  │                                   │      │
+│  └──────────────────────────────────┘      │
+│                                            │
+│  [수정] [삭제] [위로] [아래로] [발송]     │   ← 액션 버튼들
+└────────────────────────────────────────────┘
+
+비율: 가로:세로 = 약 9:5 (실제 명함 비율: 90mm × 50mm)
+배경색: white
+그림자: 0 1px 3px rgba(0,0,0,0.12)
+둥근 모서리: border-radius 4px
+</pre>
+
+<h2 id="layout">📐 전체 레이아웃 구조도</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;">
+┌──────────────────────────────────────────────────┐
+│  #header (position: fixed, z-index: 100)         │
+│  [로고] [언어선택] ... [알림] [메뉴아이콘들]     │
+├──────────────────────────────────────────────────┤
+│                                                  │
+│  #wrap (common-wrap)                             │
+│  ┌────────────────────────────────────────┐      │
+│  │  .sample_main                           │      │
+│  │  ┌──────────────────────────────────┐  │      │
+│  │  │ .sample_card (종이명함 리스트)   │  │      │
+│  │  │  ├── 명함1                       │  │      │
+│  │  │  ├── 명함2                       │  │      │
+│  │  │  └── 명함3                       │  │      │
+│  │  └──────────────────────────────────┘  │      │
+│  │                                         │      │
+│  │  .mall-group (IAM 상품 목록)           │      │
+│  │  ┌──────────────────────────────────┐  │      │
+│  │  │ .mall-img  .mall-content          │  │      │
+│  │  │ [상품1] [상품2] [상품3] ...       │  │      │
+│  │  └──────────────────────────────────┘  │      │
+│  └────────────────────────────────────────┘      │
+│                                                  │
+├──────────────────────────────────────────────────┤
+│  #footer_menu (position: fixed, bottom: 0)       │
+│  [앱홈] [내명함] [추천] [명함관리] [소식] ...    │
+└──────────────────────────────────────────────────┘
+</pre>
+
+<h2 id="follow">🎓 초등학생도 따라하는 CSS 분석법</h2>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>요소 검사</strong><br>F12 → 왼쪽 위 화살표 아이콘 클릭 → 페이지에서 명함 클릭</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Styles 패널 보기</strong><br>오른쪽 Styles 탭에 적용된 모든 CSS 규칙이 나와요.</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>실시간 수정</strong><br>CSS 값을 더블클릭해서 바꾸면 화면에 바로 반영돼요!</div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Computed 탭</strong><br>Styles 옆의 Computed 탭 → 최종 계산된 스타일 값 확인</div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>반응형 테스트</strong><br>Device Toolbar로 여러 화면 크기에서 CSS 어떻게 바뀌는지 확인</div></div>
+</div>
+
+<div class="nav-bottom"><a href="/manual/papercard/source-mobile.html" class="nav-prev">← 이전: 모바일 연동</a><a href="/manual/papercard/full-algorithm.html" class="nav-next">다음: 전체 알고리즘 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

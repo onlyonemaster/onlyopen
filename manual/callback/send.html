@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>콜백 발송하기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">IAM 콜백</div>
+      <a href="/manual/callback/" class="sb-link">📞 IAM 콜백 소개</a>
+      <a href="/manual/callback/create.html" class="sb-link">콜백 메시지 만들기</a>
+      <a href="/manual/callback/list.html" class="sb-link">콜백 리스트 관리</a>
+      <a href="/manual/callback/send.html" class="sb-link active">콜백 발송하기</a>
+      <a href="/manual/callback/settings.html" class="sb-link">콜백 설정 상세</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sharecallback/" class="sb-link">공유콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/callback/">IAM 콜백</a> › 콜백 발송하기</nav>
+    <h1 class="page-title">📤 콜백 발송하기</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#auto">자동 발송 (기본)</a></li>
+        <li><a href="#manual">수동 발송 방법</a></li>
+        <li><a href="#self">셀프폰 발송</a></li>
+        <li><a href="#push">푸시형 전송</a></li>
+        <li><a href="#app">앱 연동 발송 흐름</a></li>
+        <li><a href="#troubleshoot">문제 해결</a></li>
+      </ul>
+    </div>
+    <section id="auto">
+      <h2>자동 발송 (기본 동작)</h2>
+      <p>콜백 메시지를 등록하고 나면 <strong>별도 조작 없이</strong> 자동으로 동작합니다:</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">온리원문자 앱이 설치된 Android 스마트폰에서 <strong>부재중 전화</strong>가 발생</div></li>
+        <li><div class="step-num">2</div><div class="step-body">앱이 부재중 전화를 감지하고, 등록된 콜백 메시지 중 <strong>활성화(ON) 상태의 기본 메시지</strong>를 자동 선택</div></li>
+        <li><div class="step-num">3</div><div class="step-body">발신 번호로 <strong>자동 문자 발송</strong> (SMS/LMS/MMS)</div></li>
+        <li><div class="step-num">4</div><div class="step-body">발송 결과는 <strong>발신내역</strong> 메뉴에서 확인 가능</div></li>
+      </ol>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>📌 중요</strong>: 자동 발송이 동작하려면 콜백 메시지가 <strong>"유지" 상태(ON)</strong>여야 합니다. 리스트에서 해지(OFF)로 설정된 메시지는 발송되지 않습니다.
+      </div>
+    </section>
+    <section id="manual">
+      <h2>수동 발송 방법</h2>
+      <p>특정 대상에게 직접 콜백 메시지를 보내고 싶을 때는 <strong>콜백 리스트</strong>에서 수동 발송할 수 있습니다:</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>콜백 리스트 열기</strong>: <code>kiam.kr/m</code> → [콜백발송] → [콜백리스트보기]</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>메시지 선택</strong>: 리스트에서 발송할 메시지 클릭 → 수정 모달 열림</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>발송 방식 선택</strong>: [셀프폰 발송하기] 또는 [푸시형 전송하기] 클릭</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>수신자 입력</strong>: 전송할 친구 아이디를 입력 (쉼표로 구분하여 여러 명 가능)</div></li>
+        <li><div class="step-num">5</div><div class="step-body"><strong>[전송하기]</strong> 클릭 → <code>send_msg_applist('callback')</code> 실행</div></li>
+      </ol>
+    </section>
+    <section id="self">
+      <h2>셀프폰 발송</h2>
+      <p><strong>셀프폰 발송</strong>은 내 스마트폰의 문자 앱을 통해 직접 문자를 보내는 방식입니다.</p>
+      <div class="code-block">
+        <pre><code>// 셀프폰 발송 호출
+onclick="app_set_list('self', 'callback')"
+
+// app_set_list 함수 흐름:
+// 1. 발송 타입을 'self'로 설정
+// 2. 수신자 입력 영역 표시 (app_sets_member_call div)
+// 3. 수신자 아이디를 쉼표로 구분하여 입력
+// 4. send_msg_applist('callback') 호출 → 실제 발송</code></pre>
+      </div>
+      <table class="m-table">
+        <thead><tr><th>특징</th><th>셀프폰 발송</th><th>푸시형 전송</th></tr></thead>
+        <tbody>
+          <tr><td><strong>발송 주체</strong></td><td>내 스마트폰 (AppScript)</td><td>서버/앱 푸시 시스템</td></tr>
+          <tr><td><strong>비용</strong></td><td>통신사 문자 요금</td><td>플랫폼 포인트 차감</td></tr>
+          <tr><td><strong>수신자</strong></td><td>전화번호 기반</td><td>앱 사용자 아이디 기반</td></tr>
+          <tr><td><strong>사용 환경</strong></td><td>Android 앱 필수</td><td>앱 내 메시지 시스템</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="push">
+      <h2>푸시형 전송</h2>
+      <p><strong>푸시형 전송</strong>은 kiam.kr 플랫폼의 푸시 알림 시스템을 통해 메시지를 전달하는 방식입니다.</p>
+      <div class="code-block">
+        <pre><code>// 푸시형 전송 호출
+onclick="app_set_list('push', 'callback')"
+
+// 발송 대상: 같은 플랫폼 내 회원 아이디
+// 발송 채널: 앱 푸시 알림
+// 비용: 플랫폼 포인트로 차감</code></pre>
+      </div>
+      <p style="margin-top:12px;">푸시형 전송은 앱이 설치된 사용자에게 즉시 알림이 도착하며, 수신자가 앱 내에서 메시지를 확인할 수 있습니다.</p>
+    </section>
+    <section id="app">
+      <h2>앱 연동 발송 흐름</h2>
+      <p>콜백 발송은 <strong>온리원문자 앱(Android)</strong>의 <code>AppScript</code> 인터페이스를 통해 동작합니다:</p>
+      <table class="m-table">
+        <thead><tr><th>함수명</th><th>역할</th><th>호출 경로</th></tr></thead>
+        <tbody>
+          <tr><td><code>goCallbackApp()</code></td><td>콜백 앱 메인 화면 열기</td><td>[콜백발송] 아이콘 클릭 시</td></tr>
+          <tr><td><code>goCallbackList()</code></td><td>콜백등록관리 화면 열기</td><td>[내정보] → [콜백등록관리]</td></tr>
+          <tr><td><code>AppScript.callbackList()</code></td><td>앱 내 콜백 리스트 화면</td><td>Android WebView에서만 호출</td></tr>
+          <tr><td><code>callAppBridge()</code></td><td>앱-웹뷰 브릿지 통신</td><td>AppScript가 없을 때 대체 호출</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:20px;">플랫폼 감지 로직</h3>
+      <div class="code-block">
+        <pre><code>// goCallbackApp() - HTML 인라인
+function goCallbackApp() {
+  var navCase = navigator.userAgent.toLocaleLowerCase();
+  if (navCase.search("android") > -1) {
+    try {
+      callAppBridge('goCallbackApp', '');  // 앱 브릿지 호출
+    } catch (e) {
+      openAndroid();  // 실패 시 앱 설치 유도
+    }
+  } else {
+    alert("휴대폰에서 이용해주세요.");  // PC/iPhone 접근 제한
+  }
+}</code></pre>
+      </div>
+    </section>
+    <section id="troubleshoot">
+      <h2>문제 해결</h2>
+      <table class="m-table">
+        <thead><tr><th>문제</th><th>원인</th><th>해결 방법</th></tr></thead>
+        <tbody>
+          <tr><td>콜백 메시지가 자동 발송되지 않음</td><td>메시지가 "해지(OFF)" 상태</td><td>콜백 리스트에서 "유지(ON)"로 변경</td></tr>
+          <tr><td>PC에서 [콜백발송] 클릭 시 반응 없음</td><td>Android 앱 필요</td><td>스마트폰에서 kiam.kr/m 접속</td></tr>
+          <tr><td>"휴대폰에서 이용해주세요" 메시지</td><td>iPhone 또는 PC에서 접속</td><td>Android 폰에서만 이용 가능</td></tr>
+          <tr><td>포인트 부족</td><td>캐시포인트 잔액 부족</td><td>마이페이지 → 포인트 충전</td></tr>
+          <tr><td>수신자가 문자를 받지 못함</td><td>수신번호 오류 또는 차단</td><td>수신번호 확인 및 발신내역에서 재확인</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/callback/list.html" class="btn-prev">← 콜백 리스트 관리</a>
+      <a href="/manual/callback/settings.html" class="btn-next">콜백 설정 상세 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#auto">자동 발송</a></li>
+      <li><a href="#manual">수동 발송</a></li>
+      <li><a href="#self">셀프폰 발송</a></li>
+      <li><a href="#push">푸시형 전송</a></li>
+      <li><a href="#app">앱 연동 흐름</a></li>
+      <li><a href="#troubleshoot">문제 해결</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

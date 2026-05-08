@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>상태 라이프사이클 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">📋 소개 및 개요</a></div>
+    <div class="sb-section"><div class="sb-section-title">기본 사용법</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">📊 대시보드 화면 구성</a><a href="/manual/source-improvements/list.html" class="sb-link">🔍 개선 항목 조회·필터링</a><a href="/manual/source-improvements/register.html" class="sb-link">✏️ 새 개선 항목 등록</a><a href="/manual/source-improvements/detail.html" class="sb-link">👁️ 상세보기 및 수정</a></div>
+    <div class="sb-section"><div class="sb-section-title">심화</div><a href="/manual/source-improvements/lifecycle.html" class="sb-link active">🔄 상태 라이프사이클</a><a href="/manual/source-improvements/notice.html" class="sb-link">📢 공지사항 연동</a><a href="/manual/source-improvements/auto-register.html" class="sb-link">🤖 AI 자동 등록</a></div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">5가지 상태 개요</a>
+    <a href="#diagram" class="toc-link">상태 전이 다이어그램</a>
+    <a href="#developing" class="toc-link">개발중</a>
+    <a href="#testing" class="toc-link">테스트중</a>
+    <a href="#done" class="toc-link">완료</a>
+    <a href="#deployed" class="toc-link">배포됨</a>
+    <a href="#rollback" class="toc-link">롤백</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">🔄 상태 라이프사이클</h1>
+    <p class="lead">모든 개선 항목은 5가지 상태 중 하나를 가집니다. 상태는 개발 프로세스의 진행 단계를 나타내며, 필요에 따라 수동으로 변경합니다.</p>
+
+    <h2 id="diagram">상태 전이 다이어그램</h2>
+    <pre class="code-block"><code>   [등록]
+     │
+     ▼
+┌──────────┐    테스트 시작    ┌──────────┐
+│  개발중   │ ──────────────→ │ 테스트중  │
+│ (dev)    │                  │ (testing) │
+└──────────┘                  └──────────┘
+     │                              │
+     │ 직접 완료                    │ 테스트 통과
+     ▼                              ▼
+┌──────────┐    배포 실행      ┌──────────┐
+│   완료    │ ──────────────→ │  배포됨   │
+│  (done)  │                  │(deployed) │
+└──────────┘                  └──────────┘
+                                   │
+                              문제 발견
+                                   ▼
+                              ┌──────────┐
+                              │   롤백    │
+                              │(rollback) │
+                              └──────────┘</code></pre>
+
+    <div class="card-grid-2">
+      <div class="info-card" id="developing">
+        <span class="status-badge status-dev">개발중</span>
+        <p><strong>의미:</strong> 현재 개발이 진행 중인 항목입니다.</p>
+        <p><strong>기준:</strong> 코드 수정이 완료되지 않았거나, 아직 테스트 단계에 진입하지 않은 상태.</p>
+        <p><strong>→ 전환 가능:</strong> 테스트중, 완료 (바로 완료 처리)</p>
+      </div>
+      <div class="info-card" id="testing">
+        <span class="status-badge status-testing">테스트중</span>
+        <p><strong>의미:</strong> 개발은 완료되었고, 현재 테스트를 진행 중입니다.</p>
+        <p><strong>기준:</strong> 코드 수정 완료, 테스트 서버(DEV/TEST)에서 검증 중.</p>
+        <p><strong>→ 전환 가능:</strong> 완료 (테스트 통과), 개발중 (재수정 필요)</p>
+      </div>
+      <div class="info-card" id="done">
+        <span class="status-badge status-done">완료</span>
+        <p><strong>의미:</strong> 개발과 테스트가 모두 완료된 상태입니다.</p>
+        <p><strong>기준:</strong> 모든 작업 완료, 배포 대기 또는 배포 예정.</p>
+        <p><strong>→ 전환 가능:</strong> 배포됨 (운영 배포), 롤백</p>
+      </div>
+      <div class="info-card" id="deployed">
+        <span class="status-badge status-deployed">배포됨</span>
+        <p><strong>의미:</strong> 운영 환경(PROD)에 배포가 완료된 상태입니다.</p>
+        <p><strong>기준:</strong> <code>deployed_date</code>와 <code>deployed_by</code>가 기록됨.</p>
+        <p><strong>→ 전환 가능:</strong> 롤백 (문제 발생 시)</p>
+      </div>
+      <div class="info-card" id="rollback">
+        <span class="status-badge status-rollback">롤백</span>
+        <p><strong>의미:</strong> 배포 후 문제가 발견되어 이전 버전으로 되돌린 상태입니다.</p>
+        <p><strong>기준:</strong> 운영 환경에 심각한 이슈 발생, 긴급 롤백 결정.</p>
+        <p><strong>→ 전환 가능:</strong> 개발중 (재수정 시작)</p>
+      </div>
+    </div>
+
+    <h2>상태 변경 방법</h2>
+    <p>상태는 수동으로만 변경됩니다:</p>
+    <ol class="feature-list">
+      <li>목록 페이지에서 해당 항목의 「수정」 버튼 클릭</li>
+      <li>상태 dropdown에서 원하는 상태 선택</li>
+      <li>하단 「수정」 버튼 클릭 → AJAX 저장</li>
+    </ol>
+
+    <div class="tip-box"><strong>💡 모범 사례:</strong> 배포 시 <code>status</code>를 「배포됨」으로 변경하고, <code>deployed_date</code>와 <code>deployed_by</code>를 반드시 기록하세요. 버전 관리 시스템(vermanager)에서 릴리즈 시 자동으로 이 필드들을 업데이트합니다.</div>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/detail.html" class="next-link">← 이전: 상세보기 및 수정</a>
+      <a href="/manual/source-improvements/notice.html" class="next-link">다음: 공지사항 연동 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.5;overflow-x:auto;margin-bottom:28px;white-space:pre;font-family:monospace;}
+.card-grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:28px;}
+.info-card{background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:18px;}
+.info-card p{font-size:13px;color:var(--text2);margin:6px 0;line-height:1.6;}
+.info-card strong{color:var(--text);}
+.status-badge{display:inline-block;padding:3px 10px;border-radius:4px;font-size:12px;font-weight:700;margin-bottom:8px;}
+.status-dev{background:#cfe8fc;color:#004085;}
+.status-testing{background:#fff3cd;color:#856404;}
+.status-done{background:#c3e6cb;color:#155724;}
+.status-deployed{background:#d4edda;color:#155724;}
+.status-rollback{background:#f8d7da;color:#721c24;}
+.feature-list{margin-bottom:20px;padding-left:20px;}
+.feature-list li{margin-bottom:8px;font-size:14px;}
+.tip-box{background:var(--green-bg);border-left:4px solid var(--green);padding:14px 18px;border-radius:8px;margin-bottom:28px;font-size:14px;}
+.prev-next{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+@media(max-width:768px){.card-grid-2{grid-template-columns:1fr;}}
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

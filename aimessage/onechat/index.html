@@ -1,0 +1,1816 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>챗봇 대화 리스트</title>
+  <link rel="stylesheet" href="css/style.css?v=0428i" />
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
+</head>
+<body>
+
+  <!-- ========== 사이드바 드로어 ========== -->
+  <div class="sidebar-overlay" id="sidebarOverlay"></div>
+  <nav class="sidebar-drawer" id="sidebarDrawer">
+    <!-- 사이드바 헤더 -->
+    <div class="sidebar-header">
+      <div class="sidebar-logo">
+        <div class="sidebar-logo-icon">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="sidebar-logo-text">
+          <span class="sidebar-logo-name">OneChat</span>
+          <span class="sidebar-logo-sub">AI 챗봇 플랫폼</span>
+        </div>
+      </div>
+      <button class="sidebar-close-btn" id="sidebarCloseBtn"><i class="fas fa-times"></i></button>
+    </div>
+
+    <!-- 사용자 프로필 미니 카드 -->
+    <div class="sidebar-profile" id="sidebarProfile">
+      <div class="sidebar-profile-avatar" id="sidebarProfileAvatar">?</div>
+      <div class="sidebar-profile-info">
+        <span class="sidebar-profile-name" id="sidebarProfileName">로딩 중...</span>
+        <span class="sidebar-profile-role" id="sidebarProfileRole">아바타 챗봇 운영자</span>
+      </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- 메뉴 1: 대시보드 -->
+    <button class="sidebar-menu-item" id="sbDashboardBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">
+        <i class="fas fa-chart-bar"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">대시보드</span>
+        <span class="sidebar-menu-desc">방문자 · 채팅 · 응답률 통계</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+
+    <!-- 메뉴 1-1: 시나리오 설계 -->
+    <button class="sidebar-menu-item" id="sbScenarioBtn" onclick="openScenarioDesign()">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#6366f1,#4338ca);">
+        <i class="fas fa-sitemap"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">시나리오 설계</span>
+        <span class="sidebar-menu-desc">유입 · 캠페인 · 후속관리 · AI동행</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+
+    <!-- 메뉴 4: 공지/방송 발송 -->
+    <button class="sidebar-menu-item" id="sbBroadcastBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">
+        <i class="fas fa-bullhorn"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">HI 공지발송</span>
+        <span class="sidebar-menu-desc">단체 메시지 · 발송 이력 · 통계</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+
+    <!-- 메뉴 5: AI 동행 설정 -->
+    <button class="sidebar-menu-item" id="sbCompanionBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#f43f5e,#e11d48);">
+        <i class="fas fa-heart"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">AI 동행설정</span>
+        <span class="sidebar-menu-desc">평생 함께하는 AI 친구 · 자동 대화 유지</span>
+      </div>
+      <div class="sb-companion-status" id="sbCompanionStatus">
+        <span class="scs-dot off" id="sbCompanionDot"></span>
+        <span class="scs-label" id="sbCompanionLabel">OFF</span>
+      </div>
+    </button>
+
+    <!-- 메뉴 6: 테마 설정 -->
+    <button class="sidebar-menu-item" id="sbThemeBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#10b981,#059669);">
+        <i class="fas fa-palette"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">테마 설정</span>
+        <span class="sidebar-menu-desc">다크 모드 · 라이트 모드 전환</span>
+      </div>
+      <div class="sidebar-theme-toggle" id="sbThemeToggle">
+        <span class="stt-label" id="sbThemeLabel">다크</span>
+        <div class="stt-switch" id="sbThemeSwitch">
+          <div class="stt-knob" id="sbThemeKnob"></div>
+        </div>
+      </div>
+    </button>
+
+    <!-- PWA 등록자 -->
+    <button class="sidebar-menu-item" id="sbPwaVisitorBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
+        <i class="fas fa-mobile-alt"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">PWA 등록자</span>
+        <span class="sidebar-menu-desc">앱 설치 후 전화번호 등록한 방문자</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+
+    <!-- 메뉴 7: 구독하기 -->
+    <button class="sidebar-menu-item" id="sbSubscribeBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#f97316,#ea580c);">
+        <i class="fas fa-crown"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">구독하기 <span class="sb-plan-badge free" id="sbPlanBadge">Free</span></span>
+        <span class="sidebar-menu-desc">요금제 · 정기결제 · 포인트 충전</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+    <div class="sidebar-footer">
+      <span>AIvote OneChat v1.0</span>
+    </div>
+  </nav>
+
+  <!-- ========== AI 동행 설정 패널 ========== -->
+  <div class="companion-overlay" id="companionOverlay"></div>
+  <div class="companion-panel" id="companionPanel">
+    <div class="companion-panel-header">
+      <button class="companion-back-btn" id="companionCloseBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <div class="companion-header-title">
+        <i class="fas fa-heart" style="color:#f43f5e;"></i>
+        <span>AI 동행 설정</span>
+      </div>
+      <button class="companion-save-btn" id="companionSaveBtn">
+        <i class="fas fa-check"></i> 저장
+      </button>
+    </div>
+
+    <div class="companion-panel-body" id="companionPanelBody">
+      <!-- 로딩 상태 -->
+      <div class="companion-loading" id="companionLoading">
+        <i class="fas fa-spinner fa-spin"></i> 설정을 불러오는 중...
+      </div>
+    </div>
+  </div>
+
+  <!-- 모바일 앱 래퍼 -->
+  <div class="app-wrapper">
+
+    <!-- 상단 헤더 -->
+    <header class="app-header">
+      <div class="header-left">
+        <button class="icon-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+        <span class="app-title" id="appTitle">채팅관리</span>
+      </div>
+      <div class="header-right">
+        <!-- MY 챗봇 만들기 버튼 (챗봇 없을 때만 표시) -->
+        <button class="make-bot-btn" id="makeBotBtn" style="display:none">
+          <i class="fas fa-robot"></i>
+          <span>MY 챗봇 만들기</span>
+        </button>
+        <!-- 검색 돋보기 (탭에 따라 연결 대상 자동 변경) -->
+        <button class="icon-btn" id="headerSearchBtn" title="검색" aria-label="검색">
+          <i class="fas fa-search"></i>
+        </button>
+        <button class="icon-btn notification-btn" id="notifBtn" onclick="openNotifPanel()">
+          <i class="far fa-bell"></i>
+          <span class="badge-dot" id="notifBadgeDot" style="display:none"></span>
+        </button>
+        <!-- 아바타 + 드롭다운 -->
+        <div class="avatar-wrap">
+          <div class="avatar" id="avatarBtn">J</div>
+          <div class="avatar-dropdown" id="avatarDropdown">
+            <div class="avatar-dropdown-profile">
+              <div class="adp-avatar">J</div>
+              <div class="adp-info">
+                <span class="adp-name">송조은</span>
+                <span class="adp-role">아바타 챗봇 운영자</span>
+              </div>
+              <div class="adp-sync-wrap" id="adpSyncWrap" title="동기화 상태">
+                <i class="fas fa-sync-alt adp-sync-icon" id="adpSyncIcon"></i>
+                <span class="adp-sync-label" id="adpSyncLabel">동기화됨</span>
+              </div>
+            </div>
+            <div class="avatar-dropdown-divider"></div>
+            <button class="avatar-dropdown-item" id="openLearnBtn">
+              <div class="adi-icon learn"><i class="fas fa-brain"></i></div>
+              <div class="adi-text">
+                <span class="adi-title">아바타 학습시키기</span>
+                <span class="adi-desc">PDF · 텍스트 · 음성 · 일기</span>
+              </div>
+              <i class="fas fa-chevron-right adi-arrow"></i>
+            </button>
+
+            <button class="avatar-dropdown-item" id="openChatbotSettingBtn">
+              <div class="adi-icon setting"><i class="fas fa-sliders-h"></i></div>
+              <div class="adi-text">
+                <span class="adi-title">챗봇 설정</span>
+                <span class="adi-desc">응답 스타일 · 톤 · 언어</span>
+              </div>
+              <i class="fas fa-chevron-right adi-arrow"></i>
+            </button>
+            <div class="avatar-dropdown-divider"></div>
+            <button class="avatar-dropdown-item" id="openProfileBtn">
+              <div class="adi-icon profile"><i class="fas fa-user-circle"></i></div>
+              <div class="adi-text">
+                <span class="adi-title">내 프로필 설정</span>
+                <span class="adi-desc">사진 · 이름 · 챗봇링크 · QR</span>
+              </div>
+              <i class="fas fa-chevron-right adi-arrow"></i>
+            </button>
+            <div class="avatar-dropdown-divider"></div>
+            <!-- HI 공지발송: 드롭다운에서 숨김, 햄버거 메뉴가 programmatic click으로 사용 -->
+            <button class="avatar-dropdown-item" id="openBcMenuBtn" style="display:none">
+              <div class="adi-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444);"><i class="fas fa-bullhorn"></i></div>
+              <div class="adi-text">
+                <span class="adi-title">HI 공지발송</span>
+                <span class="adi-desc">발송 · 이력 · 통계</span>
+              </div>
+              <i class="fas fa-chevron-right adi-arrow"></i>
+            </button>
+
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========== 채팅 탭 화면 (IAM 회원 DM) ========== -->
+    <main class="tab-screen active" id="screenChat">
+
+      <!-- chatBadge: 숨김 처리 (추후 다른 위치 활용) -->
+      <span id="chatBadge" style="display:none;">0</span>
+
+      <!-- 서브 탭: 개별 / 그룹 + 우측에 새채팅/그룹 만들기 버튼 -->
+      <div class="dm-subtab-bar">
+        <button class="dm-subtab active" data-dmtab="direct" title="개별 채팅" aria-label="개별 채팅">
+          <i class="fas fa-user"></i>
+          <span class="dm-subtab-tooltip">개별 채팅</span>
+          <span class="dm-subtab-badge" id="dmDirectBadge"></span>
+        </button>
+        <button class="dm-subtab" data-dmtab="group" title="그룹 채팅" aria-label="그룹 채팅">
+          <i class="fas fa-users"></i>
+          <span class="dm-subtab-tooltip">그룹 채팅</span>
+          <span class="dm-subtab-badge" id="dmGroupBadge"></span>
+        </button>
+        <span class="dm-subtab-spacer"></span>
+        <button class="icon-btn blue icon-btn-labeled" id="dmNewChatBtn" title="새 채팅 시작">
+          <i class="fas fa-edit"></i>
+          <span class="icon-btn-label">새 채팅</span>
+        </button>
+        <button class="icon-btn blue icon-btn-labeled" id="dmNewGroupBtn" title="그룹 만들기">
+          <i class="fas fa-users"></i>
+          <span class="icon-btn-label">그룹</span>
+        </button>
+      </div>
+
+      <!-- 검색바 (토글 방식: chatSearchToggleBtn 클릭 시 표시) -->
+      <div class="search-row" id="chatSearchRow" style="display:none;">
+        <div class="search-bar" id="chatSearchBar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="채팅방 검색..." id="chatSearchInput" />
+          <button class="clear-btn" id="chatClearBtn"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <!-- DM 채팅방 목록 -->
+      <div class="dm-room-list" id="dmRoomList">
+        <div class="dm-loading">
+          <i class="fas fa-spinner fa-spin"></i> 로딩 중...
+        </div>
+      </div>
+
+    </main>
+
+    <!-- ========== DM 채팅창 ========== -->
+    <div class="chat-screen" id="dmChatScreen">
+      <div class="chat-header">
+        <button class="chat-back-btn" id="dmBackBtn">
+          <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="chat-header-info" id="dmHeaderInfo">
+          <div class="chat-name" id="dmHeaderName">채팅</div>
+          <div class="chat-sub" id="dmHeaderSub"></div>
+        </div>
+        <div class="chat-header-actions">
+          <button class="icon-btn" id="dmMembersBtn" title="멤버 보기" style="display:none;">
+            <i class="fas fa-users"></i>
+          </button>
+          <button class="icon-btn" id="dmPollBtn" title="투표 만들기">
+            <i class="fas fa-poll"></i>
+          </button>
+          <button class="icon-btn" id="dmMenuBtn" title="더보기">
+            <i class="fas fa-ellipsis-v"></i>
+          </button>
+        </div>
+      </div>
+
+      <!-- 고정 메시지 배너 -->
+      <div class="dm-pinned-banner" id="dmPinnedBanner" style="display:none;">
+        <i class="fas fa-thumbtack" style="margin-right:6px;color:var(--accent-blue);"></i>
+        <span id="dmPinnedText" class="dm-pinned-text"></span>
+      </div>
+
+      <!-- 메시지 영역 -->
+      <div class="dm-messages" id="dmMessages">
+        <div class="dm-empty-state" id="dmEmptyState">
+          <i class="fas fa-comment-dots" style="font-size:40px;color:var(--text-muted);margin-bottom:12px;"></i>
+          <p style="color:var(--text-muted);">첫 메시지를 보내보세요!</p>
+        </div>
+      </div>
+
+      <!-- 답장 미리보기 -->
+      <div class="dm-reply-preview" id="dmReplyPreview" style="display:none;">
+        <div class="dm-reply-content">
+          <i class="fas fa-reply" style="color:var(--accent-blue);margin-right:6px;"></i>
+          <span id="dmReplySender" style="font-weight:600;color:var(--accent-blue);"></span>
+          <span id="dmReplyText" style="color:var(--text-muted);margin-left:6px;"></span>
+        </div>
+        <button id="dmReplyCancelBtn" style="background:none;border:none;color:var(--text-muted);cursor:pointer;">
+          <i class="fas fa-times"></i>
+        </button>
+      </div>
+
+      <!-- 입력창 -->
+      <div class="dm-input-row">
+        <button class="icon-btn" id="dmAttachBtn" title="파일 첨부">
+          <i class="fas fa-paperclip"></i>
+        </button>
+        <textarea class="dm-input" id="dmInput" placeholder="메시지를 입력하세요..." rows="1"></textarea>
+        <button class="ci-mic" id="dmMicBtn" title="음성 입력"><i class="fas fa-microphone"></i></button>
+        <button class="dm-send-btn" id="dmSendBtn">
+          <i class="fas fa-paper-plane"></i>
+        </button>
+      </div>
+      <input type="file" id="dmFileInput" style="display:none;" accept="image/*,*/*">
+    </div>
+
+    <!-- ========== 새 채팅 / 그룹 만들기 모달 ========== -->
+    <div class="dm-modal-overlay" id="dmSearchModal" style="display:none;">
+      <div class="dm-modal">
+        <div class="dm-modal-header">
+          <h3 id="dmModalTitle">새 채팅</h3>
+          <button class="dm-modal-close" id="dmModalClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div class="dm-modal-search">
+          <input type="text" id="dmMemberSearch" placeholder="이름 또는 아이디 검색 (2자 이상)..." />
+        </div>
+        <!-- 그룹 이름 입력 (그룹 모드) -->
+        <div id="dmGroupNameRow" style="display:none;padding:0 16px 8px;">
+          <input type="text" id="dmGroupNameInput" placeholder="그룹 이름 입력..." style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-size:14px;" />
+        </div>
+        <!-- 선택된 멤버 (그룹 모드) -->
+        <div id="dmSelectedMembers" style="display:none;padding:0 16px 8px;display:flex;flex-wrap:wrap;gap:6px;"></div>
+        <div class="dm-modal-list" id="dmMemberList">
+          <div style="text-align:center;color:var(--text-muted);padding:20px;font-size:13px;">
+            이름을 검색하세요
+          </div>
+        </div>
+        <div id="dmGroupCreateRow" style="display:none;padding:12px 16px;">
+          <button id="dmGroupCreateBtn" class="dm-send-btn" style="width:100%;padding:12px;border-radius:10px;">
+            그룹 채팅 만들기
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 투표 만들기 모달 ========== -->
+    <div class="dm-modal-overlay" id="dmPollModal" style="display:none;">
+      <div class="dm-modal">
+        <div class="dm-modal-header">
+          <h3>투표 만들기</h3>
+          <button class="dm-modal-close" id="dmPollModalClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="padding:16px;">
+          <input type="text" id="dmPollQuestion" placeholder="질문을 입력하세요..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-size:14px;margin-bottom:12px;" />
+          <div id="dmPollOptions">
+            <input type="text" class="dm-poll-option" placeholder="선택지 1" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-size:13px;margin-bottom:8px;" />
+            <input type="text" class="dm-poll-option" placeholder="선택지 2" style="width:100%;padding:8px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-size:13px;margin-bottom:8px;" />
+          </div>
+          <button id="dmPollAddOption" style="background:none;border:none;color:var(--accent-blue);cursor:pointer;font-size:13px;padding:4px 0;margin-bottom:12px;">
+            <i class="fas fa-plus"></i> 선택지 추가
+          </button>
+          <label style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--text-muted);margin-bottom:12px;">
+            <input type="checkbox" id="dmPollMultiple"> 복수 선택 허용
+          </label>
+          <button id="dmPollSubmit" class="dm-send-btn" style="width:100%;padding:12px;border-radius:10px;">
+            투표 시작
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 개별 리스트 탭 화면 ========== -->
+    <!-- ========== 발신(퍼널) 탭 화면 ========== -->
+    <main class="tab-screen" id="screenContacts">
+
+      <!-- 검색바 (기본 숨김, 헤더 검색 아이콘 클릭 시 토글) -->
+      <div class="search-row" id="contactsSearchRow" style="display:none;">
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="이름, 직함, 연락처 검색..." id="contactsSearchInput" />
+          <button class="clear-btn" id="contactsClearBtn"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <!-- 통계 바: 전체 / 대화중 / 미사용 / 🔗링크방문 + 퍼널/공유 전환 버튼 -->
+      <div class="contacts-stats-bar" id="contactsStatsBar">
+        <div class="stats-left">
+          <div class="stats-left-text" id="contactsStatsFunnelText">
+            전체 <span id="statTotal">0명</span>
+            <span class="stats-sep">|</span>
+            대화중 <span id="statActive" style="color:#22c55e;">0명</span>
+            <span class="stats-sep">|</span>
+            미사용 <span id="statInactive" style="color:#ef4444;">0명</span>
+          </div>
+          <div class="stats-left-text" id="contactsStatsVisitorText" style="display:none;">
+            🔗 링크방문 <span id="statVisitor" style="color:#f59e0b;">0명</span>
+            <span class="stats-sep">|</span>
+            대화중 <span id="statVisitorChatted" style="color:#22c55e;">0명</span>
+            <span class="stats-sep">|</span>
+            미대화 <span id="statVisitorNone" style="color:#ef4444;">0명</span>
+          </div>
+          <div class="stats-action-btns">
+            <button class="stats-action-btn active" id="statsBarFunnelBtn" onclick="statsBarSwitchToFunnel()">
+              <i class="fas fa-filter"></i> 퍼널
+            </button>
+            <button class="stats-action-btn" id="statsBarShareBtn" onclick="statsBarSwitchToReceived()">
+              <i class="fas fa-share-alt"></i> 공유
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 공유(visitor) 필터 탭: 퍼널 버튼 클릭 시 숨김, 공유 버튼 클릭 시 표시 -->
+      <div class="received-filter-tabs" id="contactsVisitorFilterTabs" style="display:none;">
+        <button class="rfTab active" data-filter="all"     onclick="contactsVisitorFilter(this,'all')">전체</button>
+        <button class="rfTab"        data-filter="chatted" onclick="contactsVisitorFilter(this,'chatted')">대화중</button>
+        <button class="rfTab"        data-filter="unused"  onclick="contactsVisitorFilter(this,'unused')">미대화</button>
+      </div>
+
+      <!-- JS 호환용 숨김 요소 -->
+      <span   id="contactsBadge"   style="display:none;">0명</span>
+      <button id="addUserBtnContacts" style="display:none;"></button>
+      <button id="contactsViewToggle" style="display:none;"></button>
+
+      <!-- 챗봇 칩 필터 -->
+      <div class="chatbot-chips" id="chatbotChips" style="display:none"></div>
+
+      <!-- 퍼널/공유 리스트 -->
+      <div class="contacts-list" id="contactsList"></div>
+
+    </main>
+
+    <!-- ========== 수신 탭 화면 ========== -->
+    <main class="tab-screen" id="screenReceived">
+
+      <!-- 검색바 (기본 숨김, 헤더 검색 아이콘 클릭 시 토글) -->
+      <div class="search-row" id="inboxSearchRow" style="display:none;">
+        <div class="search-bar">
+          <i class="fas fa-search search-icon"></i>
+          <input type="text" class="search-input" placeholder="챗봇명, 운영자명 검색..." id="inboxSearchInput" />
+          <button class="clear-btn" id="inboxClearBtn"><i class="fas fa-times"></i></button>
+        </div>
+      </div>
+
+      <!-- 통계 바 -->
+      <div class="contacts-stats-bar" id="inboxStatsBar">
+        <div class="stats-left">
+          <div class="stats-left-text">
+            전체 <span id="inboxStatTotal">0명</span>
+            <span class="stats-sep">|</span>
+            대화중 <span id="inboxStatChatted" style="color:#22c55e;">0명</span>
+            <span class="stats-sep">|</span>
+            미대화 <span id="inboxStatNone" style="color:#ef4444;">0명</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 필터 탭 -->
+      <div class="inbox-filter-bar" id="inboxFilterBar">
+        <button class="inbox-filter-chip active" data-filter="all"    onclick="inboxFilter(this,'all')">전체</button>
+        <button class="inbox-filter-chip" data-filter="chatted" onclick="inboxFilter(this,'chatted')">대화중</button>
+        <button class="inbox-filter-chip" data-filter="none"    onclick="inboxFilter(this,'none')">미대화</button>
+        <button class="inbox-filter-chip" data-filter="dm"      onclick="inboxFilter(this,'dm')">DM전환됨</button>
+      </div>
+
+      <!-- JS 호환용 숨김 요소 -->
+      <span id="receivedBadge"   style="display:none;">0명</span>
+      <div  id="receivedPwaFilter" style="display:none;"></div>
+      <button id="receivedViewToggle" style="display:none;"></button>
+      <!-- receivedSearchInput: 기존 JS 호환용 (숨김) -->
+      <input id="receivedSearchInput" style="display:none;" />
+      <button id="receivedClearBtn" style="display:none;"></button>
+
+      <!-- 수신 리스트 -->
+      <div class="received-list" id="receivedList"></div>
+
+    </main>
+
+    <!-- 데모: 사용자 상태 전환 바 -->
+    <div class="user-state-bar" id="userStateBar">
+      <span class="usb-label">🔧 데모 상태:</span>
+      <button class="usb-btn active" data-state="member-with-bot">회원+챗봇있음</button>
+      <button class="usb-btn" data-state="member-no-bot">회원+챗봇없음</button>
+      <button class="usb-btn" data-state="guest">비회원(초대)</button>
+    </div>
+
+    <!-- 하단 네비게이션 -->
+    <nav class="bottom-nav">
+      <button class="nav-item" data-tab="home" id="homeNavBtn">
+        <div class="nav-icon"><i class="fas fa-home"></i></div>
+        <span>홈</span>
+      </button>
+      <button class="nav-item" data-tab="contacts">
+        <div class="nav-icon"><i class="fas fa-filter"></i></div>
+        <span>발신</span>
+      </button>
+      <button class="nav-item active" data-tab="chat">
+        <div class="nav-icon active-icon"><i class="fas fa-comment-dots"></i></div>
+        <span>채팅</span>
+      </button>
+      <button class="nav-item" data-tab="received">
+        <div class="nav-icon"><i class="fas fa-inbox"></i></div>
+        <span>수신</span>
+      </button>
+    </nav>
+
+  <!-- 채팅 전체화면 -->
+  <div class="chat-screen" id="chatScreen">
+
+    <!-- 상단 헤더 -->
+    <div class="chat-screen-header">
+      <button class="back-btn" id="backBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <div class="chat-screen-profile">
+        <div class="csp-avatar" id="cspAvatar"></div>
+        <div class="csp-info">
+          <span class="csp-name" id="cspName"></span>
+          <span class="csp-position" id="cspPosition"></span>
+          <!-- 4자 참여자 아이콘 행 -->
+          <div class="participants-row" id="participantsRow">
+            <span class="participant-chip my-bot" title="나의 아바타">
+              <i class="fas fa-robot"></i><span>MY AI</span>
+            </span>
+            <span class="participant-chip me" title="나 (직접)">
+              <i class="fas fa-user"></i><span>나</span>
+            </span>
+            <span class="participant-chip peer" title="상대 (직접)">
+              <i class="fas fa-user-tie"></i><span>상대</span>
+            </span>
+            <span class="participant-chip peer-bot" title="상대 아바타">
+              <i class="fas fa-robot"></i><span>AI</span>
+            </span>
+          </div>
+        </div>
+      </div>
+      <div class="chat-screen-actions">
+        <!-- 직접대화 요청 바노노될때 모양 표시 뱃지 -->
+        <button class="icon-btn cs-icon-btn direct-req-badge" id="directReqBadge" title="상대의 직접 대화 요청" style="display:none">
+          <i class="fas fa-hand-paper"></i>
+          <span class="direct-req-count" id="directReqCount">1</span>
+        </button>
+        <button class="icon-btn cs-icon-btn" id="voiceTtsToggle" title="TTS 음성 읽기" style="display:none">
+          <i class="fas fa-volume-xmark"></i>
+        </button>
+        <button class="icon-btn cs-icon-btn" id="chatInfoBtn">
+          <i class="fas fa-info-circle"></i>
+        </button>
+      </div>
+    </div>
+
+    <!-- 챗봇 ON/OFF 상태 바 -->
+    <div class="bot-status-bar" id="botStatusBar">
+      <div class="bsb-left">
+        <div class="bot-avatar-icon on" id="botAvatarIcon">
+          <i class="fas fa-robot"></i>
+        </div>
+        <div class="bsb-info">
+          <span class="bsb-label" id="bsbLabel">아바타 챗봇 응답 중</span>
+          <span class="bsb-sub" id="bsbSub">모든 답변을 챗봇이 자동 처리합니다</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- 메시지 영역 -->
+    <div class="chat-messages" id="chatMessages"></div>
+
+    <!-- 상대방 직접대화 요청 배너 (아바타 일시정지 중 표시) -->
+    <div class="direct-wait-banner" id="directWaitBanner" style="display:none">
+      <i class="fas fa-pause-circle"></i>
+      <span>상대가 직접 대화를 요청했습니다 &mdash; 아바타 응답 일시정지 중</span>
+      <button id="resumeAvatarBtn">재개</button>
+    </div>
+
+    <!-- 입력 바 -->
+    <div class="chat-input-bar" id="chatInputBar">
+      <!-- AI/HI 전환 토글 (입력바 앞부분) -->
+      <div class="ci-mode-toggle-wrap">
+        <label class="toggle-switch input-toggle" id="botToggleWrap" title="AI/HI 전환">
+          <input type="checkbox" id="botToggle" checked />
+          <span class="toggle-track">
+            <span class="toggle-thumb">
+              <i class="fas fa-robot toggle-icon-bot"></i>
+              <i class="fas fa-user toggle-icon-user"></i>
+            </span>
+          </span>
+        </label>
+      </div>
+      <!-- 챗봇 ON 상태: 자동 표시 -->
+      <div class="ci-bot-mode" id="ciBotMode">
+        <div class="ci-bot-indicator">
+          <i class="fas fa-robot"></i>
+          <span>AI가 자동으로 응답합니다</span>
+        </div>
+      </div>
+      <!-- 직접 입력 모드 -->
+      <div class="ci-user-mode" id="ciUserMode" style="display:none">
+
+        <!-- + 첨부 버튼 + 팝업 -->
+        <div class="ci-attach-wrap" id="ciAttachWrap">
+          <button class="ci-attach" id="ciAttachBtn">
+            <i class="fas fa-plus" id="ciAttachIcon"></i>
+          </button>
+          <!-- 첨부 팝업 메뉴 -->
+          <div class="ci-attach-popup" id="ciAttachPopup">
+            <label class="ci-attach-item" for="ciImageInput">
+              <div class="ci-attach-icon img"><i class="fas fa-image"></i></div>
+              <span>이미지</span>
+              <input type="file" id="ciImageInput" accept="image/*" multiple style="display:none" />
+            </label>
+            <label class="ci-attach-item" for="ciFileInput">
+              <div class="ci-attach-icon file"><i class="fas fa-file-alt"></i></div>
+              <span>파일</span>
+              <input type="file" id="ciFileInput" accept=".pdf,.doc,.docx,.txt,.ppt,.pptx,.xls,.xlsx" multiple style="display:none" />
+            </label>
+            <label class="ci-attach-item" for="ciCameraInput">
+              <div class="ci-attach-icon camera"><i class="fas fa-camera"></i></div>
+              <span>카메라</span>
+              <input type="file" id="ciCameraInput" accept="image/*" capture="environment" style="display:none" />
+            </label>
+          </div>
+        </div>
+
+        <!-- 입력 영역 -->
+        <div class="ci-input-wrap">
+          <!-- 첨부 미리보기 (파일 선택 시 상단에 표시) -->
+          <div class="ci-preview-row" id="ciPreviewRow"></div>
+          <!-- 음성 바 (녹음 중에만 표시) -->
+          <div class="ci-voice-bar" id="ciVoiceBar" style="display:none">
+            <div class="cvb-dot"></div>
+            <span class="cvb-label">녹음 중</span>
+            <div class="cvb-waves"><span></span><span></span><span></span><span></span><span></span></div>
+            <button class="cvb-cancel" id="ciVoiceCancel">취소</button>
+          </div>
+          <div class="ci-input-row">
+            <textarea class="ci-textarea" id="ciTextarea" placeholder="메시지를 입력하세요..." rows="1"></textarea>
+            <button class="ci-mic" id="ciMicBtn" title="음성 입력">
+              <i class="fas fa-microphone"></i>
+            </button>
+            <button class="ci-send" id="ciSendBtn">
+              <i class="fas fa-paper-plane"></i>
+            </button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- ========== 프롬프팅 설정 패널 ========== -->
+    <div class="prompt-panel" id="promptPanel">
+      <div class="prompt-panel-inner">
+
+        <!-- 헤더 -->
+        <div class="prompt-panel-header">
+          <div class="pp-title-wrap">
+            <div class="pp-avatar" id="ppAvatar"></div>
+            <div>
+              <div class="pp-name" id="ppName"></div>
+              <div class="pp-sub">아바타 프롬프팅 설정</div>
+            </div>
+          </div>
+          <button class="pp-close-btn" id="promptCloseBtn"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- 프롬프팅 모드 선택 -->
+        <div class="pp-section">
+          <div class="pp-section-title">📋 프롬프팅 모드</div>
+          <div class="pp-mode-list">
+            <label class="pp-mode-item" id="ppModeDefault">
+              <input type="radio" name="ppMode" value="default" checked />
+              <div class="pp-mode-card">
+                <div class="pp-mode-icon default"><i class="fas fa-globe"></i></div>
+                <div class="pp-mode-info">
+                  <span class="pp-mode-name">기본 프롬프팅</span>
+                  <span class="pp-mode-desc">전체 설정된 기본 프롬프트 적용</span>
+                </div>
+                <div class="pp-mode-check"><i class="fas fa-check-circle"></i></div>
+              </div>
+            </label>
+            <label class="pp-mode-item" id="ppModeCustom">
+              <input type="radio" name="ppMode" value="custom" />
+              <div class="pp-mode-card">
+                <div class="pp-mode-icon custom"><i class="fas fa-user-edit"></i></div>
+                <div class="pp-mode-info">
+                  <span class="pp-mode-name">맞춤 프롬프팅</span>
+                  <span class="pp-mode-desc">이 상대에게만 적용되는 개별 설정</span>
+                </div>
+                <div class="pp-mode-check"><i class="fas fa-check-circle"></i></div>
+              </div>
+            </label>
+            <label class="pp-mode-item" id="ppModeMerged">
+              <input type="radio" name="ppMode" value="merged" />
+              <div class="pp-mode-card">
+                <div class="pp-mode-icon merged"><i class="fas fa-layer-group"></i></div>
+                <div class="pp-mode-info">
+                  <span class="pp-mode-name">기본 + 맞춤</span>
+                  <span class="pp-mode-desc">기본 프롬프트에 맞춤 설정을 덧붙임</span>
+                </div>
+                <div class="pp-mode-check"><i class="fas fa-check-circle"></i></div>
+              </div>
+            </label>
+          </div>
+        </div>
+
+        <!-- ── 모드별 콘텐츠 영역 (스크롤) ── -->
+        <div class="pp-body" id="ppBody">
+
+          <!-- ① 기본 프롬프팅 영역 -->
+          <div class="pp-pane" id="ppPaneDefault">
+            <div class="pp-pane-label">🌐 기본 프롬프트 <span class="pp-readonly-badge">읽기 전용</span></div>
+            <div class="pp-pane-desc">전체 채팅에 공통으로 적용되는 프롬프트입니다.<br>수정하려면 아래 '기본 프롬프트 편집'을 사용하세요.</div>
+            <div class="pp-readonly-box" id="ppDefaultPromptText"></div>
+            <button class="pp-edit-global-btn" id="ppEditGlobalBtn">
+              <i class="fas fa-pen"></i> 기본 프롬프트 편집
+            </button>
+          </div>
+
+          <!-- ② 맞춤 프롬프팅 영역 -->
+          <div class="pp-pane" id="ppPaneCustom" style="display:none">
+            <div class="pp-pane-label">✏️ 맞춤 프롬프팅 <span class="pp-custom-badge" id="ppNameTag"></span></div>
+            <div class="pp-pane-desc">이 상대에게만 적용할 프롬프트를 직접 작성하세요.<br>아바타가 이 내용을 기준으로 대화합니다.</div>
+
+            <!-- 말투·톤 -->
+            <div class="pp-field-label">말투 · 톤 <small>하나 선택</small></div>
+            <div class="pp-tone-grid" id="ppToneGrid">
+              <button class="pp-tone-btn" data-tone="formal">격식체<br><small>존댓말·공손</small></button>
+              <button class="pp-tone-btn" data-tone="friendly">친근체<br><small>편안·따뜻</small></button>
+              <button class="pp-tone-btn" data-tone="expert">전문가<br><small>분석·정확</small></button>
+              <button class="pp-tone-btn" data-tone="casual">캐주얼<br><small>가볍·유머</small></button>
+              <button class="pp-tone-btn" data-tone="empathy">공감형<br><small>감성·위로</small></button>
+              <button class="pp-tone-btn" data-tone="brief">간결형<br><small>짧고 핵심</small></button>
+            </div>
+
+            <!-- 관계 -->
+            <div class="pp-field-label" style="margin-top:14px;">상대와의 관계</div>
+            <select class="pp-select" id="ppRelationSelect">
+              <option value="">-- 관계 선택 --</option>
+              <option value="client">고객 / 잠재 고객</option>
+              <option value="partner">파트너 / 협력사</option>
+              <option value="vip">VIP / 중요 인사</option>
+              <option value="colleague">동료 / 지인</option>
+              <option value="media">언론 / 미디어</option>
+              <option value="political">정계 / 공직자</option>
+              <option value="investor">투자자 / 후원자</option>
+            </select>
+
+            <!-- 대화 목적 -->
+            <div class="pp-field-label" style="margin-top:14px;">대화 목적</div>
+            <select class="pp-select" id="ppPurposeSelect">
+              <option value="">-- 목적 선택 --</option>
+              <option value="introduce">서비스·제품 소개</option>
+              <option value="consult">상담·문의 응대</option>
+              <option value="followup">팔로업·관계 유지</option>
+              <option value="schedule">미팅·일정 조율</option>
+              <option value="support">기술·고객 지원</option>
+              <option value="network">네트워킹·친분</option>
+            </select>
+
+            <!-- 직접 작성 프롬프트 -->
+            <div class="pp-field-label" style="margin-top:14px;">프롬프트 직접 작성 <small>자유롭게 작성·수정 가능</small></div>
+            <textarea class="pp-textarea" id="ppCustomText"
+              placeholder="예) 이분은 선거 솔루션에 관심이 많습니다. 따뜻하게 인사 후 자연스럽게 솔루션을 소개해주세요. 경쟁사 언급 금지."
+              rows="5"></textarea>
+            <div class="pp-char-count"><span id="ppCharCount">0</span>자</div>
+          </div>
+
+          <!-- ③ 기본+맞춤 영역 -->
+          <div class="pp-pane" id="ppPaneMerged" style="display:none">
+            <div class="pp-pane-label">🔀 기본 + 맞춤 프롬프팅</div>
+            <div class="pp-pane-desc">기본 프롬프트를 유지하면서 추가 지시사항을 덧붙입니다.</div>
+
+            <!-- 기본 프롬프트 미리보기 (읽기전용) -->
+            <div class="pp-field-label">기본 프롬프트 <span class="pp-readonly-badge">읽기 전용</span></div>
+            <div class="pp-readonly-box pp-readonly-small" id="ppMergedBaseText"></div>
+
+            <!-- 맞춤 추가 -->
+            <div class="pp-field-label" style="margin-top:14px;">말투 · 톤 <small>하나 선택</small></div>
+            <div class="pp-tone-grid" id="ppToneGridMerged">
+              <button class="pp-tone-btn" data-tone="formal">격식체<br><small>존댓말·공손</small></button>
+              <button class="pp-tone-btn" data-tone="friendly">친근체<br><small>편안·따뜻</small></button>
+              <button class="pp-tone-btn" data-tone="expert">전문가<br><small>분석·정확</small></button>
+              <button class="pp-tone-btn" data-tone="casual">캐주얼<br><small>가볍·유머</small></button>
+              <button class="pp-tone-btn" data-tone="empathy">공감형<br><small>감성·위로</small></button>
+              <button class="pp-tone-btn" data-tone="brief">간결형<br><small>짧고 핵심</small></button>
+            </div>
+
+            <div class="pp-field-label" style="margin-top:14px;">상대와의 관계</div>
+            <select class="pp-select" id="ppRelationSelectMerged">
+              <option value="">-- 관계 선택 --</option>
+              <option value="client">고객 / 잠재 고객</option>
+              <option value="partner">파트너 / 협력사</option>
+              <option value="vip">VIP / 중요 인사</option>
+              <option value="colleague">동료 / 지인</option>
+              <option value="media">언론 / 미디어</option>
+              <option value="political">정계 / 공직자</option>
+              <option value="investor">투자자 / 후원자</option>
+            </select>
+
+            <div class="pp-field-label" style="margin-top:14px;">대화 목적</div>
+            <select class="pp-select" id="ppPurposeSelectMerged">
+              <option value="">-- 목적 선택 --</option>
+              <option value="introduce">서비스·제품 소개</option>
+              <option value="consult">상담·문의 응대</option>
+              <option value="followup">팔로업·관계 유지</option>
+              <option value="schedule">미팅·일정 조율</option>
+              <option value="support">기술·고객 지원</option>
+              <option value="network">네트워킹·친분</option>
+            </select>
+
+            <div class="pp-field-label" style="margin-top:14px;">추가 지시사항 <small>기본 프롬프트에 추가됩니다</small></div>
+            <textarea class="pp-textarea" id="ppMergedExtra"
+              placeholder="예) 이분은 선거 솔루션에 관심이 많습니다. 관련 내용을 자연스럽게 언급해주세요."
+              rows="4"></textarea>
+            <div class="pp-char-count"><span id="ppMergedCharCount">0</span>자</div>
+          </div>
+
+          <!-- 최종 미리보기 (공통) -->
+          <div class="pp-preview-wrap" id="ppPreviewWrap" style="display:none">
+            <div class="pp-field-label">📝 최종 적용될 프롬프트</div>
+            <div class="pp-preview-box" id="ppPreviewBox"></div>
+          </div>
+
+        </div><!-- /pp-body -->
+
+        <!-- 저장 버튼 -->
+        <div class="pp-footer">
+          <button class="pp-preview-btn" id="ppPreviewBtn">
+            <i class="fas fa-eye"></i> 미리보기
+          </button>
+          <button class="pp-save-btn" id="ppSaveBtn">
+            <i class="fas fa-check"></i> 적용하기
+          </button>
+        </div>
+
+      </div>
+    </div>
+    <!-- ========== /프롬프팅 설정 패널 ========== -->
+
+    <!-- 상대방 입장 시뮬레이션 바 (데모용: 상대가 직접대화 요청하는 버튼) -->
+    <div class="peer-sim-bar" id="peerSimBar">
+      <button class="psb-chat-filter active" id="filterAll">전체대화</button>
+      <button class="psb-chat-filter" id="filterAI">AI대화</button>
+      <button class="psb-chat-filter" id="filterHI">HI대화</button>
+      <button class="psb-btn secondary" id="peerMsgBtn" style="margin-left:auto">
+        <i class="fas fa-comment"></i> 가상메시지
+      </button>
+      <button class="psb-btn" id="peerDirectReqBtn" style="display:none">
+        <i class="fas fa-hand-paper"></i> 직접 대화 요청
+      </button>
+    </div>
+
+  </div><!-- /chatScreen -->
+
+  </div><!-- /app-wrapper -->
+
+  <!-- ========== 프로필 설정 패널 ========== -->
+  <div class="profile-panel-overlay" id="profilePanelOverlay"></div>
+  <div class="profile-panel" id="profilePanel">
+    <div class="profile-panel-inner">
+
+      <!-- 헤더 -->
+      <div class="profile-panel-header">
+        <span class="profile-panel-title">내 프로필 설정</span>
+        <button class="pp-close-btn" id="profileCloseBtn"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- 스크롤 본문 -->
+      <div class="profile-panel-body">
+
+        <!-- 1. 프로필 사진 -->
+        <div class="pf-section">
+          <div class="pf-section-title"><i class="fas fa-camera"></i> 프로필 사진</div>
+          <div class="pf-photo-wrap">
+            <div class="pf-avatar-preview" id="pfAvatarPreview">
+              <img id="pfAvatarImg" src="" alt="" style="display:none" />
+              <span id="pfAvatarInitial">J</span>
+            </div>
+            <div class="pf-photo-actions">
+              <label class="pf-btn pf-btn-outline" for="pfPhotoInput">
+                <i class="fas fa-upload"></i> 사진 업로드
+              </label>
+              <input type="file" id="pfPhotoInput" accept="image/*" style="display:none" />
+              <button class="pf-btn pf-btn-ghost" id="pfPhotoRemove" style="display:none">
+                <i class="fas fa-trash"></i> 삭제
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. 기본 정보 -->
+        <div class="pf-section">
+          <div class="pf-section-title"><i class="fas fa-user"></i> 기본 정보</div>
+          <div class="pf-field">
+            <label class="pf-label">이름</label>
+            <input type="text" class="pf-input" id="pfName" placeholder="이름을 입력하세요" value="송조은" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">직함 / 직책</label>
+            <input type="text" class="pf-input" id="pfTitle" placeholder="예) 대표이사, 마케터, 프리랜서" value="아바타 챗봇 운영자" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">상태 메시지</label>
+            <input type="text" class="pf-input" id="pfStatus" placeholder="예) 안녕하세요! 아바타가 대신 답변합니다 😊" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">전화번호</label>
+            <input type="tel" class="pf-input" id="pfPhone" placeholder="010-0000-0000" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">이메일</label>
+            <input type="email" class="pf-input" id="pfEmail" placeholder="email@example.com" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">소속 / 회사</label>
+            <input type="text" class="pf-input" id="pfCompany" placeholder="소속 또는 회사명" />
+          </div>
+        </div>
+
+        <!-- 3. 챗봇 링크 & QR -->
+        <div class="pf-section">
+          <div class="pf-section-title"><i class="fas fa-link"></i> 챗봇 링크 & QR 코드</div>
+          <div class="pf-link-box">
+            <div class="pf-link-row">
+              <span class="pf-link-label">내 챗봇 링크</span>
+              <div class="pf-link-display">
+                <input type="text" class="pf-input pf-link-input" id="pfChatbotLink" readonly value="https://chatbot.me/s/JoEun" />
+                <button class="pf-btn pf-btn-icon" id="pfCopyLinkBtn" title="링크 복사">
+                  <i class="fas fa-copy"></i>
+                </button>
+              </div>
+            </div>
+            <div class="pf-link-row" style="margin-top:10px;display:none">
+              <span class="pf-link-label">단축 코드</span>
+              <div class="pf-link-display">
+                <input type="text" class="pf-input pf-link-input" id="pfShortCode" placeholder="예) JoEun" value="JoEun" />
+                <button class="pf-btn pf-btn-accent" id="pfUpdateLinkBtn">변경</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- QR 코드 -->
+          <div class="pf-qr-wrap">
+            <div class="pf-qr-title">QR 코드</div>
+            <div class="pf-qr-box" id="pfQrBox">
+              <!-- QR이 여기 렌더링됩니다 -->
+            </div>
+            <div class="pf-qr-actions">
+              <button class="pf-btn pf-btn-outline" id="pfDownloadQr">
+                <i class="fas fa-download"></i> QR 다운로드
+              </button>
+              <button class="pf-btn pf-btn-outline" id="pfShareQr">
+                <i class="fas fa-share-alt"></i> 공유
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. 기본 프롬프팅 -->
+        <div class="pf-section">
+          <div class="pf-section-title"><i class="fas fa-robot"></i> 전체 챗봇 기본 프롬프팅</div>
+          <div class="pf-prompt-desc">
+            모든 대화에 공통 적용되는 기본 프롬프트입니다. 아바타의 말투, 가치관, 응답 방식을 정의하세요.
+          </div>
+          <textarea class="pf-textarea" id="pfGlobalPrompt" rows="7"
+            placeholder="예) 당신은 [이름]의 AI 아바타입니다. 따뜻하고 전문적인 말투로 응답하세요..."></textarea>
+          <div class="pf-prompt-tip">
+            <i class="fas fa-lightbulb"></i>
+            <span>팁: 이름, 직업, 응답 스타일, 금지 표현, 전문 분야 등을 구체적으로 작성할수록 자연스러운 대화가 됩니다.</span>
+          </div>
+        </div>
+
+        <!-- 5. 테마 설정 -->
+        <div class="pf-section">
+          <div class="pf-section-title"><i class="fas fa-palette"></i> 화면 테마</div>
+          <div class="pf-theme-row">
+            <button class="pf-btn pf-btn-theme" id="themeLight">
+              <i class="fas fa-sun"></i> 라이트
+            </button>
+            <button class="pf-btn pf-btn-theme" id="themeDark">
+              <i class="fas fa-moon"></i> 다크
+            </button>
+          </div>
+        </div>
+
+      </div><!-- /profile-panel-body -->
+
+      <!-- 하단 저장 버튼 -->
+      <div class="profile-panel-footer">
+        <button class="pf-btn pf-btn-ghost" id="pfCancelBtn">취소</button>
+        <button class="pf-btn pf-btn-save" id="pfSaveBtn">
+          <i class="fas fa-check"></i> 저장하기
+        </button>
+      </div>
+
+    </div>
+  </div>
+  <!-- ========== /프로필 설정 패널 ========== -->
+
+  <!-- ========== MY 챗봇 만들기 패널 ========== -->
+  <div class="makebot-overlay" id="makeBotOverlay"></div>
+  <div class="makebot-panel" id="makeBotPanel">
+    <div class="makebot-inner">
+
+      <!-- 헤더 -->
+      <div class="makebot-header">
+        <span class="makebot-title"><i class="fas fa-robot"></i> MY 챗봇 만들기</span>
+        <button class="pp-close-btn" id="makeBotCloseBtn"><i class="fas fa-times"></i></button>
+      </div>
+
+      <!-- ── FLOW A: 회원 & 챗봇 없음 ── -->
+      <div class="makebot-flow" id="flowMember" style="display:none">
+        <div class="mb-hero">
+          <div class="mb-hero-icon"><i class="fas fa-check-circle"></i></div>
+          <div class="mb-hero-title">회원 확인 완료!</div>
+          <div class="mb-hero-desc">아이엠 회원이시군요 😊<br>바로 고유 챗봇 링크를 발급해 드릴게요.</div>
+        </div>
+        <div class="mb-link-card" id="mbLinkCard">
+          <div class="mb-link-label"><i class="fas fa-link"></i> 내 챗봇 고유 링크</div>
+          <div class="mb-link-value" id="mbLinkValue">https://chatbot.kiam.kr/s/...</div>
+          <div class="mb-link-notice"><i class="fas fa-lock"></i> 고유 링크는 변경·수정이 불가합니다</div>
+        </div>
+        <button class="mb-primary-btn" id="mbMemberIssueBtn">
+          <i class="fas fa-bolt"></i> 챗봇 링크 즉시 발급받기
+        </button>
+        <!-- 발급 완료 (처음엔 숨김) -->
+        <div class="mb-issued-wrap" id="mbIssuedWrap" style="display:none">
+          <div class="mb-issued-badge"><i class="fas fa-check-circle"></i> 챗봇 링크 발급 완료!</div>
+          <div class="mb-issued-link" id="mbIssuedLink"></div>
+          <div class="mb-issued-actions">
+            <button class="mb-sec-btn" id="mbCopyIssuedBtn"><i class="fas fa-copy"></i> 링크 복사</button>
+            <button class="mb-sec-btn" id="mbShareIssuedBtn"><i class="fas fa-share-alt"></i> 공유</button>
+          </div>
+          <button class="mb-primary-btn green" id="mbStartChatBtn">
+            <i class="fas fa-comment-dots"></i> 챗봇 관리 시작하기
+          </button>
+        </div>
+      </div>
+
+      <!-- ── FLOW B: 비회원 (초대 입장) ── -->
+      <div class="makebot-flow" id="flowGuest" style="display:none">
+
+        <!-- 스텝 인디케이터 -->
+        <div class="mb-steps" id="mbSteps">
+          <div class="mb-step active" data-step="1"><span class="mb-step-num">1</span><span class="mb-step-label">회원가입</span></div>
+          <div class="mb-step-line"></div>
+          <div class="mb-step" data-step="2"><span class="mb-step-num">2</span><span class="mb-step-label">로그인</span></div>
+          <div class="mb-step-line"></div>
+          <div class="mb-step" data-step="3"><span class="mb-step-num">3</span><span class="mb-step-label">앱 설치</span></div>
+          <div class="mb-step-line"></div>
+          <div class="mb-step" data-step="4"><span class="mb-step-num">4</span><span class="mb-step-label">링크 발급</span></div>
+        </div>
+
+        <!-- Step 1: 회원가입 -->
+        <div class="mb-step-content" id="mbStep1">
+          <div class="mb-step-icon purple"><i class="fas fa-user-plus"></i></div>
+          <div class="mb-step-title">아이엠 회원가입</div>
+          <div class="mb-step-desc">아이엠(KIAM) 앱의 회원이 되시면<br>나만의 AI 아바타 챗봇을 만들 수 있어요!</div>
+
+          <!-- 혜택 카드 -->
+          <div class="mb-benefit-list">
+            <div class="mb-benefit-item">
+              <i class="fas fa-robot"></i>
+              <span>나만의 AI 아바타 챗봇 생성</span>
+            </div>
+            <div class="mb-benefit-item">
+              <i class="fas fa-link"></i>
+              <span>고유 챗봇 링크 즉시 발급</span>
+            </div>
+            <div class="mb-benefit-item">
+              <i class="fas fa-address-card"></i>
+              <span>명함리스트 & 대화 관리</span>
+            </div>
+            <div class="mb-benefit-item">
+              <i class="fas fa-brain"></i>
+              <span>AI 아바타 학습 & 동기화</span>
+            </div>
+          </div>
+
+          <!-- 회원가입 링크 버튼 -->
+          <a href="https://onlymain.kiam.kr/event/automember.php?pcode=aimem20251111003344163&eventidx=13974"
+             target="_blank"
+             class="mb-primary-btn mb-signup-link"
+             id="mbSignupLinkBtn">
+            <i class="fas fa-external-link-alt"></i> 아이엠 회원가입 하기
+          </a>
+
+          <!-- 가입 완료 후 다음 단계 버튼 -->
+          <div class="mb-signup-done-wrap">
+            <div class="mb-signup-done-label">
+              <i class="fas fa-check-circle" style="color:#16a34a"></i>
+              회원가입을 완료하셨나요?
+            </div>
+            <button class="mb-primary-btn green" id="mbSignupDoneBtn" type="button">
+              <i class="fas fa-arrow-right"></i> 가입 완료 → 다음 단계
+            </button>
+          </div>
+
+          <div class="mb-alt-text">이미 회원이신가요? <button class="mb-text-btn" id="mbGoLoginBtn">로그인</button></div>
+        </div>
+
+        <!-- Step 2: 로그인 -->
+        <div class="mb-step-content" id="mbStep2" style="display:none">
+          <div class="mb-step-icon blue"><i class="fas fa-sign-in-alt"></i></div>
+          <div class="mb-step-title">아이엠 로그인</div>
+          <div class="mb-step-desc">가입하신 계정으로 로그인해 주세요.</div>
+          <form autocomplete="on" onsubmit="return false">
+          <div class="mb-field">
+            <label class="mb-label">이메일</label>
+            <input type="email" class="mb-input" id="mbLoginEmail" placeholder="email@example.com" autocomplete="username" />
+          </div>
+          <div class="mb-field">
+            <label class="mb-label">비밀번호</label>
+            <input type="password" class="mb-input" id="mbLoginPw" placeholder="비밀번호 입력" autocomplete="current-password" />
+          </div>
+          <button class="mb-primary-btn" id="mbLoginBtn" type="button">
+            <i class="fas fa-sign-in-alt"></i> 로그인
+          </button>
+          </form>
+          <div class="mb-alt-text">계정이 없으신가요? <button class="mb-text-btn" id="mbGoSignupBtn">회원가입</button></div>
+        </div>
+
+        <!-- Step 3: 앱 설치 -->
+        <div class="mb-step-content" id="mbStep3" style="display:none">
+          <div class="mb-step-icon green"><i class="fas fa-mobile-alt"></i></div>
+          <div class="mb-step-title">아이엠 앱 설치</div>
+          <div class="mb-step-desc">스마트폰에 아이엠 앱을 설치하면<br>챗봇 관리를 더 편리하게 할 수 있어요!</div>
+          <div class="mb-app-btns">
+            <a href="https://kiam.kr" target="_blank" class="mb-app-btn ios">
+              <i class="fab fa-apple"></i>
+              <div>
+                <span class="mb-app-store-label">Download on the</span>
+                <span class="mb-app-store-name">App Store</span>
+              </div>
+            </a>
+            <a href="https://kiam.kr" target="_blank" class="mb-app-btn android">
+              <i class="fab fa-google-play"></i>
+              <div>
+                <span class="mb-app-store-label">Get it on</span>
+                <span class="mb-app-store-name">Google Play</span>
+              </div>
+            </a>
+          </div>
+          <button class="mb-primary-btn" id="mbAppDoneBtn">
+            <i class="fas fa-check"></i> 설치 완료, 다음 단계로
+          </button>
+          <div class="mb-alt-text">앱 없이도 웹에서 계속 사용할 수 있어요</div>
+        </div>
+
+        <!-- Step 4: 링크 발급 -->
+        <div class="mb-step-content" id="mbStep4" style="display:none">
+          <div class="mb-step-icon orange"><i class="fas fa-link"></i></div>
+          <div class="mb-step-title">챗봇 링크 발급 완료!</div>
+          <div class="mb-step-desc">아래 고유 링크가 발급되었습니다.<br>이 링크는 변경·수정이 불가능한 고유 주소입니다.</div>
+          <div class="mb-link-card">
+            <div class="mb-link-label"><i class="fas fa-lock"></i> 나의 고유 챗봇 링크</div>
+            <div class="mb-link-value" id="mbGuestIssuedLink">https://chatbot.kiam.kr/s/...</div>
+          </div>
+          <div class="mb-issued-actions" style="margin-top:14px">
+            <button class="mb-sec-btn" id="mbCopyGuestBtn"><i class="fas fa-copy"></i> 링크 복사</button>
+            <button class="mb-sec-btn" id="mbShareGuestBtn"><i class="fas fa-share-alt"></i> 공유</button>
+          </div>
+          <button class="mb-primary-btn green" id="mbGuestDoneBtn">
+            <i class="fas fa-rocket"></i> 챗봇 관리 시작하기
+          </button>
+        </div>
+
+      </div><!-- /flowGuest -->
+
+    </div>
+  </div>
+  <!-- ========== /MY 챗봇 만들기 패널 ========== -->
+
+  <!-- ========== 챗봇 설정 패널 ========== -->
+  <div class="cbsetting-overlay" id="cbSettingOverlay"></div>
+  <div class="cbsetting-panel" id="cbSettingPanel">
+    <div class="cbsetting-header">
+      <button class="cbsetting-back-btn" id="cbSettingCloseBtn"><i class="fas fa-arrow-left"></i></button>
+      <div class="cbsetting-header-info">
+        <span class="cbsetting-title">챗봇 설정</span>
+        <span class="cbsetting-sub" id="cbSettingBotName">설정을 불러오는 중...</span>
+      </div>
+      <button class="cbsetting-save-btn" id="cbSettingSaveBtn"><i class="fas fa-check"></i> 저장</button>
+    </div>
+
+    <!-- 챗봇 선택 (여러개인 경우) -->
+    <div class="cbsetting-bot-selector" id="cbSettingBotSelector" style="display:none;">
+      <select class="cbsetting-select" id="cbSettingBotSelect"></select>
+    </div>
+
+    <div class="cbsetting-body" id="cbSettingBody">
+      <div class="cbsetting-loading"><i class="fas fa-spinner fa-spin"></i> 설정을 불러오는 중...</div>
+    </div>
+  </div>
+  <!-- ========== /챗봇 설정 패널 ========== -->
+
+  <!-- ========== 아바타 학습 전체화면 ========== -->
+  <div class="learn-screen" id="learnScreen">
+
+    <div class="learn-header">
+      <button class="back-btn" id="learnBackBtn"><i class="fas fa-arrow-left"></i></button>
+      <div class="learn-header-info">
+        <span class="learn-title">아바타 학습시키기</span>
+        <span class="learn-sub">나를 닮은 AI 만들기</span>
+      </div>
+      <div class="learn-sync-badge" id="learnSyncBadge">
+        <i class="fas fa-circle-notch fa-spin" style="display:none" id="learnSpinIcon"></i>
+        <i class="fas fa-check-circle" id="learnCheckIcon"></i>
+        <span id="learnSyncText">동기화됨</span>
+      </div>
+    </div>
+
+    <!-- 탭 -->
+    <div class="learn-tabs">
+      <button class="learn-tab active" data-ltab="diary"><i class="fas fa-book-open"></i> 일기/대화</button>
+      <button class="learn-tab" data-ltab="text"><i class="fas fa-file-alt"></i> 텍스트</button>
+      <button class="learn-tab" data-ltab="voice"><i class="fas fa-microphone"></i> 음성</button>
+      <button class="learn-tab" data-ltab="file"><i class="fas fa-file-pdf"></i> 파일</button>
+    </div>
+
+    <div class="learn-body">
+
+      <!-- ① 일기/자유 대화 탭 -->
+      <div class="learn-panel active" id="ltab-diary">
+        <div class="learn-panel-top">
+          <div class="learn-intro">
+            <div class="learn-intro-icon" style="background:rgba(139,92,246,0.15)">
+              <i class="fas fa-book-open" style="color:#8b5cf6"></i>
+            </div>
+            <div>
+              <p class="learn-intro-title">일기 · 친구에게 말하듯이</p>
+              <p class="learn-intro-desc">오늘 있었던 일, 생각, 감정을 자유롭게 기록하세요.<br>챗봇이 당신의 말투와 가치관을 학습합니다.</p>
+            </div>
+          </div>
+          <div class="learn-date-row">
+            <span class="learn-date-label" id="diaryDateLabel"></span>
+            <button class="learn-template-btn" id="diaryTemplateBtn"><i class="fas fa-magic"></i> 템플릿</button>
+          </div>
+        </div>
+        <textarea class="learn-textarea" id="diaryTextarea"
+          placeholder="오늘 어떤 일이 있었나요? 생각, 감정, 경험을 자유롭게 적어주세요.&#10;&#10;예) 오늘 중요한 미팅이 있었는데, 나는 항상 상대방의 입장을 먼저 이해하려고 노력해. 내 소통 방식은..."></textarea>
+        <div class="learn-action-row">
+          <span class="learn-char-count" id="diaryCharCount">0자</span>
+          <button class="learn-submit-btn" id="diarySubmitBtn">
+            <i class="fas fa-upload"></i> 학습 업로드
+          </button>
+        </div>
+        <!-- 학습 기록 -->
+        <div class="learn-history" id="diaryHistory"></div>
+      </div>
+
+      <!-- ② 텍스트/문서 탭 -->
+      <div class="learn-panel" id="ltab-text">
+        <div class="learn-panel-top">
+          <div class="learn-intro">
+            <div class="learn-intro-icon" style="background:rgba(59,130,246,0.15)">
+              <i class="fas fa-file-alt" style="color:#3b82f6"></i>
+            </div>
+            <div>
+              <p class="learn-intro-title">자기소개 · 프로필 · 경력</p>
+              <p class="learn-intro-desc">나를 설명하는 텍스트를 입력하거나 붙여넣기 하세요.<br>자기소개서, 이력서, 인터뷰 내용도 좋습니다.</p>
+            </div>
+          </div>
+          <div class="learn-category-row">
+            <button class="learn-cat-btn active" data-cat="intro">자기소개</button>
+            <button class="learn-cat-btn" data-cat="career">경력/이력</button>
+            <button class="learn-cat-btn" data-cat="value">가치관/철학</button>
+            <button class="learn-cat-btn" data-cat="etc">기타</button>
+          </div>
+        </div>
+        <textarea class="learn-textarea" id="textTextarea"
+          placeholder="나에 대한 정보를 입력해주세요.&#10;&#10;예) 저는 20년 경력의 정치 전문가로, 지역 주민의 삶을 개선하는 것을 최우선 가치로 삼고 있습니다..."></textarea>
+        <div class="learn-action-row">
+          <span class="learn-char-count" id="textCharCount">0자</span>
+          <button class="learn-submit-btn" id="textSubmitBtn">
+            <i class="fas fa-upload"></i> 학습 업로드
+          </button>
+        </div>
+        <div class="learn-history" id="textHistory"></div>
+      </div>
+
+      <!-- ③ 음성 탭 -->
+      <div class="learn-panel" id="ltab-voice">
+        <div class="learn-panel-top">
+          <div class="learn-intro">
+            <div class="learn-intro-icon" style="background:rgba(239,68,68,0.12)">
+              <i class="fas fa-microphone" style="color:#ef4444"></i>
+            </div>
+            <div>
+              <p class="learn-intro-title">음성으로 나를 학습시키기</p>
+              <p class="learn-intro-desc">말하듯이 자연스럽게 녹음하세요.<br>말투, 표현, 어조까지 학습합니다.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 녹음 UI -->
+        <div class="voice-recorder">
+          <div class="vr-visualizer" id="vrVisualizer">
+            <div class="vr-idle" id="vrIdle">
+              <i class="fas fa-microphone"></i>
+              <p>버튼을 눌러 녹음 시작</p>
+            </div>
+            <div class="vr-recording" id="vrRecording" style="display:none">
+              <div class="vr-waves">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span>
+              </div>
+              <p class="vr-timer" id="vrTimer">00:00</p>
+            </div>
+            <div class="vr-done" id="vrDone" style="display:none">
+              <i class="fas fa-check-circle" style="color:#22c55e;font-size:32px;"></i>
+              <p id="vrDoneText">00:00 녹음 완료</p>
+            </div>
+          </div>
+          <div class="vr-controls">
+            <button class="vr-btn record" id="vrRecordBtn">
+              <i class="fas fa-microphone" id="vrBtnIcon"></i>
+            </button>
+            <button class="vr-btn stop" id="vrStopBtn" style="display:none">
+              <i class="fas fa-stop"></i>
+            </button>
+            <button class="vr-btn upload" id="vrUploadBtn" style="display:none">
+              <i class="fas fa-upload"></i> 학습 업로드
+            </button>
+          </div>
+          <p class="vr-hint">* 최대 5분까지 녹음 가능합니다</p>
+        </div>
+        <div class="learn-history" id="voiceHistory"></div>
+      </div>
+
+      <!-- ④ 파일 탭 -->
+      <div class="learn-panel" id="ltab-file">
+        <div class="learn-panel-top">
+          <div class="learn-intro">
+            <div class="learn-intro-icon" style="background:rgba(245,158,11,0.12)">
+              <i class="fas fa-file-pdf" style="color:#f59e0b"></i>
+            </div>
+            <div>
+              <p class="learn-intro-title">PDF · 문서 파일 업로드</p>
+              <p class="learn-intro-desc">책, 강연 자료, 기고문, 인터뷰 등<br>나를 나타내는 모든 문서를 업로드하세요.</p>
+            </div>
+          </div>
+        </div>
+        <!-- 파일 드롭존 -->
+        <div class="file-dropzone" id="fileDropzone">
+          <div class="fdz-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+          <p class="fdz-title">파일을 여기에 드래그하거나</p>
+          <label class="fdz-btn" for="fileInput">파일 선택</label>
+          <input type="file" id="fileInput" accept=".pdf,.txt,.doc,.docx" multiple style="display:none" />
+          <p class="fdz-hint">PDF, TXT, DOC · 최대 20MB</p>
+        </div>
+        <!-- 업로드된 파일 목록 -->
+        <div class="file-list" id="fileList"></div>
+        <div class="learn-history" id="fileHistory"></div>
+      </div>
+
+    </div><!-- /learn-body -->
+
+    <!-- 전체 학습 현황 -->
+    <div class="learn-stats-bar">
+      <div class="lsb-item">
+        <i class="fas fa-database" style="color:var(--accent-blue)"></i>
+        <span id="learnTotalCount">0</span>개 학습됨
+      </div>
+      <div class="lsb-divider"></div>
+      <div class="lsb-item">
+        <i class="fas fa-clock" style="color:var(--green)"></i>
+        <span id="learnLastTime">-</span>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- 대시보드 패널 -->
+  <div class="dashboard-panel" id="dashboardPanel">
+    <div class="dashboard-inner">
+      <div class="dashboard-header">
+        <div class="dashboard-title-wrap">
+          <i class="fas fa-chart-pie"></i>
+          <span>대시보드</span>
+        </div>
+        <button class="dash-close-btn" id="dashCloseBtn"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="dashboard-body">
+
+        <!-- 요약 카드 3개 -->
+        <div class="dash-cards">
+          <div class="dash-card total">
+            <div class="dash-card-icon"><i class="fas fa-users"></i></div>
+            <div class="dash-card-info">
+              <span class="dash-num">65</span>
+              <span class="dash-lbl">전체 수신자</span>
+            </div>
+          </div>
+          <div class="dash-card active">
+            <div class="dash-card-icon"><i class="fas fa-comments"></i></div>
+            <div class="dash-card-info">
+              <span class="dash-num">12</span>
+              <span class="dash-lbl">대화 참여</span>
+            </div>
+          </div>
+          <div class="dash-card unused">
+            <div class="dash-card-icon"><i class="fas fa-user-clock"></i></div>
+            <div class="dash-card-info">
+              <span class="dash-num">53</span>
+              <span class="dash-lbl">미사용</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 참여율 게이지 -->
+        <div class="dash-section">
+          <div class="dash-section-title">챗봇 참여율</div>
+          <div class="dash-gauge-wrap">
+            <div class="dash-gauge-bar">
+              <div class="dash-gauge-fill" style="width: 18.5%"></div>
+            </div>
+            <span class="dash-gauge-pct">18.5%</span>
+          </div>
+          <div class="dash-gauge-desc">65명 중 12명이 대화에 참여했습니다</div>
+        </div>
+
+        <!-- 대화 횟수 분포 -->
+        <div class="dash-section">
+          <div class="dash-section-title">대화 횟수 분포</div>
+          <div class="dash-dist-list">
+            <div class="dash-dist-item">
+              <span class="dist-label">1회</span>
+              <div class="dist-bar-wrap">
+                <div class="dist-bar" style="width: 25%"></div>
+              </div>
+              <span class="dist-count">1명</span>
+            </div>
+            <div class="dash-dist-item">
+              <span class="dist-label">2회</span>
+              <div class="dist-bar-wrap">
+                <div class="dist-bar" style="width: 50%"></div>
+              </div>
+              <span class="dist-count">2명</span>
+            </div>
+            <div class="dash-dist-item">
+              <span class="dist-label">3회</span>
+              <div class="dist-bar-wrap">
+                <div class="dist-bar" style="width: 50%"></div>
+              </div>
+              <span class="dist-count">2명</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 최근 활동 -->
+        <div class="dash-section">
+          <div class="dash-section-title">최근 대화 활동</div>
+          <div class="dash-activity-list">
+            <div class="dash-activity-item">
+              <div class="activity-dot green"></div>
+              <div class="activity-info">
+                <span class="activity-name">양기대</span>
+                <span class="activity-time">2026-03-22 21:32</span>
+              </div>
+              <span class="activity-badge">3회</span>
+            </div>
+            <div class="dash-activity-item">
+              <div class="activity-dot green"></div>
+              <div class="activity-info">
+                <span class="activity-name">이종원</span>
+                <span class="activity-time">2026-03-13 20:26</span>
+              </div>
+              <span class="activity-badge">2회</span>
+            </div>
+            <div class="dash-activity-item">
+              <div class="activity-dot blue"></div>
+              <div class="activity-info">
+                <span class="activity-name">김상준</span>
+                <span class="activity-time">2026-02-27 18:12</span>
+              </div>
+              <span class="activity-badge">3회</span>
+            </div>
+            <div class="dash-activity-item">
+              <div class="activity-dot blue"></div>
+              <div class="activity-info">
+                <span class="activity-name">김문준</span>
+                <span class="activity-time">2026-02-25 18:25</span>
+              </div>
+              <span class="activity-badge">2회</span>
+            </div>
+            <div class="dash-activity-item">
+              <div class="activity-dot gray"></div>
+              <div class="activity-info">
+                <span class="activity-name">김혁</span>
+                <span class="activity-time">2026-02-25 10:03</span>
+              </div>
+              <span class="activity-badge">1회</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 등록일 현황 -->
+        <div class="dash-section">
+          <div class="dash-section-title">월별 등록 현황</div>
+          <div class="dash-month-list">
+            <div class="dash-month-item">
+              <span class="month-label">2026년 3월</span>
+              <div class="month-bar-wrap">
+                <div class="month-bar" style="width: 80%"></div>
+              </div>
+              <span class="month-count">8명</span>
+            </div>
+            <div class="dash-month-item">
+              <span class="month-label">2026년 2월</span>
+              <div class="month-bar-wrap">
+                <div class="month-bar" style="width: 37%"></div>
+              </div>
+              <span class="month-count">4명 (+ ∞ 이전)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 구독 한도 현황 -->
+        <div class="dash-section" id="quotaSection" style="display:none">
+          <div class="dash-section-title">구독 한도 현황 <span class="quota-plan-badge" id="quotaPlanBadge">Free</span></div>
+          <div class="quota-info-line" id="quotaExpireInfo"></div>
+          <div class="quota-bars">
+            <div class="quota-bar-item">
+              <div class="quota-bar-header"><span class="quota-bar-label" id="quotaLabel_profile">프로필</span><span class="quota-bar-pct" id="quotaPct_profile">0%</span></div>
+              <div class="quota-bar-track"><div class="quota-fill" id="quotaFill_profile" style="width:0%"></div></div>
+              <span class="quota-bar-used" id="quotaUsed_profile">0 / 30</span>
+            </div>
+            <div class="quota-bar-item">
+              <div class="quota-bar-header"><span class="quota-bar-label" id="quotaLabel_ai_msg">AI 메시지</span><span class="quota-bar-pct" id="quotaPct_ai_msg">0%</span></div>
+              <div class="quota-bar-track"><div class="quota-fill" id="quotaFill_ai_msg" style="width:0%"></div></div>
+              <span class="quota-bar-used" id="quotaUsed_ai_msg">0 / 15</span>
+            </div>
+            <div class="quota-bar-item">
+              <div class="quota-bar-header"><span class="quota-bar-label" id="quotaLabel_resp">응답자</span><span class="quota-bar-pct" id="quotaPct_resp">0%</span></div>
+              <div class="quota-bar-track"><div class="quota-fill" id="quotaFill_resp" style="width:0%"></div></div>
+              <span class="quota-bar-used" id="quotaUsed_resp">0 / 15</span>
+            </div>
+            <div class="quota-bar-item bot-row">
+              <div class="quota-bar-header"><span class="quota-bar-label">챗봇</span><span class="quota-bar-pct">-</span></div>
+              <span class="quota-bar-used" id="quotaUsed_bot">0 / 1</span>
+            </div>
+          </div>
+          <a class="quota-upgrade-link" href="/aimessage/onechat/subscribe.html"><i class="fas fa-crown"></i> 플랜 업그레이드하기</a>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== 구독 한도 경고 모달 ========== -->
+  <div class="quota-warning-overlay" id="quotaWarningOverlay">
+    <div class="quota-warning-box" id="quotaWarningBody"></div>
+  </div>
+
+  <!-- 오버레이 -->
+  <div class="overlay" id="overlay"></div>
+
+  <script src="js/dm.js?v=0421a"></script>
+  <script src="js/quota.js?v=0506a"></script>
+  <!-- data.js 제거: mock 데이터 완전 삭제, 모든 데이터 서버 API로 전환 -->
+  <script src="js/main.js?v=0505f"></script>
+  <script src="js/learn.js?v=0428i"></script>
+  <script src="js/api.js?v=0505c"></script>
+  <script src="js/voice.js?v=0505i"></script>
+
+  <!-- ========== 알림 패널 ========== -->
+  <div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>
+  <div class="notif-panel" id="notifPanel">
+    <div class="notif-panel-header">
+      <div class="notif-header-left">
+        <i class="fas fa-bell" style="color:#a5b4fc;font-size:16px;"></i>
+        <span class="notif-panel-title">알림</span>
+        <span class="notif-unread-badge" id="notifUnreadBadge" style="display:none">0</span>
+      </div>
+      <button class="notif-panel-close" onclick="closeNotifPanel()"><i class="fas fa-times"></i></button>
+    </div>
+    <div class="notif-filter-tabs" id="notifTabs">
+      <button class="nftab active" data-type="all" onclick="filterNotif(this,'all')">전체</button>
+      <button class="nftab" data-type="connect_request" onclick="filterNotif(this,'connect_request')">🙋 연결요청</button>
+      <button class="nftab" data-type="first_chat" onclick="filterNotif(this,'first_chat')">👋 첫 사용</button>
+    </div>
+    <div class="notif-actions-row">
+      <button class="notif-read-all-btn" onclick="readAllNotif()">
+        <i class="fas fa-check-double"></i> 모두 읽음
+      </button>
+    </div>
+    <div class="notif-list-area" id="notifListArea">
+      <div class="notif-loading"><i class="fas fa-spinner fa-spin"></i></div>
+    </div>
+  </div>
+  <!-- ========== 알림 패널 끝 ========== -->
+
+  <!-- ═══ PWA 등록자 패널 ═══ -->
+  <div id="pwaVisitorPanel" style="display:none;position:fixed;inset:0;z-index:3000;background:rgba(0,0,0,.55);align-items:flex-end;justify-content:center;">
+    <div id="pwaVisitorBox" style="background:#1a1f2e;border-radius:24px 24px 0 0;padding:0;width:100%;max-width:680px;max-height:85vh;display:flex;flex-direction:column;">
+      <!-- 헤더 -->
+      <div style="display:flex;align-items:center;justify-content:space-between;padding:20px 20px 14px;border-bottom:1px solid rgba(255,255,255,.08);">
+        <div>
+          <div style="font-size:17px;font-weight:800;color:#fff;">📲 PWA 등록자</div>
+          <div style="font-size:12px;color:#6b7280;margin-top:2px;">앱 설치 후 전화번호를 등록한 방문자 목록</div>
+        </div>
+        <button onclick="closePvaVisitorPanel()" style="background:rgba(255,255,255,.08);border:none;color:#9ca3af;width:32px;height:32px;border-radius:50%;font-size:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;">&times;</button>
+      </div>
+      <!-- 검색 -->
+      <div style="padding:12px 20px 0;">
+        <input id="pvaSearchInput" type="text" placeholder="이름 · 전화번호 · 방문자ID 검색"
+          style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;padding:10px 14px;color:#fff;font-size:14px;outline:none;"
+          oninput="onPvaSearch(this.value)">
+      </div>
+      <!-- 목록 -->
+      <div id="pvaList" style="flex:1;overflow-y:auto;padding:12px 20px 20px;"></div>
+      <!-- 로딩/더보기 -->
+      <div id="pvaMore" style="padding:0 20px 20px;display:none;">
+        <button onclick="loadPvaMore()" style="width:100%;padding:11px;background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.1);border-radius:10px;color:#9ca3af;font-size:13px;cursor:pointer;">더 보기</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ========== HI 공지발송 패널 세트 ========== -->
+  <div class="bc-overlay" id="bcOverlay"></div>
+
+  <!-- 공지발송 타입 선택 패널 -->
+  <div class="bc-panel" id="bcMenuPanel">
+    <div class="bc-panel-header">
+      <button class="bc-close-btn" id="bcMenuClose"><i class="fas fa-times"></i></button>
+      <span class="bc-panel-title">📢 HI 공지발송</span>
+    </div>
+    <div class="bc-panel-body" style="padding:20px 16px;">
+      <p style="font-size:13px;color:#94a3b8;margin-bottom:16px;">발송 대상 또는 기능을 선택하세요.</p>
+      <div class="bc-menu-grid">
+        <button class="bc-menu-card" data-compose-target="all">
+          <div class="bc-menu-card-icon" style="background:linear-gradient(135deg,#10b981,#059669);">
+            <i class="fas fa-paper-plane"></i>
+          </div>
+          <div class="bc-menu-card-title">전체 발송</div>
+          <div class="bc-menu-card-desc">퍼널 + 공유 전체</div>
+        </button>
+        <button class="bc-menu-card" data-compose-target="funnel">
+          <div class="bc-menu-card-icon" style="background:linear-gradient(135deg,#3b82f6,#2563eb);">
+            <i class="fas fa-filter"></i>
+          </div>
+          <div class="bc-menu-card-title">퍼널 발송</div>
+          <div class="bc-menu-card-desc">명함 수신자만</div>
+        </button>
+        <button class="bc-menu-card" data-compose-target="shared">
+          <div class="bc-menu-card-icon" style="background:linear-gradient(135deg,#8b5cf6,#7c3aed);">
+            <i class="fas fa-inbox"></i>
+          </div>
+          <div class="bc-menu-card-title">공유 발송</div>
+          <div class="bc-menu-card-desc">챗봇 링크 방문자</div>
+        </button>
+        <button class="bc-menu-card" id="bcMenuToHistBtn">
+          <div class="bc-menu-card-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">
+            <i class="fas fa-chart-bar"></i>
+          </div>
+          <div class="bc-menu-card-title">발송 이력</div>
+          <div class="bc-menu-card-desc">통계 · 응답자 확인</div>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 발송 작성 패널 -->
+  <div class="bc-panel" id="bcComposePanel">
+    <div class="bc-panel-header">
+      <button class="bc-close-btn" id="bcComposeClose"><i class="fas fa-times"></i></button>
+      <span class="bc-panel-title" id="bcComposePanelTitle">📢 전체 공지발송</span>
+    </div>
+    <div class="bc-panel-body">
+      <!-- 대상 현황 -->
+      <div class="bc-target-info" id="bcTargetInfo">
+        <div class="bc-target-chip funnel"><i class="fas fa-filter"></i> 퍼널 <strong id="bcFunnelCnt">-</strong>명</div>
+        <div class="bc-target-chip shared"><i class="fas fa-inbox"></i> 공유 <strong id="bcSharedCnt">-</strong>명</div>
+        <div class="bc-target-total">합계 <strong id="bcTotalCnt">-</strong>명</div>
+      </div>
+      <!-- 검색 필터 -->
+      <div class="bc-filter-row">
+        <input type="text" class="bc-input" id="bcFilterInput" placeholder="이름·연락처로 필터 (선택사항)" />
+        <button class="bc-filter-clear" id="bcFilterClear"><i class="fas fa-times"></i></button>
+      </div>
+      <!-- 제목 -->
+      <input type="text" class="bc-input" id="bcTitleInput" placeholder="공지 제목 (선택사항)" maxlength="100" />
+      <!-- 메시지 -->
+      <div class="bc-msg-label">메시지 내용 <span style="color:#ef4444">*</span></div>
+      <textarea class="bc-textarea" id="bcMsgInput" placeholder="발송할 공지 메시지를 입력하세요...&#10;&#10;운영자 공지 UI(보라색 카드)로 수신자에게 표시됩니다." rows="6"></textarea>
+      <!-- 미리보기 -->
+      <div class="bc-preview-label">미리보기</div>
+      <div class="bc-preview-box">
+        <div class="bc-preview-notice" id="bcPreviewNotice">
+          <div class="bc-preview-header">
+            <i class="fas fa-bullhorn"></i>
+            <span>운영자 공지</span>
+            <span class="bc-preview-badge">NOTICE</span>
+          </div>
+          <div class="bc-preview-divider"></div>
+          <div class="bc-preview-body" id="bcPreviewBody">메시지를 입력하면 여기에 미리보기가 표시됩니다.</div>
+          <div class="bc-preview-time">지금</div>
+        </div>
+      </div>
+      <!-- 발송 버튼 -->
+      <button class="bc-send-btn" id="bcSendBtn">
+        <i class="fas fa-paper-plane"></i>
+        <span id="bcSendBtnLabel">발송 -명</span>
+      </button>
+    </div>
+  </div>
+
+  <!-- 발송 이력 패널 -->
+  <div class="bc-panel" id="bcHistPanel">
+    <div class="bc-panel-header">
+      <button class="bc-close-btn" id="bcHistClose"><i class="fas fa-times"></i></button>
+      <span class="bc-panel-title">📊 공지 발송 이력</span>
+    </div>
+    <div class="bc-panel-body">
+      <div class="bc-hist-list" id="bcHistList">
+        <div style="text-align:center;padding:40px;color:#94a3b8;"><i class="fas fa-spinner fa-spin"></i> 불러오는 중...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 발송 상세/통계 패널 -->
+  <div class="bc-panel" id="bcStatPanel">
+    <div class="bc-panel-header">
+      <button class="bc-close-btn" id="bcStatClose"><i class="fas fa-times"></i></button>
+      <button class="bc-back-btn" id="bcStatBack"><i class="fas fa-arrow-left"></i></button>
+      <span class="bc-panel-title">📈 공지 상세</span>
+    </div>
+    <div class="bc-panel-body">
+      <!-- 기본 정보 -->
+      <div class="bc-stat-meta" id="bcStatMeta"></div>
+      <!-- 통계 바 -->
+      <div class="bc-stat-bars" id="bcStatBars"></div>
+      <!-- 탭 필터 -->
+      <div class="bc-reply-tabs" id="bcReplyTabs">
+        <button class="bc-rtab active" data-filter="all">전체</button>
+        <button class="bc-rtab" data-filter="replied">응답</button>
+        <button class="bc-rtab" data-filter="read">읽음</button>
+        <button class="bc-rtab" data-filter="unread">미읽음</button>
+      </div>
+      <!-- 수신자 목록 -->
+      <div class="bc-reply-list" id="bcReplyList">
+        <div style="text-align:center;padding:40px;color:#94a3b8;"><i class="fas fa-spinner fa-spin"></i></div>
+      </div>
+    </div>
+  </div>
+  <!-- ========== /HI 공지발송 패널 세트 ========== -->
+
+  <!-- ========== 풀스크린 종합 대시보드 ========== -->
+  <div id="fullDashOverlay" style="
+    display:none;
+    position:fixed;inset:0;z-index:9999;
+    background:#07101e;
+    flex-direction:column;
+  ">
+    <iframe
+      id="fullDashFrame"
+      src="about:blank"
+      style="
+        width:100%;height:100%;
+        border:none;flex:1;
+        background:#07101e;
+      "
+      allow="same-origin"
+    ></iframe>
+  </div>
+  <!-- ========== /풀스크린 종합 대시보드 ========== -->
+
+  <script>
+  function openScenarioDesign() {
+    // sms_idx를 URL 파라미터 또는 meta 태그에서 읽음
+    var smsIdx = (new URLSearchParams(window.location.search)).get('sms_idx') || '';
+    var metaTag = document.querySelector('meta[name="sms_idx"]');
+    if (!smsIdx && metaTag) smsIdx = metaTag.getAttribute('content') || '';
+    var url = 'scenario_plan.html' + (smsIdx ? '?sms_idx=' + encodeURIComponent(smsIdx) : '');
+    window.location.href = url;
+  }
+  </script>
+
+</body>
+</html>

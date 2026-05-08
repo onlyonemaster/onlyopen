@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>명함 이미지 & OCR 인식 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link active">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>이미지 & OCR</span></div>
+<h1>📸 명함 이미지 & OCR 인식 완전 분석</h1>
+<p class="page-desc">명함 사진을 찍어서 AI가 글자를 읽어내는(OCR) 과정의 모든 단계와 소스코드를 분석합니다.</p>
+
+<h2 id="overview">전체 흐름도</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+1. 사용자가 + 버튼 클릭 → add_paper_card()
+2. 앱 카메라 열림 → 사용자가 명함 사진 촬영
+3. 이미지 파일 → callAppBridge() → 네이티브 코드
+4. 네이티브에서 서버로 이미지 업로드 (multipart/form-data)
+5. 서버: [내부API]/[명함관리]
+   ├── 이미지 파일 수신
+   ├── OCR 엔진 호출 (아마도 Tesseract 또는 클라우드 OCR API)
+   ├── 텍스트 추출: 이름, 직책, 회사명, 전화번호, 주소, 이메일, 팩스
+   └── JSON 응답: {name, mobile, org_name, job, addr, email, fax, img_url}
+6. 클라이언트가 JSON 수신 → 모달 필드에 자동 채움
+7. AI 알림 메시지 표시 (누락된 정보 안내)
+</pre>
+
+<h2 id="modal-elements">이미지 관련 모달 요소</h2>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+<tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">요소 ID</th><th style="padding:8px 12px;border:1px solid var(--border);">역할</th></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">#paper_img_url</td><td style="padding:8px 12px;border:1px solid var(--border);">OCR 처리된 이미지의 서버 URL (hidden input)</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">#paper_img_view_wrap</td><td style="padding:8px 12px;border:1px solid var(--border);">이미지 영역 래퍼 (이미지 있을 때만 표시)</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">#paper_img_toggle_btn</td><td style="padding:8px 12px;border:1px solid var(--border);">"명함이미지보기" / "명함이미지닫기" 토글 버튼</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">#paper_img_display</td><td style="padding:8px 12px;border:1px solid var(--border);">실제 이미지 표시 영역 (기본 숨김)</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">#paper_card_img</td><td style="padding:8px 12px;border:1px solid var(--border);">&lt;img&gt; 요소 — 명함 이미지 표시</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">#paper_ai_notice</td><td style="padding:8px 12px;border:1px solid var(--border);">AI 알림 박스 (누락 정보 경고)</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">#paper_ai_notice_msg</td><td style="padding:8px 12px;border:1px solid var(--border);">AI 알림 메시지 텍스트</td></tr>
+</table>
+
+<h2 id="toggle-img">이미지 토글 — togglePaperImg()</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function togglePaperImg() {
+    var imgDisplay = document.getElementById('paper_img_display');
+    var btn = document.getElementById('paper_img_toggle_btn');
+    if (!imgDisplay) return;
+
+    if (imgDisplay.style.display === 'none') {
+        imgDisplay.style.display = 'block';                              // 보이기
+        btn.innerHTML = btn.innerHTML.replace('명함이미지보기', '명함이미지닫기');
+    } else {
+        imgDisplay.style.display = 'none';                               // 숨기기
+        btn.innerHTML = btn.innerHTML.replace('명함이미지닫기', '명함이미지보기');
+    }
+}
+</pre>
+
+<h2 id="ocr-response">OCR 응답 처리 로직</h2>
+<p>앱에서 촬영한 이미지가 서버에서 OCR 처리된 후, 다음과 같은 JSON 응답이 옵니다:</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 서버 응답 예시 (OCR 결과)
+{
+    "name": "홍길동",
+    "mobile": "010-1234-5678",
+    "org_name": "ABC컴퍼니",
+    "job": "대표이사",
+    "addr": "서울시 강남구 테헤란로 123",
+    "email": "hong@abc.com",
+    "fax": "02-123-4567",
+    "img_url": "[내부경로]/[데이터]/abc123.jpg"
+}
+
+// 클라이언트 처리:
+if (imgUrl) {
+    document.getElementById('paper_img_url').value = imgUrl;  // 숨은 필드에 저장
+    document.getElementById('paper_card_img').src = imgUrl;    // 이미지 표시
+    imgWrap.style.display = 'block';     // 이미지 래퍼 표시
+} else {
+    imgWrap.style.display = 'none';      // 이미지 없으면 숨김
+}
+// 이미지 표시 영역은 접힌 상태로 시작 (imgDisplay.style.display = 'none')
+</pre>
+
+<h2 id="ai-notice">AI 알림 (누락 정보 경고)</h2>
+<p>OCR이 모든 정보를 완벽하게 읽지 못했을 때 표시되는 경고 메시지입니다:</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 필수 필드 체크
+var missing = [];
+if (!data.name || data.name.trim() === '') missing.push('이름');
+if (!data.mobile || data.mobile.trim() === '') missing.push('휴대전화');
+if (!data.org_name || data.org_name.trim() === '') missing.push('소속(기관명)');
+
+if (missing.length > 0) {
+    noticeMsgEl.textContent =
+        '안녕하세요? IAM AI입니다. 지금 촬영 과정에서 ' +
+        missing.join(', ') + ' 등의 정보가 명확하지 않으니 ' +
+        '회원님의 최종 확인을 부탁합니다.';
+    noticeEl.style.display = 'block';  // 알림 표시
+} else {
+    noticeEl.style.display = 'none';   // 모든 정보 있으면 숨김
+}
+</pre>
+
+<div class="tip"><strong>💡 초등학생을 위한 비유:</strong> OCR은 마치 선생님이 학생의 글씨를 읽는 것과 같아요. 명함 사진이라는 '그림'을 보고 AI 선생님이 거기 적힌 글자를 찾아내는 거예요. 하지만 글씨가 너무 흐리거나 이상한 글씨체면 AI 선생님도 실수할 수 있어서, "이 부분을 다시 확인해 주세요~"라고 친절하게 알려줘요!</div>
+
+<h2 id="resize">이미지 크기 조정 — resize()</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function resize(img, maxW, maxH) {
+    var width = img.width;
+    var height = img.height;
+    // 1단계: 너비가 최대치 초과하면 비율 유지하며 축소
+    if (width > maxW) {
+        ratio = maxW / width;
+        $("#card_logo").css("width", maxW);
+        $("#card_logo").css("height", height * ratio);
+        height = height * ratio;
+    }
+    // 2단계: 높이가 최대치 초과하면 비율 유지하며 축소
+    width = $("#card_logo").width();
+    height = $("#card_logo").height();
+    if (height > maxH) {
+        ratio = maxH / height;
+        $("#card_logo").css("height", maxH);
+        $("#card_logo").css("width", width * ratio);
+    }
+}
+// 주로 #card_logo (명함 로고 이미지)에 사용됨
+</pre>
+
+<h2 id="camera-flow">앱 카메라 흐름 상세</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+사용자 클릭 → add_paper_card()
+    ↓
+callAppBridge('goCardCamera')
+    ├── Android: AppScript.goCardCamera() (네이티브 카메라 인텐트)
+    └── iOS: webkit.messageHandlers['goCardCamera'].postMessage()
+    ↓
+네이티브 카메라 열림 → 사용자 촬영
+    ↓
+이미지 파일 생성 → 네이티브 코드가 HTTP POST로 서버 전송
+    ↓
+서버 OCR 처리 → JSON 응답
+    ↓
+WebView로 JSON 콜백 → 클라이언트 JavaScript 수신
+    ↓
+모달 필드 자동 채움 + AI 알림 표시
+</pre>
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

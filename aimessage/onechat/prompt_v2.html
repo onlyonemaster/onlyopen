@@ -1,0 +1,234 @@
+<!--
+  원챗(OneChat) 챗봇 설정 v2.0 — 4-Layer Prompt Architecture
+  L1 Persona / L2 Policy / L3 Interaction / L4 Safety
+  탭 기반 아코디언 UI · 실시간 프리뷰 · Layer 토글
+-->
+<div class="cbsetting-v2-container" id="cbSettingV2Container">
+
+  <!-- ① 상단: 챗봇 이름 + Layer 활성화 요약바 -->
+  <div class="cbv2-topbar">
+    <div class="cbv2-name-section">
+      <label class="cbv2-label">챗봇 이름</label>
+      <input type="text" class="cbv2-input-name" id="cbv2InputName"
+             placeholder="예) 홍길동 AI 비서" maxlength="50" />
+      <span class="cbv2-char-hint" id="cbv2NameCount">0/50</span>
+    </div>
+
+    <!-- Layer 활성화 상태 표시줄 -->
+    <div class="cbv2-layer-toggle-bar" id="cbv2LayerToggleBar">
+      <span class="cbv2-toggle-label">활성화 Layer:</span>
+      <button class="cbv2-toggle-chip active" data-layer="L1" id="cbv2ToggleL1">
+        <span class="cbv2-chip-dot" style="background:#8b5cf6"></span> L1 페르소나
+      </button>
+      <button class="cbv2-toggle-chip active" data-layer="L2" id="cbv2ToggleL2">
+        <span class="cbv2-chip-dot" style="background:#3b82f6"></span> L2 정책
+      </button>
+      <button class="cbv2-toggle-chip active" data-layer="L3" id="cbv2ToggleL3">
+        <span class="cbv2-chip-dot" style="background:#10b981"></span> L3 상호작용
+      </button>
+      <button class="cbv2-toggle-chip active" data-layer="L4" id="cbv2ToggleL4">
+        <span class="cbv2-chip-dot" style="background:#ef4444"></span> L4 안전
+      </button>
+    </div>
+  </div>
+
+
+  <!-- ② 4-Layer 아코디언 -->
+  <div class="cbv2-accordion" id="cbv2Accordion">
+
+    <!-- ── L1: Core Persona ── -->
+    <div class="cbv2-layer-card" data-layer="L1">
+      <div class="cbv2-layer-header" data-layer="L1">
+        <div class="cbv2-layer-header-left">
+          <div class="cbv2-layer-badge" style="background:#ede9fe;color:#5b21b6">L1</div>
+          <div class="cbv2-layer-title-group">
+            <span class="cbv2-layer-title">핵심 페르소나 (Core Persona)</span>
+            <span class="cbv2-layer-desc">AI 정체성 · 가치관 · 역할 경계</span>
+          </div>
+        </div>
+        <div class="cbv2-layer-header-right">
+          <span class="cbv2-layer-char-count" id="cbv2L1CharCount">0자</span>
+          <button class="cbv2-layer-expand-btn" data-layer="L1">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+      <div class="cbv2-layer-body" id="cbv2BodyL1">
+        <div class="cbv2-layer-template-hint">
+          <strong>💡 프롬프트 가이드:</strong> AI의 근본 정체성과 역할 경계를 정의하세요. 후보의 인생 모토, 정치 철학, 지역 스토리를 포함합니다.
+          <button class="cbv2-template-load-btn" data-layer="L1" data-template="candidate">
+            <i class="fas fa-magic"></i> 후보 템플릿 불러오기
+          </button>
+        </div>
+        <textarea class="cbv2-textarea" id="cbv2TextareaL1" rows="10"
+          placeholder="당신은 [지역명] [선거명] 후보 [후보명]의 AI 아바타 대변인입니다..."></textarea>
+        <div class="cbv2-layer-footer">
+          <div class="cbv2-footer-tags">
+            <span class="cbv2-tag">추천 토큰: 200~500</span>
+            <span class="cbv2-tag">우선순위: 기반 (L4 > L3 > L2에 override 됨)</span>
+          </div>
+          <span class="cbv2-char-live" id="cbv2L1CharLive">0자</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── L2: Policy Domain ── -->
+    <div class="cbv2-layer-card" data-layer="L2">
+      <div class="cbv2-layer-header" data-layer="L2">
+        <div class="cbv2-layer-header-left">
+          <div class="cbv2-layer-badge" style="background:#e0f2fe;color:#0369a1">L2</div>
+          <div class="cbv2-layer-title-group">
+            <span class="cbv2-layer-title">정책 도메인 (Policy Domain)</span>
+            <span class="cbv2-layer-desc">5대 공약 · 지역 현안 · FAQ 지식베이스</span>
+          </div>
+        </div>
+        <div class="cbv2-layer-header-right">
+          <span class="cbv2-layer-char-count" id="cbv2L2CharCount">0자</span>
+          <button class="cbv2-layer-expand-btn" data-layer="L2">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+      <div class="cbv2-layer-body" id="cbv2BodyL2">
+        <div class="cbv2-layer-template-hint">
+          <strong>📋 프롬프트 가이드:</strong> 후보의 핵심 공약을 구조화하여 입력하세요. 공약명 → 핵심 요약 → 현재 문제 → 해결 방안 → 예산 → 기대 효과 순으로 서술합니다.
+          <button class="cbv2-template-load-btn" data-layer="L2" data-template="policy">
+            <i class="fas fa-magic"></i> 정책 템플릿 불러오기
+          </button>
+        </div>
+        <textarea class="cbv2-textarea" id="cbv2TextareaL2" rows="12"
+          placeholder="[공약 1: 주거] 재개발·재건축 촉진 5개년 계획..."></textarea>
+        <div class="cbv2-layer-footer">
+          <div class="cbv2-footer-tags">
+            <span class="cbv2-tag">추천 토큰: 500~2000</span>
+            <span class="cbv2-tag">RAG 연동 포인트</span>
+            <span class="cbv2-tag">Context Bridge 자동 갱신</span>
+          </div>
+          <span class="cbv2-char-live" id="cbv2L2CharLive">0자</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── L3: Interaction Style ── -->
+    <div class="cbv2-layer-card" data-layer="L3">
+      <div class="cbv2-layer-header" data-layer="L3">
+        <div class="cbv2-layer-header-left">
+          <div class="cbv2-layer-badge" style="background:#dcfce7;color:#166534">L3</div>
+          <div class="cbv2-layer-title-group">
+            <span class="cbv2-layer-title">상호작용 스타일 (Interaction Style)</span>
+            <span class="cbv2-layer-desc">말투 · 대화 전략 · 유형별 응대 · 종료 처리</span>
+          </div>
+        </div>
+        <div class="cbv2-layer-header-right">
+          <span class="cbv2-layer-char-count" id="cbv2L3CharCount">0자</span>
+          <button class="cbv2-layer-expand-btn" data-layer="L3">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+      <div class="cbv2-layer-body" id="cbv2BodyL3">
+        <div class="cbv2-layer-template-hint">
+          <strong>🗣️ 프롬프트 가이드:</strong> 유권자와의 대화에서 적용할 말투, 질문 유형별 응대 전략, 난처한 질문 처리 방식을 정의합니다.
+          <button class="cbv2-template-load-btn" data-layer="L3" data-template="interaction">
+            <i class="fas fa-magic"></i> 상호작용 템플릿 불러오기
+          </button>
+        </div>
+        <textarea class="cbv2-textarea" id="cbv2TextareaL3" rows="10"
+          placeholder="[말투·톤] 친근+신뢰감 / [공약 질문 시] 구체적 수치·실행 계획 중심..."></textarea>
+        <div class="cbv2-layer-footer">
+          <div class="cbv2-footer-tags">
+            <span class="cbv2-tag">추천 토큰: 300~800</span>
+            <span class="cbv2-tag">L1·L2 override 가능</span>
+          </div>
+          <span class="cbv2-char-live" id="cbv2L3CharLive">0자</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── L4: Safety & Compliance ── -->
+    <div class="cbv2-layer-card" data-layer="L4">
+      <div class="cbv2-layer-header" data-layer="L4">
+        <div class="cbv2-layer-header-left">
+          <div class="cbv2-layer-badge" style="background:#fee2e2;color:#991b1b">L4</div>
+          <div class="cbv2-layer-title-group">
+            <span class="cbv2-layer-title">안전·준수 가드레일 (Safety & Compliance)</span>
+            <span class="cbv2-layer-desc">선거법 · 차별금지 · 민감질문 · 비상대응 <strong>(최우선 적용)</strong></span>
+          </div>
+        </div>
+        <div class="cbv2-layer-header-right">
+          <span class="cbv2-layer-char-count" id="cbv2L4CharCount">0자</span>
+          <button class="cbv2-layer-expand-btn" data-layer="L4">
+            <i class="fas fa-chevron-down"></i>
+          </button>
+        </div>
+      </div>
+      <div class="cbv2-layer-body" id="cbv2BodyL4">
+        <div class="cbv2-layer-template-hint">
+          <strong>⚠️ 프롬프트 가이드:</strong> 법적·윤리적 경계와 선거법 준수사항을 정의합니다. 상대 후보 비방 금지, 선거법 조항, 민감 질문 처리 규칙을 포함합니다. <strong>L4는 모든 Layer보다 우선 적용됩니다.</strong>
+          <button class="cbv2-template-load-btn" data-layer="L4" data-template="safety">
+            <i class="fas fa-magic"></i> 선거법 가이드 불러오기
+          </button>
+        </div>
+        <textarea class="cbv2-textarea" id="cbv2TextareaL4" rows="10"
+          placeholder="[절대 위반 금지] 1. 공직선거법 위반 발언 2. 특정 성별·연령·지역 차별..."></textarea>
+        <div class="cbv2-layer-footer">
+          <div class="cbv2-footer-tags">
+            <span class="cbv2-tag tag-warn">추천 토큰: 400~1000</span>
+            <span class="cbv2-tag tag-warn">L1~L3 모두 override</span>
+            <span class="cbv2-tag tag-warn">선거법 준수 필수</span>
+          </div>
+          <span class="cbv2-char-live" id="cbv2L4CharLive">0자</span>
+        </div>
+      </div>
+    </div>
+
+  </div><!-- /cbv2-accordion -->
+
+
+  <!-- ③ 통합 프리뷰 패널 -->
+  <div class="cbv2-preview-section" id="cbv2PreviewSection">
+    <div class="cbv2-preview-header">
+      <div class="cbv2-preview-title-group">
+        <span class="cbv2-preview-title">🔍 최종 통합 프롬프트 프리뷰</span>
+        <span class="cbv2-preview-version" id="cbv2PreviewVersion">v1</span>
+      </div>
+      <div class="cbv2-preview-actions">
+        <span class="cbv2-preview-total-chars" id="cbv2TotalChars">총 0자</span>
+        <button class="cbv2-preview-copy-btn" id="cbv2CopyAssembled">
+          <i class="fas fa-copy"></i> 복사
+        </button>
+        <button class="cbv2-preview-refresh-btn" id="cbv2RefreshPreview">
+          <i class="fas fa-sync-alt"></i> 새로고침
+        </button>
+      </div>
+    </div>
+    <div class="cbv2-preview-body">
+      <pre class="cbv2-preview-code" id="cbv2AssembledPreview">프리뷰를 생성하려면 '새로고침'을 눌러주세요.</pre>
+    </div>
+  </div>
+
+
+  <!-- ④ Context Bridge 설정 (확장 가능) -->
+  <div class="cbv2-bridge-section" id="cbv2BridgeSection" style="display:none">
+    <div class="cbv2-bridge-header">
+      <span class="cbv2-bridge-title">🔗 Context Bridge — 아바타 학습 ↔ 챗봇 설정 연동</span>
+      <div class="cbv2-bridge-toggle">
+        <label class="cbv2-switch">
+          <input type="checkbox" id="cbv2BridgeEnabled" checked />
+          <span class="cbv2-switch-slider"></span>
+        </label>
+        <span id="cbv2BridgeStatus">연동 활성화</span>
+      </div>
+    </div>
+    <div class="cbv2-bridge-body" id="cbv2BridgeBody">
+      <div class="cbv2-bridge-items" id="cbv2BridgeItems">
+        <!-- JS에서 동적 렌더링 -->
+      </div>
+    </div>
+  </div>
+
+</div><!-- /cbSettingV2Container -->
+
+
+<!-- ═══════════════ Toast ═══════════════ -->
+<div id="cbv2Toast" class="cbv2-toast"></div>

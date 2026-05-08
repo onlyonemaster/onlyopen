@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>원챗(OneChat) 요금제</title>
+  <link rel="stylesheet" href="css/style.css?v=0428i">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    html, body { height: auto; min-height: 100vh; overflow-y: auto; overflow-x: hidden; -webkit-overflow-scrolling: touch; }
+    .sub-wrap { width: 767px; margin: 0 auto; padding: 24px 16px 60px; }
+    .sub-close { position: fixed; top: 12px; right: 12px; z-index: 100; width: 36px; height: 36px; border-radius: 50%; background: var(--bg-card); border: 1px solid var(--border); display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; color: var(--text-muted); transition: all .2s; text-decoration: none; }
+    .sub-close:hover { background: var(--bg-card2); color: var(--text-primary); }
+    .sub-hero { text-align: center; padding: 16px 0 6px; }
+    .sub-hero-badge { display: inline-block; padding: 5px 14px; border-radius: 100px; font-size: 12px; font-weight: 600; margin-bottom: 10px; background: rgba(249,115,22,0.15); color: var(--orange); }
+    .sub-hero h1 { font-size: 22px; font-weight: 700; color: var(--text-primary); margin-bottom: 4px; letter-spacing: -0.4px; }
+    .sub-hero p { font-size: 13px; color: var(--text-muted); line-height: 1.55; }
+    .sub-billing { display: flex; align-items: center; justify-content: center; gap: 14px; margin: 20px 0 6px; }
+    .sub-billing-label { font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; transition: color .2s; }
+    .sub-billing-label.on { color: var(--text-primary); font-weight: 700; }
+    .sub-billing-sw { position: relative; width: 46px; height: 26px; background: var(--bg-card2); border-radius: 13px; cursor: pointer; border: 1px solid var(--border); transition: background .25s; flex-shrink: 0; }
+    .sub-billing-sw.yearly { background: var(--orange); border-color: transparent; }
+    .sub-billing-sw::after { content: ''; position: absolute; top: 3px; left: 3px; width: 18px; height: 18px; background: var(--text-muted); border-radius: 50%; transition: transform .25s, background .25s; }
+    .sub-billing-sw.yearly::after { transform: translateX(20px); background: #fff; }
+    .sub-save { font-size: 10px; background: rgba(34,197,94,.18); color: var(--green); padding: 2px 7px; border-radius: 10px; font-weight: 700; }
+    .sub-tabs { display: flex; justify-content: center; gap: 4px; margin: 16px 0 12px; background: var(--bg-card2); border-radius: 10px; padding: 3px; max-width: 360px; margin-left: auto; margin-right: auto; }
+    .sub-tab { flex: 1; text-align: center; padding: 8px 0; font-size: 13px; font-weight: 500; color: var(--text-muted); cursor: pointer; border-radius: 8px; transition: all .2s; border: none; background: none; }
+    .sub-tab.on { background: var(--bg-card); color: var(--text-primary); font-weight: 700; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+    .sub-plans { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+    .sub-plan { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 16px; display: flex; flex-direction: column; transition: border-color .2s, box-shadow .2s; }
+    .sub-plan.pop { border-color: var(--orange); box-shadow: 0 0 0 1px var(--orange); }
+    .sub-plan-name { font-size: 15px; font-weight: 700; color: var(--text-primary); margin-bottom: 2px; }
+    .sub-plan-desc { font-size: 11px; color: var(--text-muted); margin-bottom: 12px; }
+    .sub-plan-price { font-size: 26px; font-weight: 800; color: var(--text-primary); }
+    .sub-plan-price small { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+    .sub-plan-specs { list-style: none; padding: 0; margin: 14px 0; flex: 1; }
+    .sub-plan-specs li { font-size: 12px; color: var(--text-secondary); padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+    .sub-plan-specs li i { color: var(--green); font-size: 10px; width: 14px; text-align: center; }
+    .sub-plan-btn { display: block; width: 100%; padding: 11px 0; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: opacity .2s; }
+    .sub-plan-btn.primary { background: var(--orange); color: #fff; }
+    .sub-plan-btn.outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border); }
+    .sub-plan-btn:hover { opacity: 0.85; }
+    .sub-b2b { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+    .sub-b2b-card { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 20px 16px; }
+    .sub-b2b-card.enterprise { border-color: var(--accent-blue); }
+    .sub-b2b-name { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .sub-b2b-price { font-size: 24px; font-weight: 800; color: var(--text-primary); margin: 8px 0; }
+    .sub-b2b-price small { font-size: 13px; font-weight: 500; color: var(--text-muted); }
+    .sub-b2b-specs { list-style: none; padding: 0; margin: 12px 0; }
+    .sub-b2b-specs li { font-size: 12px; color: var(--text-secondary); padding: 4px 0; display: flex; align-items: center; gap: 6px; }
+    .sub-b2b-specs li i { color: var(--green); font-size: 10px; width: 14px; text-align: center; }
+    .sub-b2b-btn { display: block; width: 100%; padding: 11px 0; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; border: none; transition: opacity .2s; }
+    .sub-b2b-btn.primary { background: var(--accent-blue); color: #fff; }
+    .sub-b2b-btn.outline { background: transparent; color: var(--text-primary); border: 1px solid var(--border); }
+    .sub-custom { text-align: center; padding: 32px 16px; }
+    .sub-custom h3 { font-size: 18px; color: var(--text-primary); margin-bottom: 8px; }
+    .sub-custom p { font-size: 13px; color: var(--text-muted); }
+    .sub-custom-feat { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 16px 0; }
+    .sub-custom-chip { font-size: 12px; padding: 6px 12px; background: var(--bg-card2); color: var(--text-secondary); border-radius: 8px; }
+    .sub-point { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; text-align: center; margin: 24px 0; }
+    .sub-point p { font-size: 13px; color: var(--text-muted); margin-bottom: 8px; }
+    .sub-point a { display: inline-block; padding: 10px 24px; background: var(--orange); color: #fff; border-radius: 10px; font-weight: 700; font-size: 13px; text-decoration: none; }
+    .sub-compare { overflow-x: auto; margin: 24px 0; }
+    .sub-compare table { width: 100%; border-collapse: collapse; font-size: 12px; min-width: 600px; }
+    .sub-compare th { padding: 10px 8px; text-align: center; font-weight: 700; color: var(--text-primary); background: var(--bg-card2); border-bottom: 1px solid var(--border); }
+    .sub-compare th:first-child { text-align: left; }
+    .sub-compare td { padding: 8px; text-align: center; color: var(--text-secondary); border-bottom: 1px solid var(--border); }
+    .sub-compare td:first-child { text-align: left; color: var(--text-primary); font-weight: 500; }
+    .sub-compare .fa-check { color: var(--green); }
+    .sub-compare .fa-minus { color: var(--text-muted); }
+    .sub-guarantee { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius-md); padding: 16px; text-align: center; margin-top: 20px; }
+    .sub-guarantee p { font-size: 13px; color: var(--text-secondary); }
+
+    /* Light theme overrides */
+    body.theme-light .sub-plan { background: #fff; border-color: rgba(0,0,0,0.08); }
+    body.theme-light .sub-plan.pop { border-color: var(--orange); }
+    body.theme-light .sub-plan-name { color: #1e293b; }
+    body.theme-light .sub-plan-price { color: #1e293b; }
+    body.theme-light .sub-plan-specs li { color: #475569; }
+    body.theme-light .sub-plan-btn.outline { color: #1e293b; border-color: rgba(0,0,0,0.12); }
+    body.theme-light .sub-tabs { background: #e2e8f0; }
+    body.theme-light .sub-tab.on { background: #fff; color: #1e293b; }
+    body.theme-light .sub-b2b-card { background: #fff; border-color: rgba(0,0,0,0.08); }
+    body.theme-light .sub-b2b-name { color: #1e293b; }
+    body.theme-light .sub-b2b-price { color: #1e293b; }
+    body.theme-light .sub-b2b-specs li { color: #475569; }
+    body.theme-light .sub-b2b-btn.outline { color: #1e293b; border-color: rgba(0,0,0,0.12); }
+    body.theme-light .sub-custom h3 { color: #1e293b; }
+    body.theme-light .sub-custom-chip { background: #e2e8f0; color: #475569; }
+    body.theme-light .sub-point { background: #fff; border-color: rgba(0,0,0,0.08); }
+    body.theme-light .sub-compare th { background: #e2e8f0; color: #1e293b; }
+    body.theme-light .sub-compare td { color: #475569; }
+    body.theme-light .sub-compare td:first-child { color: #1e293b; }
+    body.theme-light .sub-guarantee { background: #fff; border-color: rgba(0,0,0,0.08); }
+    body.theme-light .sub-guarantee p { color: #475569; }
+    body.theme-light .sub-billing-sw { background: #cbd5e1; }
+
+    /* ── 시나리오충전 모달 ───────────────── */
+    .scenario-modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.6); z-index: 1000; justify-content: center; align-items: center; padding: 16px; overflow-y: auto; }
+    .scenario-modal-overlay.show { display: flex; }
+    .scenario-modal { background: var(--bg-card); border: 1px solid var(--border); border-radius: 16px; max-width: 480px; width: 100%; max-height: 90vh; overflow-y: auto; animation: modalSlideUp 0.3s ease; }
+    @keyframes modalSlideUp { from { transform: translateY(30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+    .scenario-modal-header { display: flex; align-items: center; justify-content: space-between; padding: 20px 20px 12px; border-bottom: 1px solid var(--border); }
+    .scenario-modal-header h2 { font-size: 18px; font-weight: 700; color: var(--text-primary); margin: 0; }
+    .scenario-modal-close { background: none; border: none; color: var(--text-muted); font-size: 18px; cursor: pointer; padding: 4px; }
+    .scenario-modal-close:hover { color: var(--text-primary); }
+    .scenario-modal-body { padding: 20px; }
+    .scenario-section { margin-bottom: 20px; }
+    .scenario-section-title { font-size: 12px; font-weight: 700; color: var(--text-secondary); margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+    .scenario-plans { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+    .scenario-plan-card { border: 2px solid var(--border); border-radius: 12px; padding: 14px; cursor: pointer; transition: all 0.2s; display: block; }
+    .scenario-plan-card:hover { border-color: var(--text-muted); }
+    .scenario-plan-card.selected { border-color: var(--orange); background: rgba(249,115,22,0.06); }
+    .scenario-plan-card input[type="radio"] { display: none; }
+    .plan-card-content { display: flex; flex-direction: column; gap: 4px; pointer-events: none; }
+    .plan-card-name { font-size: 15px; font-weight: 700; color: var(--text-primary); }
+    .plan-card-desc { font-size: 11px; color: var(--text-muted); }
+    .plan-card-base-price { font-size: 18px; font-weight: 800; color: var(--orange); margin-top: 6px; }
+    .plan-card-vat-price { font-size: 11px; color: var(--text-muted); }
+    .scenario-quantity { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
+    .scenario-qty-card { border: 2px solid var(--border); border-radius: 12px; padding: 14px 8px; cursor: pointer; text-align: center; transition: all 0.2s; display: block; }
+    .scenario-qty-card:hover { border-color: var(--text-muted); }
+    .scenario-qty-card.selected { border-color: var(--orange); background: rgba(249,115,22,0.06); }
+    .scenario-qty-card input[type="radio"] { display: none; }
+    .qty-card-content { display: flex; flex-direction: column; gap: 4px; align-items: center; pointer-events: none; }
+    .qty-num { font-size: 16px; font-weight: 700; color: var(--text-primary); }
+    .qty-discount { font-size: 12px; color: var(--text-muted); }
+    .qty-discount.highlight { color: var(--green); font-weight: 600; }
+    .scenario-summary { background: var(--bg-card2); border-radius: 12px; padding: 16px; }
+    .summary-row { display: flex; justify-content: space-between; align-items: center; padding: 6px 0; font-size: 13px; color: var(--text-secondary); }
+    .summary-row.total { border-top: 1px dashed var(--border); margin-top: 8px; padding-top: 12px; font-size: 16px; font-weight: 800; color: var(--text-primary); }
+    .discount-amount { color: var(--green); font-weight: 600; }
+    .scenario-pay-btn { display: block; width: 100%; padding: 14px 0; background: var(--orange); color: #fff; border: none; border-radius: 12px; font-size: 15px; font-weight: 700; cursor: pointer; transition: opacity 0.2s; margin-top: 8px; }
+    .scenario-pay-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .scenario-pay-btn:not(:disabled):hover { opacity: 0.85; }
+    .scenario-notice { font-size: 11px; color: var(--text-muted); text-align: center; margin-top: 10px; line-height: 1.5; }
+    body.theme-light .scenario-modal { background: #fff; border-color: rgba(0,0,0,0.08); }
+    body.theme-light .scenario-plan-card { border-color: rgba(0,0,0,0.1); }
+    body.theme-light .scenario-plan-card.selected { background: rgba(249,115,22,0.04); }
+    body.theme-light .scenario-qty-card { border-color: rgba(0,0,0,0.1); }
+    body.theme-light .scenario-qty-card.selected { background: rgba(249,115,22,0.04); }
+    body.theme-light .scenario-summary { background: #f1f5f9; }
+    body.theme-light .plan-card-name, body.theme-light .qty-num, body.theme-light .summary-row.total { color: #1e293b; }
+    body.theme-light .scenario-modal-header h2 { color: #1e293b; }
+
+    @media (max-width: 767px) {
+      .sub-wrap { width: auto; }
+      .sub-plans { grid-template-columns: 1fr; }
+      .sub-b2b { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 500px) {
+      .sub-wrap { padding: 16px 12px 40px; }
+    }
+  </style>
+</head>
+<body>
+<a href="/aimessage/onechat/" class="sub-close" title="돌아가기"><i class="fas fa-times"></i></a>
+<div class="sub-wrap">
+
+  <!-- Hero -->
+  <div class="sub-hero">
+    <span class="sub-hero-badge">AI 챗봇 마케팅의 시작</span>
+    <h1>나에게 딱 맞는 요금제를 선택하세요</h1>
+    <p>7일 무료 체험으로 직접 경험해보세요. 언제든 해지 가능합니다.</p>
+  </div>
+
+  <!-- Billing toggle -->
+  <div class="sub-billing">
+    <span class="sub-billing-label on" id="lblMonthly" onclick="toggleBilling('monthly')">월간 결제</span>
+    <div class="sub-billing-sw" id="billingSw" onclick="toggleBilling()"></div>
+    <span class="sub-billing-label" id="lblYearly" onclick="toggleBilling('yearly')">연간 결제</span>
+    <span class="sub-save">최대 20%↓</span>
+  </div>
+
+  <!-- Tabs -->
+  <div class="sub-tabs" id="subTabs">
+    <button class="sub-tab on" data-tab="personal">개인용</button>
+    <button class="sub-tab" data-tab="b2b">B2B</button>
+    <button class="sub-tab" data-tab="custom">커스텀</button>
+  </div>
+
+  <!-- Personal Plans -->
+  <div class="sub-plans" id="personalPlans"></div>
+
+  <!-- B2B Panel -->
+  <div class="sub-b2b" id="b2bPanel" style="display:none;">
+    <!-- 비즈니스 ₩99,000 -->
+    <div class="sub-b2b-card">
+      <div class="sub-b2b-name">비즈니스</div>
+      <div class="sub-b2b-price" id="b2bBizPrice">₩99,000<small>/월</small></div>
+      <ul class="sub-b2b-specs">
+        <li><i class="fas fa-check"></i> 프로필 확장 50,000건/월</li>
+        <li><i class="fas fa-check"></i> AI 메시지 30,000건/월</li>
+        <li><i class="fas fa-check"></i> 응답자 30,000명/월</li>
+        <li><i class="fas fa-check"></i> 챗봇 100개</li>
+        <li><i class="fas fa-check"></i> 최대 3개 계정</li>
+        <li><i class="fas fa-check"></i> 관리자 대시보드</li>
+      </ul>
+      <button class="sub-b2b-btn primary" onclick="selectPlan('b2b-biz')">시작하기</button>
+    </div>
+    <!-- 비즈프로 ₩190,000 -->
+    <div class="sub-b2b-card">
+      <div class="sub-b2b-name">비즈프로</div>
+      <div class="sub-b2b-price" id="b2bProPrice">₩199,000<small>/월</small></div>
+      <ul class="sub-b2b-specs">
+        <li><i class="fas fa-check"></i> 프로필 확장 150,000건/월</li>
+        <li><i class="fas fa-check"></i> AI 메시지 90,000건/월</li>
+        <li><i class="fas fa-check"></i> 응답자 90,000명/월</li>
+        <li><i class="fas fa-check"></i> 챗봇 300개</li>
+        <li><i class="fas fa-check"></i> 최대 5개 계정</li>
+        <li><i class="fas fa-check"></i> API 연동</li>
+      </ul>
+      <button class="sub-b2b-btn primary" onclick="selectPlan('b2b-pro')">시작하기</button>
+    </div>
+    <!-- 팀 ₩299,000 -->
+    <div class="sub-b2b-card">
+      <div class="sub-b2b-name">비즈팀</div>
+      <div class="sub-b2b-price" id="b2bTeamPrice">₩299,000<small>/월</small></div>
+      <ul class="sub-b2b-specs">
+        <li><i class="fas fa-check"></i> 프로필 확장 500,000건/월</li>
+        <li><i class="fas fa-check"></i> AI 메시지 300,000건/월</li>
+        <li><i class="fas fa-check"></i> 응답자 300,000명/월</li>
+        <li><i class="fas fa-check"></i> 챗봇 500개</li>
+        <li><i class="fas fa-check"></i> 최대 10개 계정</li>
+        <li><i class="fas fa-check"></i> 전담 매니저</li>
+      </ul>
+      <button class="sub-b2b-btn primary" onclick="selectPlan('b2b-team')">시작하기</button>
+    </div>
+  </div>
+
+  <!-- Custom Panel -->
+  <div class="sub-custom" id="customPanel" style="display:none;">
+    <h3>완전 맞춤형 솔루션</h3>
+    <p>대규모 트래픽과 특수 요구사항에 최적화된 맞춤형 플랜을 제공합니다.</p>
+    <div class="sub-custom-feat">
+      <span class="sub-custom-chip">응답자 무제한</span>
+      <span class="sub-custom-chip">전용 서버</span>
+      <span class="sub-custom-chip">화이트라벨</span>
+      <span class="sub-custom-chip">SSO/SAML</span>
+      <span class="sub-custom-chip">API 전체 접근</span>
+      <span class="sub-custom-chip">커스텀 AI 모델</span>
+      <span class="sub-custom-chip">데이터 레이크</span>
+      <span class="sub-custom-chip">24/7 기술 지원</span>
+    </div>
+    <button class="sub-plan-btn outline" onclick="selectPlan('custom')" style="max-width:240px;margin:0 auto;">맞춤 견적 요청하기</button>
+  </div>
+
+  <!-- 시나리오충전 배너 -->
+  <div class="sub-point">
+    <p>이미 구독 중이신가요? 시나리오 캠페인 충전만 필요하시면 아래 링크를 이용하세요.</p>
+    <a href="javascript:void(0)" onclick="openScenarioCharge()">시나리오 충전하기</a>
+  </div>
+
+  <!-- Comparison Table -->
+  <div class="sub-compare">
+    <table id="compareTable">
+      <thead id="compareHead"></thead>
+      <tbody id="compareBody"></tbody>
+    </table>
+  </div>
+
+  <!-- Guarantee -->
+  <div class="sub-guarantee">
+    <p><strong>7일 무료 체험</strong> &middot; 모든 유료 플랜은 첫 7일간 무료로 이용하실 수 있습니다. 부담 없이 시작하세요.</p>
+  </div>
+
+</div>
+
+<!-- ============================================================ -->
+<!-- 시나리오충전 모달                                             -->
+<!-- ============================================================ -->
+<div class="scenario-modal-overlay" id="scenarioModalOverlay">
+  <div class="scenario-modal">
+    <div class="scenario-modal-header">
+      <h2>시나리오 캠페인 충전</h2>
+      <button class="scenario-modal-close" onclick="closeScenarioCharge()">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="scenario-modal-body">
+      <!-- 요금제 선택 -->
+      <div class="scenario-section">
+        <h3 class="scenario-section-title">요금제 선택</h3>
+        <div class="scenario-plans">
+          <label class="scenario-plan-card" id="planLight">
+            <input type="radio" name="scenarioPlan" value="light" onchange="updateScenarioPrice()">
+            <div class="plan-card-content">
+              <span class="plan-card-name">라이트</span>
+              <span class="plan-card-desc">기본 시나리오 캠페인</span>
+              <span class="plan-card-base-price">500,000원</span>
+              <span class="plan-card-vat-price">(VAT포함 550,000원)</span>
+            </div>
+          </label>
+          <label class="scenario-plan-card" id="planStandard">
+            <input type="radio" name="scenarioPlan" value="standard" onchange="updateScenarioPrice()">
+            <div class="plan-card-content">
+              <span class="plan-card-name">스탠다드</span>
+              <span class="plan-card-desc">고급 시나리오 + AI 최적화</span>
+              <span class="plan-card-base-price">1,000,000원</span>
+              <span class="plan-card-vat-price">(VAT포함 1,100,000원)</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 건수 선택 -->
+      <div class="scenario-section">
+        <h3 class="scenario-section-title">건수 선택</h3>
+        <div class="scenario-quantity">
+          <label class="scenario-qty-card" id="qty1">
+            <input type="radio" name="scenarioQty" value="1" onchange="updateScenarioPrice()">
+            <div class="qty-card-content">
+              <span class="qty-num">1건</span>
+              <span class="qty-discount">할인 없음</span>
+            </div>
+          </label>
+          <label class="scenario-qty-card" id="qty2">
+            <input type="radio" name="scenarioQty" value="2" onchange="updateScenarioPrice()">
+            <div class="qty-card-content">
+              <span class="qty-num">2건</span>
+              <span class="qty-discount highlight">10% 할인</span>
+            </div>
+          </label>
+          <label class="scenario-qty-card" id="qty3">
+            <input type="radio" name="scenarioQty" value="3" onchange="updateScenarioPrice()">
+            <div class="qty-card-content">
+              <span class="qty-num">3건</span>
+              <span class="qty-discount highlight">20% 할인</span>
+            </div>
+          </label>
+        </div>
+      </div>
+
+      <!-- 결제 금액 요약 -->
+      <div class="scenario-section">
+        <h3 class="scenario-section-title">결제 금액</h3>
+        <div class="scenario-summary">
+          <div class="summary-row">
+            <span>단가 (VAT포함)</span>
+            <span id="summaryUnitPrice">-</span>
+          </div>
+          <div class="summary-row">
+            <span>건수</span>
+            <span id="summaryQty">-</span>
+          </div>
+          <div class="summary-row" id="discountRow" style="display:none;">
+            <span>할인 금액</span>
+            <span class="discount-amount" id="summaryDiscount">-</span>
+          </div>
+          <div class="summary-row total">
+            <span>최종 결제 금액</span>
+            <span id="summaryTotal">-</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 결제 버튼 -->
+      <button class="scenario-pay-btn" id="scenarioPayBtn" onclick="startScenarioPayment()" disabled>
+        <i class="fas fa-credit-card"></i> 토스페이먼츠로 결제하기
+      </button>
+      <p class="scenario-notice">
+        <i class="fas fa-info-circle"></i>
+        본 결제는 토스페이먼츠를 통한 단회 결제로 처리되며, 결제 완료 후 즉시 시나리오 캠페인 이용이 가능합니다.
+      </p>
+    </div>
+  </div>
+</div>
+
+<script src="https://js.tosspayments.com/v1/payment"></script>
+<script>
+// ── Theme sync ──────────────────────────────────
+(function() {
+  var theme = localStorage.getItem('appTheme') || 'dark';
+  if (theme === 'light') document.body.classList.add('theme-light');
+  window.addEventListener('storage', function(e) {
+    if (e.key === 'appTheme') {
+      if (e.newValue === 'light') document.body.classList.add('theme-light');
+      else document.body.classList.remove('theme-light');
+    }
+  });
+})();
+
+// ── Plans data ───────────────────────────────────
+var PLANS = [
+  { id:'free',   name:'Free',    desc:'기본 기능 체험',            icon:'fa-rocket',       priceM:0,        priceY:0,        profile:30,   aiMsg:15,    resp:15,     bot:1,   pop:false, cta:'무료 시작',   style:'outline' },
+  { id:'basic',  name:'Basic',   desc:'소규모 비즈니스',           icon:'fa-star',         priceM:9900,     priceY:7900,     profile:500,  aiMsg:300,   resp:300,    bot:3,   pop:false, cta:'시작하기',    style:'outline' },
+  { id:'standard',name:'Standard',desc:'성장하는 비즈니스',        icon:'fa-fire',         priceM:19000,    priceY:15200,    profile:1500, aiMsg:900,   resp:900,    bot:10,  pop:true,  cta:'가장 인기',   style:'primary' },
+  { id:'pro',    name:'Pro',     desc:'파워 유저',                 icon:'fa-bolt',         priceM:49000,    priceY:39200,    profile:10000,aiMsg:6000,  resp:6000,   bot:30,  pop:false, cta:'시작하기',    style:'outline' }
+];
+
+var state = { billing:'monthly', tab:'personal' };
+var planContainer = document.getElementById('personalPlans');
+var b2bPanel      = document.getElementById('b2bPanel');
+var customPanel   = document.getElementById('customPanel');
+
+// ── Render ───────────────────────────────────────
+function renderPlans() {
+  var isYear = state.billing === 'yearly';
+  var html = '';
+  for (var i = 0; i < PLANS.length; i++) {
+    var p = PLANS[i];
+    var price = isYear ? p.priceY : p.priceM;
+    var priceStr = price === 0 ? '무료' : '₩' + price.toLocaleString();
+    html += '<div class="sub-plan' + (p.pop ? ' pop' : '') + '">' +
+      '<span class="sub-plan-name">' + p.name + '</span>' +
+      '<span class="sub-plan-desc">' + p.desc + '</span>' +
+      '<span class="sub-plan-price">' + priceStr + '<small>/' + (isYear ? '년' : '월') + '</small></span>' +
+      '<ul class="sub-plan-specs">' +
+        '<li><i class="fas fa-check"></i> 프로필 확장 ' + p.profile.toLocaleString() + '건/월</li>' +
+        '<li><i class="fas fa-check"></i> AI 메시지 ' + p.aiMsg.toLocaleString() + '건/월</li>' +
+        '<li><i class="fas fa-check"></i> 응답자 ' + p.resp.toLocaleString() + '명/월</li>' +
+        '<li><i class="fas fa-check"></i> 챗봇 ' + p.bot.toLocaleString() + '개</li>' +
+      '</ul>' +
+      '<button class="sub-plan-btn ' + p.style + '" onclick="selectPlan(\'' + p.id + '\')">' + p.cta + '</button>' +
+    '</div>';
+  }
+  planContainer.innerHTML = html;
+}
+
+function updateB2BPrice() {
+  var isYear = state.billing === 'yearly';
+  document.getElementById('b2bBizPrice').innerHTML = isYear ? '₩79,200<small>/년</small>' : '₩99,000<small>/월</small>';
+  document.getElementById('b2bProPrice').innerHTML = isYear ? '₩159,200<small>/년</small>' : '₩199,000<small>/월</small>';
+  document.getElementById('b2bTeamPrice').innerHTML = isYear ? '₩239,000<small>/년</small>' : '₩299,000<small>/월</small>';
+}
+
+// ── Billing toggle ───────────────────────────────
+function toggleBilling(mode) {
+  if (mode) state.billing = mode;
+  else      state.billing = state.billing === 'monthly' ? 'yearly' : 'monthly';
+  var sw    = document.getElementById('billingSw');
+  var lblM  = document.getElementById('lblMonthly');
+  var lblY  = document.getElementById('lblYearly');
+  if (state.billing === 'yearly') { sw.classList.add('yearly'); lblM.classList.remove('on'); lblY.classList.add('on'); }
+  else                            { sw.classList.remove('yearly'); lblY.classList.remove('on'); lblM.classList.add('on'); }
+  renderPlans();
+  updateB2BPrice();
+}
+
+// ── Compare table data ────────────────────────────
+var COMPARE_COLS = {
+  personal: ['Free','Basic','Standard','Pro'],
+  b2b: ['비즈니스','비즈프로','비즈팀'],
+  all: ['Free','Basic','Standard','Pro','비즈니스','비즈프로','비즈팀']
+};
+var COMPARE_ROWS = [
+  { label:'프로필 확장', personal:['30건/월','500건/월','1,500건/월','10,000건/월'], b2b:['50,000건/월','150,000건/월','500,000건/월'] },
+  { label:'AI 메시지', personal:['15건/월','300건/월','900건/월','6,000건/월'], b2b:['30,000건/월','90,000건/월','300,000건/월'] },
+  { label:'챗봇 응답자', personal:['15명/월','300명/월','900명/월','6,000명/월'], b2b:['30,000명/월','90,000명/월','300,000명/월'] },
+  { label:'AI 아바타 챗봇', personal:icn(1,1,1,1), b2b:icn(1,1,1) },
+  { label:'링크 공유', personal:icn(1,1,1,1), b2b:icn(1,1,1) },
+  { label:'대화 관리자', personal:icn(1,1,1,1), b2b:icn(1,1,1) },
+  { label:'AI 자동 응답', personal:icn(1,1,1,1), b2b:icn(1,1,1) },
+  { label:'명함 캡처', personal:icn(1,1,1,1), b2b:icn(1,1,1) },
+  { label:'SMS 퍼널', personal:icn(0,1,1,1), b2b:icn(1,1,1) },
+  { label:'AI 동행', personal:icn(0,1,1,1), b2b:icn(1,1,1) },
+  { label:'HI 공지', personal:icn(0,0,1,1), b2b:icn(1,1,1) },
+  { label:'시나리오 캠페인', personal:icn(0,0,1,1), b2b:icn(1,1,1) },
+  { label:'AI 아바타 커스텀 학습', personal:icn(0,0,0,1), b2b:icn(1,1,1) },
+  { label:'방문자 DM 전환', personal:icn(0,0,0,1), b2b:icn(1,1,1) },
+  { label:'기본 지원', personal:icn(1,1,1,1), b2b:icn(1,1,1) },
+  { label:'우선 지원', personal:icn(0,0,0,0), b2b:icn(1,1,1) }
+];
+function icn(){var a=[];for(var i=0;i<arguments.length;i++)a.push(arguments[i]?'<i class="fas fa-check"></i>':'<i class="fas fa-minus"></i>');return a;}
+
+function renderCompareTable(tab) {
+  var cols = COMPARE_COLS[tab] || COMPARE_COLS.all;
+  var head = document.getElementById('compareHead');
+  var body = document.getElementById('compareBody');
+  if (!head || !body) return;
+  var h = '<tr><th>기능</th>';
+  for (var i=0;i<cols.length;i++) h += '<th>'+cols[i]+'</th>';
+  h += '</tr>';
+  head.innerHTML = h;
+  var b = '';
+  for (var r=0;r<COMPARE_ROWS.length;r++) {
+    var row = COMPARE_ROWS[r];
+    var vals = tab === 'b2b' ? row.b2b : row.personal;
+    if (tab === 'all') vals = row.personal.concat(row.b2b);
+    b += '<tr><td>'+row.label+'</td>';
+    for (var c=0;c<vals.length;c++) b += '<td>'+vals[c]+'</td>';
+    b += '</tr>';
+  }
+  body.innerHTML = b;
+}
+
+// ── Tab switch ───────────────────────────────────
+document.getElementById('subTabs').addEventListener('click', function(e) {
+  if (!e.target.classList.contains('sub-tab')) return;
+  var tab = e.target.dataset.tab;
+  state.tab = tab;
+  var tabs = this.querySelectorAll('.sub-tab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('on');
+  e.target.classList.add('on');
+  planContainer.style.display = tab === 'personal' ? '' : 'none';
+  b2bPanel.style.display      = tab === 'b2b'      ? '' : 'none';
+  customPanel.style.display   = tab === 'custom'   ? '' : 'none';
+  renderCompareTable(tab);
+});
+
+// ── 결제 금액 조회 ──────────────────────────────────
+function resolvePlanPrice(planId) {
+  var isYear = state.billing === 'yearly';
+  // B2B 요금제
+  var B2B = {
+    'b2b-biz':  { price: isYear ? 79200 : 99000,  name: '비즈니스' },
+    'b2b-pro':  { price: isYear ? 159200 : 199000, name: '비즈프로' },
+    'b2b-team': { price: isYear ? 239000 : 299000, name: '팀' }
+  };
+  if (B2B[planId]) return B2B[planId];
+  // 개인용 요금제
+  for (var i = 0; i < PLANS.length; i++) {
+    if (PLANS[i].id === planId) {
+      return { price: isYear ? PLANS[i].priceY : PLANS[i].priceM, name: PLANS[i].name };
+    }
+  }
+  return null;
+}
+
+// ── Select plan ──────────────────────────────────
+function selectPlan(planId) {
+  // Free: 바로 원챗으로
+  if (planId === 'free') {
+    window.location.href = '/aimessage/onechat/index.html';
+    return;
+  }
+  if (planId === 'custom') {
+    alert('커스텀 플랜은 요구사항 분석 후 맞춤 견적을 제공합니다.\n카카오톡 @kiam 으로 연락 주세요.');
+    return;
+  }
+
+  // 유료 플랜 → 토스페이먼츠 빌링 (정기구독)
+  var info = resolvePlanPrice(planId);
+  if (!info || info.price <= 0) {
+    alert('결제 정보를 불러올 수 없습니다. 다시 시도해주세요.');
+    return;
+  }
+
+  var isYear  = state.billing === 'yearly';
+  var orderId = 'OCSUB-' + Date.now() + '-' + Math.random().toString(36).substr(2, 6).toUpperCase();
+  var baseUrl = location.protocol + '//' + location.hostname;
+
+  var successParams = '?planId=' + encodeURIComponent(planId)
+    + '&billing=' + encodeURIComponent(state.billing)
+    + '&amount=' + info.price;
+
+  try {
+    var tossPayments = TossPayments('live_ck_4yKeq5bgrpwbOGgyAJPBVGX0lzW6');
+    tossPayments.requestPayment('카드', {
+      amount:       info.price,
+      orderId:      orderId,
+      orderName:    '원챗(OneChat) ' + info.name + ' ' + (isYear ? '연간' : '월간') + ' 구독',
+      customerName: '',
+      successUrl:   baseUrl + '/iam/pay_subscribe_success.php' + successParams,
+      failUrl:      baseUrl + '/iam/pay_subscribe_fail.php' + successParams
+    }).catch(function(error) {
+      if (error.code !== 'USER_CANCEL') {
+        alert('결제 오류: ' + error.message);
+      }
+    });
+  } catch(e) {
+    alert('결제 모듈을 불러올 수 없습니다. 잠시 후 다시 시도해주세요.');
+  }
+}
+
+// ── 시나리오충전 ──────────────────────────────────
+var SCENARIO_PRICES = { light: 550000, standard: 1100000 };
+var QTY_DISCOUNTS = { 1: 0, 2: 0.10, 3: 0.20 };
+var scenarioState = { plan: null, qty: null };
+
+function openScenarioCharge() {
+  document.getElementById('scenarioModalOverlay').classList.add('show');
+  scenarioState = { plan: null, qty: null };
+  var radios = document.querySelectorAll('input[name="scenarioPlan"], input[name="scenarioQty"]');
+  for (var i = 0; i < radios.length; i++) radios[i].checked = false;
+  var cards = document.querySelectorAll('.scenario-plan-card, .scenario-qty-card');
+  for (var j = 0; j < cards.length; j++) cards[j].classList.remove('selected');
+  document.getElementById('scenarioPayBtn').disabled = true;
+  updateScenarioPrice();
+}
+
+function closeScenarioCharge() {
+  document.getElementById('scenarioModalOverlay').classList.remove('show');
+}
+
+document.addEventListener('click', function(e) {
+  if (e.target.id === 'scenarioModalOverlay') closeScenarioCharge();
+});
+
+function updateScenarioPrice() {
+  var planRadio = document.querySelector('input[name="scenarioPlan"]:checked');
+  var qtyRadio  = document.querySelector('input[name="scenarioQty"]:checked');
+
+  var planCards = document.querySelectorAll('.scenario-plan-card');
+  for (var i = 0; i < planCards.length; i++) planCards[i].classList.remove('selected');
+  if (planRadio) planRadio.closest('.scenario-plan-card').classList.add('selected');
+
+  var qtyCards = document.querySelectorAll('.scenario-qty-card');
+  for (var j = 0; j < qtyCards.length; j++) qtyCards[j].classList.remove('selected');
+  if (qtyRadio) qtyRadio.closest('.scenario-qty-card').classList.add('selected');
+
+  if (!planRadio || !qtyRadio) {
+    document.getElementById('summaryUnitPrice').textContent = '-';
+    document.getElementById('summaryQty').textContent = '-';
+    document.getElementById('summaryTotal').textContent = '-';
+    document.getElementById('discountRow').style.display = 'none';
+    document.getElementById('scenarioPayBtn').disabled = true;
+    return;
+  }
+
+  scenarioState.plan = planRadio.value;
+  scenarioState.qty  = parseInt(qtyRadio.value);
+
+  var unitPrice   = SCENARIO_PRICES[scenarioState.plan];
+  var discount    = QTY_DISCOUNTS[scenarioState.qty];
+  var subtotal    = unitPrice * scenarioState.qty;
+  var discountAmt = Math.round(subtotal * discount);
+  var total       = subtotal - discountAmt;
+
+  document.getElementById('summaryUnitPrice').textContent = '₩' + unitPrice.toLocaleString();
+  document.getElementById('summaryQty').textContent       = scenarioState.qty + '건';
+  document.getElementById('summaryTotal').textContent     = '₩' + total.toLocaleString();
+
+  if (discount > 0) {
+    document.getElementById('discountRow').style.display = 'flex';
+    document.getElementById('summaryDiscount').textContent = '-₩' + discountAmt.toLocaleString();
+  } else {
+    document.getElementById('discountRow').style.display = 'none';
+  }
+
+  document.getElementById('scenarioPayBtn').disabled = false;
+}
+
+function startScenarioPayment() {
+  var unitPrice   = SCENARIO_PRICES[scenarioState.plan];
+  var discount    = QTY_DISCOUNTS[scenarioState.qty];
+  var subtotal    = unitPrice * scenarioState.qty;
+  var total       = subtotal - Math.round(subtotal * discount);
+
+  var planName    = scenarioState.plan === 'light' ? '라이트' : '스탠다드';
+  var orderId     = 'SCENARIO-' + Date.now() + '-' + Math.random().toString(36).substr(2,6).toUpperCase();
+  var baseUrl     = location.protocol + '//' + location.hostname;
+
+  try {
+    var tossPayments = TossPayments('live_ck_4yKeq5bgrpwbOGgyAJPBVGX0lzW6');
+    tossPayments.requestPayment('카드', {
+      amount:       total,
+      orderId:      orderId,
+      orderName:    '시나리오 캠페인 충전 (' + planName + ' ' + scenarioState.qty + '건)',
+      customerName: '',
+      successUrl:   baseUrl + '/iam/pay_scenario_success.php?plan=' + scenarioState.plan + '&qty=' + scenarioState.qty + '&amount=' + total,
+      failUrl:      baseUrl + '/iam/pay_scenario_fail.php'
+    }).catch(function(error) {
+      if (error.code !== 'USER_CANCEL') {
+        alert('결제 오류: ' + error.message);
+      }
+    });
+  } catch(e) {
+    alert('결제 모듈을 불러올 수 없습니다. 잠시 후 다시 시도해주세요.');
+  }
+}
+
+// ── Init ─────────────────────────────────────────
+renderPlans();
+renderCompareTable('personal');
+</script>
+</body>
+</html>

@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 — 버전 관리 시스템 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">🔄 시스템 소개</a></div>
+    <div class="sb-section"><div class="sb-section-title">핵심 기능</div><a href="/manual/vermanager/dashboard.html" class="sb-link active">📊 대시보드</a><a href="/manual/vermanager/sites.html" class="sb-link">🌐 사이트 관리</a><a href="/manual/vermanager/release.html" class="sb-link">🚀 버전 릴리즈</a><a href="/manual/vermanager/history.html" class="sb-link">📜 릴리즈 이력</a><a href="/manual/vermanager/improvements.html" class="sb-link">💡 소스 개선사항</a><a href="/manual/vermanager/changelog.html" class="sb-link">📝 체인지로그</a></div>
+    <div class="sb-section"><div class="sb-section-title">고급 기능</div><a href="/manual/vermanager/remote.html" class="sb-link">🖥️ 원격 서버 연동</a><a href="/manual/vermanager/git.html" class="sb-link">🔧 Git/GitHub 자동화</a><a href="/manual/vermanager/settings.html" class="sb-link">⚙️ 설정 관리</a></div>
+  </nav>
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">대시보드 개요</a>
+    <a href="#site-selector" class="toc-link">사이트 선택기</a>
+    <a href="#kpi" class="toc-link">KPI 카드</a>
+    <a href="#release-buttons" class="toc-link">빠른 릴리즈 버튼</a>
+    <a href="#recent" class="toc-link">최근 릴리즈·개선사항</a>
+  </div>
+  <main class="m-content">
+    <h1 id="overview">📊 대시보드</h1>
+    <p class="lead">메인 대시보드는 선택된 사이트의 버전 정보, KPI, 빠른 릴리즈 액션, 최근 이력을 한 화면에 제공합니다.</p>
+
+    <h2 id="site-selector">🌐 사이트 선택기 (상단)</h2>
+    <p>여러 사이트가 등록된 경우, 드롭다운으로 조회할 사이트를 전환할 수 있습니다. URL 파라미터 <code>?site=kiam-prod</code>로 직접 지정도 가능합니다. 기본값은 첫 번째 활성 사이트입니다.</p>
+
+    <h2 id="kpi">KPI 카드 (4종)</h2>
+    <div class="kpi-row"><div class="kpi-box"><span class="kpi-v">v1.0.1</span><span class="kpi-l">현재 버전</span></div><div class="kpi-box"><span class="kpi-v">1</span><span class="kpi-l">전체 릴리즈</span></div><div class="kpi-box"><span class="kpi-v">5</span><span class="kpi-l">개선사항</span></div><div class="kpi-box"><span class="kpi-v">2026-05-02</span><span class="kpi-l">마지막 릴리즈</span></div></div>
+
+    <h2 id="release-buttons">🚀 빠른 릴리즈 버튼 (3종)</h2>
+    <p>대시보드에서 바로 릴리즈를 실행할 수 있습니다:</p>
+    <div class="btn-row"><span class="btn-demo btn-green">🟢 PATCH</span><span class="btn-demo btn-yellow">🟡 MINOR</span><span class="btn-demo btn-red">🔴 MAJOR</span></div>
+    <p>클릭 시 <code>api/release.php</code>로 POST 요청이 전송되고, 버전이 자동 범핑(bump)됩니다.</p>
+    <pre class="code-block"><code>// 프론트엔드에서 호출
+fetch('/vermanager/api/release', {
+  method: 'POST',
+  headers: {'Content-Type': 'application/json'},
+  body: JSON.stringify({
+    site: 'kiam-prod',
+    type: 'patch',
+    note: '자동 릴리즈'
+  })
+})</code></pre>
+
+    <h2 id="recent">최근 릴리즈 이력 + 개선사항 목록</h2>
+    <p>대시보드 하단에는 최신 릴리즈 이력과 등록된 개선사항이 표시됩니다. 「전체보기」링크로 각각 history, improvements 페이지로 이동할 수 있습니다.</p>
+
+    <div class="prev-next"><a href="/manual/vermanager/" class="next-link">← 이전: 시스템 소개</a><a href="/manual/vermanager/sites.html" class="next-link">다음: 사이트 관리 →</a></div>
+  </main>
+</div>
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:28px;}
+.kpi-box{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:24px 16px;text-align:center;}
+.kpi-v{display:block;font-size:24px;font-weight:800;color:var(--brand);margin-bottom:6px;}
+.kpi-l{font-size:13px;color:var(--text2);}
+.btn-row{display:flex;gap:12px;margin-bottom:28px;}
+.btn-demo{padding:12px 28px;border-radius:10px;font-size:15px;font-weight:700;color:white;cursor:default;}
+.btn-green{background:linear-gradient(135deg,#56ab2f,#a8e063);}
+.btn-yellow{background:linear-gradient(135deg,#f0ad4e,#f7d774);}
+.btn-red{background:linear-gradient(135deg,#d9534f,#f0706c);}
+.prev-next{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+@media(max-width:768px){.kpi-row{grid-template-columns:1fr 1fr;}}
+</style>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

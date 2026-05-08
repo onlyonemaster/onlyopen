@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>소스 개선 관리 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">소스 개선 관리</div>
+      <a href="/manual/source-improvements/" class="sb-link active">📋 소개 및 개요</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">기본 사용법</div>
+      <a href="/manual/source-improvements/dashboard.html" class="sb-link">📊 대시보드 화면 구성</a>
+      <a href="/manual/source-improvements/list.html" class="sb-link">🔍 개선 항목 조회·필터링</a>
+      <a href="/manual/source-improvements/register.html" class="sb-link">✏️ 새 개선 항목 등록</a>
+      <a href="/manual/source-improvements/detail.html" class="sb-link">👁️ 상세보기 및 수정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">심화</div>
+      <a href="/manual/source-improvements/lifecycle.html" class="sb-link">🔄 상태 라이프사이클</a>
+      <a href="/manual/source-improvements/notice.html" class="sb-link">📢 공지사항 연동</a>
+      <a href="/manual/source-improvements/auto-register.html" class="sb-link">🤖 AI 자동 등록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">관련 시스템</div>
+      <a href="/manual/vermanager/" class="sb-link">🔄 버전 관리 시스템</a>
+    </div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">시스템 개요</a>
+    <a href="#purpose" class="toc-link">개발 배경 및 목적</a>
+    <a href="#access" class="toc-link">접근 방법</a>
+    <a href="#architecture" class="toc-link">시스템 아키텍처</a>
+    <a href="#data-model" class="toc-link">데이터 모델</a>
+    <a href="#related" class="toc-link">연계 시스템</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">📋 소스 개선 관리 시스템</h1>
+    <p class="lead">코드 개선 사항과 개발 이력을 체계적으로 추적·관리하는 <strong>관리자 전용</strong> 시스템입니다. 모든 소스코드 변경, 버그 수정, 기능 추가, 성능 개선, 리팩토링 작업을 일관된 형식으로 기록하고 배포까지 추적할 수 있습니다.</p>
+
+    <div class="info-box">
+      <strong>🔐 접근 권한:</strong> 관리자 전용 페이지입니다. <code>one_member_admin_id</code> 세션이 필요하며, <code>onlyonemaket</code> 계정은 접근이 제한됩니다.
+    </div>
+
+    <h2 id="purpose">개발 배경 및 목적</h2>
+    <div class="card-grid-2">
+      <div class="info-card">
+        <h3>🎯 추적성 (Traceability)</h3>
+        <p>누가, 언제, 무엇을, 왜 수정했는지 완전한 감사 추적(audit trail)을 제공합니다. 모든 코드 변경은 날짜·개발자·영향도와 함께 기록됩니다.</p>
+      </div>
+      <div class="info-card">
+        <h3>📊 가시성 (Visibility)</h3>
+        <p>대시보드를 통해 프로젝트별·카테고리별·상태별 개선 현황을 한눈에 파악할 수 있습니다. 진행 중인 작업과 완료된 작업을 실시간으로 추적합니다.</p>
+      </div>
+      <div class="info-card">
+        <h3>🔄 연계성 (Integration)</h3>
+        <p>버전 관리 시스템(vermanager)의 릴리즈와 자동 연동되어, 어떤 개선사항이 어떤 버전에 포함되었는지 추적합니다. 공지사항 시스템과도 연결되어 배포 소식을 자동 공지할 수 있습니다.</p>
+      </div>
+      <div class="info-card">
+        <h3>🤖 자동화 (Automation)</h3>
+        <p>AI가 개발한 내용을 자동 등록 스크립트(<code>auto_register_*.php</code>)로 일괄 등록할 수 있습니다. 중복 체크 로직이 내장되어 있어 안전하게 운영됩니다.</p>
+      </div>
+    </div>
+
+    <h2 id="access">접근 방법</h2>
+    <div class="step-list">
+      <div class="step-item">
+        <span class="step-num">1</span>
+        <div class="step-body">
+          <strong>관리자 로그인</strong>
+          <p><a href="https://kiam.kr/admin/" target="_blank">https://kiam.kr/admin/</a> 에서 관리자 계정으로 로그인합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">2</span>
+        <div class="step-body">
+          <strong>좌측 메뉴에서 진입</strong>
+          <p>관리자 좌측 메뉴에서 「소스개발관리」 메뉴를 클릭하거나, 직접 URL로 접근합니다.</p>
+        </div>
+      </div>
+      <div class="step-item">
+        <span class="step-num">3</span>
+        <div class="step-body">
+          <strong>직접 URL</strong>
+          <p><a href="https://kiam.kr/admin/admin_source_improvements.php" target="_blank">https://kiam.kr/admin/admin_source_improvements.php</a></p>
+          <p>상단 breadcrumb: 3종환경비교 → 크론잡관리 → 이슈대시보드 → <strong>소스개발관리</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="architecture">시스템 아키텍처</h2>
+    <pre class="code-block"><code>┌─────────────────────────────────────────────────────────┐
+│              소스 개선 관리 시스템                          │
+├─────────────────────────────────────────────────────────┤
+│  admin_source_improvements.php     ← 메인 목록 페이지      │
+│  admin_source_improvements_form.php ← 등록/수정 폼         │
+│  /admin/ajax/source_improvements_save.php ← AJAX 저장     │
+│  notice_ai-write.php               ← 공지 연동             │
+│  auto_register_improvements.php    ← AI 자동 등록 (Phase1) │
+│  auto_register_phase3_6.php       ← AI 자동 등록 (Phase3~6)│
+├─────────────────────────────────────────────────────────┤
+│  DB: source_improvements 테이블 (23개 컬럼)                │
+│  ┌──────────────────────────────────────────────────┐   │
+│  │ id, date, project, category, title, description   │   │
+│  │ developer, files_changed, lines_added, lines_deleted│  │
+│  │ status, test_result, environments, deployed_date  │   │
+│  │ deployed_by, deployment_log, notice_id            │   │
+│  │ impact_level, notes, created_at, updated_at       │   │
+│  └──────────────────────────────────────────────────┘   │
+├─────────────────────────────────────────────────────────┤
+│  연계: vermanager (버전 관리) ← 개선사항 릴리즈 매핑       │
+│  연계: notice (공지사항)     ← 배포 공지 자동 발행         │
+└─────────────────────────────────────────────────────────┘</code></pre>
+
+    <h2 id="data-model">데이터 모델 (source_improvements 테이블)</h2>
+    <table class="m-table">
+      <thead><tr><th>컬럼</th><th>타입</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><code>id</code></td><td>INT</td><td>자동 증가 기본 키</td></tr>
+        <tr><td><code>date</code></td><td>DATE</td><td>작업 날짜 (YYYY-MM-DD)</td></tr>
+        <tr><td><code>project</code></td><td>VARCHAR(50)</td><td>프로젝트명 (아이엠플랫폼, SMS, ainote, nalara, 기타)</td></tr>
+        <tr><td><code>category</code></td><td>VARCHAR(50)</td><td>분류 (버그 수정, 기능 추가, 성능 개선, 보안, 리팩토링, 문서화)</td></tr>
+        <tr><td><code>title</code></td><td>VARCHAR(200)</td><td>개선 제목 (최대 200자)</td></tr>
+        <tr><td><code>description</code></td><td>TEXT</td><td>상세 설명 (마크다운 스타일)</td></tr>
+        <tr><td><code>developer</code></td><td>VARCHAR(50)</td><td>개발자 이름</td></tr>
+        <tr><td><code>files_changed</code></td><td>INT</td><td>수정된 파일 수</td></tr>
+        <tr><td><code>lines_added</code></td><td>INT</td><td>추가된 라인 수</td></tr>
+        <tr><td><code>lines_deleted</code></td><td>INT</td><td>삭제된 라인 수</td></tr>
+        <tr><td><code>status</code></td><td>VARCHAR(20)</td><td>상태 (개발중, 테스트중, 완료, 배포됨, 롤백)</td></tr>
+        <tr><td><code>test_result</code></td><td>VARCHAR(10)</td><td>테스트 결과 (PASS, FAIL, SKIP)</td></tr>
+        <tr><td><code>environments</code></td><td>VARCHAR(50)</td><td>배포 환경 (쉼표 구분: dev,test,prod)</td></tr>
+        <tr><td><code>deployed_date</code></td><td>DATETIME</td><td>배포 일시</td></tr>
+        <tr><td><code>deployed_by</code></td><td>VARCHAR(50)</td><td>배포자</td></tr>
+        <tr><td><code>impact_level</code></td><td>VARCHAR(10)</td><td>영향도 (낮음, 중간, 높음, 긴급)</td></tr>
+        <tr><td><code>notes</code></td><td>TEXT</td><td>추가 메모</td></tr>
+        <tr><td><code>created_at</code></td><td>DATETIME</td><td>생성 일시</td></tr>
+        <tr><td><code>updated_at</code></td><td>DATETIME</td><td>수정 일시</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="related">연계 시스템</h2>
+    <div class="related-box">
+      <div class="related-item">
+        <strong>🔄 버전 관리 시스템 (vermanager)</strong>
+        <p>릴리즈 시 <code>linked_improvements</code>로 개선사항 ID를 매핑하여, 각 버전에 어떤 개선사항이 포함되었는지 추적합니다. <code>api/improvements.php</code>에서 <code>released_in</code> 필드로 버전을 기록합니다.</p>
+      </div>
+      <div class="related-item">
+        <strong>📢 공지사항 시스템</strong>
+        <p><code>notice_ai-write.php</code>를 통해 개선 완료 사항을 공지사항으로 발행할 수 있습니다. 발행된 공지는 <code>notice_id</code>로 추적됩니다.</p>
+      </div>
+      <div class="related-item">
+        <strong>⚙️ 3종 환경 비교</strong>
+        <p>상단 breadcrumb에서 개발·테스트·운영 3종 환경 비교 페이지로 이동할 수 있습니다.</p>
+      </div>
+    </div>
+
+    <div class="prev-next">
+      <span></span>
+      <a href="/manual/source-improvements/dashboard.html" class="next-link">다음: 대시보드 화면 구성 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead { font-size:17px; color:var(--text2); margin-bottom:24px; line-height:1.8; }
+.info-box { background:var(--blue-bg); border-left:4px solid var(--brand); padding:16px 20px; border-radius:8px; margin-bottom:28px; }
+.info-box code { background:var(--bg3); padding:2px 6px; border-radius:3px; font-size:13px; }
+.card-grid-2 { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:28px; }
+.info-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:20px; }
+.info-card h3 { font-size:15px; margin-bottom:8px; }
+.info-card p { font-size:13px; color:var(--text2); line-height:1.7; }
+.step-list { margin-bottom:28px; }
+.step-item { display:flex; gap:16px; align-items:flex-start; padding:16px 0; border-bottom:1px solid var(--border); }
+.step-item:last-child { border-bottom:none; }
+.step-num { width:32px; height:32px; background:var(--brand); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:14px; font-weight:700; flex-shrink:0; }
+.step-body strong { display:block; font-size:15px; margin-bottom:4px; }
+.step-body p { font-size:13px; color:var(--text2); }
+.code-block { background:var(--bg3); padding:20px; border-radius:8px; font-size:12px; line-height:1.6; overflow-x:auto; margin-bottom:28px; white-space:pre; font-family:monospace; }
+.m-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:28px; }
+.m-table th { background:var(--bg3); padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid var(--border); }
+.m-table td { padding:9px 12px; border-bottom:1px solid var(--border); }
+.m-table code { background:var(--bg3); padding:2px 6px; border-radius:3px; font-size:12px; }
+.related-box { margin-bottom:28px; }
+.related-item { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:20px; margin-bottom:12px; }
+.related-item strong { display:block; font-size:15px; margin-bottom:6px; }
+.related-item p { font-size:13px; color:var(--text2); line-height:1.7; }
+.prev-next { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:20px; border-top:1px solid var(--border); }
+.next-link { color:var(--brand); text-decoration:none; font-weight:600; font-size:14px; }
+.next-link:hover { text-decoration:underline; }
+@media(max-width:768px){ .card-grid-2{grid-template-columns:1fr;} }
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

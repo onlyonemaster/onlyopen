@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전체 구조 & 라우터 — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link active">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>라우터</span></div>
+<h1>🏗️ index.php 라우터 완전 분석</h1>
+<p class="page-desc">Apache mod_rewrite와 PHP 내장 서버를 모두 지원하는 메인 라우터의 동작 원리입니다.</p>
+
+<h2 id="route-resolution">라우트 결정 로직</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// 1순위: Apache mod_rewrite → ?route=xxx
+$route = $_GET['route'] ?? null;
+
+// 2순위: PHP 내장 서버 → REQUEST_URI 파싱
+if (!$route) {
+    $uri = $_SERVER['REQUEST_URI'] ?? '/';
+    $uri = parse_url($uri, PHP_URL_PATH);        // 쿼리스트링 제거
+    $uri = rtrim($uri, '/');
+    $uri = preg_replace('#^/vermanager#', '', $uri); // 접두사 제거
+    $uri = ltrim($uri, '/');
+    $route = $uri ?: 'dashboard';                // 기본값: dashboard
+}
+
+// index.php/xxx 패턴 정리
+$route = preg_replace('#^index\.php/?#', '', $route);</pre>
+
+<h2 id="routing-table">라우팅 테이블</h2>
+<table>
+  <tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">$route 값</th><th style="padding:8px 12px;border:1px solid var(--border);">로드되는 파일</th><th style="padding:8px 12px;border:1px solid var(--border);">접속 URL 예시</th></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">dashboard / (공백)</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/dashboard.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/</code> 또는 <code>/vermanager/dashboard</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">release</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/release.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/release</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">history</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/history.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/history</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">improvements</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/improvements.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/improvements</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">changelog</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/changelog.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/changelog</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">settings</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/settings.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/settings</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">sites</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/sites.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/sites</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">site-detail</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/site-detail.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/site-detail</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">remote</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/remote.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/remote</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">git</td><td style="padding:8px 12px;border:1px solid var(--border);">pages/git.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/git</code></td></tr>
+  <tr style="background:var(--brand-light);"><td style="padding:8px 12px;border:1px solid var(--border);">api/version</td><td style="padding:8px 12px;border:1px solid var(--border);">api/version.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/api/version</code></td></tr>
+  <tr style="background:var(--brand-light);"><td style="padding:8px 12px;border:1px solid var(--border);">api/release</td><td style="padding:8px 12px;border:1px solid var(--border);">api/release.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/api/release</code></td></tr>
+  <tr style="background:var(--brand-light);"><td style="padding:8px 12px;border:1px solid var(--border);">api/improvements</td><td style="padding:8px 12px;border:1px solid var(--border);">api/improvements.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/api/improvements</code></td></tr>
+  <tr style="background:var(--brand-light);"><td style="padding:8px 12px;border:1px solid var(--border);">api/history</td><td style="padding:8px 12px;border:1px solid var(--border);">api/history.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/api/history</code></td></tr>
+  <tr style="background:var(--brand-light);"><td style="padding:8px 12px;border:1px solid var(--border);">api/sites</td><td style="padding:8px 12px;border:1px solid var(--border);">api/sites.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/api/sites</code></td></tr>
+  <tr style="background:var(--brand-light);"><td style="padding:8px 12px;border:1px solid var(--border);">api/remote</td><td style="padding:8px 12px;border:1px solid var(--border);">api/remote.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/api/remote</code></td></tr>
+  <tr style="background:var(--brand-light);"><td style="padding:8px 12px;border:1px solid var(--border);">api/git</td><td style="padding:8px 12px;border:1px solid var(--border);">api/git.php</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>/vermanager/api/git</code></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><i>그 외</i></td><td style="padding:8px 12px;border:1px solid var(--border);">404 페이지</td><td style="padding:8px 12px;border:1px solid var(--border);">404 응답</td></tr>
+</table>
+
+<h2 id="htaccess">.htaccess 설정</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">RewriteEngine On
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]</pre>
+<p>실제 파일이나 디렉터리가 아니면 모두 <code>index.php?route=xxx</code>로 전달합니다. CSS/JS 같은 정적 자산은 그대로 서빙됩니다.</p>
+
+<h2 id="site-selection">사이트 선택 메커니즘</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">$current_site_id = get_current_site_id();
+$current_site = $current_site_id ? get_site($current_site_id) : null;
+
+function get_current_site_id(): ?string {
+    $id = $_GET['site'] ?? null;
+    if ($id && get_site($id)) return $id;     // URL 지정 사이트
+    
+    $sites = get_active_sites();
+    if (!empty($sites)) {
+        return array_key_first($sites);       // 첫 번째 활성 사이트
+    }
+    return null;
+}</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> PHP 내장 서버(<code>php -S localhost:8000</code>)로도 완전히 동작합니다. <code>.htaccess</code> 없이 REQUEST_URI를 직접 파싱하여 라우팅합니다.</div>
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

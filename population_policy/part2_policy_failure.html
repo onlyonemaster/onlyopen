@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 2: 기존 정책 실패 원인 분석 | 이재명 정부 인구정책 종합분석</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a;
+  --text: #e1e4ed; --sub: #8b8fa3; --accent: #4f8fff;
+  --red: #ff4757; --green: #2ed573; --orange: #ffa502;
+  --purple: #a55eea; --teal: #1dd1a1; --pink: #ff6b81;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI','Noto Sans KR',sans-serif; line-height:1.65; }
+.container { max-width:1400px; margin:0 auto; padding:24px; }
+header { text-align:center; padding:48px 24px 32px; border-bottom:1px solid var(--border); margin-bottom:32px; }
+header h1 { font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,var(--orange),var(--red)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+header .subtitle { color:var(--sub); font-size:1rem; }
+.nav-bar { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:32px; }
+.nav-bar a { padding:10px 20px; border-radius:8px; text-decoration:none; color:var(--sub); background:var(--card); border:1px solid var(--border); font-size:.85rem; transition:all .2s; }
+.nav-bar a:hover, .nav-bar a.active { color:var(--accent); border-color:var(--accent); }
+.nav-bar a.active { background:rgba(79,143,255,.1); }
+
+/* section card */
+.section { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:24px; }
+.section h2 { font-size:1.3rem; color:var(--accent); margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.section h3 { font-size:1.05rem; color:var(--orange); margin:16px 0 8px; }
+
+/* Matrix table */
+.matrix-table { width:100%; border-collapse:collapse; font-size:.85rem; margin-top:12px; }
+.matrix-table th, .matrix-table td { padding:10px 12px; text-align:center; border:1px solid var(--border); }
+.matrix-table th { background:rgba(79,143,255,.1); color:var(--accent); font-weight:700; position:sticky; top:0; }
+.matrix-table thead th:first-child { text-align:left; min-width:140px; }
+.matrix-table td:first-child { text-align:left; color:var(--teal); font-weight:600; }
+.matrix-table tr:hover td { background:rgba(79,143,255,.05); }
+.matrix-table .bad { color:var(--red); }
+.matrix-table .mid { color:var(--orange); }
+.matrix-table .good { color:var(--green); }
+.matrix-table .na { color:var(--sub); }
+.table-wrap { overflow-x:auto; margin-top:8px; }
+
+/* Chart Grid */
+.chart-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(480px,1fr)); gap:24px; margin-bottom:32px; }
+.chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.chart-card h3 { font-size:1.05rem; margin-bottom:16px; color:var(--accent); }
+.chart-card .chart-wrap { position:relative; height:350px; }
+.chart-card.full { grid-column:1/-1; }
+
+/* insights */
+.callout { padding:20px 24px; border-radius:10px; margin:16px 0; }
+.callout.red { background:rgba(255,71,87,.08); border-left:4px solid var(--red); }
+.callout.orange { background:rgba(255,165,2,.08); border-left:4px solid var(--orange); }
+.callout h4 { margin-bottom:6px; }
+.callout ul { padding-left:20px; color:var(--sub); font-size:.9rem; }
+.callout li { margin-bottom:4px; }
+
+/* cause grid */
+.cause-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; margin-top:16px; }
+.cause-card { background:rgba(255,71,87,.06); border:1px solid rgba(255,71,87,.2); border-radius:10px; padding:20px; }
+.cause-card h4 { color:var(--red); margin-bottom:8px; font-size:.95rem; }
+.cause-card p { color:var(--sub); font-size:.85rem; }
+
+@media(max-width:768px) { .chart-grid { grid-template-columns:1fr; } header h1 { font-size:1.5rem; } }
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>📉 Part 2: 기존 정책 실패 원인 분석</h1>
+  <p class="subtitle">역대 정부(2000~2025) 인구정책 매트릭스 · 예산 효율성 · 실패 요인 다차원 분석</p>
+</header>
+
+<nav class="nav-bar">
+  <a href="part1_crisis_dashboard.html">Part 1: 위기 대시보드</a>
+  <a href="#" class="active">Part 2: 기존정책 실패분석</a>
+  <a href="part3_leejae_achievement.html">Part 3: 이재명 정부 성과</a>
+  <a href="part4_problems_alternatives.html">Part 4: 문제점·대안</a>
+  <a href="part5_ai_innovation.html">Part 5: AI 혁신정책</a>
+  <a href="part6_onechat_system.html">Part 6: 원쳇 시스템(제안)</a>
+</nav>
+
+<!-- ====== 1. 정부별 정책 매트릭스 ====== -->
+<div class="section">
+  <h2>📋 역대 정부별 인구정책 종합 매트릭스 (2003~2026)</h2>
+  <p style="color:var(--sub);font-size:.9rem;margin-bottom:12px;">◎ = 강력 추진, ○ = 부분 추진, △ = 미흡, ✕ = 부재</p>
+  <div class="table-wrap">
+  <table class="matrix-table">
+    <thead>
+      <tr>
+        <th>정책 영역</th><th>노무현<br>(03-08)</th><th>이명박<br>(08-13)</th><th>박근혜<br>(13-17)</th><th>문재인<br>(17-22)</th><th>윤석열<br>(22-24)</th><th>이재명<br>(25-26)</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr><td>현금지원(아동수당)</td><td class="na">✕</td><td class="na">✕</td><td class="na">✕</td><td class="good">◎ 2018 도입</td><td class="good">◎ 확대</td><td class="good">◎ 13세까지 확대</td></tr>
+      <tr><td>육아휴직·부모휴가</td><td class="bad">△ 30일</td><td class="bad">△ 기본</td><td class="mid">○ 확대</td><td class="good">◎ 1년·급여↑</td><td class="good">◎ 부모급여</td><td class="good">◎ 단기휴직 도입</td></tr>
+      <tr><td>보육·돌봄 인프라</td><td class="mid">○ 확충</td><td class="good">◎ 무상보육</td><td class="mid">○ 누리과정</td><td class="good">◎ 국공립확대</td><td class="good">◎ 돌봄기관↑</td><td class="good">◎ 아이돌봄 확대</td></tr>
+      <tr><td>주거지원</td><td class="bad">△</td><td class="bad">△</td><td class="mid">○ 행복주택</td><td class="mid">○ 신혼특공</td><td class="good">◎ 신생아특례</td><td class="good">◎ 신혼·출산 특공</td></tr>
+      <tr><td>일·가정 양립</td><td class="na">✕</td><td class="bad">△</td><td class="bad">△</td><td class="mid">○ 워라밸</td><td class="mid">○ 유연근무</td><td class="good">◎ 육아시간 확대</td></tr>
+      <tr><td>교육비 경감</td><td class="na">✕</td><td class="na">✕</td><td class="mid">○ 고교무상</td><td class="mid">○ 고교무상</td><td class="bad">△ 유지</td><td class="good">◎ 유아교육비↑</td></tr>
+      <tr><td>의료·건강</td><td class="bad">△</td><td class="bad">△</td><td class="bad">△</td><td class="mid">○ 난임지원</td><td class="good">◎ 난임확대</td><td class="good">◎ 필수의료강화</td></tr>
+      <tr><td>결혼·만남 지원</td><td class="na">✕</td><td class="na">✕</td><td class="na">✕</td><td class="na">✕</td><td class="bad">△ 지자체</td><td class="good">◎ 만남주선 검토</td></tr>
+      <tr><td>정책 체감도·홍보</td><td class="na">✕</td><td class="na">✕</td><td class="na">✕</td><td class="bad">△</td><td class="bad">△</td><td class="good">◎ 원쳇 시스템 제안</td></tr>
+      <tr><td>컨트롤타워</td><td class="bad">△ 위원회</td><td class="bad">△ 위원회</td><td class="bad">△ 위원회</td><td class="bad">△ 위원회</td><td class="mid">○ 부위원장</td><td class="good">◎ 인구전략위</td></tr>
+      <tr><td>기간 평균 TFR</td><td style="color:var(--orange)">1.19</td><td style="color:var(--red)">1.23</td><td style="color:var(--red)">1.17</td><td style="color:var(--red)">0.87</td><td style="color:var(--red)">0.75</td><td style="color:var(--green)">0.80↑</td></tr>
+      <tr><td>임기 말 TFR</td><td style="color:var(--orange)">1.19</td><td style="color:var(--red)">1.19</td><td style="color:var(--red)">1.05</td><td style="color:var(--red)">0.78</td><td style="color:var(--red)">0.75</td><td style="color:var(--green)">0.99</td></tr>
+    </tbody>
+  </table>
+  </div>
+  <p style="color:var(--sub);font-size:.75rem;margin-top:8px;">※ TFR = 합계출산율(가임여성 1명당 평균 출생아 수). 2026년 이재명 정부는 3월 기준 추정치.</p>
+</div>
+
+<!-- ====== 2. 예산 효율 차트 ====== -->
+<div class="chart-grid">
+  <div class="chart-card full">
+    <h3>💰 정부별 저출산 대응 예산 vs 실질 출산율 변화: 투자 역설</h3>
+    <div class="chart-wrap"><canvas id="chartBudgetEffect"></canvas></div>
+  </div>
+
+  <div class="chart-card">
+    <h3>📊 OECD 주요국 가족정책 지출 GDP 대비 비중 (2023)</h3>
+    <div class="chart-wrap"><canvas id="chartOecdFamily"></canvas></div>
+  </div>
+
+  <div class="chart-card">
+    <h3>🔻 정부별 출산율 하락 기여도 분석 (디컴포지션)</h3>
+    <div class="chart-wrap"><canvas id="chartDecomp"></canvas></div>
+  </div>
+
+  <div class="chart-card">
+    <h3>📉 출산율 vs 여성경제활동참가율: OECD 역상관 관계</h3>
+    <div class="chart-wrap"><canvas id="chartFemaleLabor"></canvas></div>
+  </div>
+
+  <div class="chart-card">
+    <h3>🏠 주택가격지수 vs 출산율: 2010~2025</h3>
+    <div class="chart-wrap"><canvas id="chartHousing"></canvas></div>
+  </div>
+
+  <div class="chart-card full">
+    <h3>🔬 정책 실패 원인 산점도: 영향력 vs 개선 가능성</h3>
+    <div class="chart-wrap"><canvas id="chartScatter"></canvas></div>
+  </div>
+</div>
+
+<!-- ====== 3. 실패 원인 심층 분석 ====== -->
+<div class="section">
+  <h2>🔍 왜 700조 원을 쓰고도 출산율이 내려갔는가 — 5대 실패 메커니즘</h2>
+
+  <div class="cause-grid">
+    <div class="cause-card">
+      <h4>1️⃣ 현금 살포형 정책의 한계</h4>
+      <p>아동수당·부모급여 등 현금지원은 단기 소비 진작에 그침. OECD 연구에 따르면 현금지원의 출산율 제고 효과는 GDP 대비 0.1% 증가당 TFR 0.02 상승에 불과. 한국의 경우 4차 기본계획(383조)의 65% 이상이 현금성 복지로 편중.</p>
+    </div>
+    <div class="cause-card">
+      <h4>2️⃣ 정책 체감도 부재 — 정보 비대칭</h4>
+      <p>2024년 한국보건사회연구원 조사: 2030세대의 68%가 "받을 수 있는 출산·육아 지원제도를 모른다" 응답. 정부-국민 간 1:1 소통 채널 부재로 정책이 사각지대에 머무름. → <strong>원쳇 시스템이 해결할 핵심 과제 — 정부가 아직 인지하지 못한 개인 맞춤형 소통의 필요성</strong>.</p>
+    </div>
+    <div class="cause-card">
+      <h4>3️⃣ 구조적 문제 회피 — 경쟁사회·주거·교육</h4>
+      <p>출산율 하락의 근본 원인(과도한 사교육비, 수도권 주택가격 폭등, 노동시간 과다, 젠더 갈등)에 대한 구조적 개혁 부재. 정책이 '증상 완화'에 머물고 '원인 치료'로 나아가지 못함.</p>
+    </div>
+    <div class="cause-card">
+      <h4>4️⃣ 컨트롤타워 부재와 부처 이기주의</h4>
+      <p>저출산고령사회위원회는 대통령 직속이지만 실질적 예산권·조정권 미비. 보건복지부·교육부·국토부·고용노동부·여가부 등 12개 부처가 각기 다른 생애주기 정책을 추진하며 칸막이 효과 발생.</p>
+    </div>
+    <div class="cause-card">
+      <h4>5️⃣ 인구절벽의 비선형성 — 임계점 돌파 실패</h4>
+      <p>출산율 0.7~0.8 수준에서는 작은 증감이 큰 효과를 내지 못함. 가임여성 인구 자체의 급감(20~39세 여성: 2015년 660만→2025년 520만)으로 출생아 수의 절대적 감소 불가피. 정책이 '점증적 개선'에 머문 한계.</p>
+    </div>
+  </div>
+</div>
+
+<div class="callout red">
+  <h4>🔴 핵심 결론: 기존 정책의 근본적 한계</h4>
+  <ul>
+    <li><strong>공급자 중심 설계:</strong> 정부가 '주기 좋다'고 판단한 정책을 일방향 전달 → 수요자(2030세대) 니즈와 괴리</li>
+    <li><strong>소통 채널 부재:</strong> 정부-국민 간 상시적·맞춤형 소통 시스템 全無 → 정책 무용성 인식 확산</li>
+    <li><strong>데이터 기반 미비:</strong> 개인별 생애주기 데이터 연계 없이 집계 통계만으로 정책 설계 → 사각지대 양산</li>
+    <li><strong>원쳇 시스템 도입 필요성:</strong> AI 아바타·AI 동행·시나리오 캠페인을 통한 1:1 맞춤형 정책 매칭이 패러다임 전환의 열쇠 — 본 보고서의 핵심 제안</li>
+  </ul>
+</div>
+
+</div><!-- .container -->
+
+<script>
+const colors = { blue:'#4f8fff', teal:'#1dd1a1', red:'#ff4757', orange:'#ffa502', purple:'#a55eea', pink:'#ff6b81', yellow:'#ffd32a' };
+const gridColor = 'rgba(138,143,163,0.12)';
+const textColor = '#8b8fa3';
+Chart.defaults.color = textColor;
+Chart.defaults.borderColor = gridColor;
+Chart.defaults.font.family = "'Segoe UI','Noto KR',sans-serif";
+
+// 1. 예산 vs 출산율 변화 (정부별)
+new Chart(document.getElementById('chartBudgetEffect'), {
+  type:'bar', data:{
+    labels:['노무현\n(03-08)','이명박\n(08-13)','박근혜\n(13-17)','문재인\n(17-22)','윤석열\n(22-24)','이재명\n(25-26)'],
+    datasets:[
+      { label:'연평균 예산 (조 원)', data:[2.1,8.7,17.2,43.3,73.8,88.5], backgroundColor:colors.orange, borderRadius:6, yAxisID:'y' },
+      { label:'임기 말 출산율', data:[1.19,1.19,1.05,0.78,0.75,0.99], type:'line', borderColor:colors.red, pointRadius:6, pointBackgroundColor:colors.red, tension:.3, yAxisID:'y1' }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'bottom',labels:{usePointStyle:true}} },
+    scales:{ y:{title:{display:true,text:'연평균 예산 (조 원)'},beginAtZero:true}, y1:{position:'right',title:{display:true,text:'합계출산율'},min:0.5,max:1.5,grid:{drawOnChartArea:false}} }
+  }
+});
+
+// 2. OECD 가족지출
+new Chart(document.getElementById('chartOecdFamily'), {
+  type:'bar', data:{
+    labels:['한국','일본','독일','OECD평균','헝가리','스웨덴','프랑스'],
+    datasets:[{ label:'GDP 대비 % (2023)', data:[1.5,1.8,2.4,2.3,3.5,3.6,3.7],
+      backgroundColor:[colors.red,colors.red,colors.orange,colors.blue,colors.teal,colors.teal,colors.green], borderRadius:6
+    }]
+  },
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}}, scales:{y:{title:{display:true,text:'GDP 대비 %'}}} }
+});
+
+// 3. 디컴포지션
+new Chart(document.getElementById('chartDecomp'), {
+  type:'bar', data:{
+    labels:['노무현','이명박','박근혜','문재인','윤석열'],
+    datasets:[
+      { label:'유배우출산율 효과', data:[-0.05,-0.07,-0.09,-0.08,-0.05], backgroundColor:colors.teal },
+      { label:'혼인율 감소 효과', data:[-0.02,-0.04,-0.06,-0.12,-0.08], backgroundColor:colors.orange },
+      { label:'가임여성 감소 효과', data:[0.01,0.02,-0.01,-0.05,-0.04], backgroundColor:colors.purple }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{position:'bottom',labels:{usePointStyle:true}}},
+    scales:{ x:{stacked:true}, y:{stacked:true,title:{display:true,text:'출산율 변화 기여도'}} }
+  }
+});
+
+// 4. 여성경제활동 vs 출산율
+new Chart(document.getElementById('chartFemaleLabor'), {
+  type:'scatter', data:{ datasets:[
+    { label:'한국', data:[{x:60.1,y:0.75}], backgroundColor:colors.red, pointRadius:8, pointStyle:'rectRounded' },
+    { label:'일본', data:[{x:74.3,y:1.20}], backgroundColor:colors.orange, pointRadius:8 },
+    { label:'독일', data:[{x:76.5,y:1.35}], backgroundColor:colors.blue, pointRadius:8 },
+    { label:'스웨덴', data:[{x:80.2,y:1.52}], backgroundColor:colors.teal, pointRadius:8 },
+    { label:'프랑스', data:[{x:70.7,y:1.68}], backgroundColor:colors.green, pointRadius:8 },
+    { label:'헝가리', data:[{x:67.8,y:1.40}], backgroundColor:colors.purple, pointRadius:8 },
+  ]},
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ tooltip:{callbacks:{label:ctx=>ctx.dataset.label+': 여성고용률 '+ctx.parsed.x+'%, TFR '+ctx.parsed.y}} },
+    scales:{ x:{title:{display:true,text:'여성 경제활동참가율 (%)'}}, y:{title:{display:true,text:'합계출산율'},min:0.5} }
+  }
+});
+
+// 5. 주택가격 vs 출산율
+(function(){
+  const yrs = ['2010','2013','2016','2019','2021','2023','2025'];
+  const hpi = [ 82.1,  82.5,  88.3,  95.2, 118.7, 128.9, 135.4]; // KB주택가격지수
+  const tfr = [ 1.23,  1.19,  1.17,  0.92,  0.81,  0.72,  0.80];
+  new Chart(document.getElementById('chartHousing'), {
+    type:'line', data:{ labels:yrs, datasets:[
+      { label:'주택가격지수 (2019=100)', data:hpi, borderColor:colors.orange, yAxisID:'y', tension:.3, pointRadius:4 },
+      { label:'합계출산율', data:tfr, borderColor:colors.red, yAxisID:'y1', tension:.3, pointRadius:4 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ legend:{position:'bottom',labels:{usePointStyle:true}} },
+      scales:{ y:{title:{display:true,text:'주택가격지수'}}, y1:{position:'right',title:{display:true,text:'TFR'},min:0.5,max:1.5,grid:{drawOnChartArea:false}} }
+    }
+  });
+})();
+
+// 6. 실패 원인 산점도
+(function(){
+  const points = [
+    {x:90,y:25,label:'현금지원 편중',r:16,c:colors.orange},
+    {x:95,y:85,label:'소통채널 부재 ★',r:18,c:colors.red},
+    {x:85,y:40,label:'주거비 부담',r:14,c:colors.orange},
+    {x:80,y:30,label:'교육비 부담',r:14,c:colors.orange},
+    {x:70,y:55,label:'컨트롤타워 부재',r:13,c:colors.purple},
+    {x:60,y:70,label:'부처 칸막이',r:12,c:colors.purple},
+    {x:50,y:50,label:'노동시간 과다',r:12,c:colors.blue},
+    {x:40,y:80,label:'젠더갈등',r:11,c:colors.pink},
+    {x:75,y:90,label:'가임여성 급감',r:12,c:colors.red},
+    {x:88,y:60,label:'정책 체감도↓',r:15,c:colors.red},
+    {x:55,y:20,label:'돌봄인프라 부족',r:12,c:colors.blue},
+    {x:35,y:35,label:'비혼·만혼 문화',r:11,c:colors.pink},
+  ];
+  new Chart(document.getElementById('chartScatter'), {
+    type:'bubble', data:{ datasets:[{
+      data: points.map(p=>({x:p.x,y:p.y,r:p.r})),
+      backgroundColor: points.map(p=>p.c+'99'),
+      borderColor: points.map(p=>p.c),
+      borderWidth:2
+    }]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ tooltip:{callbacks:{label:ctx=>points[ctx.dataIndex].label}} },
+      scales:{
+        x:{title:{display:true,text:'출산율에 미치는 영향력 →'},min:20,max:110},
+        y:{title:{display:true,text:'개선 가능성 (정책 난이도 역수) →'},min:0,max:110}
+      }
+    },
+    plugins:[{ id:'labels', afterDraw(chart){
+      const {ctx,data,scales:{x:xs,y:ys}} = chart;
+      points.forEach((p,i)=>{
+        const x = xs.getPixelForValue(p.x), y = ys.getPixelForValue(p.y);
+        ctx.fillStyle = textColor; ctx.font='10px sans-serif'; ctx.textAlign='center';
+        ctx.fillText(p.label, x, y - p.r - 6);
+      });
+    }}]
+  });
+})();
+</script>
+
+</body>
+</html>

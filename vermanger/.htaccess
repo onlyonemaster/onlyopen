@@ -1,0 +1,10 @@
+RewriteEngine On
+RewriteBase /vermanger/
+
+# API routes
+RewriteRule ^api/(.*)$ api/$1 [L,QSA]
+
+# Default to index.php
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^(.*)$ index.php?path=$1 [QSA,L]

@@ -1,0 +1,32 @@
+<div class="screen" id="screen7">
+    <div class="section-head">
+      <span class="badge">STEP 8</span>
+      <h2>노쇼 방지 알고리즘 — AI 위험 예측 &amp; 자동 대응</h2>
+      <p class="desc">6개 평가 요소 기반 개인별 노쇼 위험도를 실시간 계산, 위험 구간별 자동 알림 차등 발송.</p>
+    </div>
+    <div class="dashboard">
+      <h2>노쇼 위험 평가 알고리즘</h2>
+      <table class="compare-table" style="margin-top:16px;">
+        <thead><tr><th>평가 요소</th><th>가중치</th><th>측정 방식</th></tr></thead>
+        <tbody>
+          <tr><td>과거 노쇼 이력</td><td class="highlight">0.30</td><td>최근 6개월 노쇼 횟수</td></tr>
+          <tr><td>예약까지 남은 기간</td><td class="highlight">0.20</td><td>D-day 간격</td></tr>
+          <tr><td>거주지 거리</td><td class="highlight">0.15</td><td>한의원까지 km</td></tr>
+          <tr><td>진단 완성도</td><td class="highlight">0.15</td><td>문진 단계 완료율</td></tr>
+          <tr><td>콘텐츠 반응도</td><td class="highlight">0.10</td><td>콘텐츠 클릭 여부</td></tr>
+          <tr><td>초진/재진 구분</td><td class="highlight">0.10</td><td>첫 방문 여부</td></tr>
+        </tbody>
+      </table>
+      <h3 style="font-size:15px;font-weight:700;margin:24px 0 14px;">위험 구간별 자동 대응</h3>
+      <table class="compare-table">
+        <thead><tr><th>위험 구간</th><th>점수</th><th>자동 알림</th><th>방지 효과</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--green-600);font-weight:700;">안전</td><td>0~30%</td><td>D-1 리마인드 1회</td><td>노쇼율 3% 미만</td></tr>
+          <tr><td style="color:var(--amber);font-weight:700;">주의</td><td>31~60%</td><td>D-3 정보, D-1 리마인드</td><td>노쇼율 8% 미만</td></tr>
+          <tr><td style="color:var(--red);font-weight:700;">위험</td><td>61%+</td><td>D-5 정보, D-2 상담, D-1 확인</td><td>노쇼율 15% 미만</td></tr>
+        </tbody>
+      </table>
+      <h3 style="font-size:15px;font-weight:700;margin:24px 0 14px;">현재 예약 환자 노쇼 위험도</h3>
+      <div class="trust-list" id="noshowList"></div>
+    </div>
+  </div>

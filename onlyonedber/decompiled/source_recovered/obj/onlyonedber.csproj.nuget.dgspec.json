@@ -1,0 +1,62 @@
+{
+  "format": 1,
+  "restore": {
+    "/mnt/d/onlyonegroup/08.온리원셀링/셀링솔루션/온리원디버솔루션/디버버전/온리원디버251015_블로그폰.게시검색이메일수집수정/source_recovered/onlyonedber.csproj": {}
+  },
+  "projects": {
+    "/mnt/d/onlyonegroup/08.온리원셀링/셀링솔루션/온리원디버솔루션/디버버전/온리원디버251015_블로그폰.게시검색이메일수집수정/source_recovered/onlyonedber.csproj": {
+      "version": "1.0.0",
+      "restore": {
+        "projectUniqueName": "/mnt/d/onlyonegroup/08.온리원셀링/셀링솔루션/온리원디버솔루션/디버버전/온리원디버251015_블로그폰.게시검색이메일수집수정/source_recovered/onlyonedber.csproj",
+        "projectName": "onlyonedber",
+        "projectPath": "/mnt/d/onlyonegroup/08.온리원셀링/셀링솔루션/온리원디버솔루션/디버버전/온리원디버251015_블로그폰.게시검색이메일수집수정/source_recovered/onlyonedber.csproj",
+        "packagesPath": "/home/learn/.nuget/packages/",
+        "outputPath": "/mnt/d/onlyonegroup/08.온리원셀링/셀링솔루션/온리원디버솔루션/디버버전/온리원디버251015_블로그폰.게시검색이메일수집수정/source_recovered/obj/",
+        "projectStyle": "PackageReference",
+        "configFilePaths": [
+          "/home/learn/.nuget/NuGet/NuGet.Config"
+        ],
+        "originalTargetFrameworks": [
+          "net462"
+        ],
+        "sources": {
+          "https://api.nuget.org/v3/index.json": {}
+        },
+        "frameworks": {
+          "net462": {
+            "targetAlias": "net462",
+            "projectReferences": {}
+          }
+        },
+        "warningProperties": {
+          "warnAsError": [
+            "NU1605"
+          ]
+        },
+        "restoreAuditProperties": {
+          "enableAudit": "true",
+          "auditLevel": "low",
+          "auditMode": "direct"
+        }
+      },
+      "frameworks": {
+        "net462": {
+          "targetAlias": "net462",
+          "dependencies": {
+            "Microsoft.NETFramework.ReferenceAssemblies": {
+              "suppressParent": "All",
+              "target": "Package",
+              "version": "[1.0.3, )",
+              "autoReferenced": true
+            },
+            "System.Resources.Extensions": {
+              "target": "Package",
+              "version": "[8.0.0, )"
+            }
+          },
+          "runtimeIdentifierGraphPath": "/home/learn/.dotnet/sdk/8.0.415/RuntimeIdentifierGraph.json"
+        }
+      }
+    }
+  }
+}

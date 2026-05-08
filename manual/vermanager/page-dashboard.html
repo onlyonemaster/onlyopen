@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link active">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>대시보드</span></div>
+<h1>📊 메인 대시보드 (pages/dashboard.php)</h1>
+<p class="page-desc">버전 관리 시스템의 첫 화면입니다. 시스템 전체 KPI, 사이트별 버전 현황, 빠른 릴리즈 기능을 제공합니다.</p>
+
+<h2 id="layout">페이지 레이아웃 구조</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;">vm-layout
+├── vm-sidebar (좌측 250px)
+│   ├── vm-brand: "Onlyone 통합 버전 관리" 로고
+│   ├── vm-site-selector: 사이트 드롭다운 (kiam-prod / kiam-dev / ...)
+│   ├── vm-nav: 7개 메뉴 링크
+│   │   ├── 📊 대시보드 (active)
+│   │   ├── 🚀 새 릴리즈
+│   │   ├── 📜 버전 히스토리
+│   │   ├── 🔧 소스 개선 목록
+│   │   ├── 📝 CHANGELOG
+│   │   ├── 🔍 사이트 상세
+│   │   └── 🌐 사이트 관리
+│   └── vm-sidebar-footer: 현재 사이트 미니 정보
+│
+└── vm-main
+    ├── vm-topbar
+    │   ├── 페이지 타이틀 + 브레드크럼 (사이트 > 환경)
+    │   └── 도메인 필 + "새 릴리즈" 버튼
+    │
+    ├── 📈 전체 현황 섹션
+    │   └── 4개 vm-card (전체사이트, 운영환경, 개발환경, 서버대수)
+    │       └── 데이터: $stats = get_system_stats()
+    │
+    ├── 🌐 사이트별 버전 현황 테이블
+    │   └── 사이트명 | 도메인 | 환경뱃지 | 현재버전 | 릴리즈수 | 바로가기
+    │       └── 현재 선택된 사이트는 vm-row-active 하이라이트
+    │
+    ├── 📌 현재 사이트 상세
+    │   └── 4개 지표: 현재버전, 총릴리즈, 미발행개선, 마지막릴리즈
+    │
+    ├── 🚀 빠른 릴리즈 패널
+    │   └── PATCH / MINOR / MAJOR 라디오 + 실행 버튼
+    │       └── POST /vermanager/api/release 호출
+    │
+    ├── 📜 최근 릴리즈 목록 (타입 아이콘 + from→to + 날짜)
+    │
+    └── 🔧 최근 소스 개선 목록 (제목 + 카테고리 + 릴리즈여부 + 날짜)</pre>
+
+<h2 id="data-loading">데이터 로딩 (서버 로직 추적)</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// 1) 시스템 통계 (site-registry.json 기반)
+$stats = get_system_stats();   // → total_sites, production_sites, development_sites, total_servers
+
+// 2) 현재 사이트 정보
+$site_id = $current_site_id;   // → index.php에서 get_current_site_id() 결과
+$site = $current_site;          // → get_site($site_id) 결과
+
+// 3) 현재 사이트 버전 (package.json)
+$version = site_get_current_version($site_id);
+
+// 4) 버전 히스토리 (version_history.json, 역순 정렬)
+$history = site_get_history($site_id);
+$history = array_reverse($history);   // 최신순으로 뒤집기
+$totalReleases = count($history);
+$lastRelease = $totalReleases > 0 ? $history[0] : null;
+
+// 5) 소스 개선 목록 (improvements.json)
+$improvements = site_get_improvements($site_id);
+$totalImprovements = count($improvements);
+$unreleasedImps = count(array_filter($improvements, fn($i) => empty($i['released_in'])));
+
+// 6) CHANGELOG
+$changelog = site_get_changelog($site_id);
+
+// 7) 사이트별 요약 (모든 활성 사이트의 버전+릴리즈수)
+$site_summaries = [];
+foreach ($all_sites as $sid => $s) {
+    $sv = site_get_current_version($sid);
+    $sh = site_get_history($sid);
+    $site_summaries[] = ['id'=>$sid, 'name'=>..., 'version'=>$sv['raw'], 'releases'=>count($sh)...];
+}
+
+// 8) 다음 버전 미리보기
+$nextPatch = bump_version($version, 'patch');    // v1.0.1 → v1.0.2
+$nextMinor = bump_version($version, 'minor');    // v1.0.1 → v1.1.0
+$nextMajor = bump_version($version, 'major');    // v1.0.1 → v2.0.0</pre>
+
+<h2 id="quick-release">빠른 릴리즈 JavaScript</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// 사이트 전환
+function switchSite(siteId) {
+    window.location.href = '?site=' + siteId;
+}
+
+// 빠른 릴리즈
+async function quickRelease(type) {
+    const res = await fetch('/vermanager/api/release', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({
+            site: '<?= $site_id ?>',
+            type: type,
+            note: '대시보드 빠른 릴리즈'
+        })
+    });
+    const data = await res.json();
+    if (data.ok) {
+        alert('✅ ' + data.message);
+        location.reload();   // 대시보드 갱신
+    }
+}</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> 대시보드는 페이지 로딩 시 <b>4개의 JSON 파일</b>(package.json, version_history.json, improvements.json, changelog.json)을 모두 읽습니다. 사이트 선택기 드롭다운으로 운영↔개발 환경을 즉시 전환할 수 있습니다. 빠른 릴리즈는 확인 대화상자 없이 즉시 PATCH 버전을 증가시킵니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

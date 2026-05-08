@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연동 & 공지 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔧 소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">개요 & 전체 구조</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 대시보드</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">KPI & 개선현황</a><a href="/manual/source-improvements/filter.html" class="sb-link">필터 & 검색</a></div>
+  <div class="sb-section"><div class="sb-section-title">📝 등록 & 수정</div><a href="/manual/source-improvements/register.html" class="sb-link">신규 등록</a><a href="/manual/source-improvements/edit.html" class="sb-link">수정 & 보기</a></div>
+  <div class="sb-section"><div class="sb-section-title">⚙️ DB & 구조</div><a href="/manual/source-improvements/database.html" class="sb-link">DB 테이블 구조</a><a href="/manual/source-improvements/integration.html" class="sb-link active">연동 & 공지</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/source-improvements/">소스 개선 관리</a><span class="sep">›</span><span>연동 & 공지</span></div>
+<h1>📢 연동 시스템 & AI 공지 변환</h1>
+<p class="page-desc">소스 개선 항목을 AI 공지로 변환하는 시스템과 버전 관리(vermanager)와의 연동 구조를 분석합니다.</p>
+
+<h2 id="notice-link">공지 변환 링크</h2>
+<p>목록 테이블의 액션 컬럼에서 <code>notice_id</code>가 NULL인 항목에만 <b>공지</b> 버튼이 표시됩니다:</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">&lt;?php if (!$row['notice_id']): ?&gt;
+  &lt;a href="notice_ai-write.php?source_id=&lt;?php echo $row['id']; ?&gt;"
+     class="btn-sm btn-notice"&gt;공지&lt;/a&gt;
+&lt;?php endif; ?&gt;</pre>
+
+<p>이미 공지로 변환된 항목(<code>notice_id</code>가 존재하는 경우)은 공지 버튼이 사라집니다.</p>
+
+<h2 id="action-buttons">액션 버튼 로직</h2>
+<table>
+  <tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">버튼</th><th style="padding:8px 12px;border:1px solid var(--border);">링크</th><th style="padding:8px 12px;border:1px solid var(--border);">색상</th><th style="padding:8px 12px;border:1px solid var(--border);">조건</th></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>보기</b></td><td style="padding:8px 12px;border:1px solid var(--border);"><code>admin_source_improvements_form.php?id=N&action=view</code></td><td style="padding:8px 12px;border:1px solid var(--border);">청록</td><td style="padding:8px 12px;border:1px solid var(--border);">항상 표시</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>수정</b></td><td style="padding:8px 12px;border:1px solid var(--border);"><code>admin_source_improvements_form.php?id=N&action=edit</code></td><td style="padding:8px 12px;border:1px solid var(--border);">노랑</td><td style="padding:8px 12px;border:1px solid var(--border);">항상 표시</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>공지</b></td><td style="padding:8px 12px;border:1px solid var(--border);"><code>notice_ai-write.php?source_id=N</code></td><td style="padding:8px 12px;border:1px solid var(--border);">초록</td><td style="padding:8px 12px;border:1px solid var(--border);">notice_id == NULL</td></tr>
+</table>
+
+<h2 id="vermanager-link">버전 관리 시스템과의 연동</h2>
+<p>vermanager에서 릴리즈를 실행할 때, 연결된 소스 개선 항목(<code>linked_improvements</code>)이 CHANGELOG에 기록됩니다. 또한 <code>auto_register_*.php</code> 스크립트가 이 테이블에 직접 INSERT합니다.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">vermanager → source_improvements 연동 경로
+─────────────────────────────────────────
+1. [관리자] admin_source_improvements.php 에서 등록
+2. [vermanager] improvements 페이지에서 개선 항목 확인
+3. [vermanager] release 페이지에서 릴리즈 실행
+   └── linked_improvements: ["imp_4", "imp_5"]
+4. [vermanager] CHANGELOG에 포함 내역 자동 기록
+5. [관리자] 공지 버튼으로 AI 공지 변환 (선택)</pre>
+
+<h2 id="status-flow">상태 생명주기</h2>
+<div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:16px 0;font-size:13px;line-height:2.2;">
+  <b>개발중</b> → 작업 시작 (기본 상태)
+  &nbsp; ↓<br>
+  <b>테스트중</b> → QA 검증 단계
+  &nbsp; ↓<br>
+  <b>완료</b> → 구현 완료, 배포 대기
+  &nbsp; ↓<br>
+  <b>배포됨</b> → 실제 서버에 반영됨 ✅
+  <br><br>
+  <span style="color:var(--red);">⚠️ 롤백</span> → 문제 발생 시 이전 상태로 복귀
+</div>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> 소스 개선 관리 시스템은 단독으로도 완전하지만, <b>버전 관리 시스템(vermanager)</b>과 연동하면 릴리즈 → CHANGELOG → 공지까지의 완전한 DevOps 파이프라인이 구축됩니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

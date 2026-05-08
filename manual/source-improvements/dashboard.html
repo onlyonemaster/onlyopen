@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 화면 구성 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">소스 개선 관리</div>
+      <a href="/manual/source-improvements/" class="sb-link">📋 소개 및 개요</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">기본 사용법</div>
+      <a href="/manual/source-improvements/dashboard.html" class="sb-link active">📊 대시보드 화면 구성</a>
+      <a href="/manual/source-improvements/list.html" class="sb-link">🔍 개선 항목 조회·필터링</a>
+      <a href="/manual/source-improvements/register.html" class="sb-link">✏️ 새 개선 항목 등록</a>
+      <a href="/manual/source-improvements/detail.html" class="sb-link">👁️ 상세보기 및 수정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">심화</div>
+      <a href="/manual/source-improvements/lifecycle.html" class="sb-link">🔄 상태 라이프사이클</a>
+      <a href="/manual/source-improvements/notice.html" class="sb-link">📢 공지사항 연동</a>
+      <a href="/manual/source-improvements/auto-register.html" class="sb-link">🤖 AI 자동 등록</a>
+    </div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">대시보드 개요</a>
+    <a href="#kpi-cards" class="toc-link">KPI 요약 카드</a>
+    <a href="#status-chart" class="toc-link">상태별 현황 차트</a>
+    <a href="#project-chart" class="toc-link">프로젝트별 현황</a>
+    <a href="#new-button" class="toc-link">「새로 등록」버튼</a>
+    <a href="#query-logic" class="toc-link">대시보드 쿼리 로직</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">📊 대시보드 화면 구성</h1>
+    <p class="lead">페이지 최상단에 위치한 대시보드는 전체 개선 현황을 한눈에 보여줍니다. 4개의 KPI 카드와 2개의 차트 패널로 구성되어 있습니다.</p>
+
+    <h2 id="kpi-cards">KPI 요약 카드 (4종)</h2>
+    <p>대시보드 상단에는 4개의 그라데이션 카드가 가로로 배치됩니다. 각 카드는 MySQL 집계 쿼리로 실시간 값을 계산합니다.</p>
+
+    <div class="card-grid-2" style="margin-bottom:20px;">
+      <div class="kpi-demo" style="background:linear-gradient(135deg,#667eea,#764ba2);color:white;"><h3>10</h3><p>누적 개선 건수</p></div>
+      <div class="kpi-demo" style="background:linear-gradient(135deg,#56ab2f,#a8e063);color:white;"><h3>8</h3><p>이번 달 개선</p></div>
+      <div class="kpi-demo" style="background:linear-gradient(135deg,#4facfe,#00f2fe);color:white;"><h3>3</h3><p>오늘 개선</p></div>
+      <div class="kpi-demo" style="background:linear-gradient(135deg,#f093fb,#f5576c);color:white;"><h3>5</h3><p>배포됨</p></div>
+    </div>
+
+    <table class="m-table">
+      <thead><tr><th>카드</th><th>SQL 집계</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td><strong>누적 개선 건수</strong></td><td><code>COUNT(*) FROM source_improvements</code></td><td>시스템에 등록된 전체 개선 건수</td></tr>
+        <tr><td><strong>이번 달 개선</strong></td><td><code>COUNT(*) WHERE date >= '월초'</code></td><td>이번 달 1일부터 오늘까지 등록된 건수</td></tr>
+        <tr><td><strong>오늘 개선</strong></td><td><code>COUNT(*) WHERE date = CURDATE()</code></td><td>오늘 날짜로 등록된 건수</td></tr>
+        <tr><td><strong>배포됨</strong></td><td><code>COUNT(*) WHERE status = '배포됨'</code></td><td>운영 환경에 배포 완료된 개선 건수</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="status-chart">🔴 상태별 현황 차트</h2>
+    <p>왼쪽 패널에서는 5가지 상태(개발중, 완료, 테스트중, 배포됨, 롤백)별로 건수를 보여줍니다.</p>
+    <pre class="code-block"><code>$dashboard_sql = "SELECT
+    COUNT(*) as total,
+    (SELECT COUNT(*) FROM source_improvements
+     WHERE date >= '{$this_month_start}' AND date <= '{$today}') as this_month,
+    (SELECT COUNT(*) FROM source_improvements
+     WHERE date = '{$today}') as today,
+    (SELECT COUNT(*) FROM source_improvements
+     WHERE status = '개발중') as dev,
+    (SELECT COUNT(*) FROM source_improvements
+     WHERE status = '완료') as done,
+    (SELECT COUNT(*) FROM source_improvements
+     WHERE status = '테스트중') as testing,
+    (SELECT COUNT(*) FROM source_improvements
+     WHERE status = '배포됨') as deployed
+FROM source_improvements";</code></pre>
+
+    <div class="tip-box">
+      <strong>💡 참고:</strong> 롤백 상태는 별도 집계되지 않지만, 목록 필터에서는 선택 가능합니다.
+    </div>
+
+    <h2 id="project-chart">📁 프로젝트별 현황 (최근 30일)</h2>
+    <p>오른쪽 패널에서는 5개 프로젝트별로 최근 30일간 등록된 개선 건수를 보여줍니다.</p>
+    <pre class="code-block"><code>$project_sql = "SELECT project, COUNT(*) as cnt
+FROM source_improvements
+WHERE date >= DATE_SUB(CURDATE(), INTERVAL 30 DAY)
+GROUP BY project";
+
+$projects = array('아이엠플랫폼', 'SMS', 'ainote', 'nalara', '기타');</code></pre>
+
+    <h2 id="new-button">「새로 등록」버튼</h2>
+    <p>대시보드 바로 아래에 위치한 파란색 버튼입니다. 클릭 시 등록 폼 페이지(<code>admin_source_improvements_form.php</code>)로 이동합니다.</p>
+    <pre class="code-block"><code>&lt;a href="admin_source_improvements_form.php"
+   class="btn btn-primary"&gt;
+    &lt;i class="fa fa-plus"&gt;&lt;/i&gt; 새로 등록
+&lt;/a&gt;</code></pre>
+
+    <h2 id="query-logic">대시보드 쿼리 로직 상세</h2>
+    <div class="flow-box">
+      <div class="flow-item"><span class="flow-dot"></span> PHP: <code>$today = date('Y-m-d');</code> / <code>$this_month_start = date('Y-m-01');</code></div>
+      <div class="flow-item"><span class="flow-dot"></span> 단일 SELECT 문에서 서브쿼리 6개로 모든 KPI 한 번에 조회</div>
+      <div class="flow-item"><span class="flow-dot"></span> <code>mysqli_fetch_array()</code>로 연관 배열 반환</div>
+      <div class="flow-item"><span class="flow-dot"></span> 각 카드에서 <code>$dashboard['total']</code>, <code>$dashboard['deployed']</code> 등으로 출력</div>
+    </div>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/" class="next-link">← 이전: 소개 및 개요</a>
+      <a href="/manual/source-improvements/list.html" class="next-link">다음: 개선 항목 조회·필터링 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead { font-size:17px; color:var(--text2); margin-bottom:24px; line-height:1.8; }
+.kpi-demo { padding:20px; border-radius:10px; text-align:center; }
+.kpi-demo h3 { font-size:28px; margin:0 0 4px; }
+.kpi-demo p { font-size:13px; opacity:.9; margin:0; }
+.card-grid-2 { display:grid; grid-template-columns:1fr 1fr 1fr 1fr; gap:12px; margin-bottom:28px; }
+.m-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:28px; }
+.m-table th { background:var(--bg3); padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid var(--border); }
+.m-table td { padding:9px 12px; border-bottom:1px solid var(--border); }
+.m-table code { background:var(--bg3); padding:2px 6px; border-radius:3px; font-size:12px; }
+.code-block { background:var(--bg3); padding:20px; border-radius:8px; font-size:12px; line-height:1.6; overflow-x:auto; margin-bottom:20px; white-space:pre; font-family:monospace; }
+.tip-box { background:var(--green-bg); border-left:4px solid var(--green); padding:14px 18px; border-radius:8px; margin-bottom:28px; font-size:14px; }
+.flow-box { margin-bottom:28px; }
+.flow-item { display:flex; align-items:center; gap:12px; padding:10px 0; border-bottom:1px solid var(--border); font-size:13px; }
+.flow-item:last-child { border-bottom:none; }
+.flow-dot { width:10px; height:10px; background:var(--brand); border-radius:50%; flex-shrink:0; }
+.prev-next { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:20px; border-top:1px solid var(--border); }
+.next-link { color:var(--brand); text-decoration:none; font-weight:600; font-size:14px; }
+.next-link:hover { text-decoration:underline; }
+@media(max-width:768px){ .card-grid-2{grid-template-columns:1fr 1fr;} }
+@media(max-width:480px){ .card-grid-2{grid-template-columns:1fr;} }
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>
