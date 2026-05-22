@@ -660,7 +660,12 @@ html,body{
 
   // ── 첨부 (임시 안내) ───────────────────────────────────
   $attach.addEventListener('click', function(){
-    alert('파일 첨부는 B-5(api/me_data.php) 단계에서 활성화됩니다.\n지금은 텍스트로 자유롭게 기록해주세요.');
+    // [ME-B6] 첨부는 데이터 풀 패널 진입으로 안내
+    if (window.OneMeDataPanel) {
+      window.OneMeDataPanel.open({ initialScope: 'all', inputScope: 'private' });
+    } else {
+      alert('파일 첨부는 추후 단계에서 활성화됩니다.\n지금은 텍스트로 자유롭게 기록해주세요.');
+    }
   });
 
   // ── 메뉴 시트 ──────────────────────────────────────────
@@ -676,10 +681,20 @@ html,body{
       closeMenu();
       switch(key){
         case 'learn':
-          alert('아바타 학습시키기는 B-5(api/me_data.php) 단계에서 활성화됩니다.');
+          // [ME-B6] 데이터 풀 패널 — 학습 데이터 추가 시작점 (입력 시 private 기본)
+          if (window.OneMeDataPanel) {
+            window.OneMeDataPanel.open({ initialScope: 'all', inputScope: 'private' });
+          } else {
+            alert('데이터 풀 패널을 불러올 수 없습니다. (me_data_panel.js 누락)');
+          }
           break;
         case 'scope':
-          alert('공개범위 관리는 B-6(avatar_v2.html Scope 토글) 단계에서 활성화됩니다.');
+          // [ME-B6] 데이터 풀 패널 — 공개범위(scope) 관리 진입
+          if (window.OneMeDataPanel) {
+            window.OneMeDataPanel.open({ initialScope: 'all' });
+          } else {
+            alert('데이터 풀 패널을 불러올 수 없습니다. (me_data_panel.js 누락)');
+          }
           break;
         case 'dashboard':
           alert('대시보드는 추후 단계에서 추가됩니다.');
@@ -719,5 +734,9 @@ html,body{
   };
 })();
 </script>
+
+<!-- [ME-B6] 데이터 풀 패널 (Scope 토글 + me_data.php 연동) -->
+<script src="/aimessage/onechat/js/me_data_panel.js?v=0523a"></script>
+
 </body>
 </html>
