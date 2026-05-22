@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>챗봇 대화 리스트</title>
-  <link rel="stylesheet" href="css/style.css?v=0428i" />
+  <link rel="stylesheet" href="css/style.css?v=0513a" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.4.0/css/all.min.css" />
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/qrcodejs@1.0.0/qrcode.min.js"></script>
@@ -35,6 +35,28 @@
         <span class="sidebar-profile-name" id="sidebarProfileName">로딩 중...</span>
         <span class="sidebar-profile-role" id="sidebarProfileRole">아바타 챗봇 운영자</span>
       </div>
+    </div>
+
+    <div class="sidebar-divider"></div>
+
+    <!-- ============================================================
+         [ME-B1] 운영 모드 전환 토글 (2026-05-23, 라이프 아바타 도입)
+         외부 아바타(공개·고객용) ↔ 나의 아바타(내부·개인용) 전환
+         localStorage: oneMeMode = 'public' | 'private'
+         하위 메뉴들이 이 값을 읽어 데이터 소스를 자동 전환
+    ============================================================ -->
+    <div class="sb-mode-card" id="sbModeCard">
+      <span class="sb-mode-new-badge">NEW</span>
+      <div class="sb-mode-label"><i class="fas fa-toggle-on"></i> 운영 모드</div>
+      <div class="sb-mode-toggle">
+        <button type="button" class="sb-mode-btn active pub" data-mode="public" id="sbModePublicBtn">
+          <i class="fas fa-globe"></i> 외부 아바타
+        </button>
+        <button type="button" class="sb-mode-btn me" data-mode="private" id="sbModePrivateBtn">
+          <i class="fas fa-brain"></i> 나의 아바타
+        </button>
+      </div>
+      <div class="sb-mode-hint" id="sbModeHint">고객·후원자와 대화하는 공개 아바타입니다</div>
     </div>
 
     <div class="sidebar-divider"></div>
@@ -107,6 +129,18 @@
       </div>
     </button>
 
+    <!-- 알림음 설정 (2026-05-15) -->
+    <button class="sidebar-menu-item" id="sbRingtoneBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">
+        <i class="fas fa-bell"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">알림음 설정</span>
+        <span class="sidebar-menu-desc">통화 수신 알림음 선택 · 미리듣기</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+
     <!-- PWA 등록자 -->
     <button class="sidebar-menu-item" id="sbPwaVisitorBtn">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#7c3aed,#4f46e5);">
@@ -120,7 +154,7 @@
     </button>
 
     <!-- 메뉴 7: 구독하기 -->
-    <button class="sidebar-menu-item" id="sbSubscribeBtn">
+    <button class="sidebar-menu-item" id="sbSubscribeBtn" onclick="location.href='/aimessage/onechat/subscribe.html'">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#f97316,#ea580c);">
         <i class="fas fa-crown"></i>
       </div>
@@ -301,8 +335,14 @@
           <button class="icon-btn" id="dmMembersBtn" title="멤버 보기" style="display:none;">
             <i class="fas fa-users"></i>
           </button>
-          <button class="icon-btn" id="dmPollBtn" title="투표 만들기">
+          <button class="icon-btn" id="dmPollBtn" title="투표 만들기" style="display:none;">
             <i class="fas fa-poll"></i>
+          </button>
+          <button class="icon-btn" id="dmVideoCallBtn" title="화상통화">
+            <i class="fas fa-video"></i>
+          </button>
+          <button class="icon-btn" id="dmVoiceCallBtn" title="음성통화">
+            <i class="fas fa-microphone"></i>
           </button>
           <button class="icon-btn" id="dmMenuBtn" title="더보기">
             <i class="fas fa-ellipsis-v"></i>
@@ -350,6 +390,30 @@
       <input type="file" id="dmFileInput" style="display:none;" accept="image/*,*/*">
     </div>
 
+    <!-- ========== DM 더보기 드롭다운 ========== -->
+    <div id="dmContextMenu" class="dm-ctx-menu">
+      <button class="dm-ctx-item" id="dmCtxCreateVideoRoom">
+        <i class="fas fa-video"></i> 화상 대화실 만들기
+      </button>
+      <button class="dm-ctx-item" id="dmCtxCreateVoiceRoom">
+        <i class="fas fa-microphone"></i> 음성 대화실 만들기
+      </button>
+      <div class="dm-ctx-divider"></div>
+      <button class="dm-ctx-item" id="dmCtxMembers">
+        <i class="fas fa-users"></i> 멤버 보기
+      </button>
+      <button class="dm-ctx-item" id="dmCtxInvite">
+        <i class="fas fa-user-plus"></i> 멤버 초대
+      </button>
+      <button class="dm-ctx-item" id="dmCtxRename">
+        <i class="fas fa-edit"></i> 채팅방 이름 변경
+      </button>
+      <div class="dm-ctx-divider"></div>
+      <button class="dm-ctx-item danger" id="dmCtxLeave">
+        <i class="fas fa-sign-out-alt"></i> 채팅방 나가기
+      </button>
+    </div>
+
     <!-- ========== 새 채팅 / 그룹 만들기 모달 ========== -->
     <div class="dm-modal-overlay" id="dmSearchModal" style="display:none;">
       <div class="dm-modal">
@@ -375,6 +439,57 @@
           <button id="dmGroupCreateBtn" class="dm-send-btn" style="width:100%;padding:12px;border-radius:10px;">
             그룹 채팅 만들기
           </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========== 화상/음성 대화실 만들기 모달 ========== -->
+    <div class="dm-modal-overlay" id="dmCreateRoomModal" style="display:none;">
+      <div class="dm-modal" style="max-width:420px;">
+        <div class="dm-modal-header">
+          <h3 id="dmCreateRoomTitle">📹 화상 대화실 만들기</h3>
+          <button class="dm-modal-close" id="dmCreateRoomClose"><i class="fas fa-times"></i></button>
+        </div>
+        <div style="padding:18px;">
+          <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text);">방 이름</label>
+            <input type="text" id="dmCreateRoomName" placeholder="대화실 이름" maxlength="80"
+              style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg-input);color:var(--text);font-size:14px;box-sizing:border-box;" />
+          </div>
+
+          <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:6px;color:var(--text);">🖥️ 화면 공유 권한</label>
+            <div style="display:flex;gap:8px;">
+              <label class="dm-radio-opt selected" data-share="all" style="flex:1;padding:10px;border:2px solid var(--accent-green,#10b981);background:rgba(16,185,129,.1);border-radius:8px;text-align:center;font-size:13px;cursor:pointer;font-weight:600;">
+                모두 사용
+              </label>
+              <label class="dm-radio-opt" data-share="admin_only" style="flex:1;padding:10px;border:2px solid var(--border);border-radius:8px;text-align:center;font-size:13px;cursor:pointer;color:var(--text-muted);">
+                관리자만
+              </label>
+            </div>
+          </div>
+
+          <!-- 알림음 선택 (B안, 2026-05-15) -->
+          <div style="margin-bottom:16px;">
+            <label style="display:block;font-size:13px;font-weight:600;margin-bottom:8px;color:var(--text);">🔔 수신 알림음</label>
+            <div id="dmRingtoneSelector" style="max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px;padding:4px 0;">
+              <div style="color:var(--text-muted);font-size:12px;padding:8px;">불러오는 중...</div>
+            </div>
+          </div>
+
+          <div style="font-size:12px;color:var(--text-muted);margin-bottom:18px;padding:10px;background:var(--bg-input);border-radius:8px;">
+            ⏱️ 무인 1분 후 자동 종료 / 24시간 후 강제 종료<br>
+            👑 방을 만든 사람이 관리자가 됩니다
+          </div>
+
+          <div style="display:flex;gap:8px;">
+            <button id="dmCreateRoomCancel" style="flex:1;padding:11px;border-radius:8px;background:var(--bg-input);color:var(--text);border:1px solid var(--border);cursor:pointer;font-weight:600;font-size:14px;">
+              취소
+            </button>
+            <button id="dmCreateRoomSubmit" class="dm-send-btn" style="flex:1.5;padding:11px;border-radius:8px;font-weight:600;font-size:14px;">
+              대화실 만들기
+            </button>
+          </div>
         </div>
       </div>
     </div>
@@ -578,6 +693,12 @@
         </button>
         <button class="icon-btn cs-icon-btn" id="voiceTtsToggle" title="TTS 음성 읽기" style="display:none">
           <i class="fas fa-volume-xmark"></i>
+        </button>
+        <button class="icon-btn cs-icon-btn" id="csVideoCallBtn" title="화상통화" style="display:none;">
+          <i class="fas fa-video"></i>
+        </button>
+        <button class="icon-btn cs-icon-btn" id="csVoiceCallBtn" title="음성통화" style="display:none;">
+          <i class="fas fa-microphone"></i>
         </button>
         <button class="icon-btn cs-icon-btn" id="chatInfoBtn">
           <i class="fas fa-info-circle"></i>
@@ -929,11 +1050,11 @@
           <div class="pf-section-title"><i class="fas fa-user"></i> 기본 정보</div>
           <div class="pf-field">
             <label class="pf-label">이름</label>
-            <input type="text" class="pf-input" id="pfName" placeholder="이름을 입력하세요" value="송조은" />
+            <input type="text" class="pf-input" id="pfName" placeholder="이름을 입력하세요" />
           </div>
           <div class="pf-field">
             <label class="pf-label">직함 / 직책</label>
-            <input type="text" class="pf-input" id="pfTitle" placeholder="예) 대표이사, 마케터, 프리랜서" value="아바타 챗봇 운영자" />
+            <input type="text" class="pf-input" id="pfTitle" placeholder="예) 대표이사, 마케터, 프리랜서" />
           </div>
           <div class="pf-field">
             <label class="pf-label">상태 메시지</label>
@@ -950,6 +1071,49 @@
           <div class="pf-field">
             <label class="pf-label">소속 / 회사</label>
             <input type="text" class="pf-input" id="pfCompany" placeholder="소속 또는 회사명" />
+          </div>
+        </div>
+
+        <!-- 2-1. 발신자 정보 (Phase 3: 메시지 발송용 글로벌 프로필) -->
+        <div class="pf-section">
+          <div class="pf-section-title"><i class="fas fa-paper-plane"></i> 발신자 정보</div>
+          <div class="pf-prompt-desc">AI 메시지·캠페인 발송 시 사용되는 발신자 정보입니다. 한 번 입력하면 모든 챗봇이 공유합니다.</div>
+          <div class="pf-field">
+            <label class="pf-label">발신자 이름</label>
+            <input type="text" class="pf-input" id="pfSenderName" placeholder="홍길동" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">직책</label>
+            <input type="text" class="pf-input" id="pfSenderPosition" placeholder="대표, 매니저, 컨설턴트 등" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">소속</label>
+            <input type="text" class="pf-input" id="pfSenderAffiliation" placeholder="소속 단체 또는 회사명" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">회사 주소</label>
+            <input type="text" class="pf-input" id="pfSenderCompanyAddress" placeholder="회사 주소" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">자택 주소</label>
+            <input type="text" class="pf-input" id="pfSenderHomeAddress" placeholder="자택 주소 (선택)" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">발신자 소개</label>
+            <textarea class="pf-textarea" id="pfSenderIntroduction" rows="5" placeholder="자신을 소개하는 문구를 작성하세요. AI 메시지 발송 시 활용됩니다."></textarea>
+          </div>
+        </div>
+
+        <!-- 2-2. 사업체 정보 -->
+        <div class="pf-section">
+          <div class="pf-section-title"><i class="fas fa-building"></i> 사업체 정보</div>
+          <div class="pf-field">
+            <label class="pf-label">사업체명</label>
+            <input type="text" class="pf-input" id="pfVendorName" placeholder="회사명 또는 사업체명" />
+          </div>
+          <div class="pf-field">
+            <label class="pf-label">사업체 업종</label>
+            <input type="text" class="pf-input" id="pfVendorIndustry" placeholder="예) 프로그램개발, 교육서비스, 컨설팅 등" />
           </div>
         </div>
 
@@ -1219,16 +1383,52 @@
       <button class="cbsetting-save-btn" id="cbSettingSaveBtn"><i class="fas fa-check"></i> 저장</button>
     </div>
 
-    <!-- 챗봇 선택 (여러개인 경우) -->
-    <div class="cbsetting-bot-selector" id="cbSettingBotSelector" style="display:none;">
-      <select class="cbsetting-select" id="cbSettingBotSelect"></select>
-    </div>
 
     <div class="cbsetting-body" id="cbSettingBody">
       <div class="cbsetting-loading"><i class="fas fa-spinner fa-spin"></i> 설정을 불러오는 중...</div>
     </div>
   </div>
   <!-- ========== /챗봇 설정 패널 ========== -->
+
+  <!-- ========== 알림음 설정 패널 (2026-05-15) ========== -->
+  <div class="ringtone-overlay" id="ringtoneOverlay"></div>
+  <div class="ringtone-panel" id="ringtonePanel">
+    <div class="ringtone-header">
+      <button class="ringtone-back-btn" id="ringtoneCloseBtn"><i class="fas fa-arrow-left"></i></button>
+      <span class="ringtone-title"><i class="fas fa-bell"></i> 알림음 설정</span>
+    </div>
+    <div class="ringtone-body" id="ringtoneBody">
+      <div class="ringtone-loading"><i class="fas fa-spinner fa-spin"></i> 불러오는 중...</div>
+    </div>
+  </div>
+  <style>
+  .ringtone-overlay{position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:1200;display:none}
+  .ringtone-overlay.open{display:block}
+  .ringtone-panel{position:fixed;top:0;right:-420px;width:420px;max-width:100vw;height:100%;background:var(--bg-card,#1e2030);z-index:1201;display:flex;flex-direction:column;transition:right .3s ease;box-shadow:-4px 0 24px rgba(0,0,0,.4)}
+  .ringtone-panel.open{right:0}
+  .ringtone-header{display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border-color,rgba(255,255,255,.1));background:var(--bg-header,#161827)}
+  .ringtone-back-btn{background:none;border:none;color:var(--text-primary,#e2e8f0);font-size:18px;cursor:pointer;padding:4px 8px;border-radius:6px}
+  .ringtone-back-btn:hover{background:rgba(255,255,255,.08)}
+  .ringtone-title{font-size:16px;font-weight:700;color:var(--text-primary,#e2e8f0)}
+  .ringtone-body{flex:1;overflow-y:auto;padding:16px}
+  .ringtone-section-title{font-size:12px;font-weight:700;color:var(--text-muted,#94a3b8);text-transform:uppercase;letter-spacing:.05em;margin:16px 0 8px}
+  .ringtone-section-title:first-child{margin-top:0}
+  .ringtone-item{display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:8px;cursor:pointer;transition:background .15s;margin-bottom:4px;border:2px solid transparent}
+  .ringtone-item:hover{background:rgba(255,255,255,.06)}
+  .ringtone-item.selected{background:rgba(139,92,246,.15);border-color:rgba(139,92,246,.5)}
+  .ringtone-item-icon{width:36px;height:36px;border-radius:50%;background:rgba(139,92,246,.2);display:flex;align-items:center;justify-content:center;color:#8b5cf6;font-size:14px;flex-shrink:0}
+  .ringtone-item.voice-type .ringtone-item-icon{background:rgba(16,185,129,.2);color:#10b981}
+  .ringtone-item-info{flex:1;min-width:0}
+  .ringtone-item-name{font-size:14px;font-weight:600;color:var(--text-primary,#e2e8f0);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .ringtone-item-desc{font-size:11px;color:var(--text-muted,#94a3b8);margin-top:2px}
+  .ringtone-preview-btn{background:rgba(255,255,255,.08);border:none;color:var(--text-primary,#e2e8f0);width:30px;height:30px;border-radius:50%;cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:12px;flex-shrink:0;transition:background .15s}
+  .ringtone-preview-btn:hover{background:rgba(139,92,246,.3)}
+  .ringtone-preview-btn.playing{background:rgba(139,92,246,.4);color:#a78bfa}
+  .ringtone-voice-badge{font-size:9px;background:rgba(16,185,129,.2);color:#10b981;border:1px solid rgba(16,185,129,.3);padding:1px 5px;border-radius:8px;margin-left:5px;font-weight:600}
+  .ringtone-loading{text-align:center;padding:32px;color:var(--text-muted,#94a3b8)}
+  .ringtone-empty{text-align:center;padding:16px;color:var(--text-muted,#94a3b8);font-size:13px}
+  </style>
+  <!-- ========== /알림음 설정 패널 ========== -->
 
   <!-- ========== 아바타 학습 전체화면 ========== -->
   <div class="learn-screen" id="learnScreen">
@@ -1252,6 +1452,7 @@
       <button class="learn-tab" data-ltab="text"><i class="fas fa-file-alt"></i> 텍스트</button>
       <button class="learn-tab" data-ltab="voice"><i class="fas fa-microphone"></i> 음성</button>
       <button class="learn-tab" data-ltab="file"><i class="fas fa-file-pdf"></i> 파일</button>
+      <button class="learn-tab" data-ltab="news"><i class="fas fa-newspaper"></i> 뉴스/자동수집</button>
     </div>
 
     <div class="learn-body">
@@ -1387,6 +1588,44 @@
         <!-- 업로드된 파일 목록 -->
         <div class="file-list" id="fileList"></div>
         <div class="learn-history" id="fileHistory"></div>
+      </div>
+
+      <!-- ── 뉴스/자동수집 탭 ── -->
+      <div class="learn-panel" id="ltab-news">
+        <div class="learn-panel-top">
+          <div class="learn-intro">
+            <div class="learn-intro-icon" style="background:rgba(99,102,241,0.12)">
+              <i class="fas fa-newspaper" style="color:#6366f1"></i>
+            </div>
+            <div>
+              <p class="learn-intro-title">자동 수집 학습 데이터</p>
+              <p class="learn-intro-desc">뉴스·유튜브·블로그에서 자동으로 수집된<br>나의 학습 데이터 현황입니다.</p>
+            </div>
+          </div>
+        </div>
+        <div class="news-stats" id="newsStats">
+          <div class="news-stat-card" id="nsCard-news">
+            <span class="ns-icon"><i class="fas fa-newspaper"></i></span>
+            <span class="ns-count" id="nsCount-news">0</span>
+            <span class="ns-label">뉴스</span>
+          </div>
+          <div class="news-stat-card" id="nsCard-youtube">
+            <span class="ns-icon"><i class="fab fa-youtube"></i></span>
+            <span class="ns-count" id="nsCount-youtube">0</span>
+            <span class="ns-label">유튜브</span>
+          </div>
+          <div class="news-stat-card" id="nsCard-blog">
+            <span class="ns-icon"><i class="fas fa-blog"></i></span>
+            <span class="ns-count" id="nsCount-blog">0</span>
+            <span class="ns-label">블로그</span>
+          </div>
+        </div>
+        <div class="news-last-update">
+          <i class="fas fa-sync-alt"></i> 마지막 수집: <span id="newsLastCrawl">-</span>
+        </div>
+        <div class="news-list" id="newsList">
+          <div class="news-loading"><i class="fas fa-circle-notch fa-spin"></i> 불러오는 중...</div>
+        </div>
       </div>
 
     </div><!-- /learn-body -->
@@ -1591,13 +1830,21 @@
   <!-- 오버레이 -->
   <div class="overlay" id="overlay"></div>
 
-  <script src="js/dm.js?v=0421a"></script>
+  <script>
+  // 챗봇 도메인 환경 분기 (2026-05-11): dev=dc.kiam.kr / prod=chatbot.kiam.kr
+  const CHATBOT_DOMAIN = (location.hostname === 'dev.kiam.kr' || location.hostname === 'dc.kiam.kr')
+      ? 'dc.kiam.kr' : 'chatbot.kiam.kr';
+  </script>
+  <script src="js/call_listener_global.js?v=0515a"></script>
+  <script src="js/dm.js?v=0514b"></script>
   <script src="js/quota.js?v=0506a"></script>
   <!-- data.js 제거: mock 데이터 완전 삭제, 모든 데이터 서버 API로 전환 -->
-  <script src="js/main.js?v=0505f"></script>
+  <script src="js/main.js?v=0522home"></script>
   <script src="js/learn.js?v=0428i"></script>
   <script src="js/api.js?v=0505c"></script>
   <script src="js/voice.js?v=0505i"></script>
+  <!-- [ME-B1] 운영 모드 전환 토글 (2026-05-23, 라이프 아바타) -->
+  <script src="js/me_mode.js?v=0523a"></script>
 
   <!-- ========== 알림 패널 ========== -->
   <div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>
