@@ -710,7 +710,12 @@ html,body{
           }
           break;
         case 'dashboard':
-          alert('대시보드는 추후 단계에서 추가됩니다.');
+          // [ME-C3] 내 아바타 대시보드 — Health Score + Scope/Privacy/Category/Timeline/Recent
+          if (window.OneMeDashboard) {
+            window.OneMeDashboard.open();
+          } else {
+            alert('대시보드 모듈을 불러올 수 없습니다. (me_dashboard.js 누락)');
+          }
           break;
         case 'decisions':
           alert('의사결정 추적은 추후 단계에서 추가됩니다.');
@@ -750,6 +755,9 @@ html,body{
 
 <!-- [ME-B6] 데이터 풀 패널 (Scope 토글 + me_data.php 연동) -->
 <script src="/aimessage/onechat/js/me_data_panel.js?v=0523a"></script>
+
+<!-- [ME-C3] 내 아바타 대시보드 (me_stats.php 연동, SVG 차트, Health Score) -->
+<script src="/aimessage/onechat/js/me_dashboard.js?v=0523c3"></script>
 
 </body>
 </html>
