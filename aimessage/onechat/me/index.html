@@ -718,7 +718,12 @@ html,body{
           }
           break;
         case 'decisions':
-          alert('의사결정 추적은 추후 단계에서 추가됩니다.');
+          // [ME-C2] 의사결정 추적 — Predict → Decide → Reflect → Match%
+          if (window.OneMeDecisionsPanel) {
+            window.OneMeDecisionsPanel.open();
+          } else {
+            alert('결정 추적 모듈을 불러올 수 없습니다. (me_decisions_panel.js 누락)');
+          }
           break;
         case 'clear':
           if (confirm('이 대화 기록을 모두 지울까요?\n(아직 임시 저장소라 되돌릴 수 없습니다)')) {
@@ -757,7 +762,10 @@ html,body{
 <script src="/aimessage/onechat/js/me_data_panel.js?v=0523a"></script>
 
 <!-- [ME-C3] 내 아바타 대시보드 (me_stats.php 연동, SVG 차트, Health Score) -->
-<script src="/aimessage/onechat/js/me_dashboard.js?v=0523c3"></script>
+<script src="/aimessage/onechat/js/me_dashboard.js?v=0523c3b"></script>
+
+<!-- [ME-C2] 의사결정 추적 (me_decisions.php 연동, Predict→Decide→Reflect 루프) -->
+<script src="/aimessage/onechat/js/me_decisions_panel.js?v=0523c2"></script>
 
 </body>
 </html>

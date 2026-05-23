@@ -188,6 +188,7 @@
     var cats = (d.category || []);
     var timeline = (d.timeline || []);
     var recent = (d.recent || []);
+    var decisions = d.decisions || { summary: null, recent: [] };
 
     var html = '';
 
@@ -201,6 +202,8 @@
     html += categoryCardHtml(cats, activeCnt);
     html += sparkCardHtml(timeline);
     html += recentCardHtml(recent, !!d.locked);
+    // [C-2] 결정 트래커 위젯
+    html += decisionsCardHtml(decisions);
     html += '</div>';
 
     body.innerHTML = html;
@@ -214,6 +217,19 @@
       var ring = body.querySelector('.ring-fg[data-off]');
       if (ring) ring.setAttribute('stroke-dashoffset', ring.getAttribute('data-off'));
     });
+
+    // [C-2] 결정 위젯의 '결정 추적' 버튼 → decisions panel 열기
+    var openDecBtn = body.querySelector('#me-db-open-dec');
+    if (openDecBtn) {
+      openDecBtn.addEventListener('click', function () {
+        close();
+        if (window.OneMeDecisionsPanel && typeof window.OneMeDecisionsPanel.open === 'function') {
+          setTimeout(function () { window.OneMeDecisionsPanel.open(); }, 260);
+        } else {
+          alert('결정 추적 모듈을 불러올 수 없습니다. (me_decisions_panel.js 누락)');
+        }
+      });
+    }
   }
 
   function heroHtml(h, d) {
@@ -467,6 +483,102 @@
           '<span class="sum">' + recent.length + '건</span>' +
         '</div>' +
         '<div class="me-db-recent">' + rows + '</div>' +
+      '</div>';
+  }
+
+  // ───────── [C-2] Decisions widget ─────────
+  function decisionsCardHtml(dec) {
+    var s = (dec && dec.summary) || {};
+    var rec = (dec && dec.recent) || [];
+    var total = s.total || 0;
+
+    // 매칭 라벨별 색상
+    var MLAB = {
+      hit:     { label:'적중', bg:'#d1fae5', fg:'#065f46' },
+      partial: { label:'부분', bg:'#fed7aa', fg:'#9a3412' },
+      miss:    { label:'빗나감', bg:'#fecaca', fg:'#991b1b' },
+      pending: { label:'대기', bg:'#f3f4f6', fg:'#6b7280' }
+    };
+    var SLAB = { pending:'대기', decided:'결정함', reflected:'회고완료' };
+
+    var rateTxt = (s.match_rate === null || s.match_rate === undefined)
+      ? '–'
+      : Math.round(s.match_rate) + '%';
+
+    // 매칭 분포 — 간이 가로 바
+    var hit = s.hit || 0, par = s.partial || 0, mis = s.miss || 0;
+    var matchSum = hit + par + mis;
+    var distBar = '';
+    if (matchSum > 0) {
+      distBar =
+        '<div style="display:flex;height:8px;border-radius:4px;overflow:hidden;background:#f3f4f6;margin-top:8px;">' +
+          (hit ? '<span style="background:#10b981;width:' + ((hit/matchSum)*100).toFixed(1) + '%;"></span>' : '') +
+          (par ? '<span style="background:#f59e0b;width:' + ((par/matchSum)*100).toFixed(1) + '%;"></span>' : '') +
+          (mis ? '<span style="background:#ef4444;width:' + ((mis/matchSum)*100).toFixed(1) + '%;"></span>' : '') +
+        '</div>' +
+        '<div style="display:flex;gap:8px;font-size:10.5px;color:#6b7280;margin-top:5px;flex-wrap:wrap;">' +
+          '<span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#10b981;margin-right:3px;"></span>적중 ' + hit + '</span>' +
+          '<span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#f59e0b;margin-right:3px;"></span>부분 ' + par + '</span>' +
+          '<span><span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:#ef4444;margin-right:3px;"></span>빗나감 ' + mis + '</span>' +
+        '</div>';
+    }
+
+    var statRow =
+      '<div style="display:flex;gap:14px;flex-wrap:wrap;font-size:11.5px;color:#4b5563;align-items:baseline;">' +
+        '<span><b style="font-size:16px;color:#4c1d95;">' + total + '</b> 전체</span>' +
+        '<span><b>' + (s.pending || 0) + '</b> 대기</span>' +
+        '<span><b style="color:#3b82f6;">' + (s.decided || 0) + '</b> 결정함</span>' +
+        '<span><b style="color:#10b981;">' + (s.reflected || 0) + '</b> 회고</span>' +
+        '<span style="margin-left:auto;font-size:13px;"><b style="color:#047857;font-size:18px;">' + rateTxt + '</b> <span style="color:#9ca3af;">매칭률</span></span>' +
+      '</div>';
+
+    var recentHtml = '';
+    if (rec.length === 0) {
+      recentHtml = '<div style="font-size:12px;color:#6b7280;margin-top:8px;">' +
+                     (total === 0
+                       ? '아직 등록된 결정이 없습니다. "결정 추적" 메뉴에서 첫 결정을 등록해보세요.'
+                       : '표시할 최근 항목이 없습니다.') +
+                   '</div>';
+    } else {
+      recentHtml = '<div style="display:flex;flex-direction:column;gap:6px;margin-top:10px;">';
+      rec.forEach(function (r) {
+        var st = r.state || 'pending';
+        var ml = MLAB[r.match_label || 'pending'];
+        var scoreTxt = '';
+        if (st === 'reflected' && r.match_score !== null && r.match_score !== undefined) {
+          scoreTxt = ' ' + Math.round(r.match_score) + '%';
+        }
+        recentHtml +=
+          '<div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:#f9fafb;border-radius:8px;font-size:12px;">' +
+            '<span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:' +
+              (st === 'reflected' ? '#10b981' : st === 'decided' ? '#3b82f6' : '#9ca3af') + ';"></span>' +
+            '<span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:#1f2937;">' +
+              esc(r.title || '(제목 없음)') +
+              ' <span style="color:#9ca3af;font-size:10.5px;">· ' + esc(SLAB[st] || st) + '</span>' +
+            '</span>' +
+            (st === 'reflected'
+              ? '<span style="font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:5px;background:' + ml.bg + ';color:' + ml.fg + ';">' +
+                ml.label + scoreTxt + '</span>'
+              : '') +
+          '</div>';
+      });
+      recentHtml += '</div>';
+    }
+
+    var openBtn = '<button type="button" id="me-db-open-dec" ' +
+                  'style="background:#a855f7;color:#fff;border:0;padding:5px 12px;border-radius:6px;font-size:11.5px;font-weight:600;cursor:pointer;">' +
+                  '<i class="fas fa-arrow-right"></i> 결정 추적' +
+                  '</button>';
+
+    return '' +
+      '<div class="me-db-card full">' +
+        '<div class="me-db-card-head">' +
+          '<h3><i class="fas fa-scale-balanced"></i> 의사결정 추적</h3>' +
+          openBtn +
+        '</div>' +
+        statRow +
+        distBar +
+        recentHtml +
       '</div>';
   }
 

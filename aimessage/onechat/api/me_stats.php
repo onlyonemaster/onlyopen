@@ -281,6 +281,61 @@ $health = [
 ];
 
 // ────────────────────────────────────────────────────────────
+// 8.5) [C-2] Decisions 집계 (panic_lock 무관 — 결정은 메타정보)
+// ────────────────────────────────────────────────────────────
+$dec_sum = mes_q1($db, "
+    SELECT
+      COUNT(*) AS total_cnt,
+      SUM(CASE WHEN (chosen_option IS NULL OR chosen_option = '')
+               AND (outcome_text IS NULL OR outcome_text = '') THEN 1 ELSE 0 END) AS pending_cnt,
+      SUM(CASE WHEN (chosen_option IS NOT NULL AND chosen_option <> '')
+               AND (outcome_text IS NULL OR outcome_text = '') THEN 1 ELSE 0 END) AS decided_cnt,
+      SUM(CASE WHEN outcome_text IS NOT NULL AND outcome_text <> '' THEN 1 ELSE 0 END) AS reflected_cnt,
+      SUM(CASE WHEN match_label='hit'     THEN 1 ELSE 0 END) AS hit_cnt,
+      SUM(CASE WHEN match_label='partial' THEN 1 ELSE 0 END) AS partial_cnt,
+      SUM(CASE WHEN match_label='miss'    THEN 1 ELSE 0 END) AS miss_cnt,
+      ROUND(AVG(CASE WHEN match_label IN ('hit','partial','miss')
+                     AND match_score IS NOT NULL THEN match_score END), 2) AS match_rate
+    FROM Gn_onechat_me_decisions
+    WHERE mem_id COLLATE utf8mb4_0900_ai_ci = '{$le}'
+      AND is_deleted = 0
+");
+$decisions_agg = [
+    'total'     => (int)($dec_sum['total_cnt']     ?? 0),
+    'pending'   => (int)($dec_sum['pending_cnt']   ?? 0),
+    'decided'   => (int)($dec_sum['decided_cnt']   ?? 0),
+    'reflected' => (int)($dec_sum['reflected_cnt'] ?? 0),
+    'hit'       => (int)($dec_sum['hit_cnt']       ?? 0),
+    'partial'   => (int)($dec_sum['partial_cnt']   ?? 0),
+    'miss'      => (int)($dec_sum['miss_cnt']      ?? 0),
+    'match_rate'=> isset($dec_sum['match_rate']) && $dec_sum['match_rate'] !== null
+                    ? (float)$dec_sum['match_rate'] : null,
+];
+
+// 최근 결정 3건 (대시보드 위젯용)
+$dec_recent = mes_qall($db, "
+    SELECT idx, title, chosen_option, ai_recommended, match_label, match_score,
+           DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') AS created_at,
+           DATE_FORMAT(outcome_at, '%Y-%m-%d %H:%i') AS outcome_at
+    FROM Gn_onechat_me_decisions
+    WHERE mem_id COLLATE utf8mb4_0900_ai_ci = '{$le}'
+      AND is_deleted = 0
+    ORDER BY idx DESC
+    LIMIT 3
+");
+foreach ($dec_recent as &$dr) {
+    $dr['idx'] = (int)$dr['idx'];
+    if (isset($dr['match_score']) && $dr['match_score'] !== null) {
+        $dr['match_score'] = (float)$dr['match_score'];
+    }
+    // state 파생
+    if (!empty($dr['outcome_at'])) $dr['state'] = 'reflected';
+    else if (!empty($dr['chosen_option'])) $dr['state'] = 'decided';
+    else $dr['state'] = 'pending';
+}
+unset($dr);
+
+// ────────────────────────────────────────────────────────────
 // 9) 응답 정리
 // ────────────────────────────────────────────────────────────
 $avatar_pub = [
@@ -296,18 +351,22 @@ $avatar_pub = [
 ];
 
 onechat_json([
-    'ok'       => true,
-    'locked'   => $is_locked,
-    'avatar'   => $avatar_pub,
-    'total'    => $total,
-    'scope'    => $scope,
-    'privacy'  => $privacy,
-    'category' => $category,
-    'timeline' => $timeline,
-    'recent'   => $recent,
-    'health'   => $health,
+    'ok'        => true,
+    'locked'    => $is_locked,
+    'avatar'    => $avatar_pub,
+    'total'     => $total,
+    'scope'     => $scope,
+    'privacy'   => $privacy,
+    'category'  => $category,
+    'timeline'  => $timeline,
+    'recent'    => $recent,
+    'health'    => $health,
+    'decisions' => [
+        'summary' => $decisions_agg,
+        'recent'  => $dec_recent,
+    ],
     'meta'     => [
         'generated_at' => date('Y-m-d H:i:s'),
-        'version'      => 'C-3.1',
+        'version'      => 'C-3.2', // C-2 decisions 통합
     ],
 ], 200);
