@@ -66,6 +66,56 @@
 }
 .me-dp-close:hover{ background:#f3f4f6; }
 
+/* ── [C-6] 헤더 액션 영역 + Panic Lock 토글 ─────────────────── */
+.me-dp-head-actions{
+  display:flex; align-items:center; gap:6px;
+}
+.me-dp-lock-btn{
+  display:inline-flex; align-items:center; gap:6px;
+  border:1.5px solid var(--dp-border);
+  background:#fff;
+  color:var(--dp-text2);
+  font-family:inherit; font-size:12px; font-weight:600;
+  padding:6px 10px; border-radius:8px;
+  cursor:pointer;
+  transition:all .15s ease;
+}
+.me-dp-lock-btn:hover{
+  background:#f9fafb;
+  border-color:#9ca3af;
+}
+.me-dp-lock-btn .me-dp-lock-label{
+  font-size:12px;
+}
+.me-dp-lock-btn i{ font-size:13px; }
+
+/* 잠금 활성 상태 — 빨강 (위험 강조) */
+.me-dp-lock-btn.locked{
+  background:#fef2f2;
+  color:#991b1b;
+  border-color:#fecaca;
+  box-shadow:0 2px 8px rgba(239,68,68,.20);
+  animation: meDpLockPulse 2.4s ease-in-out infinite;
+}
+.me-dp-lock-btn.locked:hover{
+  background:#fee2e2;
+  border-color:#f87171;
+}
+@keyframes meDpLockPulse{
+  0%, 100% { box-shadow:0 2px 8px rgba(239,68,68,.20); }
+  50%      { box-shadow:0 2px 14px rgba(239,68,68,.45); }
+}
+
+.me-dp-lock-btn:disabled{
+  opacity:.55; cursor:not-allowed;
+}
+
+/* 모바일 — 헤더 폭 좁을 때 라벨 숨김 */
+@media (max-width:520px){
+  .me-dp-lock-btn .me-dp-lock-label{ display:none; }
+  .me-dp-lock-btn{ padding:6px 8px; }
+}
+
 /* ── 스코프 토글 (탭바) ─────────────────────────────────────── */
 .me-dp-scope{
   display:flex; gap:6px;

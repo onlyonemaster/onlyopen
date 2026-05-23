@@ -19,8 +19,9 @@
   // ──────────────────────────────────────────────────────────────
   // 상수
   // ──────────────────────────────────────────────────────────────
-  var API_URL  = '/aimessage/onechat/api/me_data.php';
-  var CSS_HREF = '/aimessage/onechat/css/me_data_panel.css';
+  var API_URL    = '/aimessage/onechat/api/me_data.php';
+  var AVATAR_API = '/aimessage/onechat/api/me_avatar.php';   // [C-6] 아바타 상태 API
+  var CSS_HREF   = '/aimessage/onechat/css/me_data_panel.css';
   var PANEL_ID = 'meDataPanelOverlay';
   var TOAST_ID = 'meDataPanelToast';
   var PAGE_SIZE = 30;
@@ -139,9 +140,15 @@
       + '<div class="me-dp-sheet" role="dialog" aria-modal="true" aria-label="데이터 풀 관리">'
       +   '<div class="me-dp-head">'
       +     '<h3><i class="fas fa-shield-alt"></i> 데이터 풀 · 공개범위 관리</h3>'
-      +     '<button type="button" class="me-dp-close" id="meDpClose" aria-label="닫기">'
-      +       '<i class="fas fa-times"></i>'
-      +     '</button>'
+      +     '<div class="me-dp-head-actions">'
+      +       '<button type="button" class="me-dp-lock-btn" id="meDpLockBtn" aria-label="비상 잠금 토글" title="비상 잠금 (Panic Lock)">'
+      +         '<i class="fas fa-lock-open"></i>'
+      +         '<span class="me-dp-lock-label">잠금</span>'
+      +       '</button>'
+      +       '<button type="button" class="me-dp-close" id="meDpClose" aria-label="닫기">'
+      +         '<i class="fas fa-times"></i>'
+      +       '</button>'
+      +     '</div>'
       +   '</div>'
 
       +   '<div class="me-dp-scope" id="meDpScope">'
@@ -336,6 +343,27 @@
     });
   }
 
+  // [C-6] 아바타 상태 API
+  function apiAvatarGet() {
+    return fetch(AVATAR_API, {
+      method: 'GET',
+      credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    }).then(function (r) {
+      return r.json().then(function (j) { return { code: r.status, body: j }; });
+    });
+  }
+  function apiAvatarAction(action) {
+    return fetch(AVATAR_API, {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+      body: JSON.stringify({ action: action })
+    }).then(function (r) {
+      return r.json().then(function (j) { return { code: r.status, body: j }; });
+    });
+  }
+
   // ──────────────────────────────────────────────────────────────
   // 액션
   // ──────────────────────────────────────────────────────────────
@@ -370,6 +398,7 @@
       renderBanner();
       renderList();
       updateSubmitButton();
+      updateLockButton();  // [C-6] me_data GET 응답의 locked 필드로 잠금 버튼 동기화
     }).catch(function (e) {
       state.loading = false;
       console.error('[me-dp] GET 실패:', e);
@@ -430,6 +459,7 @@
         state.locked = true;
         renderBanner();
         updateSubmitButton();
+        updateLockButton();  // [C-6] 잠금 버튼 즉시 갱신
         setStatus('Panic Lock 상태입니다. 입력이 차단됩니다.', 'error');
         toast('Panic Lock 상태', 'error');
       } else {
@@ -443,6 +473,74 @@
       setStatus('네트워크 오류', 'error');
       toast('네트워크 오류', 'error');
     });
+  }
+
+  // [C-6] Panic Lock 토글
+  function handleLockToggle() {
+    var btn = $('meDpLockBtn');
+    if (!btn) return;
+
+    if (state.locked) {
+      // 잠금 해제 — 확인은 가볍게
+      if (!confirm('비상 잠금을 해제할까요?\n민감도 4·5 항목이 다시 노출되며, 신규 입력이 허용됩니다.')) return;
+      btn.disabled = true;
+      apiAvatarAction('unlock').then(function (res) {
+        btn.disabled = false;
+        if (res.code === 200 && res.body && res.body.ok) {
+          state.locked = !!res.body.locked;
+          state.avatarStatus = res.body.status || 'active';
+          updateLockButton();
+          renderBanner();
+          updateSubmitButton();
+          toast('비상 잠금이 해제되었습니다.', 'ok');
+          loadList(false);  // 민감도 4·5 항목 복귀를 위해 재조회
+        } else {
+          var msg = (res.body && res.body.error && (res.body.error.message || res.body.error)) || ('잠금 해제 실패 (' + res.code + ')');
+          toast(msg, 'error');
+        }
+      }).catch(function (e) {
+        btn.disabled = false;
+        console.error('[me-dp/C6] unlock 실패:', e);
+        toast('네트워크 오류', 'error');
+      });
+    } else {
+      // 잠금 활성화 — 강하게 확인
+      if (!confirm('비상 잠금(Panic Lock)을 활성화할까요?\n\n· 민감도 4·5 데이터가 즉시 숨겨집니다.\n· 새 데이터 입력이 차단됩니다.\n· 언제든 잠금 해제할 수 있습니다.')) return;
+      btn.disabled = true;
+      apiAvatarAction('lock').then(function (res) {
+        btn.disabled = false;
+        if (res.code === 200 && res.body && res.body.ok) {
+          state.locked = !!res.body.locked;
+          state.avatarStatus = res.body.status || 'locked';
+          updateLockButton();
+          renderBanner();
+          updateSubmitButton();
+          toast('비상 잠금이 활성화되었습니다.', 'ok');
+          loadList(false);  // 민감도 4·5 자동 제외 적용을 위해 재조회
+        } else {
+          var msg = (res.body && res.body.error && (res.body.error.message || res.body.error)) || ('잠금 실패 (' + res.code + ')');
+          toast(msg, 'error');
+        }
+      }).catch(function (e) {
+        btn.disabled = false;
+        console.error('[me-dp/C6] lock 실패:', e);
+        toast('네트워크 오류', 'error');
+      });
+    }
+  }
+
+  function updateLockButton() {
+    var btn = $('meDpLockBtn');
+    if (!btn) return;
+    if (state.locked) {
+      btn.classList.add('locked');
+      btn.innerHTML = '<i class="fas fa-lock"></i><span class="me-dp-lock-label">잠김</span>';
+      btn.setAttribute('title', '비상 잠금 활성 — 클릭하여 해제');
+    } else {
+      btn.classList.remove('locked');
+      btn.innerHTML = '<i class="fas fa-lock-open"></i><span class="me-dp-lock-label">잠금</span>';
+      btn.setAttribute('title', '비상 잠금 활성화 (Panic Lock)');
+    }
   }
 
   function handleDelete(idx) {
@@ -498,6 +596,10 @@
   // ──────────────────────────────────────────────────────────────
   function bindEvents() {
     $('meDpClose').addEventListener('click', close);
+
+    // [C-6] 잠금 토글 버튼
+    var lockBtn = $('meDpLockBtn');
+    if (lockBtn) lockBtn.addEventListener('click', handleLockToggle);
 
     // ESC 키
     document.addEventListener('keydown', escHandler);
