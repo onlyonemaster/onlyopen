@@ -93,15 +93,21 @@ function mea_to_response($row) {
 }
 
 // ────────────────────────────────────────────────────────────
-// 메서드 라우팅
+// 메서드 라우팅 (POST?_method=PUT 패턴도 지원 — C-2와 일관)
 // ────────────────────────────────────────────────────────────
 $method = $_SERVER['REQUEST_METHOD'];
+if ($method === 'POST' && !empty($_GET['_method'])) {
+    $m = strtoupper((string)$_GET['_method']);
+    if ($m === 'PUT') $method = 'PUT';
+}
 
 try {
     if ($method === 'GET') {
         handle_get($db, $login_id);
     } elseif ($method === 'POST') {
         handle_post($db, $login_id);
+    } elseif ($method === 'PUT') {
+        handle_put($db, $login_id);
     } else {
         onechat_json(['error' => 'Method Not Allowed'], 405);
     }
@@ -224,5 +230,100 @@ function handle_post($db, $login_id) {
         'locked'       => ($next_status === 'locked'),
         'paused'       => ($next_status === 'paused'),
         'avatar'       => $refreshed,
+    ]);
+}
+
+// ════════════════════════════════════════════════════════════
+// PUT — 정체성 수정 (avatar_name / identity_text)
+//   호출 방법:
+//     POST /me_avatar.php?_method=PUT
+//     body(JSON): { "avatar_name"?:string, "identity_text"?:string }
+//   응답: { ok:true, updated:{...}, avatar:{...} }
+//   규칙:
+//     · panic_lock 상태(locked)에서는 423 차단 (정체성도 사적 정보)
+//     · 보낸 필드만 부분 수정 (PATCH 의미론)
+//     · avatar_name: 1~80자, 빈 문자열 금지
+//     · identity_text: 0~2000자 (NULL 허용 — 빈 문자열 보내면 NULL로 저장)
+// ════════════════════════════════════════════════════════════
+function handle_put($db, $login_id) {
+    // 1) body 파싱
+    $raw = file_get_contents('php://input');
+    $b = [];
+    if ($raw !== '' && $raw !== false) {
+        $j = json_decode($raw, true);
+        if (is_array($j)) $b = $j;
+    }
+    if (empty($b)) $b = $_POST ?: [];
+
+    // 2) 현재 상태 로드 + Panic Lock 차단
+    $row = mea_load_avatar($db, $login_id);
+    if (!$row) {
+        onechat_json(['error' => '아바타 행을 가져올 수 없습니다.'], 500);
+    }
+    if (($row['status'] ?? '') === 'locked') {
+        onechat_json([
+            'error' => ['code' => 'LOCKED', 'message' => '잠금 상태에서는 정체성을 수정할 수 없습니다.']
+        ], 423);
+    }
+
+    // 3) 입력 검증 — 보낸 필드만 처리
+    $sets = [];
+    $updated = [];
+
+    if (array_key_exists('avatar_name', $b)) {
+        $name = trim((string)$b['avatar_name']);
+        if ($name === '') {
+            onechat_json(['error' => [
+                'code' => 'INVALID_NAME',
+                'message' => '아바타 이름은 비울 수 없습니다.'
+            ]], 400);
+        }
+        // avatar_name 컬럼은 VARCHAR(60) — DB 스키마에 맞춰 60자로 클램프
+        if (mb_strlen($name) > 60) {
+            $name = mb_substr($name, 0, 60);
+        }
+        $sets[] = "avatar_name = '" . mea_esc($db, $name) . "'";
+        $updated['avatar_name'] = $name;
+    }
+
+    if (array_key_exists('identity_text', $b)) {
+        $txt = (string)$b['identity_text'];
+        // 정규화: 빈 문자열 → NULL
+        if (trim($txt) === '') {
+            $sets[] = "identity_text = NULL";
+            $updated['identity_text'] = null;
+        } else {
+            if (mb_strlen($txt) > 2000) $txt = mb_substr($txt, 0, 2000);
+            $sets[] = "identity_text = '" . mea_esc($db, $txt) . "'";
+            $updated['identity_text'] = $txt;
+        }
+    }
+
+    if (empty($sets)) {
+        onechat_json(['error' => [
+            'code' => 'NO_FIELDS',
+            'message' => '수정할 필드(avatar_name 또는 identity_text)가 없습니다.'
+        ]], 400);
+    }
+
+    // 4) UPDATE
+    $sets[] = "updated_at = NOW()";
+    $le = mea_esc($db, $login_id);
+    $sql = "UPDATE Gn_onechat_me_avatar
+            SET " . implode(', ', $sets) . "
+            WHERE mem_id COLLATE utf8mb4_0900_ai_ci = '{$le}'
+            LIMIT 1";
+    if (!$db->query($sql)) {
+        onechat_json(['error' => 'UPDATE 실패: ' . $db->error], 500);
+    }
+
+    // 5) 최신 상태 반환
+    mea_recalc_counts($db, $login_id);
+    $refreshed = mea_to_response(mea_load_avatar($db, $login_id));
+
+    onechat_json([
+        'ok'      => true,
+        'updated' => $updated,
+        'avatar'  => $refreshed,
     ]);
 }
