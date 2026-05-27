@@ -39,28 +39,6 @@
 
     <div class="sidebar-divider"></div>
 
-    <!-- ============================================================
-         [ME-B1] 운영 모드 전환 토글 (2026-05-23, 라이프 아바타 도입)
-         외부 아바타(공개·고객용) ↔ 나의 아바타(내부·개인용) 전환
-         localStorage: oneMeMode = 'public' | 'private'
-         하위 메뉴들이 이 값을 읽어 데이터 소스를 자동 전환
-    ============================================================ -->
-    <div class="sb-mode-card" id="sbModeCard">
-      <span class="sb-mode-new-badge">NEW</span>
-      <div class="sb-mode-label"><i class="fas fa-toggle-on"></i> 운영 모드</div>
-      <div class="sb-mode-toggle">
-        <button type="button" class="sb-mode-btn active pub" data-mode="public" id="sbModePublicBtn">
-          <i class="fas fa-globe"></i> 외부 아바타
-        </button>
-        <button type="button" class="sb-mode-btn me" data-mode="private" id="sbModePrivateBtn">
-          <i class="fas fa-brain"></i> 나의 아바타
-        </button>
-      </div>
-      <div class="sb-mode-hint" id="sbModeHint">고객·후원자와 대화하는 공개 아바타입니다</div>
-    </div>
-
-    <div class="sidebar-divider"></div>
-
     <!-- 메뉴 1: 대시보드 -->
     <button class="sidebar-menu-item" id="sbDashboardBtn">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">
@@ -112,6 +90,21 @@
       </div>
     </button>
 
+    <!-- 메뉴 5-2: 예약관리설정 (v_rs · STEP C-5) -->
+    <button class="sidebar-menu-item" id="sbReserveBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">예약관리설정</span>
+        <span class="sidebar-menu-desc">한 번 설정 · 챗봇이 자동 예약 응대</span>
+      </div>
+      <div class="sb-companion-status" id="sbReserveStatus">
+        <span class="scs-dot off" id="sbReserveDot"></span>
+        <span class="scs-label" id="sbReserveLabel">OFF</span>
+      </div>
+    </button>
+
     <!-- 메뉴 6: 테마 설정 -->
     <button class="sidebar-menu-item" id="sbThemeBtn">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#10b981,#059669);">
@@ -153,18 +146,6 @@
       <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
     </button>
 
-    <!-- 메뉴 8: 예약 관리 설정 -->
-    <button class="sidebar-menu-item" id="sbReserveBtn">
-      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#14b8a6,#0d9488);">
-        <i class="fas fa-calendar-check"></i>
-      </div>
-      <div class="sidebar-menu-text">
-        <span class="sidebar-menu-title">예약 관리 설정</span>
-        <span class="sidebar-menu-desc">예약 접수 · 시간 설정 · 알림 관리</span>
-      </div>
-      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
-    </button>
-
     <!-- 메뉴 7: 구독하기 -->
     <button class="sidebar-menu-item" id="sbSubscribeBtn" onclick="location.href='/aimessage/onechat/subscribe.html'">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#f97316,#ea580c);">
@@ -180,37 +161,6 @@
       <span>AIvote OneChat v1.0</span>
     </div>
   </nav>
-
-  <!-- ========== 예약 관리 설정 패널 (전체화면) ========== -->
-  <div class="reserve-overlay" id="reserveOverlay"></div>
-  <div class="reserve-panel" id="reservePanel">
-    <div class="reserve-panel-header">
-      <button class="reserve-back-btn" id="reserveCloseBtn">
-        <i class="fas fa-arrow-left"></i>
-      </button>
-      <div class="reserve-header-title">
-        <i class="fas fa-calendar-check" style="color:#14b8a6;"></i>
-        <span>예약 관리 설정</span>
-      </div>
-      <button class="reserve-save-btn" id="reserveSaveBtn">
-        <i class="fas fa-check"></i> 저장
-      </button>
-    </div>
-
-    <!-- 탭 내비게이션 -->
-    <div class="reserve-tabs" id="reserveTabs">
-      <button class="reserve-tab active" data-tab="basic"><i class="fas fa-cog"></i> 기본 설정</button>
-      <button class="reserve-tab" data-tab="time"><i class="fas fa-clock"></i> 시간 설정</button>
-      <button class="reserve-tab" data-tab="noti"><i class="fas fa-bell"></i> 알림 설정</button>
-    </div>
-
-    <div class="reserve-panel-body" id="reservePanelBody">
-      <!-- JS로 렌더링 -->
-      <div class="reserve-loading" id="reserveLoading">
-        <i class="fas fa-spinner fa-spin"></i> 설정을 불러오는 중...
-      </div>
-    </div>
-  </div>
 
   <!-- ========== AI 동행 설정 패널 ========== -->
   <div class="companion-overlay" id="companionOverlay"></div>
@@ -235,6 +185,165 @@
       </div>
     </div>
   </div>
+
+  <!-- ════════════════════════════════════════════════════════════════
+       예약관리설정 패널 (v_rs · STEP C-6)
+       구조: 좌측 6항목 메뉴 + 우측 중앙 캔버스 (캘린더 핵심)
+       ════════════════════════════════════════════════════════════════ -->
+  <div class="companion-overlay" id="reserveOverlay"></div>
+  <div class="companion-panel" id="reservePanel">
+    <div class="companion-panel-header">
+      <button class="companion-back-btn" id="reserveCloseBtn"><i class="fas fa-arrow-left"></i></button>
+      <div class="companion-header-title">
+        <i class="fas fa-calendar-check" style="color:#3b82f6;"></i>
+        <span>예약관리설정</span>
+      </div>
+      <button class="companion-save-btn" id="reserveSaveBtn">
+        <i class="fas fa-check"></i> 저장
+      </button>
+    </div>
+
+    <div class="companion-panel-body" id="reservePanelBody">
+      <div class="companion-loading" id="reserveLoading">
+        <i class="fas fa-spinner fa-spin"></i> 설정을 불러오는 중...
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 예약관리설정 전용 스타일 (스코프드: #reservePanel 안에서만 적용) ── -->
+  <style>
+    /* 패널 폭: 항상 전체 화면 (좌측메뉴 + 중앙캔버스) */
+    #reservePanel { max-width: 100% !important; width: 100% !important; }
+    #reservePanel .rs-layout { display:grid; grid-template-columns: 180px 1fr; min-height: calc(100vh - 60px); }
+    @media (max-width: 700px) { #reservePanel .rs-layout { grid-template-columns: 1fr; } #reservePanel .rs-side { display:none; } }
+
+    #reservePanel .rs-side {
+      background: rgba(0,0,0,0.25); border-right: 1px solid rgba(255,255,255,0.06); padding: 12px 6px;
+    }
+    #reservePanel .rs-side-title { font-size: 10px; color: #64748b; padding: 4px 12px 10px; font-weight: 800; letter-spacing: 0.6px; }
+    #reservePanel .rs-side-item {
+      display:flex; align-items:center; gap:10px; padding:10px 12px; margin-bottom:2px;
+      background:transparent; border:none; width:100%; border-radius:9px; cursor:pointer;
+      color:#94a3b8; font-size:13px; font-family:inherit; transition:all .15s; text-align:left;
+    }
+    #reservePanel .rs-side-item:hover { background:rgba(255,255,255,0.06); color:#e2e8f0; }
+    #reservePanel .rs-side-item.active {
+      background:linear-gradient(135deg,rgba(59,130,246,0.20),rgba(168,85,247,0.10));
+      color:#e2e8f0; border-left:3px solid #3b82f6; padding-left:9px;
+    }
+    #reservePanel .rs-side-item .ic {
+      width:26px; height:26px; border-radius:7px; display:flex; align-items:center; justify-content:center;
+      font-size:11px; background:rgba(255,255,255,0.06); color:#cbd5e1;
+    }
+    #reservePanel .rs-side-item.active .ic { background:linear-gradient(135deg,#3b82f6,#a78bfa); color:white; }
+    #reservePanel .rs-side-item .lbl { flex:1; font-weight:600; }
+
+    #reservePanel .rs-central { padding: 18px; overflow-y: auto; max-height: calc(100vh - 60px); }
+    #reservePanel .rs-view { display:none; }
+    #reservePanel .rs-view.active { display:block; }
+    #reservePanel .rs-head { display:flex; align-items:center; justify-content:space-between; padding-bottom:12px; margin-bottom:14px; border-bottom:1px solid rgba(255,255,255,0.07); }
+    #reservePanel .rs-head h2 { margin:0; font-size:16px; color:#e2e8f0; display:flex; align-items:center; gap:8px; }
+    #reservePanel .rs-help { font-size:11px; color:#94a3b8; margin-top:3px; }
+
+    #reservePanel .rs-card {
+      background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+      border-radius:11px; padding:14px; margin-bottom:11px;
+    }
+    #reservePanel .rs-card .h { display:flex; align-items:center; gap:8px; margin-bottom:10px; }
+    #reservePanel .rs-card .h .lab { font-size:13px; font-weight:700; color:#e2e8f0; }
+    #reservePanel .rs-card .h .b { font-size:10px; padding:2px 7px; border-radius:99px; font-weight:700; background:rgba(59,130,246,0.18); color:#60a5fa; }
+    #reservePanel .rs-card .hint { font-size:11px; color:#94a3b8; margin-top:6px; line-height:1.5; }
+    #reservePanel .rs-row { display:flex; align-items:center; gap:8px; margin-bottom:8px; flex-wrap:wrap; }
+    #reservePanel .rs-row label { font-size:12px; color:#94a3b8; min-width:62px; }
+    #reservePanel .rs-in {
+      background:rgba(0,0,0,0.30); border:1px solid rgba(255,255,255,0.1); color:#e2e8f0;
+      padding:7px 10px; border-radius:7px; font-size:13px; font-family:inherit;
+    }
+    #reservePanel .rs-in.time { width:90px; }
+    #reservePanel .rs-in.num { width:70px; text-align:center; }
+    #reservePanel .rs-in.txt { flex:1; min-width:130px; }
+    #reservePanel .rs-day-toggle { display:flex; gap:4px; flex-wrap:wrap; }
+    #reservePanel .rs-day {
+      padding:5px 10px; font-size:11px; font-weight:700; border-radius:6px;
+      background:rgba(255,255,255,0.05); color:#94a3b8; border:1px solid transparent;
+      cursor:pointer; user-select:none;
+    }
+    #reservePanel .rs-day.on { background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:white; border-color:#3b82f6; }
+
+    #reservePanel .rs-bo {
+      display:flex; align-items:center; gap:8px; padding:7px 10px; margin-bottom:5px;
+      background:rgba(239,68,68,0.08); border:1px solid rgba(239,68,68,0.2);
+      border-radius:7px; font-size:12px; color:#fca5a5;
+    }
+    #reservePanel .rs-bo .x { margin-left:auto; cursor:pointer; opacity:0.7; }
+    #reservePanel .rs-add-btn {
+      width:100%; padding:9px; background:rgba(255,255,255,0.04); border:1px dashed rgba(255,255,255,0.22);
+      color:#94a3b8; border-radius:8px; cursor:pointer; font-size:12px;
+    }
+
+    /* 캘린더 */
+    #reservePanel .rs-cal-head { display:flex; align-items:center; justify-content:space-between; margin-bottom:10px; }
+    #reservePanel .rs-cal-nav { display:flex; gap:6px; }
+    #reservePanel .rs-cal-nav button {
+      background:rgba(255,255,255,0.05); border:none; color:#cbd5e1; padding:6px 10px; border-radius:7px; cursor:pointer; font-size:13px;
+    }
+    #reservePanel .rs-cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; }
+    #reservePanel .rs-cal-cell {
+      aspect-ratio: 1.0; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.05); border-radius:7px;
+      padding:6px; font-size:11px; color:#cbd5e1; display:flex; flex-direction:column; gap:3px;
+    }
+    #reservePanel .rs-cal-cell.dim { opacity:0.3; }
+    #reservePanel .rs-cal-cell.today { border-color:#3b82f6; box-shadow: inset 0 0 0 1px #3b82f6; }
+    #reservePanel .rs-cal-cell .d { font-weight:800; font-size:13px; color:#e2e8f0; }
+    #reservePanel .rs-cal-cell .stat { font-size:9px; color:#60a5fa; }
+    #reservePanel .rs-cal-cell .stat.full { color:#fca5a5; }
+
+    /* 트리거 */
+    #reservePanel .rs-trig {
+      background:rgba(255,255,255,0.03); border:1px solid rgba(255,255,255,0.07);
+      border-radius:11px; padding:13px; margin-bottom:11px;
+    }
+    #reservePanel .rs-trig-head { display:flex; align-items:center; gap:8px; margin-bottom:9px; }
+    #reservePanel .rs-trig-head .t-lab { flex:1; font-size:13px; font-weight:700; color:#e2e8f0; }
+    #reservePanel .rs-trig-head .t-tag { font-size:9px; padding:2px 7px; border-radius:99px; font-weight:700; background:rgba(59,130,246,0.2); color:#60a5fa; }
+
+    /* 토글 스위치 */
+    #reservePanel .rs-sw {
+      position:relative; width:38px; height:22px; background:rgba(255,255,255,0.1); border-radius:99px; cursor:pointer; transition: all 0.2s;
+    }
+    #reservePanel .rs-sw::after { content:''; position:absolute; top:2px; left:2px; width:18px; height:18px; background:white; border-radius:50%; transition: all 0.2s; }
+    #reservePanel .rs-sw.on { background:linear-gradient(135deg,#3b82f6,#1d4ed8); }
+    #reservePanel .rs-sw.on::after { left:18px; }
+
+    /* 예약현황 통계 */
+    #reservePanel .rs-stat-grid { display:grid; grid-template-columns: repeat(4, 1fr); gap:8px; margin-bottom:12px; }
+    @media (max-width: 600px) { #reservePanel .rs-stat-grid { grid-template-columns: repeat(2, 1fr); } }
+    #reservePanel .rs-stat {
+      background:rgba(255,255,255,0.04); padding:11px; border-radius:9px; border:1px solid rgba(255,255,255,0.06);
+    }
+    #reservePanel .rs-stat .n { font-size:22px; font-weight:800; color:#e2e8f0; font-family:'JetBrains Mono', monospace; }
+    #reservePanel .rs-stat .l { font-size:10px; color:#94a3b8; margin-top:3px; }
+    #reservePanel .rs-bk-row {
+      display:flex; align-items:center; gap:8px; padding:9px 11px;
+      background:rgba(255,255,255,0.03); border-radius:8px; margin-bottom:5px; font-size:12px; color:#cbd5e1;
+    }
+    #reservePanel .rs-bk-row .id { font-family:'JetBrains Mono',monospace; color:#64748b; }
+    #reservePanel .rs-bk-row .st { margin-left:auto; font-size:9px; padding:2px 7px; border-radius:99px; font-weight:700; }
+    #reservePanel .rs-bk-row .st.confirmed { background:rgba(16,185,129,0.18); color:#34d399; }
+    #reservePanel .rs-bk-row .st.cancelled { background:rgba(239,68,68,0.18); color:#fca5a5; }
+    #reservePanel .rs-bk-row .st.done      { background:rgba(148,163,184,0.18); color:#cbd5e1; }
+    #reservePanel .rs-bk-row .st.pending   { background:rgba(245,158,11,0.18); color:#fbbf24; }
+
+    /* 알림 채널 */
+    #reservePanel .rs-notif-row { display:flex; align-items:center; gap:10px; padding:8px 0; }
+    #reservePanel .rs-pill { font-size:10px; padding:3px 9px; border-radius:99px; font-weight:700; }
+    #reservePanel .rs-pill.cust { background:rgba(59,130,246,0.18); color:#60a5fa; }
+    #reservePanel .rs-pill.oper { background:rgba(16,185,129,0.18); color:#34d399; }
+    #reservePanel .rs-pill.adm  { background:rgba(168,85,247,0.18); color:#c4b5fd; }
+
+    /* 푸터 정보 */
+    #reservePanel .rs-foot { padding: 14px; border-top:1px solid rgba(255,255,255,0.06); font-size:10px; color:#64748b; text-align:center; }
+  </style>
 
   <!-- 모바일 앱 래퍼 -->
   <div class="app-wrapper">
@@ -1882,14 +1991,10 @@
   <script src="js/dm.js?v=0514b"></script>
   <script src="js/quota.js?v=0506a"></script>
   <!-- data.js 제거: mock 데이터 완전 삭제, 모든 데이터 서버 API로 전환 -->
-  <script src="js/main.js?v=0522home"></script>
+  <script src="js/main.js?v=rs1c14"></script>
   <script src="js/learn.js?v=0428i"></script>
-  <script src="js/api.js?v=0505c"></script>
+  <script src="js/api.js?v=rs1c14"></script>
   <script src="js/voice.js?v=0505i"></script>
-  <!-- [ME-B1] 운영 모드 전환 토글 (2026-05-23, 라이프 아바타) -->
-  <script src="js/me_mode.js?v=0523a"></script>
-  <!-- [ME-B2] 채팅 리스트 최상단 '나의 아바타' 핀 카드 (2026-05-23, 라이프 아바타) -->
-  <script src="js/me_chat_pin.js?v=0523a"></script>
 
   <!-- ========== 알림 패널 ========== -->
   <div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>

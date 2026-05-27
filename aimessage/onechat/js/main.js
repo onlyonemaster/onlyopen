@@ -4704,451 +4704,6 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
 // =====================================================
-// 예약 관리 설정 패널
-// =====================================================
-document.addEventListener('DOMContentLoaded', function () {
-
-  var sbReserveBtn    = document.getElementById('sbReserveBtn');
-  var reservePanel    = document.getElementById('reservePanel');
-  var reserveOverlay  = document.getElementById('reserveOverlay');
-  var reserveCloseBtn = document.getElementById('reserveCloseBtn');
-  var reserveSaveBtn  = document.getElementById('reserveSaveBtn');
-  var reserveBody     = document.getElementById('reservePanelBody');
-  var reserveTabs     = document.getElementById('reserveTabs');
-
-  if (!reservePanel) return;
-
-  var rvConfig   = {};
-  var rvSmsIdx   = 0;
-  var rvBotName  = '';
-  var rvActiveTab = 'basic';
-
-  // sms_idx 자동 감지
-  function getActiveSmsIdx() {
-    if (typeof window.chatSmsIdx !== 'undefined' && window.chatSmsIdx > 0) return window.chatSmsIdx;
-    try {
-      var stored = localStorage.getItem('onechat_sms_idx');
-      if (stored && parseInt(stored) > 0) return parseInt(stored);
-    } catch(e){}
-    try {
-      var params = new URLSearchParams(location.search);
-      var p = params.get('sms_idx');
-      if (p && parseInt(p) > 0) return parseInt(p);
-    } catch(e){}
-    return 0;
-  }
-
-  function openReservePanel() {
-    if (typeof closeSidebar === 'function') closeSidebar();
-    reservePanel.classList.add('open');
-    reserveOverlay.classList.add('open');
-    document.body.style.overflow = 'hidden';
-    history.pushState({ menu: 'reserve' }, '', '#reserve');
-    rvSmsIdx = getActiveSmsIdx();
-    rvActiveTab = 'basic';
-    if (reserveTabs) {
-      reserveTabs.querySelectorAll('.reserve-tab').forEach(function(t) {
-        t.classList.remove('active');
-        if (t.dataset.tab === 'basic') t.classList.add('active');
-      });
-    }
-    loadReserveConfig();
-  }
-
-  function closeReservePanel() {
-    reservePanel.classList.remove('open');
-    reserveOverlay.classList.remove('open');
-    document.body.style.overflow = '';
-  }
-
-  if (sbReserveBtn)    sbReserveBtn.addEventListener('click', openReservePanel);
-  if (reserveCloseBtn) reserveCloseBtn.addEventListener('click', closeReservePanel);
-  if (reserveOverlay)  reserveOverlay.addEventListener('click', closeReservePanel);
-  if (reserveSaveBtn)  reserveSaveBtn.addEventListener('click', saveReserveConfig);
-
-  // 탭 클릭
-  if (reserveTabs) {
-    reserveTabs.addEventListener('click', function(e) {
-      var tab = e.target.closest('.reserve-tab');
-      if (!tab) return;
-      collectCurrentTab();
-      rvActiveTab = tab.dataset.tab;
-      reserveTabs.querySelectorAll('.reserve-tab').forEach(function(t) { t.classList.remove('active'); });
-      tab.classList.add('active');
-      renderReserveTab();
-    });
-  }
-
-  function loadReserveConfig() {
-    reserveBody.innerHTML = '<div class="reserve-loading"><i class="fas fa-spinner fa-spin"></i> 설정을 불러오는 중...</div>';
-    var url = './api/reserve_setting.php';
-    if (rvSmsIdx > 0) url += '?sms_idx=' + rvSmsIdx;
-
-    fetch(url, { credentials: 'include' })
-      .then(function(r){ return r.json(); })
-      .then(function(data) {
-        if (!data.success) throw new Error(data.error || '로드 실패');
-        rvConfig  = data.config || {};
-        rvSmsIdx  = data.sms_idx || rvSmsIdx;
-        rvBotName = data.bot_name || '';
-        try { localStorage.setItem('onechat_sms_idx', rvSmsIdx); } catch(e){}
-        renderReserveTab();
-      })
-      .catch(function(err) {
-        reserveBody.innerHTML = '<div class="reserve-loading" style="color:#ef4444;"><i class="fas fa-exclamation-triangle"></i> ' + escRv(err.message) + '</div>';
-      });
-  }
-
-  function renderReserveTab() {
-    switch (rvActiveTab) {
-      case 'basic': renderBasicTab(); break;
-      case 'time':  renderTimeTab();  break;
-      case 'noti':  renderNotiTab();  break;
-      default:      renderBasicTab();
-    }
-  }
-
-  function renderBasicTab() {
-    var c = rvConfig;
-    var html =
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-robot"></i> 현재 채팅방</div>' +
-      '<div style="font-size:14px;font-weight:600;color:var(--text-primary);padding:4px 0;">' +
-        '<i class="fas fa-comment-dots" style="color:#14b8a6;margin-right:6px;"></i>' +
-        escRv(rvBotName || '채팅방 #' + rvSmsIdx) +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-power-off"></i> 예약 기능</div>' +
-      '<div class="rv-toggle-row">' +
-        '<div class="rv-toggle-info">' +
-          '<span class="rv-toggle-label">예약 접수 활성화</span>' +
-          '<span class="rv-toggle-desc">활성화하면 방문자가 채팅으로 예약할 수 있습니다</span>' +
-        '</div>' +
-        '<div class="rv-switch' + (c.is_enabled ? ' on' : '') + '" id="rvEnableSwitch">' +
-          '<div class="rv-switch-knob"></div>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-check-double"></i> 예약 확정 방식</div>' +
-      '<div class="rv-toggle-row">' +
-        '<div class="rv-toggle-info">' +
-          '<span class="rv-toggle-label">자동 확정</span>' +
-          '<span class="rv-toggle-desc">OFF이면 관리자가 수동으로 확정합니다</span>' +
-        '</div>' +
-        '<div class="rv-switch' + (c.auto_confirm ? ' on' : '') + '" id="rvAutoConfirm">' +
-          '<div class="rv-switch-knob"></div>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-th-large"></i> 슬롯 설정</div>' +
-      '<div style="margin-bottom:12px;">' +
-        '<label class="rv-label">슬롯당 시간 (분)</label>' +
-        '<div class="rv-hint">한 예약 건당 소요 시간</div>' +
-        '<select class="rv-select" id="rvSlotDuration">' +
-          _rvDurationOptions(c.slot_duration || 30) +
-        '</select>' +
-      '</div>' +
-      '<div>' +
-        '<label class="rv-label">슬롯당 최대 예약 수</label>' +
-        '<div class="rv-hint">같은 시간에 받을 수 있는 최대 예약 건수</div>' +
-        '<select class="rv-select" id="rvMaxPerSlot">' +
-          _rvMaxOptions(c.max_per_slot || 1) +
-        '</select>' +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-tag"></i> 예약 명칭</div>' +
-      '<div class="rv-hint">방문자에게 보이는 예약 이름 (예: 상담 예약, 진료 예약)</div>' +
-      '<input type="text" class="rv-input" id="rvReserveName" value="' + escRv(c.reserve_name || '예약') + '" placeholder="예: 상담 예약" />' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-info-circle"></i> 예약 안내 메시지</div>' +
-      '<div class="rv-hint">예약 시 방문자에게 보여지는 안내 메시지</div>' +
-      '<textarea class="rv-textarea" id="rvGuide" rows="4" placeholder="예) 예약 후 변경은 24시간 전까지 가능합니다.">' + escRv(c.reserve_guide || '') + '</textarea>' +
-    '</div>' +
-    '<div class="rv-bottom-spacer"></div>';
-
-    reserveBody.innerHTML = html;
-    _bindRvSwitches();
-  }
-
-  function renderTimeTab() {
-    var c = rvConfig;
-    var days = c.work_days || [1,2,3,4,5];
-
-    var html =
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-business-time"></i> 영업 시간</div>' +
-      '<div class="rv-hint">예약 접수가 가능한 시간대</div>' +
-      '<div class="rv-time-row">' +
-        '<select class="rv-select" id="rvOpenHour">' + _rvTimeOptions(c.open_hour != null ? c.open_hour : 9) + '</select>' +
-        '<span class="rv-time-sep">시 ~</span>' +
-        '<select class="rv-select" id="rvCloseHour">' + _rvTimeOptions(c.close_hour != null ? c.close_hour : 18) + '</select>' +
-        '<span class="rv-time-sep">시</span>' +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-utensils"></i> 점심시간</div>' +
-      '<div class="rv-toggle-row" style="margin-bottom:12px;">' +
-        '<div class="rv-toggle-info">' +
-          '<span class="rv-toggle-label">점심시간 제외</span>' +
-          '<span class="rv-toggle-desc">점심시간에는 예약을 받지 않습니다</span>' +
-        '</div>' +
-        '<div class="rv-switch' + (c.lunch_enabled ? ' on' : '') + '" id="rvLunchEnabled">' +
-          '<div class="rv-switch-knob"></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="rv-time-row">' +
-        '<select class="rv-select" id="rvLunchStart">' + _rvTimeOptions(c.lunch_start != null ? c.lunch_start : 12) + '</select>' +
-        '<span class="rv-time-sep">시 ~</span>' +
-        '<select class="rv-select" id="rvLunchEnd">' + _rvTimeOptions(c.lunch_end != null ? c.lunch_end : 13) + '</select>' +
-        '<span class="rv-time-sep">시</span>' +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-calendar-week"></i> 영업 요일</div>' +
-      '<div class="rv-hint">예약을 받을 요일을 선택하세요</div>' +
-      '<div class="rv-day-grid">' +
-        _rvDayChips(days) +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-ban"></i> 취소 기한</div>' +
-      '<div class="rv-hint">예약 취소가 가능한 최소 시간 (예약 시간 기준)</div>' +
-      '<select class="rv-select" id="rvCancelNotice">' +
-        _rvCancelOptions(c.cancel_notice_hours != null ? c.cancel_notice_hours : 24) +
-      '</select>' +
-    '</div>' +
-    '<div class="rv-bottom-spacer"></div>';
-
-    reserveBody.innerHTML = html;
-    _bindRvSwitches();
-    _bindRvDayChips();
-  }
-
-  function renderNotiTab() {
-    var c = rvConfig;
-    var html =
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-bell"></i> 알림 설정</div>' +
-      '<div class="rv-toggle-row" style="margin-bottom:14px;">' +
-        '<div class="rv-toggle-info">' +
-          '<span class="rv-toggle-label">새 예약 알림</span>' +
-          '<span class="rv-toggle-desc">새로운 예약이 들어오면 알림</span>' +
-        '</div>' +
-        '<div class="rv-switch' + (c.noti_new_reserve ? ' on' : '') + '" id="rvNotiNew">' +
-          '<div class="rv-switch-knob"></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="rv-toggle-row" style="margin-bottom:14px;">' +
-        '<div class="rv-toggle-info">' +
-          '<span class="rv-toggle-label">취소 알림</span>' +
-          '<span class="rv-toggle-desc">예약 취소 시 알림</span>' +
-        '</div>' +
-        '<div class="rv-switch' + (c.noti_cancel ? ' on' : '') + '" id="rvNotiCancel">' +
-          '<div class="rv-switch-knob"></div>' +
-        '</div>' +
-      '</div>' +
-      '<div class="rv-toggle-row">' +
-        '<div class="rv-toggle-info">' +
-          '<span class="rv-toggle-label">리마인드 알림</span>' +
-          '<span class="rv-toggle-desc">예약 시간 전 방문자에게 리마인드 발송</span>' +
-        '</div>' +
-        '<div class="rv-switch' + (c.noti_remind ? ' on' : '') + '" id="rvNotiRemind">' +
-          '<div class="rv-switch-knob"></div>' +
-        '</div>' +
-      '</div>' +
-    '</div>' +
-    '<div class="rv-section">' +
-      '<div class="rv-section-title"><i class="fas fa-clock"></i> 리마인드 시간</div>' +
-      '<div class="rv-hint">예약 시간 몇 시간 전에 알림을 보낼지 설정</div>' +
-      '<select class="rv-select" id="rvRemindHours">' +
-        '<option value="0.5"' + (c.remind_hours == 0.5 ? ' selected' : '') + '>30분 전</option>' +
-        '<option value="1"' + (c.remind_hours == 1 ? ' selected' : '') + '>1시간 전</option>' +
-        '<option value="2"' + (c.remind_hours == 2 ? ' selected' : '') + '>2시간 전</option>' +
-        '<option value="3"' + (c.remind_hours == 3 ? ' selected' : '') + '>3시간 전</option>' +
-        '<option value="6"' + (c.remind_hours == 6 ? ' selected' : '') + '>6시간 전</option>' +
-        '<option value="12"' + (c.remind_hours == 12 ? ' selected' : '') + '>12시간 전</option>' +
-        '<option value="24"' + (c.remind_hours == 24 ? ' selected' : '') + '>24시간 전 (1일 전)</option>' +
-      '</select>' +
-    '</div>' +
-    '<div class="rv-bottom-spacer"></div>';
-
-    reserveBody.innerHTML = html;
-    _bindRvSwitches();
-  }
-
-  function _bindRvSwitches() {
-    reserveBody.querySelectorAll('.rv-switch').forEach(function(sw) {
-      sw.addEventListener('click', function() { this.classList.toggle('on'); });
-    });
-  }
-
-  function _bindRvDayChips() {
-    reserveBody.querySelectorAll('.rv-day-chip').forEach(function(chip) {
-      chip.addEventListener('click', function() { this.classList.toggle('active'); });
-    });
-  }
-
-  function collectCurrentTab() {
-    switch (rvActiveTab) {
-      case 'basic':
-        var sw = document.getElementById('rvEnableSwitch');
-        if (sw) rvConfig.is_enabled = sw.classList.contains('on');
-        var ac = document.getElementById('rvAutoConfirm');
-        if (ac) rvConfig.auto_confirm = ac.classList.contains('on');
-        var sd = document.getElementById('rvSlotDuration');
-        if (sd) rvConfig.slot_duration = parseInt(sd.value);
-        var mp = document.getElementById('rvMaxPerSlot');
-        if (mp) rvConfig.max_per_slot = parseInt(mp.value);
-        var rn = document.getElementById('rvReserveName');
-        if (rn) rvConfig.reserve_name = rn.value.trim();
-        var rg = document.getElementById('rvGuide');
-        if (rg) rvConfig.reserve_guide = rg.value.trim();
-        break;
-      case 'time':
-        var oh = document.getElementById('rvOpenHour');
-        if (oh) rvConfig.open_hour = parseInt(oh.value);
-        var chx = document.getElementById('rvCloseHour');
-        if (chx) rvConfig.close_hour = parseInt(chx.value);
-        var le = document.getElementById('rvLunchEnabled');
-        if (le) rvConfig.lunch_enabled = le.classList.contains('on');
-        var ls = document.getElementById('rvLunchStart');
-        if (ls) rvConfig.lunch_start = parseInt(ls.value);
-        var lend = document.getElementById('rvLunchEnd');
-        if (lend) rvConfig.lunch_end = parseInt(lend.value);
-        var cn = document.getElementById('rvCancelNotice');
-        if (cn) rvConfig.cancel_notice_hours = parseInt(cn.value);
-        var activeDays = [];
-        reserveBody.querySelectorAll('.rv-day-chip.active').forEach(function(chip) {
-          activeDays.push(parseInt(chip.dataset.day));
-        });
-        rvConfig.work_days = activeDays;
-        break;
-      case 'noti':
-        var nn = document.getElementById('rvNotiNew');
-        if (nn) rvConfig.noti_new_reserve = nn.classList.contains('on');
-        var nc = document.getElementById('rvNotiCancel');
-        if (nc) rvConfig.noti_cancel = nc.classList.contains('on');
-        var nr = document.getElementById('rvNotiRemind');
-        if (nr) rvConfig.noti_remind = nr.classList.contains('on');
-        var rh = document.getElementById('rvRemindHours');
-        if (rh) rvConfig.remind_hours = parseFloat(rh.value);
-        break;
-    }
-  }
-
-  function saveReserveConfig() {
-    collectCurrentTab();
-    var payload = Object.assign({}, rvConfig);
-    payload.sms_idx = rvSmsIdx;
-
-    if (reserveSaveBtn) {
-      reserveSaveBtn.disabled = true;
-      reserveSaveBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 저장 중...';
-    }
-
-    fetch('./api/reserve_setting.php', {
-      method: 'POST',
-      credentials: 'include',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload),
-    })
-    .then(function(r){ return r.json(); })
-    .then(function(data) {
-      if (reserveSaveBtn) {
-        reserveSaveBtn.disabled = false;
-        reserveSaveBtn.innerHTML = '<i class="fas fa-check"></i> 저장';
-      }
-      if (data.success) {
-        showRvToast('저장되었습니다');
-      } else {
-        showRvToast('저장 실패: ' + (data.error || '알 수 없음'));
-      }
-    })
-    .catch(function(){
-      if (reserveSaveBtn) {
-        reserveSaveBtn.disabled = false;
-        reserveSaveBtn.innerHTML = '<i class="fas fa-check"></i> 저장';
-      }
-      showRvToast('네트워크 오류');
-    });
-  }
-
-  function showRvToast(msg) {
-    var t = document.getElementById('rvToast');
-    if (!t) {
-      t = document.createElement('div');
-      t.id = 'rvToast';
-      t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e293b;color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:9999;opacity:0;transition:opacity 0.3s;pointer-events:none;white-space:nowrap;max-width:90vw;text-align:center;box-shadow:0 4px 20px rgba(0,0,0,0.4);';
-      document.body.appendChild(t);
-    }
-    t.textContent = msg;
-    t.style.opacity = '1';
-    clearTimeout(t._timer);
-    t._timer = setTimeout(function(){ t.style.opacity = '0'; }, 2500);
-  }
-
-  function escRv(str) {
-    if (!str) return '';
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-
-  function _rvTimeOptions(selected) {
-    var html = '';
-    for (var h = 0; h <= 23; h++) {
-      html += '<option value="' + h + '"' + (h === selected ? ' selected' : '') + '>' + (h < 10 ? '0' : '') + h + ':00</option>';
-    }
-    return html;
-  }
-
-  function _rvDurationOptions(selected) {
-    var opts = [10, 15, 20, 30, 45, 60, 90, 120];
-    return opts.map(function(m) {
-      var label = m >= 60 ? (m/60) + '시간' : m + '분';
-      return '<option value="' + m + '"' + (m === selected ? ' selected' : '') + '>' + label + '</option>';
-    }).join('');
-  }
-
-  function _rvMaxOptions(selected) {
-    var html = '';
-    for (var i = 1; i <= 20; i++) {
-      html += '<option value="' + i + '"' + (i === selected ? ' selected' : '') + '>' + i + '건</option>';
-    }
-    return html;
-  }
-
-  function _rvDayChips(activeDays) {
-    var dayNames = ['일','월','화','수','목','금','토'];
-    var html = '';
-    for (var d = 0; d <= 6; d++) {
-      var isActive = activeDays.indexOf(d) !== -1;
-      html += '<div class="rv-day-chip' + (isActive ? ' active' : '') + '" data-day="' + d + '">' + dayNames[d] + '</div>';
-    }
-    return html;
-  }
-
-  function _rvCancelOptions(selected) {
-    var opts = [
-      { v: 1, l: '1시간 전' }, { v: 2, l: '2시간 전' }, { v: 3, l: '3시간 전' },
-      { v: 6, l: '6시간 전' }, { v: 12, l: '12시간 전' },
-      { v: 24, l: '24시간 전 (1일 전)' }, { v: 48, l: '48시간 전 (2일 전)' },
-    ];
-    return opts.map(function(o) {
-      return '<option value="' + o.v + '"' + (o.v === selected ? ' selected' : '') + '>' + o.l + '</option>';
-    }).join('');
-  }
-
-  window.openReservePanel = openReservePanel;
-
-}); // end DOMContentLoaded (reserve)
-
-
-
-// =====================================================
 // 해시 라우팅 - 초기 로드 및 뒤로가기 지원
 // =====================================================
 (function() {
@@ -5168,9 +4723,6 @@ document.addEventListener('DOMContentLoaded', function () {
       case '#broadcast':
         var bcBtn = document.getElementById('openBcMenuBtn');
         if (bcBtn) bcBtn.click();
-        break;
-      case '#reserve':
-        if (typeof openReservePanel === 'function') openReservePanel();
         break;
       case '#companion':
         if (typeof openCompanionPanel === 'function') openCompanionPanel();
@@ -5226,4 +4778,651 @@ document.addEventListener('DOMContentLoaded', function () {
 
   // 전역 노출 (외부에서도 해시 처리 가능)
   window.handleHashRoute = handleHash;
+})();
+
+
+// ════════════════════════════════════════════════════════════════════
+//  원챗 예약관리설정 모듈 (v_rs · STEP C-6)
+//  - 사이드바 → 예약관리설정 클릭 → 패널 열림
+//  - 좌측 6항목 메뉴(기본설정/캘린더/트리거/알림/AI동행/예약현황)
+//  - 중앙 캔버스가 메뉴에 따라 전환
+//  - 모든 변경은 즉시 API 저장
+// ════════════════════════════════════════════════════════════════════
+(function reserveModuleInit() {
+
+  // ── 컨텍스트 도우미 (Bug2 Fix: 다중 fallback + 비동기 API 조회) ──
+  // 현재 활성 채팅방의 sms_idx/request_idx를 얻는 함수.
+  // 여러 소스에서 fallback으로 탐색 (사용자가 채팅방을 이미 선택한 상태).
+  var _rsCtxCache = { sms_idx: 0, request_idx: 0 };
+
+  function rsGetCtx() {
+    // 1) 캐시에 값이 있으면 바로 반환
+    if (_rsCtxCache.sms_idx) return { sms_idx: _rsCtxCache.sms_idx, request_idx: _rsCtxCache.request_idx };
+
+    var s = 0, r = 0;
+
+    // 2) 원챗 전역 변수들 (다른 모듈이 설정한 값)
+    s = window.currentSmsIdx || (window.activeChat && window.activeChat.sms_idx) || 0;
+    r = window.currentRequestIdx || (window.activeChat && window.activeChat.request_idx) || 0;
+
+    // 3) 다른 모듈에서 사용하는 전역 변수 fallback
+    if (!s) s = (typeof contactSmsIdx !== 'undefined' && contactSmsIdx > 0) ? contactSmsIdx : 0;
+    if (!s) s = (typeof mySmsIdx !== 'undefined' && mySmsIdx > 0) ? mySmsIdx : 0;
+    if (!s) s = (typeof cbCurrentSmsIdx !== 'undefined' && cbCurrentSmsIdx > 0) ? cbCurrentSmsIdx : 0;
+    if (!s) s = (typeof cpSmsIdx !== 'undefined' && cpSmsIdx > 0) ? cpSmsIdx : 0;
+
+    // 4) URL 파라미터 (?sms_idx=X&request_idx=Y)
+    if (!s) {
+      try {
+        var params = new URLSearchParams(window.location.search);
+        s = parseInt(params.get('sms_idx') || '0', 10) || 0;
+        r = parseInt(params.get('request_idx') || '0', 10) || r;
+      } catch(e){}
+    }
+
+    // 5) DOM dataset fallback
+    if (!s) {
+      var chatScr = document.querySelector('[data-visitor-sms-idx]');
+      if (chatScr) s = parseInt(chatScr.getAttribute('data-visitor-sms-idx'), 10) || 0;
+    }
+    if (!s) {
+      var ck = document.querySelector('.chat-card[data-sms-idx]')
+            || document.querySelector('[data-sms-idx]');
+      if (ck) {
+        s = parseInt(ck.getAttribute('data-sms-idx'), 10) || 0;
+        if (!r) r = parseInt(ck.getAttribute('data-request-idx') || '0', 10) || 0;
+      }
+    }
+
+    // 6) localStorage fallback (이전 세션에서 저장된 값)
+    if (!s) {
+      try {
+        s = parseInt(localStorage.getItem('rs_sms_idx') || '0', 10) || 0;
+        r = parseInt(localStorage.getItem('rs_request_idx') || '0', 10) || r;
+      } catch(e){}
+    }
+
+    // 캐시에 저장
+    if (s) {
+      _rsCtxCache.sms_idx = s;
+      _rsCtxCache.request_idx = r;
+      try {
+        localStorage.setItem('rs_sms_idx', String(s));
+        if (r) localStorage.setItem('rs_request_idx', String(r));
+      } catch(e){}
+    }
+    return { sms_idx: s, request_idx: r };
+  }
+
+  // 비동기 컨텍스트 확보: 동기 rsGetCtx()가 실패하면 API로 챗봇 목록 조회
+  function rsGetCtxAsync() {
+    var ctx = rsGetCtx();
+    if (ctx.sms_idx) return Promise.resolve(ctx);
+    return fetch('./api/chatbot_setting.php', { credentials: 'include' })
+      .then(function(r){ return r.json(); })
+      .then(function(data){
+        var bots = data.bots || data.list || [];
+        if (data.success && bots.length > 0) {
+          _rsCtxCache.sms_idx = bots[0].sms_idx;
+          _rsCtxCache.request_idx = bots[0].request_idx || 0;
+          try {
+            localStorage.setItem('rs_sms_idx', String(_rsCtxCache.sms_idx));
+            if (_rsCtxCache.request_idx) localStorage.setItem('rs_request_idx', String(_rsCtxCache.request_idx));
+          } catch(e){}
+          return { sms_idx: _rsCtxCache.sms_idx, request_idx: _rsCtxCache.request_idx };
+        }
+        return { sms_idx: 0, request_idx: 0 };
+      })
+      .catch(function(){ return { sms_idx: 0, request_idx: 0 }; });
+  }
+
+  // 안전한 fetch wrapper (인증 쿠키 동반)
+  function rsApi(url, opts) {
+    opts = opts || {};
+    opts.credentials = 'include';
+    opts.headers = opts.headers || {};
+    if (opts.body && typeof opts.body === 'object' && !(opts.body instanceof FormData)) {
+      opts.headers['Content-Type'] = 'application/json';
+      opts.body = JSON.stringify(opts.body);
+    }
+    return fetch(url, opts).then(function(r) { return r.json().then(function(j){ j._http = r.status; return j; }); });
+  }
+
+  // 토스트
+  function rsToast(msg, kind) {
+    var t = document.createElement('div');
+    t.style.cssText = 'position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:'
+                    + (kind==='err'?'#dc2626':kind==='ok'?'#059669':'#1e293b')
+                    + ';color:#fff;padding:10px 20px;border-radius:20px;font-size:13px;z-index:99999;'
+                    + 'box-shadow:0 4px 24px rgba(0,0,0,0.4);max-width:90vw;text-align:center;white-space:pre-line;';
+    t.textContent = msg;
+    document.body.appendChild(t);
+    setTimeout(function(){ t.style.transition='opacity 0.4s'; t.style.opacity='0'; }, 2200);
+    setTimeout(function(){ t.remove(); }, 2700);
+  }
+
+  // ── 상태 (모듈 전역) ─────────────────────────────────
+  var rsState = {
+    activeView: 'basic',   // basic / cal / trig / notif / hook / status
+    config: null,
+    blackouts: [],
+    triggers: [],
+    slots: [],
+    slotsByDate: {},
+    bookings: [],
+    bookingStat: null,
+    calMonth: null,        // YYYY-MM
+  };
+
+  // ── 패널 열기/닫기 ───────────────────────────────────
+  function openReservePanel() {
+    if (typeof closeSidebar === 'function') closeSidebar();
+    var p = document.getElementById('reservePanel');
+    var o = document.getElementById('reserveOverlay');
+    if (!p || !o) return;
+    p.classList.add('open');
+    o.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    history.pushState({ menu: 'reserve' }, '', '#reserve');
+    renderReserveSkeleton();
+    rsLoadAll();
+  }
+  function closeReservePanel() {
+    var p = document.getElementById('reservePanel');
+    var o = document.getElementById('reserveOverlay');
+    if (p) p.classList.remove('open');
+    if (o) o.classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  // ── 스켈레톤 (좌측 메뉴 + 중앙 컨테이너) ────────────
+  function renderReserveSkeleton() {
+    var body = document.getElementById('reservePanelBody');
+    if (!body) return;
+    body.innerHTML = ''
+      + '<div class="rs-layout">'
+      +   '<aside class="rs-side">'
+      +     '<div class="rs-side-title">예약관리설정</div>'
+      +     rsSideItem('basic',  'fa-sliders-h',      '기본 설정')
+      +     rsSideItem('cal',    'fa-calendar-alt',   '캘린더')
+      +     rsSideItem('trig',   'fa-bolt',           '트리거')
+      +     rsSideItem('notif',  'fa-bell',           '알림')
+      +     rsSideItem('hook',   'fa-link',           'AI동행 연결')
+      +     rsSideItem('status', 'fa-list-check',     '예약현황')
+      +   '</aside>'
+      +   '<main class="rs-central" id="rsCentral">'
+      +     '<div class="rs-view active" data-view="loading"><i class="fas fa-spinner fa-spin"></i> 불러오는 중...</div>'
+      +   '</main>'
+      + '</div>'
+      + '<div class="rs-foot">설정은 자동 저장됩니다. 한 번 설정하면 챗봇이 자동으로 예약을 처리해요.</div>';
+    body.querySelectorAll('.rs-side-item').forEach(function(btn) {
+      btn.addEventListener('click', function() { rsSwitchView(btn.getAttribute('data-key')); });
+    });
+  }
+  function rsSideItem(key, icon, label) {
+    var on = (key === rsState.activeView) ? ' active' : '';
+    return '<button class="rs-side-item' + on + '" data-key="' + key + '">'
+         + '<span class="ic"><i class="fas ' + icon + '"></i></span>'
+         + '<span class="lbl">' + label + '</span></button>';
+  }
+  function rsSwitchView(key) {
+    rsState.activeView = key;
+    document.querySelectorAll('#reservePanel .rs-side-item').forEach(function(b) {
+      b.classList.toggle('active', b.getAttribute('data-key') === key);
+    });
+    rsRenderCentral();
+  }
+
+  // ── 초기 로딩: config / triggers / slots / bookings ─
+  function rsLoadAll() {
+    // 동기 시도 후 실패하면 비동기 API로 자동 탐색
+    var ctx = rsGetCtx();
+    if (ctx.sms_idx) {
+      _doRsLoad(ctx);
+    } else {
+      rsGetCtxAsync().then(function(asyncCtx) {
+        if (asyncCtx.sms_idx) {
+          _doRsLoad(asyncCtx);
+        } else {
+          var c = document.getElementById('rsCentral');
+          if (c) c.innerHTML = '<div style="padding:30px;text-align:center;color:#94a3b8;">'
+            + '<i class="fas fa-exclamation-triangle" style="font-size:30px;margin-bottom:10px;display:block;color:#fbbf24;"></i>'
+            + '채팅방을 찾을 수 없습니다.<br><span style="font-size:11px;">새로고침 후 다시 시도해주세요.</span></div>';
+        }
+      });
+    }
+  }
+  function _doRsLoad(ctx) {
+    var q = 'sms_idx=' + ctx.sms_idx + '&request_idx=' + (ctx.request_idx || 0);
+    Promise.all([
+      rsApi('/aimessage/onechat/api/reserve_config.php?' + q),
+      rsApi('/aimessage/onechat/api/reserve_trigger.php?' + q),
+      rsApi('/aimessage/onechat/api/reserve_slot.php?'   + q),
+      rsApi('/aimessage/onechat/api/reserve_booking.php?'+ q),
+    ]).then(function(arr) {
+      if (arr[0].ok) { rsState.config = arr[0].config; rsState.blackouts = arr[0].blackouts || []; }
+      if (arr[1].ok)   rsState.triggers = arr[1].triggers || [];
+      if (arr[2].ok) { rsState.slots = arr[2].slots || []; rsState.slotsByDate = arr[2].by_date || {}; }
+      if (arr[3].ok) { rsState.bookings = arr[3].bookings || []; rsState.bookingStat = arr[3].stat || null; }
+      // 사이드바 상태 업데이트 (ON/OFF 도트)
+      var dot = document.getElementById('sbReserveDot');
+      var lbl = document.getElementById('sbReserveLabel');
+      if (dot && lbl && rsState.config) {
+        var on = !!rsState.config.enabled;
+        dot.classList.toggle('on', on); dot.classList.toggle('off', !on);
+        lbl.textContent = on ? 'ON' : 'OFF';
+      }
+      rsRenderCentral();
+    }).catch(function(e) {
+      rsToast('불러오기 실패: ' + e.message, 'err');
+    });
+  }
+
+  // ── 중앙 캔버스 렌더링 (메뉴별) ─────────────────────
+  function rsRenderCentral() {
+    var c = document.getElementById('rsCentral');
+    if (!c) return;
+    var v = rsState.activeView;
+    if (v === 'basic')      c.innerHTML = rsViewBasic();
+    else if (v === 'cal')   c.innerHTML = rsViewCalendar();
+    else if (v === 'trig')  c.innerHTML = rsViewTriggers();
+    else if (v === 'notif') c.innerHTML = rsViewNotif();
+    else if (v === 'hook')  c.innerHTML = rsViewHook();
+    else if (v === 'status')c.innerHTML = rsViewStatus();
+    bindViewEvents(v);
+  }
+
+  /* ════════ View 1: 기본설정 ════════ */
+  function rsViewBasic() {
+    var cfg = rsState.config || {};
+    var days = (cfg.work_days || '1,2,3,4,5').split(',').map(function(s){return parseInt(s,10);});
+    var dayLbl = ['일','월','화','수','목','금','토'];
+    var bos = rsState.blackouts || [];
+    return ''
+      + '<div class="rs-head"><div><h2><i class="fas fa-sliders-h"></i> 기본 설정</h2><div class="rs-help">한 번 설정하면 챗봇이 알아서 예약을 받아요.</div></div></div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">예약 기능</span><span class="b">ON/OFF</span></div>'
+      +   '<div class="rs-row"><label>활성화</label><div class="rs-sw ' + (cfg.enabled?'on':'') + '" data-field="enabled"></div><span class="hint" style="margin:0">' + (cfg.enabled?'예약 받는 중':'꺼짐') + '</span></div>'
+      +   '<div class="rs-row"><label>가게/장소</label><input class="rs-in txt" data-field="place_name" value="' + esc(cfg.place_name) + '" placeholder="예: 마리네 카페" /></div>'
+      +   '<div class="rs-row"><label>전화</label><input class="rs-in txt" data-field="place_phone" value="' + esc(cfg.place_phone) + '" placeholder="010-..." /></div>'
+      + '</div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">일과시간</span><span class="b">필수</span></div>'
+      +   '<div class="rs-row"><label>요일</label><div class="rs-day-toggle" id="rsDayToggle">'
+      +     dayLbl.map(function(l,i){return '<span class="rs-day' + (days.indexOf(i)>=0?' on':'') + '" data-d="' + i + '">' + l + '</span>';}).join('')
+      +   '</div></div>'
+      +   '<div class="rs-row"><label>시작</label><input type="time" class="rs-in time" data-field="work_start" value="' + (cfg.work_start||'10:00').slice(0,5) + '" />'
+      +     '<label>종료</label><input type="time" class="rs-in time" data-field="work_end" value="' + (cfg.work_end||'19:00').slice(0,5) + '" /></div>'
+      + '</div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">슬롯 + 동시수용</span><span class="b">필수</span></div>'
+      +   '<div class="rs-row"><label>슬롯</label><input type="number" class="rs-in num" data-field="slot_minutes" value="' + (cfg.slot_minutes||30) + '" min="5" max="240" />분'
+      +     '<label style="margin-left:10px">동시</label><input type="number" class="rs-in num" data-field="capacity" value="' + (cfg.capacity||1) + '" min="1" max="500" />명</div>'
+      +   '<div class="hint">슬롯 길이마다 예약 단위가 생성되고, 동시수용은 같은 시간에 받을 수 있는 인원수예요.</div>'
+      + '</div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">제외시간 (점심/휴무 등)</span><span class="b">선택</span></div>'
+      +   '<div class="rs-bo-list" id="rsBoList">'
+      +     (bos.length ? bos.map(function(b){return '<div class="rs-bo">' + esc(b.label||'제외') + ' · ' + esc(b.kind) + (b.weekday!==null?(' · '+dayLbl[b.weekday]):'') + ' · ' + esc((b.time_from||'')+'~'+(b.time_to||'')) + '<i class="fas fa-times x" data-bo-del="' + b.id + '"></i></div>';}).join('')
+                    : '<div style="font-size:11px;color:#64748b;padding:6px;">등록된 제외시간이 없습니다.</div>')
+      +   '</div>'
+      +   '<button class="rs-add-btn" id="rsAddBo"><i class="fas fa-plus"></i> 제외시간 추가</button>'
+      + '</div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">부가 정책</span><span class="b">선택</span></div>'
+      +   '<div class="rs-row"><label>리드타임</label><input type="number" class="rs-in num" data-field="lead_time_min" value="' + (cfg.lead_time_min||60) + '" min="0" />분 전까지 예약 가능</div>'
+      +   '<div class="rs-row"><label>예약 한도</label><input type="number" class="rs-in num" data-field="max_advance_days" value="' + (cfg.max_advance_days||30) + '" min="1" />일 앞까지</div>'
+      +   '<div class="rs-row"><label>취소 가능</label><input type="number" class="rs-in num" data-field="cancel_until_hours" value="' + (cfg.cancel_until_hours||24) + '" min="0" />시간 전까지</div>'
+      +   '<div class="rs-row"><label>봇 인사말</label><input class="rs-in txt" data-field="bot_intro" value="' + esc(cfg.bot_intro) + '" /></div>'
+      + '</div>';
+  }
+
+  /* ════════ View 2: 캘린더 (핵심 시각화) ════════ */
+  function rsViewCalendar() {
+    var now = new Date();
+    if (!rsState.calMonth) rsState.calMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
+    var [y, m] = rsState.calMonth.split('-').map(Number);
+    var first = new Date(y, m-1, 1);
+    var last  = new Date(y, m, 0);
+    var startW = first.getDay();
+    var byD = rsState.slotsByDate || {};
+    var todayStr = now.toISOString().slice(0,10);
+
+    var cells = '';
+    for (var i = 0; i < startW; i++) cells += '<div class="rs-cal-cell dim"></div>';
+    for (var d = 1; d <= last.getDate(); d++) {
+      var ds = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
+      var info = byD[ds];
+      var statTxt = info ? (info.open + '/' + info.total) : '–';
+      var statCls = info && info.full > 0 && info.open === 0 ? 'full' : '';
+      var todayCls = (ds === todayStr) ? ' today' : '';
+      cells += '<div class="rs-cal-cell' + todayCls + '" data-cal-date="' + ds + '"><div class="d">' + d + '</div><div class="stat ' + statCls + '">' + statTxt + '</div></div>';
+    }
+
+    var todayBks = (rsState.bookings || []).filter(function(b){ return b.slot_date === todayStr; });
+
+    return ''
+      + '<div class="rs-head"><div><h2><i class="fas fa-calendar-alt"></i> 캘린더</h2><div class="rs-help">하루별 슬롯 가용 현황 (열림/전체)</div></div></div>'
+      + '<div class="rs-card">'
+      +   '<div class="rs-cal-head"><div style="font-size:15px;font-weight:800;">' + y + '년 ' + m + '월</div>'
+      +     '<div class="rs-cal-nav"><button data-cal-prev>◀</button><button data-cal-today>오늘</button><button data-cal-next>▶</button></div></div>'
+      +   '<div class="rs-cal-grid">'
+      +     ['일','월','화','수','목','금','토'].map(function(d){return '<div style="text-align:center;font-size:10px;color:#64748b;padding:4px 0;font-weight:700;">'+d+'</div>';}).join('')
+      +     cells
+      +   '</div>'
+      + '</div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">오늘 예약 (' + todayBks.length + '건)</span></div>'
+      +   (todayBks.length ? todayBks.map(rsBkRow).join('') : '<div style="font-size:11px;color:#64748b;padding:6px;">오늘 예약 없음</div>')
+      + '</div>';
+  }
+  function rsBkRow(b) {
+    return '<div class="rs-bk-row"><span class="id">#' + b.id + '</span>'
+         + '<span>' + esc(b.customer_name || '고객') + ' · ' + (b.slot_time||'').slice(0,5) + ' · ' + b.headcount + '명</span>'
+         + '<span class="st ' + b.status + '">' + b.status + '</span></div>';
+  }
+
+  /* ════════ View 3: 트리거 ════════ */
+  function rsViewTriggers() {
+    var tMap = {};
+    (rsState.triggers || []).forEach(function(t){ tMap[t.trigger_type] = t; });
+    var defs = [
+      ['manual',    '수동 트리거',  '고객이 키워드를 말하면 즉시'],
+      ['mood',      '분위기 감지',  '대화에서 신호 감지'],
+      ['companion', 'AI 동행 주기', '자연스러운 시간에 자발 제안'],
+      ['interest',  '관심사 매칭',  'ME가 관심사와 매칭'],
+    ];
+    return ''
+      + '<div class="rs-head"><div><h2><i class="fas fa-bolt"></i> 트리거 (왜 말 걸지)</h2><div class="rs-help">각 트리거는 "왜 말 걸었나" 합리적 이유를 함께 전달합니다 (마케팅 아님)</div></div></div>'
+      + defs.map(function(d){
+          var t = tMap[d[0]] || {};
+          return '<div class="rs-trig">'
+               + '<div class="rs-trig-head"><span class="t-lab">' + d[1] + '</span><span class="t-tag">' + d[2] + '</span><div class="rs-sw ' + (t.enabled?'on':'') + '" data-trig-enabled="' + d[0] + '"></div></div>'
+               + (d[0]==='manual'    ? '<div class="rs-row"><label>키워드</label><input class="rs-in txt" data-trig-field="keywords" data-trig-type="manual" value="' + esc(t.keywords) + '" placeholder="예약,예약하고싶어"/></div>' : '')
+               + (d[0]==='mood'      ? '<div class="rs-row"><label>신호</label><input class="rs-in txt" data-trig-field="mood_signals" data-trig-type="mood" value="' + esc(t.mood_signals) + '" placeholder="놀러가고싶다,쉬고싶다"/></div>' : '')
+               + (d[0]==='companion' ? '<div class="rs-row"><label>주기</label><input type="number" class="rs-in num" data-trig-field="companion_periodic_days" data-trig-type="companion" value="' + (t.companion_periodic_days||14) + '" min="1"/>일</div>' : '')
+               + (d[0]==='interest'  ? '<div class="rs-row"><label>관심태그</label><input class="rs-in txt" data-trig-field="interest_tags" data-trig-type="interest" value="' + esc(t.interest_tags) + '" placeholder="카페,공방,체험"/></div>' : '')
+               + '<div class="rs-row"><label>쿨다운</label><input type="number" class="rs-in num" data-trig-field="cooldown_hours" data-trig-type="' + d[0] + '" value="' + (t.cooldown_hours||24) + '" min="0"/>시간</div>'
+               + '<div class="rs-row"><label>이유 템플릿</label><input class="rs-in txt" data-trig-field="reason_template" data-trig-type="' + d[0] + '" value="' + esc(t.reason_template) + '" /></div>'
+               + '<div class="rs-row"><label>메시지</label><input class="rs-in txt" data-trig-field="message_template" data-trig-type="' + d[0] + '" value="' + esc(t.message_template) + '" /></div>'
+               + '</div>';
+        }).join('');
+  }
+
+  /* ════════ View 4: 알림 ════════ */
+  function rsViewNotif() {
+    return ''
+      + '<div class="rs-head"><div><h2><i class="fas fa-bell"></i> 3-Way 알림</h2><div class="rs-help">예약/취소 시 고객·운영자·관리자 모두 챗봇 알림 발송</div></div></div>'
+      + '<div class="rs-card">'
+      +   '<div class="rs-notif-row"><span class="rs-pill cust">고객</span><span style="font-size:12px;color:#cbd5e1;">예약 확정 안내 + 변경/취소 방법</span></div>'
+      +   '<div class="rs-notif-row"><span class="rs-pill oper">운영자</span><span style="font-size:12px;color:#cbd5e1;">신규 예약 알림 + 트리거 종류</span></div>'
+      +   '<div class="rs-notif-row"><span class="rs-pill adm">관리자</span><span style="font-size:12px;color:#cbd5e1;">감사 로그 + 시스템 모니터링용</span></div>'
+      +   '<div class="hint">현재는 챗봇 채널로 즉시 발송. SMS/PUSH는 Phase 2에서 확장 예정.</div>'
+      + '</div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">최근 알림 로그</span></div>'
+      +   '<div style="font-size:11px;color:#64748b;padding:6px;">예약 발생 시 자동 기록됩니다. (예약현황 메뉴에서 확인)</div>'
+      + '</div>';
+  }
+
+  /* ════════ View 5: AI 동행 연결 ════════ */
+  function rsViewHook() {
+    var stages = [
+      ['post_book',    '예약 직후 (~1분)',   '안내사항 확인'],
+      ['before_24h',   '24시간 전',         '일정 재확인'],
+      ['same_day_2h',  '당일 2시간 전',      '길안내'],
+      ['after_7d',     '7일 후',            '만족도 케어 (마케팅 아님)'],
+      ['after_30d',    '30일 후',           '자연스러운 재방문 제안'],
+    ];
+    return ''
+      + '<div class="rs-head"><div><h2><i class="fas fa-link"></i> AI 동행 연결</h2><div class="rs-help">예약 후 5단계 자동 후속대화 (모두 "왜 말 걸었나" 포함)</div></div></div>'
+      + '<div class="rs-card">'
+      +   stages.map(function(s){
+            return '<div class="rs-notif-row"><span class="rs-pill cust">' + s[1] + '</span><span style="font-size:12px;color:#cbd5e1;">' + s[2] + '</span></div>';
+          }).join('')
+      +   '<div class="hint">예약 생성 시 자동으로 5개 훅이 스케줄링됩니다. 실제 발화는 cron 작업에서 처리.</div>'
+      + '</div>';
+  }
+
+  /* ════════ View 6: 예약현황 ════════ */
+  function rsViewStatus() {
+    var st = rsState.bookingStat || { total: 0, confirmed: 0, cancelled: 0, done: 0 };
+    var bks = (rsState.bookings || []).slice(0, 30);
+    return ''
+      + '<div class="rs-head"><div><h2><i class="fas fa-list-check"></i> 예약현황</h2><div class="rs-help">최근 67일 내 예약 (오늘 -7 ~ 오늘 +60)</div></div></div>'
+      + '<div class="rs-stat-grid">'
+      +   '<div class="rs-stat"><div class="n">' + (st.total||0)     + '</div><div class="l">총 예약</div></div>'
+      +   '<div class="rs-stat"><div class="n">' + (st.confirmed||0) + '</div><div class="l">확정</div></div>'
+      +   '<div class="rs-stat"><div class="n">' + (st.cancelled||0) + '</div><div class="l">취소</div></div>'
+      +   '<div class="rs-stat"><div class="n">' + (st.done||0)      + '</div><div class="l">완료</div></div>'
+      + '</div>'
+      + '<div class="rs-card"><div class="h"><span class="lab">예약 목록</span></div>'
+      +   (bks.length ? bks.map(function(b){return '<div class="rs-bk-row"><span class="id">#' + b.id + '</span>'
+            + '<span>' + esc(b.customer_name||'고객') + ' · ' + b.slot_date + ' ' + (b.slot_time||'').slice(0,5) + ' · ' + b.headcount + '명</span>'
+            + '<span class="st ' + b.status + '">' + b.status + '</span></div>';}).join('')
+                    : '<div style="font-size:11px;color:#64748b;padding:6px;">예약 내역 없음</div>')
+      + '</div>';
+  }
+
+  /* ════════ 이벤트 바인딩 (뷰 전환 시마다 재바인딩) ════════ */
+  function bindViewEvents(v) {
+    var c = document.getElementById('rsCentral');
+    if (!c) return;
+
+    // 공통: 토글 스위치(enabled)
+    c.querySelectorAll('.rs-sw[data-field="enabled"]').forEach(function(sw){
+      sw.addEventListener('click', function(){
+        sw.classList.toggle('on');
+        saveConfigField('enabled', sw.classList.contains('on') ? 1 : 0);
+      });
+    });
+
+    // input/number/text 변경 → debounced save (change + input 모두 감지)
+    c.querySelectorAll('[data-field]').forEach(function(el){
+      if (el.classList.contains('rs-sw')) return;
+      var f = el.getAttribute('data-field');
+      // input: 즉시 state 반영 (UI 동기화), change: API 저장 트리거
+      el.addEventListener('input', function(){
+        var val = el.value;
+        if (el.type === 'number') val = parseInt(val,10) || 0;
+        if (!rsState.config) rsState.config = {};
+        rsState.config[f] = val;
+      });
+      el.addEventListener('change', function(){
+        var val = el.value;
+        if (el.type === 'number') val = parseInt(val,10) || 0;
+        saveConfigField(f, val);
+      });
+    });
+
+    // 요일 토글
+    c.querySelectorAll('#rsDayToggle .rs-day').forEach(function(el){
+      el.addEventListener('click', function(){
+        el.classList.toggle('on');
+        var days = [];
+        c.querySelectorAll('#rsDayToggle .rs-day.on').forEach(function(x){ days.push(x.getAttribute('d') ? x.getAttribute('d') : x.getAttribute('data-d')); });
+        // dataset 정확히 ← data-d 속성
+        var ds = [];
+        c.querySelectorAll('#rsDayToggle .rs-day.on').forEach(function(x){ ds.push(parseInt(x.getAttribute('data-d'),10)); });
+        ds.sort();
+        saveConfigField('work_days', ds.join(','));
+      });
+    });
+
+    // 제외시간 추가
+    var addBo = c.querySelector('#rsAddBo');
+    if (addBo) addBo.addEventListener('click', addBlackout);
+    c.querySelectorAll('[data-bo-del]').forEach(function(el){
+      el.addEventListener('click', function(){
+        var id = parseInt(el.getAttribute('data-bo-del'), 10);
+        deleteBlackout(id);
+      });
+    });
+
+    // 캘린더 네비
+    var prev = c.querySelector('[data-cal-prev]');
+    var next = c.querySelector('[data-cal-next]');
+    var today= c.querySelector('[data-cal-today]');
+    if (prev) prev.addEventListener('click', function(){ shiftMonth(-1); });
+    if (next) next.addEventListener('click', function(){ shiftMonth(1); });
+    if (today)today.addEventListener('click', function(){ var n=new Date(); rsState.calMonth = n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0'); rsRenderCentral(); });
+
+    // 트리거 enabled 토글
+    c.querySelectorAll('.rs-sw[data-trig-enabled]').forEach(function(sw){
+      sw.addEventListener('click', function(){
+        sw.classList.toggle('on');
+        var type = sw.getAttribute('data-trig-enabled');
+        saveTriggerField(type, 'enabled', sw.classList.contains('on') ? 1 : 0);
+      });
+    });
+    // 트리거 input 변경
+    c.querySelectorAll('[data-trig-field]').forEach(function(el){
+      if (el.classList.contains('rs-sw')) return;
+      var f = el.getAttribute('data-trig-field');
+      var t = el.getAttribute('data-trig-type');
+      el.addEventListener('change', function(){
+        var val = el.value;
+        if (el.type === 'number') val = parseInt(val,10) || 0;
+        saveTriggerField(t, f, val);
+      });
+    });
+  }
+
+  function shiftMonth(diff) {
+    var [y, m] = rsState.calMonth.split('-').map(Number);
+    var d = new Date(y, m-1+diff, 1);
+    rsState.calMonth = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+    rsRenderCentral();
+  }
+
+  /* ════════ API 저장 ════════ */
+  var saveDebounce = null;
+  function saveConfigField(field, val) {
+    var ctx = rsGetCtx();
+    if (!ctx.sms_idx) { rsToast('채팅방을 먼저 선택해주세요','err'); return; }
+    if (!rsState.config) rsState.config = {};
+    rsState.config[field] = val;
+    clearTimeout(saveDebounce);
+    saveDebounce = setTimeout(function() {
+      _doSaveConfig(ctx, false);
+    }, 400);
+  }
+
+  // 전체 config를 한번에 API로 보내는 함수
+  function _doSaveConfig(ctx, showToast) {
+    if (!ctx) ctx = rsGetCtx();
+    if (!ctx.sms_idx) { rsToast('채팅방을 먼저 선택해주세요','err'); return; }
+    var cfg = rsState.config || {};
+    var body = {
+      sms_idx: ctx.sms_idx,
+      request_idx: ctx.request_idx || 0,
+      enabled: cfg.enabled ? 1 : 0,
+      place_name: cfg.place_name || '',
+      place_phone: cfg.place_phone || '',
+      work_days: cfg.work_days || '1,2,3,4,5',
+      work_start: cfg.work_start || '10:00',
+      work_end: cfg.work_end || '19:00',
+      slot_minutes: cfg.slot_minutes || 30,
+      capacity: cfg.capacity || 1,
+      lead_time_min: cfg.lead_time_min || 60,
+      max_advance_days: cfg.max_advance_days || 30,
+      cancel_until_hours: cfg.cancel_until_hours || 24,
+      bot_intro: cfg.bot_intro || ''
+    };
+    rsApi('/aimessage/onechat/api/reserve_config.php', { method:'POST', body: body }).then(function(j){
+      if (j.ok) {
+        if (showToast !== false) rsToast('저장됐습니다 ✓', 'ok');
+        rsState.config = j.config || Object.assign(rsState.config || {}, body);
+        // 슬롯 재생성됐을 가능성 → 슬롯 다시 로드
+        if (j.slot_regen && j.slot_regen.created !== undefined) {
+          rsApi('/aimessage/onechat/api/reserve_slot.php?sms_idx=' + ctx.sms_idx + '&request_idx=' + (ctx.request_idx||0)).then(function(s){
+            if (s.ok) { rsState.slots = s.slots; rsState.slotsByDate = s.by_date; }
+          });
+        }
+        // 저장 버튼 피드백
+        var svBtn = document.getElementById('reserveSaveBtn');
+        if (svBtn) { svBtn.innerHTML = '<i class="fas fa-check"></i> 저장됨'; setTimeout(function(){ svBtn.innerHTML = '<i class="fas fa-check"></i> 저장'; }, 2000); }
+      } else rsToast('저장 실패: '+(j.error && j.error.message||'unknown'),'err');
+    }).catch(function(e){ rsToast('네트워크 오류: '+e.message,'err'); });
+  }
+
+  // 저장 버튼 클릭: 전체 config 강제 저장
+  function rsSaveFullConfig() {
+    clearTimeout(saveDebounce);
+    // 현재 화면의 input 값들을 rsState.config에 반영
+    var c = document.getElementById('rsCentral');
+    if (c) {
+      c.querySelectorAll('[data-field]').forEach(function(el){
+        if (el.classList.contains('rs-sw')) return;
+        var f = el.getAttribute('data-field');
+        var val = el.value;
+        if (el.type === 'number') val = parseInt(val,10) || 0;
+        if (!rsState.config) rsState.config = {};
+        rsState.config[f] = val;
+      });
+    }
+    _doSaveConfig(null, true);
+  }
+
+  function saveTriggerField(type, field, val) {
+    var ctx = rsGetCtx();
+    if (!ctx.sms_idx) return;
+    // local state 업데이트
+    var t = (rsState.triggers || []).find(function(x){return x.trigger_type===type;});
+    if (!t) { t = {trigger_type: type}; rsState.triggers.push(t); }
+    t[field] = val;
+    var body = { sms_idx: ctx.sms_idx, request_idx: ctx.request_idx, triggers: [Object.assign({trigger_type:type}, t)] };
+    clearTimeout(saveDebounce);
+    saveDebounce = setTimeout(function() {
+      rsApi('/aimessage/onechat/api/reserve_trigger.php', { method:'POST', body: body }).then(function(j){
+        if (j.ok) rsToast('트리거 저장됨','ok');
+        else rsToast('저장 실패','err');
+      });
+    }, 400);
+  }
+
+  function addBlackout() {
+    var label  = prompt('제외시간 이름 (예: 점심시간, 휴무)', '점심시간');
+    if (!label) return;
+    var kind = 'weekly';
+    var weekday = parseInt(prompt('요일 (0=일~6=토)','1'),10);
+    if (isNaN(weekday)||weekday<0||weekday>6) return;
+    var tf = prompt('시작 (HH:MM)','12:00');
+    var tt = prompt('종료 (HH:MM)','13:00');
+    if (!tf || !tt) return;
+    var ctx = rsGetCtx();
+    rsApi('/aimessage/onechat/api/reserve_blackout.php', {method:'POST', body:{
+      sms_idx: ctx.sms_idx, request_idx: ctx.request_idx,
+      label: label, kind: kind, weekday: weekday,
+      time_from: tf+':00', time_to: tt+':00'
+    }}).then(function(j){
+      if (j.ok) { rsToast('추가됨','ok'); rsLoadAll(); }
+      else rsToast('실패','err');
+    });
+  }
+
+  function deleteBlackout(id) {
+    if (!confirm('이 제외시간을 삭제할까요?')) return;
+    var ctx = rsGetCtx();
+    rsApi('/aimessage/onechat/api/reserve_blackout.php?id='+id+'&sms_idx='+ctx.sms_idx+'&request_idx='+ctx.request_idx, {method:'DELETE'}).then(function(j){
+      if (j.ok) { rsToast('삭제됨','ok'); rsLoadAll(); }
+      else rsToast('실패','err');
+    });
+  }
+
+  // ── 유틸 ─────────────────────────────────────────
+  function esc(s) { if (s===null||s===undefined) return ''; return String(s).replace(/[&<>"']/g, function(c){return ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'})[c];}); }
+
+  // ── 초기 바인딩 ──────────────────────────────────
+  document.addEventListener('DOMContentLoaded', function(){
+    var btn = document.getElementById('sbReserveBtn');
+    if (btn) btn.addEventListener('click', openReservePanel);
+    var close = document.getElementById('reserveCloseBtn');
+    if (close) close.addEventListener('click', closeReservePanel);
+    var ov = document.getElementById('reserveOverlay');
+    if (ov) ov.addEventListener('click', closeReservePanel);
+    // saveBtn: 전체 설정을 한번에 저장
+    var sv = document.getElementById('reserveSaveBtn');
+    if (sv) sv.addEventListener('click', function(){ rsSaveFullConfig(); });
+    // 해시 라우팅
+    if (location.hash === '#reserve') setTimeout(openReservePanel, 300);
+  });
+
+  // 전역 노출
+  window.openReservePanel = openReservePanel;
+  window.closeReservePanel = closeReservePanel;
+  window.reserveState = rsState;
 })();
