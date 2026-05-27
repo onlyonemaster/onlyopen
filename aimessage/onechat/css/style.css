@@ -8065,3 +8065,241 @@ body.one-mode-public #dmRoomList .me-pin-card {
 /* ============================================================
    [ME-B2] END
 ============================================================ */
+
+/* ============================================================
+   예약 관리 설정 패널 (전체 화면)
+============================================================ */
+.reserve-overlay {
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 960;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s;
+  backdrop-filter: blur(2px);
+}
+.reserve-overlay.open { opacity: 1; pointer-events: all; }
+
+.reserve-panel {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-dark);
+  z-index: 961;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.4,0,0.2,1);
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+.reserve-panel.open { transform: translateX(0); }
+body.theme-light .reserve-panel { background: #f8fafc; }
+
+/* 패널 헤더 */
+.reserve-panel-header {
+  display: flex; align-items: center;
+  gap: 12px; padding: 14px 16px;
+  padding-top: max(14px, env(safe-area-inset-top));
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+}
+body.theme-light .reserve-panel-header { background: #fff; }
+
+.reserve-back-btn {
+  background: none; border: none; cursor: pointer;
+  color: var(--text-muted); font-size: 18px;
+  width: 36px; height: 36px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.15s, color 0.15s;
+  flex-shrink: 0;
+}
+.reserve-back-btn:hover { background: var(--bg-card2); color: var(--text-primary); }
+
+.reserve-header-title {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 16px; font-weight: 700; color: var(--text-primary);
+  flex: 1;
+}
+.reserve-save-btn {
+  background: linear-gradient(135deg, #14b8a6, #0d9488);
+  color: #fff; border: none; border-radius: 20px;
+  padding: 8px 16px; font-size: 13px; font-weight: 700;
+  cursor: pointer; transition: opacity 0.2s;
+  display: flex; align-items: center; gap: 6px;
+  flex-shrink: 0;
+}
+.reserve-save-btn:hover { opacity: 0.85; }
+.reserve-save-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* 탭 내비게이션 */
+.reserve-tabs {
+  display: flex; gap: 0;
+  background: var(--bg-dark);
+  border-bottom: 1px solid var(--border);
+  flex-shrink: 0;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+body.theme-light .reserve-tabs { background: #fff; }
+.reserve-tab {
+  flex: 1; min-width: 0;
+  padding: 12px 8px;
+  background: none; border: none;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  border-bottom: 2px solid transparent;
+  transition: color 0.2s, border-color 0.2s;
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+  white-space: nowrap;
+}
+.reserve-tab:hover { color: var(--text-primary); }
+.reserve-tab.active {
+  color: #14b8a6;
+  border-bottom-color: #14b8a6;
+}
+
+/* 패널 바디 */
+.reserve-panel-body {
+  flex: 1; overflow-y: auto; padding: 16px;
+  max-width: 600px;
+  margin: 0 auto;
+  width: 100%;
+  box-sizing: border-box;
+}
+.reserve-loading {
+  text-align: center; padding: 40px;
+  color: var(--text-muted); font-size: 14px;
+}
+
+/* 설정 섹션 */
+.rv-section {
+  background: var(--bg-card);
+  border-radius: 16px; padding: 16px;
+  margin-bottom: 14px;
+}
+.rv-section-title {
+  font-size: 13px; font-weight: 700;
+  color: var(--text-muted); text-transform: uppercase;
+  letter-spacing: 0.5px; margin-bottom: 12px;
+  display: flex; align-items: center; gap: 6px;
+}
+.rv-section-title i { font-size: 12px; }
+
+/* 토글 스위치 */
+.rv-toggle-row {
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px;
+}
+.rv-toggle-info { flex: 1; }
+.rv-toggle-label { font-size: 14px; font-weight: 600; color: var(--text-primary); }
+.rv-toggle-desc  { font-size: 11px; color: var(--text-muted); margin-top: 2px; }
+
+.rv-switch {
+  width: 48px; height: 28px;
+  background: #4b5563; border-radius: 14px;
+  cursor: pointer; position: relative;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.rv-switch.on { background: #14b8a6; }
+.rv-switch-knob {
+  width: 22px; height: 22px;
+  background: #fff; border-radius: 50%;
+  position: absolute; top: 3px; left: 3px;
+  transition: transform 0.2s;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+}
+.rv-switch.on .rv-switch-knob { transform: translateX(20px); }
+
+/* 입력 필드 */
+.rv-input {
+  width: 100%; padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
+  box-sizing: border-box;
+}
+.rv-input:focus { border-color: #14b8a6; outline: none; }
+.rv-textarea {
+  width: 100%; padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
+  resize: vertical; min-height: 80px;
+  box-sizing: border-box;
+  font-family: inherit;
+}
+.rv-textarea:focus { border-color: #14b8a6; outline: none; }
+
+.rv-select {
+  padding: 10px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text-primary);
+  font-size: 14px;
+  box-sizing: border-box;
+  width: 100%;
+}
+.rv-select:focus { border-color: #14b8a6; outline: none; }
+
+.rv-time-row {
+  display: flex; align-items: center; gap: 8px;
+}
+.rv-time-row .rv-select { flex: 1; }
+.rv-time-sep {
+  font-size: 13px; color: var(--text-muted); white-space: nowrap;
+}
+
+.rv-label {
+  font-size: 13px; font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 6px; display: block;
+}
+.rv-hint {
+  font-size: 11px; color: var(--text-muted);
+  margin-bottom: 8px;
+}
+
+/* 요일 체크박스 그리드 */
+.rv-day-grid {
+  display: flex; gap: 6px; flex-wrap: wrap;
+}
+.rv-day-chip {
+  padding: 8px 14px;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  font-size: 13px; font-weight: 600;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  user-select: none;
+}
+.rv-day-chip.active {
+  background: rgba(20,184,166,0.15);
+  border-color: #14b8a6;
+  color: #14b8a6;
+}
+
+/* 슬롯 */
+.rv-slot-row {
+  display: flex; align-items: center; gap: 8px;
+  margin-bottom: 8px;
+}
+.rv-slot-row .rv-input { flex: 1; }
+
+.rv-bottom-spacer { height: 40px; }
+
+/* PC에서도 전체 화면 */
+@media (min-width: 769px) {
+  .reserve-panel {
+    max-width: 100%;
+    width: 100%;
+  }
+}

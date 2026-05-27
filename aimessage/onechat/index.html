@@ -153,6 +153,18 @@
       <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
     </button>
 
+    <!-- 메뉴 8: 예약 관리 설정 -->
+    <button class="sidebar-menu-item" id="sbReserveBtn">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#14b8a6,#0d9488);">
+        <i class="fas fa-calendar-check"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">예약 관리 설정</span>
+        <span class="sidebar-menu-desc">예약 접수 · 시간 설정 · 알림 관리</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+
     <!-- 메뉴 7: 구독하기 -->
     <button class="sidebar-menu-item" id="sbSubscribeBtn" onclick="location.href='/aimessage/onechat/subscribe.html'">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#f97316,#ea580c);">
@@ -168,6 +180,37 @@
       <span>AIvote OneChat v1.0</span>
     </div>
   </nav>
+
+  <!-- ========== 예약 관리 설정 패널 (전체화면) ========== -->
+  <div class="reserve-overlay" id="reserveOverlay"></div>
+  <div class="reserve-panel" id="reservePanel">
+    <div class="reserve-panel-header">
+      <button class="reserve-back-btn" id="reserveCloseBtn">
+        <i class="fas fa-arrow-left"></i>
+      </button>
+      <div class="reserve-header-title">
+        <i class="fas fa-calendar-check" style="color:#14b8a6;"></i>
+        <span>예약 관리 설정</span>
+      </div>
+      <button class="reserve-save-btn" id="reserveSaveBtn">
+        <i class="fas fa-check"></i> 저장
+      </button>
+    </div>
+
+    <!-- 탭 내비게이션 -->
+    <div class="reserve-tabs" id="reserveTabs">
+      <button class="reserve-tab active" data-tab="basic"><i class="fas fa-cog"></i> 기본 설정</button>
+      <button class="reserve-tab" data-tab="time"><i class="fas fa-clock"></i> 시간 설정</button>
+      <button class="reserve-tab" data-tab="noti"><i class="fas fa-bell"></i> 알림 설정</button>
+    </div>
+
+    <div class="reserve-panel-body" id="reservePanelBody">
+      <!-- JS로 렌더링 -->
+      <div class="reserve-loading" id="reserveLoading">
+        <i class="fas fa-spinner fa-spin"></i> 설정을 불러오는 중...
+      </div>
+    </div>
+  </div>
 
   <!-- ========== AI 동행 설정 패널 ========== -->
   <div class="companion-overlay" id="companionOverlay"></div>
