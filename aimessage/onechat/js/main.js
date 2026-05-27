@@ -5385,22 +5385,22 @@ document.addEventListener('DOMContentLoaded', function () {
     if (!tf || !tt) return;
     var ctx = rsGetCtx();
     rsApi('/aimessage/onechat/api/reserve_blackout.php', {method:'POST', body:{
-      sms_idx: ctx.sms_idx, request_idx: ctx.request_idx,
+      sms_idx: ctx.sms_idx, request_idx: ctx.request_idx || 0,
       label: label, kind: kind, weekday: weekday,
       time_from: tf+':00', time_to: tt+':00'
     }}).then(function(j){
-      if (j.ok) { rsToast('추가됨','ok'); rsLoadAll(); }
-      else rsToast('실패','err');
-    });
+      if (j.ok) { rsToast('제외시간 추가됨 ✓','ok'); rsLoadAll(); }
+      else rsToast('추가 실패: '+(typeof j.error==='string'?j.error:(j.error&&j.error.message)||'unknown'),'err');
+    }).catch(function(e){ rsToast('네트워크 오류: '+e.message,'err'); });
   }
 
   function deleteBlackout(id) {
     if (!confirm('이 제외시간을 삭제할까요?')) return;
     var ctx = rsGetCtx();
-    rsApi('/aimessage/onechat/api/reserve_blackout.php?id='+id+'&sms_idx='+ctx.sms_idx+'&request_idx='+ctx.request_idx, {method:'DELETE'}).then(function(j){
-      if (j.ok) { rsToast('삭제됨','ok'); rsLoadAll(); }
-      else rsToast('실패','err');
-    });
+    rsApi('/aimessage/onechat/api/reserve_blackout.php?id='+id+'&sms_idx='+ctx.sms_idx+'&request_idx='+(ctx.request_idx||0), {method:'DELETE'}).then(function(j){
+      if (j.ok) { rsToast('삭제됨 ✓','ok'); rsLoadAll(); }
+      else rsToast('삭제 실패: '+(typeof j.error==='string'?j.error:(j.error&&j.error.message)||'unknown'),'err');
+    }).catch(function(e){ rsToast('네트워크 오류: '+e.message,'err'); });
   }
 
   // ── 유틸 ─────────────────────────────────────────
