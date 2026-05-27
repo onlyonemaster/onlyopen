@@ -5335,7 +5335,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // 저장 버튼 피드백
         var svBtn = document.getElementById('reserveSaveBtn');
         if (svBtn) { svBtn.innerHTML = '<i class="fas fa-check"></i> 저장됨'; setTimeout(function(){ svBtn.innerHTML = '<i class="fas fa-check"></i> 저장'; }, 2000); }
-      } else rsToast('저장 실패: '+(j.error && j.error.message||'unknown'),'err');
+      } else rsToast('저장 실패: '+(typeof j.error === 'string' ? j.error : (j.error && j.error.message) || 'unknown'),'err');
     }).catch(function(e){ rsToast('네트워크 오류: '+e.message,'err'); });
   }
 
