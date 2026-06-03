@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>폰 데이터 자동 동기화 · MyChat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+</head>
+<body>
+<div id="top"></div>
+
+<div class="mc-wrap">
+
+  <div class="mc-hero">
+    <h1>📱 폰 데이터 자동 동기화</h1>
+    <p>
+      통화·문자·카톡·이메일·헬스·캘린더를 아바타가 자동으로 받아옵니다.
+      소스별로 <b>주기·보존기간·기본 공개범위</b>를 다르게 설정할 수 있고,
+      Wi-Fi/배터리/방해금지 조건도 지킵니다.
+    </p>
+  </div>
+
+  <!-- master enable -->
+  <div class="mc-section">
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">자동 동기화 활성화</div>
+        <div class="de">아래 소스별 설정에 따라 모바일 앱이 백그라운드에서 데이터를 보냅니다.</div>
+      </div>
+      <label class="mc-switch">
+        <input type="checkbox" id="sw-master">
+        <span class="sl"></span>
+      </label>
+    </div>
+    <div id="status-line" class="hint"></div>
+  </div>
+
+  <!-- sources -->
+  <div class="mc-section">
+    <h2>🗂️ 소스별 정책 <span class="badge">9 종류</span></h2>
+    <div id="src-list"></div>
+  </div>
+
+  <!-- global rules -->
+  <div class="mc-section">
+    <h2>🛡️ 전송 조건</h2>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">Wi-Fi 연결 시에만</div>
+        <div class="de">데이터 요금이 들지 않게 모바일 데이터에서는 보내지 않습니다.</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-wifi"><span class="sl"></span></label>
+    </div>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">방해금지 시간(취침)</div>
+        <div class="de" id="quiet-de">23:00 — 07:00 동안은 동기화 일시정지</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-quiet"><span class="sl"></span></label>
+    </div>
+
+    <div class="mc-row" id="quiet-times">
+      <div class="mc-field" style="flex:1">
+        <label>취침 시작</label>
+        <input type="time" id="quiet-start" class="mc-input">
+      </div>
+      <div class="mc-field" style="flex:1">
+        <label>기상 시각</label>
+        <input type="time" id="quiet-end" class="mc-input">
+      </div>
+    </div>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">배터리 최소 잔량</div>
+        <div class="de">잔량이 이 값보다 낮으면 동기화를 멈춥니다.</div>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <input type="number" id="batt-min" class="mc-input" min="5" max="80" step="5" style="width:80px;text-align:center">
+        <span style="color:var(--text-mute);font-size:12px">%</span>
+      </div>
+    </div>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">전송 중 암호화</div>
+        <div class="de">TLS + 추가 페이로드 암호화 (E2EE는 저장소 설정에서)</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-enc"><span class="sl"></span></label>
+    </div>
+  </div>
+
+  <!-- daily self-sync (Idea #1) -->
+  <div class="mc-section">
+    <h2>🧠 매일의 나 — Daily Self-Sync</h2>
+    <p class="hint" style="margin-top:-4px">
+      매일 자정 직전, 그 날의 모든 신호(통화·문자·헬스·이동)를 <b>한 줄 요약</b>으로 압축해서
+      아바타에게 주입합니다. 아바타가 "오늘의 너"를 매일 새로 학습하게 됩니다.
+    </p>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">활성화</div>
+        <div class="de">매일 한 줄 요약을 생성하고 디지털 트윈에 반영</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-daily"><span class="sl"></span></label>
+    </div>
+
+    <div class="mc-field">
+      <label>요약 생성 시각</label>
+      <input type="time" id="daily-time" class="mc-input" value="23:50">
+    </div>
+
+    <div class="mc-field">
+      <label>요약 깊이</label>
+      <select id="daily-depth" class="mc-select">
+        <option value="brief">짧게 (1~2문장)</option>
+        <option value="standard" selected>표준 (한 단락 + 핵심 5개)</option>
+        <option value="deep">깊이 (한 단락 + 핵심 + 감정/회고)</option>
+      </select>
+    </div>
+
+    <button class="mc-btn sm" id="btn-self-now">
+      🧪 지금 한 번 만들어보기
+    </button>
+    <div id="self-preview" class="hint" style="margin-top:10px"></div>
+  </div>
+
+  <!-- actions -->
+  <div class="mc-section">
+    <div class="mc-row">
+      <button class="mc-btn primary full" id="btn-save">💾 저장</button>
+      <button class="mc-btn full" id="btn-test">🔌 지금 한번 끌어오기</button>
+    </div>
+    <p class="hint">
+      ※ 모바일 앱이 설치돼 있어야 자동 전송이 됩니다.
+      앱 미설치 시에는 학습 페이지의 <b>📱 폰 데이터 자동채움</b>으로 수동 가져오기 가능.
+    </p>
+  </div>
+
+  <div style="text-align:center;margin-top:20px">
+    <a href="/aimessage/mychat/" class="mc-chip">← MyChat 홈으로</a>
+  </div>
+</div>
+
+<script src="/aimessage/mychat/assets/mychat.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  document.getElementById('top').innerHTML = mc.renderTopbar({
+    title: '📱 폰 데이터 자동 동기화',
+    sub: '소스별 정책 · 전송 조건 · 매일의 나'
+  });
+
+  var SRC = [
+    {k:'call',   ic:'📞', name:'통화 기록',      de:'발신·수신·부재중 통화 메타+요약'},
+    {k:'sms',    ic:'💬', name:'문자 (SMS/MMS)', de:'발신·수신 본문'},
+    {k:'kakao',  ic:'🗨️', name:'카카오톡',       de:'대화방 메시지 (접근성 권한 필요)'},
+    {k:'email',  ic:'✉️', name:'이메일',         de:'IMAP/Gmail/Outlook 헤더+본문'},
+    {k:'meet',   ic:'🎤', name:'회의 녹음',      de:'사용자가 직접 녹음한 회의 오디오'},
+    {k:'photo',  ic:'🖼️', name:'사진',           de:'썸네일+캡션+위치 (원본은 옵션)'},
+    {k:'video',  ic:'🎬', name:'영상',           de:'썸네일+자막 (원본은 옵션)'},
+    {k:'health', ic:'❤️', name:'헬스 데이터',    de:'걸음·심박·수면·운동'},
+    {k:'cal',    ic:'📅', name:'캘린더',         de:'일정 제목·시간·참가자'}
+  ];
+
+  var FREQ_OPTS = [
+    {v:'realtime', l:'실시간'},
+    {v:'15min',    l:'15분'},
+    {v:'hourly',   l:'1시간'},
+    {v:'daily',    l:'하루'},
+    {v:'manual',   l:'수동'}
+  ];
+  var RETAIN_OPTS = [
+    {v:0,    l:'저장 안함 (요약만)'},
+    {v:30,   l:'30일'},
+    {v:90,   l:'90일'},
+    {v:180,  l:'180일'},
+    {v:365,  l:'1년'},
+    {v:730,  l:'2년'},
+    {v:-1,   l:'무기한'}
+  ];
+  var SCOPE_OPTS = [
+    {v:'private', l:'🔒 비공개'},
+    {v:'public',  l:'🌐 공개'},
+    {v:'both',    l:'⚖️ 양쪽'}
+  ];
+
+  var policy = mc.syncPolicyGet();
+
+  function selOpts(arr, cur){
+    return arr.map(function(o){
+      return '<option value="'+o.v+'"'+(String(o.v)===String(cur)?' selected':'')+'>'+mc.esc(o.l)+'</option>';
+    }).join('');
+  }
+
+  function render(){
+    // master
+    document.getElementById('sw-master').checked = !!policy.enabled;
+    document.getElementById('sw-wifi').checked = !!policy.wifi_only;
+    document.getElementById('sw-quiet').checked = !!(policy.sleep_quiet_hours && policy.sleep_quiet_hours.on);
+    document.getElementById('quiet-start').value = (policy.sleep_quiet_hours||{}).start || '23:00';
+    document.getElementById('quiet-end').value   = (policy.sleep_quiet_hours||{}).end   || '07:00';
+    document.getElementById('batt-min').value = policy.battery_min || 20;
+    document.getElementById('sw-enc').checked = policy.encrypt_in_transit !== false;
+    document.getElementById('sw-daily').checked = !!policy.daily_self_sync_on;
+    document.getElementById('daily-time').value = policy.daily_self_sync_time || '23:50';
+    document.getElementById('daily-depth').value = policy.daily_self_sync_depth || 'standard';
+
+    updateStatus();
+
+    // src list
+    var list = document.getElementById('src-list');
+    list.innerHTML = SRC.map(function(s){
+      var st = policy.sources[s.k] || {on:false, freq:'manual', retain_days: 90, default_scope:'private'};
+      return ''
+        + '<div class="mc-card" data-src="'+s.k+'" style="flex-direction:column; align-items:stretch">'
+        +   '<div style="display:flex;align-items:center;gap:12px">'
+        +     '<div class="ic">'+s.ic+'</div>'
+        +     '<div class="body">'
+        +       '<div class="ti">'+s.name+'</div>'
+        +       '<div class="de">'+s.de+'</div>'
+        +     '</div>'
+        +     '<label class="mc-switch"><input type="checkbox" data-act="on" '+(st.on?'checked':'')+'><span class="sl"></span></label>'
+        +   '</div>'
+        +   '<div class="mc-row" style="margin-top:10px">'
+        +     '<div class="mc-field" style="margin:0">'
+        +       '<label style="font-size:11px">주기</label>'
+        +       '<select data-act="freq" class="mc-select">'+selOpts(FREQ_OPTS, st.freq)+'</select>'
+        +     '</div>'
+        +     '<div class="mc-field" style="margin:0">'
+        +       '<label style="font-size:11px">보존</label>'
+        +       '<select data-act="retain" class="mc-select">'+selOpts(RETAIN_OPTS, st.retain_days)+'</select>'
+        +     '</div>'
+        +     '<div class="mc-field" style="margin:0">'
+        +       '<label style="font-size:11px">기본 공개</label>'
+        +       '<select data-act="scope" class="mc-select">'+selOpts(SCOPE_OPTS, st.default_scope)+'</select>'
+        +     '</div>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+
+    // bind source events (delegated)
+    if (!list.dataset.bound){
+      list.addEventListener('change', function(e){
+        var card = e.target.closest('[data-src]');
+        if (!card) return;
+        var k = card.dataset.src;
+        var act = e.target.dataset.act;
+        if (!policy.sources[k]) policy.sources[k] = {};
+        if (act === 'on')     policy.sources[k].on = !!e.target.checked;
+        if (act === 'freq')   policy.sources[k].freq = e.target.value;
+        if (act === 'retain') policy.sources[k].retain_days = Number(e.target.value);
+        if (act === 'scope')  policy.sources[k].default_scope = e.target.value;
+        updateStatus();
+      });
+      list.dataset.bound = '1';
+    }
+  }
+
+  function updateStatus(){
+    var n = 0; var live = 0;
+    Object.keys(policy.sources||{}).forEach(function(k){
+      var s = policy.sources[k];
+      if (s && s.on){ n++; if (s.freq==='realtime'||s.freq==='15min') live++; }
+    });
+    var line = '활성 소스 '+n+'개 · 실시간/근실시간 '+live+'개';
+    if (!policy.enabled) line += ' (마스터 OFF — 적용 안 됨)';
+    document.getElementById('status-line').textContent = line;
+
+    var qd = document.getElementById('quiet-de');
+    var s = document.getElementById('quiet-start').value || '23:00';
+    var e = document.getElementById('quiet-end').value || '07:00';
+    qd.textContent = s+' — '+e+' 동안은 동기화 일시정지';
+  }
+
+  // ---------- top-level toggles ----------
+  document.getElementById('sw-master').addEventListener('change', function(e){ policy.enabled = e.target.checked; updateStatus(); });
+  document.getElementById('sw-wifi').addEventListener('change', function(e){ policy.wifi_only = e.target.checked; });
+  document.getElementById('sw-quiet').addEventListener('change', function(e){
+    if (!policy.sleep_quiet_hours) policy.sleep_quiet_hours = {start:'23:00', end:'07:00'};
+    policy.sleep_quiet_hours.on = e.target.checked;
+  });
+  document.getElementById('quiet-start').addEventListener('change', function(e){
+    if (!policy.sleep_quiet_hours) policy.sleep_quiet_hours = {on:true};
+    policy.sleep_quiet_hours.start = e.target.value;
+    updateStatus();
+  });
+  document.getElementById('quiet-end').addEventListener('change', function(e){
+    if (!policy.sleep_quiet_hours) policy.sleep_quiet_hours = {on:true};
+    policy.sleep_quiet_hours.end = e.target.value;
+    updateStatus();
+  });
+  document.getElementById('batt-min').addEventListener('change', function(e){
+    policy.battery_min = Math.max(5, Math.min(80, Number(e.target.value)||20));
+    e.target.value = policy.battery_min;
+  });
+  document.getElementById('sw-enc').addEventListener('change', function(e){ policy.encrypt_in_transit = e.target.checked; });
+  document.getElementById('sw-daily').addEventListener('change', function(e){ policy.daily_self_sync_on = e.target.checked; });
+  document.getElementById('daily-time').addEventListener('change', function(e){ policy.daily_self_sync_time = e.target.value; });
+  document.getElementById('daily-depth').addEventListener('change', function(e){ policy.daily_self_sync_depth = e.target.value; });
+
+  // ---------- buttons ----------
+  document.getElementById('btn-save').addEventListener('click', function(){
+    mc.syncPolicySave(policy);
+    mc.toast('💾 동기화 정책 저장', 'ok');
+  });
+  document.getElementById('btn-test').addEventListener('click', function(){
+    var btn = this; var orig = btn.innerHTML;
+    btn.innerHTML = '<span class="mc-spin"></span> 가져오는 중...';
+    btn.disabled = true;
+    mc.api('/aimessage/mychat/api/learn_ingest.php?action=phone_counts').then(function(r){
+      btn.innerHTML = orig; btn.disabled = false;
+      if (r && r.ok && r.counts){
+        var sum = 0; Object.keys(r.counts).forEach(function(k){ sum += (r.counts[k]||0); });
+        mc.toast('📥 '+sum+'건 도달 가능 (데모)', 'ok', 3000);
+      } else {
+        mc.toast('📥 데모 모드 — 백엔드 미구현', 'warn', 3000);
+      }
+    });
+  });
+  document.getElementById('btn-self-now').addEventListener('click', function(){
+    var btn = this; var orig = btn.innerHTML;
+    btn.innerHTML = '<span class="mc-spin"></span> 생성 중...';
+    btn.disabled = true;
+    // local demo summary
+    setTimeout(function(){
+      btn.innerHTML = orig; btn.disabled = false;
+      var depth = policy.daily_self_sync_depth || 'standard';
+      var samples = {
+        brief: '오늘의 너: 오전 집중도 높음, 오후 미팅 3건. 수면 부족 1시간.',
+        standard: '오늘의 너 — 오전 집중도 ↑, 오후 미팅 3건 처리. 점심 후 컨디션 다소 저하. 핵심: ①배포 일정 확정 ②엄마와 주말 약속 ③헬스 수면 5h32m ④이메일 23건 ⑤메모 7건.',
+        deep: '오늘의 너 — 오전 9~12시 집중 흐름 양호, 코드/기획 정리에 적합. 오후 미팅 후 피로감 증가(심박 회복 늦음). 핵심 이벤트 5건, 정서적 톤은 차분-약간 무거움. 회고: 수면 부족 누적 → 내일은 미팅 오전에 모으는 것이 유리.'
+      };
+      document.getElementById('self-preview').innerHTML =
+        '<div class="mc-card" style="margin-top:4px"><div class="ic">🧠</div><div class="body"><div class="ti">미리보기</div><div class="de" style="-webkit-line-clamp:6">'+mc.esc(samples[depth])+'</div></div></div>';
+    }, 700);
+  });
+
+  // try load from server (best effort)
+  mc.api('/aimessage/mychat/api/sync_policy.php?action=load').then(function(r){
+    if (r && r.ok && r.policy){
+      policy = Object.assign(policy, r.policy);
+      render();
+    }
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>

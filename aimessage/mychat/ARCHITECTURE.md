@@ -27,13 +27,19 @@
 ┌────────────────────────────────────────────────────────────────────┐
 │                        MYCHAT FRONT-END                            │
 │                                                                    │
-│  /aimessage/mychat/index.html         (메인 채팅)                  │
-│  /aimessage/mychat/learn-v2.html      ★ 통합 학습 (5×14)           │
-│  /aimessage/mychat/avatar-studio.html (얼굴·목소리·HeyGen)         │
-│  /aimessage/mychat/storage-settings.html ★ 저장소·API키            │
-│  /aimessage/mychat/phone-sync-settings.html  (예정)                │
-│  /aimessage/mychat/dashboard.html      (인생 분석)                 │
-│  /aimessage/mychat/decisions.html      (의사결정 추적)             │
+│  /aimessage/mychat/index.html             (메인 채팅 + 메뉴 허브)   │
+│  /aimessage/mychat/learn-v2.html       ★ 통합 학습 (5×14)           │
+│  /aimessage/mychat/avatar-studio.html     (얼굴·목소리·HeyGen)     │
+│  /aimessage/mychat/storage-settings.html  ★ 저장소·BYO API키       │
+│  /aimessage/mychat/phone-sync-settings.html  ★ 폰 자동 동기화 정책 │
+│  /aimessage/mychat/life-inbox.html        ★ 라이프 인박스          │
+│  /aimessage/mychat/decision-assistant.html ★ Predict→Decide→Reflect│
+│                                              + 한 장 의사결정 카드 │
+│  /aimessage/mychat/daily-sync.html        ★ 매일의 나 (Daily Self) │
+│  /aimessage/mychat/anomaly-watchdog.html  ★ 위험 신호 워치독       │
+│  /aimessage/mychat/usage-guard.html       ★ API 사용량 가드        │
+│  /aimessage/mychat/digital-legacy.html    ★ 디지털 유산 모드       │
+│  /aimessage/mychat/assets/mychat.{css,js}  공통 디자인+로직 모듈   │
 │                                                                    │
 └──────────────────────────────┬─────────────────────────────────────┘
                                │ HTTPS / JSON

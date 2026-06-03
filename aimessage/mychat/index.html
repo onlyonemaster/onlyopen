@@ -403,6 +403,25 @@ html,body{
   <button data-menu="storage">
     <i class="fas fa-database"></i> 저장소 · API 키 설정
   </button>
+  <!-- [P2 2026-06-04] Second-Me 신규 모듈 -->
+  <button data-menu="phonesync">
+    <i class="fas fa-mobile-screen"></i> 폰 데이터 자동 동기화
+  </button>
+  <button data-menu="inbox">
+    <i class="fas fa-inbox"></i> 라이프 인박스
+  </button>
+  <button data-menu="dailysync">
+    <i class="fas fa-brain"></i> 매일의 나 (Daily Self-Sync)
+  </button>
+  <button data-menu="anomaly">
+    <i class="fas fa-shield-halved"></i> 위험 신호 워치독
+  </button>
+  <button data-menu="usage">
+    <i class="fas fa-coins"></i> API 사용량 가드
+  </button>
+  <button data-menu="legacy">
+    <i class="fas fa-clipboard-user"></i> 디지털 유산 모드
+  </button>
   <!-- [ME-C6] 비상 잠금 토글 (Panic Lock) -->
   <button data-menu="panic" class="danger">
     <i class="fas fa-lock"></i> 비상 잠금 (Panic Lock)
@@ -411,7 +430,7 @@ html,body{
     <i class="fas fa-chart-bar"></i> 나의 인생 분석 대시보드
   </button>
   <button data-menu="decisions">
-    <i class="fas fa-clipboard-list"></i> 의사결정 추적
+    <i class="fas fa-clipboard-list"></i> 의사결정 어시스턴트
   </button>
   <h4 style="margin-top:10px">대화 관리</h4>
   <button data-menu="clear" class="danger">
@@ -691,6 +710,24 @@ html,body{
           // [P1 2026-06-04] 신규: 저장소 모드(서버/온디바이스) + BYO API 키 설정
           location.href = '/aimessage/mychat/storage-settings.html';
           break;
+        case 'phonesync':
+          location.href = '/aimessage/mychat/phone-sync-settings.html';
+          break;
+        case 'inbox':
+          location.href = '/aimessage/mychat/life-inbox.html';
+          break;
+        case 'dailysync':
+          location.href = '/aimessage/mychat/daily-sync.html';
+          break;
+        case 'anomaly':
+          location.href = '/aimessage/mychat/anomaly-watchdog.html';
+          break;
+        case 'usage':
+          location.href = '/aimessage/mychat/usage-guard.html';
+          break;
+        case 'legacy':
+          location.href = '/aimessage/mychat/digital-legacy.html';
+          break;
         case 'panic':
           if (confirm('⚠️ 긴급 차단 — 모든 외부 공개 데이터를 즉시 비공개로 전환합니다.\n계속하시겠습니까?')) {
             fetch('/aimessage/mychat/api/settings.php', {
@@ -710,7 +747,8 @@ html,body{
           location.href = '/aimessage/mychat/dashboard.html';
           break;
         case 'decisions':
-          location.href = '/aimessage/mychat/decisions.html';
+          // [P2 2026-06-04] decisions.html → decision-assistant.html (Predict→Decide→Reflect + Decision Card)
+          location.href = '/aimessage/mychat/decision-assistant.html';
           break;
         case 'clear':
           if (confirm('대화 기록을 모두 지울까요?')) {

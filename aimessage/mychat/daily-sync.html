@@ -1,0 +1,272 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>매일의 나 · MyChat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+<style>
+  .day-card{
+    background:var(--bg-card);border:1px solid var(--line);
+    border-radius: var(--r-md); padding:14px; margin-bottom:10px;
+  }
+  .day-card h3{margin:0 0 4px;font-size:14px}
+  .day-card .date{font-size:11px;color:var(--text-mute);margin-bottom:8px}
+  .day-card p{font-size:13px;line-height:1.6;color:var(--text-dim);margin:0 0 8px}
+  .day-card .keys{display:flex;flex-wrap:wrap;gap:4px}
+  .heatmap{
+    display:grid; grid-template-columns: repeat(7,1fr); gap:4px;
+    margin: 10px 0 14px;
+  }
+  .heatmap .cell{
+    aspect-ratio: 1;
+    border-radius:4px;
+    background:#1a2030;
+    position:relative;
+  }
+  .heatmap .cell[data-level="1"]{background:#2a2f4d}
+  .heatmap .cell[data-level="2"]{background:#3e3a8c}
+  .heatmap .cell[data-level="3"]{background:#5840d0}
+  .heatmap .cell[data-level="4"]{background:#7c5cff}
+  .heatmap .cell::after{
+    content: attr(data-d);
+    position:absolute; bottom:1px; right:3px; font-size:9px; color:rgba(255,255,255,0.5);
+  }
+</style>
+</head>
+<body>
+<div id="top"></div>
+
+<div class="mc-wrap">
+
+  <div class="mc-hero">
+    <h1>🧠 매일의 나</h1>
+    <p>
+      매일 자정 직전, 아바타가 그날의 모든 신호를 <b>한 문단으로 압축</b>해서 학습합니다.
+      이 페이지에서 매일의 요약을 돌아보고, 마음에 안 드는 부분은 직접 다시 쓸 수 있어요.
+    </p>
+  </div>
+
+  <div class="mc-section">
+    <h2>최근 30일 활동 강도</h2>
+    <div class="heatmap" id="heatmap"></div>
+    <div class="hint">색이 진할수록 신호가 많이 수집된 날입니다.</div>
+  </div>
+
+  <div class="mc-section">
+    <h2>📝 일일 요약 <span class="badge" id="day-count">0</span></h2>
+    <div class="mc-row" style="margin-bottom:10px">
+      <button class="mc-btn primary full" id="btn-gen-today">🧪 오늘 요약 지금 생성</button>
+      <button class="mc-btn full" id="btn-settings">⚙️ 정책 설정</button>
+    </div>
+    <div id="day-list"></div>
+    <div id="day-empty" class="mc-empty" style="display:none">
+      <div class="ico">🌙</div>
+      <div class="ti">아직 일일 요약이 없어요</div>
+      <div class="de">위 "오늘 요약 지금 생성" 버튼을 눌러서 첫 요약을 만들어 보세요.</div>
+    </div>
+  </div>
+</div>
+
+<script src="/aimessage/mychat/assets/mychat.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  document.getElementById('top').innerHTML = mc.renderTopbar({
+    title: '🧠 매일의 나 — Daily Self-Sync',
+    sub: '디지털 트윈이 매일 자라는 곳'
+  });
+
+  // ---------- pool key ----------
+  var KEY = 'mychat_daily_sync_v1';
+  function loadDays(){ return mc.lsGet(KEY, []); }
+  function saveDays(arr){ mc.lsSet(KEY, arr); }
+
+  function todayKey(){
+    var d = new Date(); return d.toISOString().slice(0,10);
+  }
+
+  // ---------- demo seeding ----------
+  function seedIfEmpty(){
+    var days = loadDays();
+    if (days.length > 0) return;
+    var demos = [];
+    var now = new Date();
+    function mk(daysAgo, summary, score, keys){
+      var d = new Date(now); d.setDate(d.getDate()-daysAgo);
+      demos.push({
+        date: d.toISOString().slice(0,10),
+        ts: d.getTime(),
+        summary: summary,
+        signal_score: score,
+        keys: keys
+      });
+    }
+    mk(3, '오늘의 너 — 오전 집중도 양호, 코드 리뷰 3건. 점심 후 미팅 2건. 수면 6h21m으로 평일 평균 회복. 핵심: ①PR #112 머지 ②엄마 통화 12분 ③헬스 걸음 8.4k.', 75,
+       ['집중↑','수면 회복','PR 머지']);
+    mk(2, '오늘의 너 — 카톡 폭증(150건)으로 단편적 하루. 회의 4건 처리했지만 깊은 작업 시간 부족. 저녁 운동으로 컨디션 회복.', 88,
+       ['카톡 폭증','회의↑','운동 회복']);
+    mk(1, '오늘의 너 — 평온한 하루. 이메일 정리, 가족 식사. 큰 결정 없음. 컨디션 안정.', 42,
+       ['평온','가족 식사']);
+    saveDays(demos);
+  }
+  seedIfEmpty();
+
+  // ---------- heatmap (30d) ----------
+  function renderHeatmap(){
+    var days = loadDays();
+    var byDate = {};
+    days.forEach(function(d){ byDate[d.date] = d.signal_score||0; });
+
+    var host = document.getElementById('heatmap');
+    host.innerHTML = '';
+    var now = new Date();
+    for (var i=29; i>=0; i--){
+      var dt = new Date(now); dt.setDate(dt.getDate()-i);
+      var k = dt.toISOString().slice(0,10);
+      var score = byDate[k] || 0;
+      var lv = score>=80?4 : score>=50?3 : score>=20?2 : score>0?1 : 0;
+      var el = document.createElement('div');
+      el.className='cell';
+      el.dataset.level = lv;
+      el.dataset.d = dt.getDate();
+      el.title = k+' · 신호 '+score;
+      host.appendChild(el);
+    }
+  }
+
+  // ---------- day list ----------
+  function renderDays(){
+    var days = loadDays().slice().sort(function(a,b){ return b.ts - a.ts; });
+    document.getElementById('day-count').textContent = days.length;
+    var empty = document.getElementById('day-empty');
+    var list = document.getElementById('day-list');
+    if (!days.length){ empty.style.display='block'; list.innerHTML=''; return; }
+    empty.style.display='none';
+
+    list.innerHTML = days.map(function(d){
+      var keys = (d.keys||[]).map(function(k){
+        return '<span class="mc-chip">'+mc.esc(k)+'</span>';
+      }).join('');
+      return ''
+        + '<div class="day-card" data-date="'+mc.esc(d.date)+'">'
+        +   '<div class="date">'+mc.esc(d.date)+' · 신호 '+(d.signal_score||0)+'</div>'
+        +   '<h3>오늘의 너</h3>'
+        +   '<p>'+mc.esc(d.summary||'')+'</p>'
+        +   '<div class="keys">'+keys+'</div>'
+        +   '<div style="margin-top:10px;display:flex;gap:6px">'
+        +     '<button class="mc-btn sm" data-act="edit">✏️ 수정</button>'
+        +     '<button class="mc-btn sm" data-act="inbox">📥 인박스에</button>'
+        +     '<button class="mc-btn sm danger" data-act="del">🗑</button>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+
+    if (!list.dataset.bound){
+      list.addEventListener('click', function(e){
+        var btn = e.target.closest('[data-act]'); if (!btn) return;
+        var card = e.target.closest('[data-date]');
+        var date = card.dataset.date;
+        var act = btn.dataset.act;
+        var arr = loadDays();
+        var i = arr.findIndex(function(x){ return x.date===date; });
+        if (i<0) return;
+
+        if (act==='edit'){
+          openEdit(arr[i]);
+        } else if (act==='del'){
+          if (!confirm('이 날 요약을 삭제할까요?')) return;
+          arr.splice(i,1); saveDays(arr); renderAll();
+        } else if (act==='inbox'){
+          mc.inboxAdd({
+            source:'manual', kind:'note', pinned:false,
+            title:'🧠 '+date+' 일일 요약',
+            summary: arr[i].summary
+          });
+          mc.toast('인박스에 저장','ok',1500);
+        }
+      });
+      list.dataset.bound='1';
+    }
+  }
+
+  function openEdit(rec){
+    mc.openModal(''
+      + '<h3>✏️ 일일 요약 수정 — '+mc.esc(rec.date)+'</h3>'
+      + '<div class="mc-field"><label>요약</label><textarea id="ed-sum" class="mc-textarea" style="min-height:120px">'+mc.esc(rec.summary)+'</textarea></div>'
+      + '<div class="mc-field"><label>핵심 키워드 (쉼표 구분)</label><input id="ed-keys" class="mc-input" value="'+mc.esc((rec.keys||[]).join(', '))+'"></div>'
+      + '<div class="actions">'
+      +   '<button class="mc-btn ghost" onclick="mc.closeModal()">취소</button>'
+      +   '<button class="mc-btn primary" id="ed-save">저장</button>'
+      + '</div>'
+    , { onOpen: function(box){
+        box.querySelector('#ed-save').addEventListener('click', function(){
+          var sum = box.querySelector('#ed-sum').value.trim();
+          var keysRaw = box.querySelector('#ed-keys').value.trim();
+          var arr = loadDays();
+          var i = arr.findIndex(function(x){ return x.date===rec.date; });
+          if (i>=0){
+            arr[i].summary = sum;
+            arr[i].keys = keysRaw ? keysRaw.split(',').map(function(s){ return s.trim(); }).filter(Boolean) : [];
+            saveDays(arr);
+          }
+          mc.closeModal();
+          mc.toast('수정 저장','ok',1200);
+          renderAll();
+        });
+      }});
+  }
+
+  // ---------- generate today ----------
+  document.getElementById('btn-gen-today').addEventListener('click', function(){
+    var btn = this; var orig = btn.innerHTML;
+    btn.innerHTML = '<span class="mc-spin"></span> 생성 중...';
+    btn.disabled = true;
+    // best-effort server
+    mc.api('/aimessage/mychat/api/daily_sync.php', { action:'generate_today' }).then(function(r){
+      btn.innerHTML = orig; btn.disabled = false;
+
+      var arr = loadDays();
+      var k = todayKey();
+      var rec;
+      if (r && r.ok && r.summary){
+        rec = { date: k, ts: Date.now(), summary: r.summary, signal_score: r.signal_score||50, keys: r.keys||[] };
+      } else {
+        // local synthesis (demo)
+        var s = mc.getSettings();
+        var depth = (s && s.daily_self_sync_depth) || 'standard';
+        var inbox = mc.inboxList().filter(function(it){
+          return (Date.now() - it.ts) < 24*3600*1000;
+        });
+        var pool = mc.poolList ? mc.poolList() : [];
+        var n = inbox.length + (pool ? pool.length : 0);
+        var pieces = inbox.slice(0,5).map(function(it){ return it.title; }).join(' / ');
+        var samples = {
+          brief:    '오늘의 너 — 신호 '+n+'건. '+(pieces||'특별한 이벤트 없음.'),
+          standard: '오늘의 너 — 신호 '+n+'건 수집. '+(pieces||'특별한 이벤트 없음.')+' 큰 결정 없이 안정적인 하루였어.',
+          deep:     '오늘의 너 — 신호 '+n+'건. '+(pieces||'정적')+'. 정서적 톤은 안정. 내일은 컨디션 회복이 우선.'
+        };
+        rec = { date: k, ts: Date.now(), summary: samples[depth]||samples.standard, signal_score: Math.min(95, 30 + n*5), keys:['신호'+n+'건'] };
+      }
+      // upsert
+      var i = arr.findIndex(function(x){ return x.date===k; });
+      if (i>=0) arr[i] = rec; else arr.unshift(rec);
+      saveDays(arr);
+      mc.toast('오늘의 너 요약 생성','ok');
+      renderAll();
+    });
+  });
+
+  document.getElementById('btn-settings').addEventListener('click', function(){
+    location.href = '/aimessage/mychat/phone-sync-settings.html#daily';
+  });
+
+  function renderAll(){ renderHeatmap(); renderDays(); }
+  renderAll();
+})();
+</script>
+</body>
+</html>

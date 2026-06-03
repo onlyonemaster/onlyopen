@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>API 사용량 가드 · MyChat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+<style>
+  .meter{
+    background:var(--bg-elev); border:1px solid var(--line);
+    border-radius: var(--r-lg); padding:18px; margin-bottom:14px;
+  }
+  .meter .big{font-size:32px;font-weight:800}
+  .meter .lbl{font-size:11px;color:var(--text-mute)}
+  .bar{
+    height:10px; background:var(--bg); border-radius:999px; overflow:hidden;
+    margin: 10px 0 6px;
+  }
+  .bar > span{display:block; height:100%; background:linear-gradient(90deg,#7c5cff,#4ea1ff); transition: width .4s ease}
+  .bar.warn > span{background:linear-gradient(90deg,#f6c544,#ff8a3a)}
+  .bar.danger > span{background:linear-gradient(90deg,#ff5d5d,#ff8a8a)}
+  .row-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px}
+  .row-stats .b{background:var(--bg); border-radius:8px;padding:8px;text-align:center}
+  .row-stats .b .n{font-size:16px;font-weight:700}
+  .row-stats .b .l{font-size:10px;color:var(--text-mute)}
+  .pmap{display:grid;grid-template-columns:1fr 1fr; gap:8px; margin-top:10px}
+  .pmap .it{
+    background:var(--bg-elev);border:1px solid var(--line-soft);border-radius:10px;padding:10px;
+    display:flex; gap:8px; align-items:center;
+  }
+  .pmap .it .ic{font-size:18px}
+  .pmap .it .b{flex:1;min-width:0}
+  .pmap .it .n{font-weight:700}
+  .pmap .it .l{font-size:11px;color:var(--text-mute)}
+</style>
+</head>
+<body>
+<div id="top"></div>
+
+<div class="mc-wrap">
+
+  <div class="mc-hero">
+    <h1>💸 API 사용량 가드</h1>
+    <p>
+      네 BYO API 키를 안전하게 쓰는 안전장치. <b>월 캡</b>·<b>임계치 알림</b>·
+      <b>저가 모델 자동 폴백</b>으로 예상치 못한 청구서를 막습니다.
+    </p>
+  </div>
+
+  <!-- big meter -->
+  <div class="meter">
+    <div style="display:flex;align-items:flex-end;gap:12px">
+      <div>
+        <div class="lbl">이번 달 사용</div>
+        <div class="big" id="m-usd">$0.00</div>
+        <div class="lbl"><span id="m-krw">₩0</span> · <span id="m-calls">0</span>회 호출</div>
+      </div>
+      <div style="flex:1;text-align:right">
+        <div class="lbl">월 캡</div>
+        <div style="font-size:18px;font-weight:700" id="m-cap">$0</div>
+      </div>
+    </div>
+    <div class="bar" id="m-bar"><span style="width:0%"></span></div>
+    <div class="lbl" id="m-pct">0%</div>
+
+    <div class="row-stats">
+      <div class="b"><div class="n" id="m-today">$0</div><div class="l">오늘</div></div>
+      <div class="b"><div class="n" id="m-avg">$0</div><div class="l">일 평균</div></div>
+      <div class="b"><div class="n" id="m-eta">—</div><div class="l">월말 예상</div></div>
+    </div>
+
+    <div class="pmap" id="m-providers"></div>
+  </div>
+
+  <!-- cap settings -->
+  <div class="mc-section">
+    <h2>📐 캡 설정</h2>
+
+    <div class="mc-field">
+      <label>월 비용 캡 (USD)</label>
+      <input id="cap-usd" type="number" min="0" step="1" class="mc-input">
+      <p class="hint">0이면 캡 없음. 일반 사용자 권장: $10~30</p>
+    </div>
+
+    <div class="mc-field">
+      <label>알림 임계치</label>
+      <div class="mc-toggle">
+        <button data-at="0.5">50%</button>
+        <button data-at="0.8" class="on">80%</button>
+        <button data-at="0.9">90%</button>
+      </div>
+    </div>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">캡 도달 시 저가 모델 자동 폴백</div>
+        <div class="de">GPT-4o → GPT-4o-mini, Claude Opus → Sonnet 등으로 자동 전환</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-fallback"><span class="sl"></span></label>
+    </div>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">캡 도달 시 새 요청 완전 차단</div>
+        <div class="de">폴백도 거부. 다음 달 또는 캡 상향 시까지 멈춤.</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-hardstop"><span class="sl"></span></label>
+    </div>
+  </div>
+
+  <!-- model presets -->
+  <div class="mc-section">
+    <h2>🔁 폴백 매핑</h2>
+    <p class="hint">고가 모델을 호출하려고 할 때, 캡 도달 후에는 짝지어진 저가 모델로 대체.</p>
+    <div id="fallback-list"></div>
+  </div>
+
+  <!-- buttons -->
+  <div class="mc-section">
+    <div class="mc-row">
+      <button class="mc-btn primary full" id="btn-save">💾 저장</button>
+      <button class="mc-btn full" id="btn-test-add">🧪 데모 $0.50 추가</button>
+      <button class="mc-btn danger" id="btn-reset">초기화</button>
+    </div>
+  </div>
+
+</div>
+
+<script src="/aimessage/mychat/assets/mychat.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  document.getElementById('top').innerHTML = mc.renderTopbar({
+    title: '💸 API 사용량 가드',
+    sub: '월 캡 · 알림 · 자동 폴백'
+  });
+
+  var s = mc.getSettings();
+  s.usage_cap = s.usage_cap || { monthly_usd: 20, alert_at: 0.8, fallback: true, hardstop: false };
+  s.fallback_map = s.fallback_map || {
+    'gpt-4o': 'gpt-4o-mini',
+    'claude-opus-4': 'claude-sonnet-4',
+    'gemini-2.5-pro': 'gemini-2.5-flash'
+  };
+
+  function renderTop(){
+    document.getElementById('cap-usd').value = s.usage_cap.monthly_usd;
+    document.querySelectorAll('[data-at]').forEach(function(b){
+      b.classList.toggle('on', Number(b.dataset.at) === Number(s.usage_cap.alert_at));
+    });
+    document.getElementById('sw-fallback').checked = !!s.usage_cap.fallback;
+    document.getElementById('sw-hardstop').checked = !!s.usage_cap.hardstop;
+  }
+
+  function renderMeter(){
+    var u = mc.usageGet();
+    var cap = s.usage_cap.monthly_usd || 0;
+    document.getElementById('m-usd').textContent  = mc.fmtUsd(u.total_usd);
+    document.getElementById('m-krw').textContent  = mc.fmtKrwLike(u.total_usd);
+    document.getElementById('m-calls').textContent= u.calls;
+    document.getElementById('m-cap').textContent  = cap>0 ? mc.fmtUsd(cap) : '없음';
+
+    var pct = cap>0 ? Math.min(100, Math.round((u.total_usd/cap)*100)) : 0;
+    var bar = document.getElementById('m-bar');
+    bar.className = 'bar' + (pct>=90?' danger':pct>=75?' warn':'');
+    bar.querySelector('span').style.width = pct+'%';
+    document.getElementById('m-pct').textContent = pct+'% 사용';
+
+    // today / avg / eta
+    var day = new Date().toISOString().slice(0,10);
+    var today = (u.by_day && u.by_day[day]) || 0;
+    var ds = Object.keys(u.by_day||{});
+    var avg = ds.length ? (u.total_usd/ds.length) : 0;
+    var now = new Date();
+    var daysInMonth = new Date(now.getFullYear(), now.getMonth()+1, 0).getDate();
+    var eta = avg * daysInMonth;
+    document.getElementById('m-today').textContent = mc.fmtUsd(today);
+    document.getElementById('m-avg').textContent   = mc.fmtUsd(avg);
+    document.getElementById('m-eta').textContent   = mc.fmtUsd(eta);
+
+    // providers
+    var pmap = document.getElementById('m-providers');
+    var pkeys = Object.keys(u.by_provider||{});
+    if (!pkeys.length){
+      pmap.innerHTML = '<div class="it"><div class="ic">·</div><div class="b"><div class="n">아직 호출 없음</div><div class="l">아래 데모 버튼으로 테스트해보세요</div></div></div>';
+    } else {
+      var icMap = { openai:'🟢', anthropic:'🟣', google:'🔵', custom:'⚪' };
+      pmap.innerHTML = pkeys.map(function(k){
+        return '<div class="it"><div class="ic">'+(icMap[k]||'•')+'</div><div class="b"><div class="n">'+mc.fmtUsd(u.by_provider[k])+'</div><div class="l">'+mc.esc(k)+'</div></div></div>';
+      }).join('');
+    }
+  }
+
+  function renderFallback(){
+    var rows = Object.keys(s.fallback_map).map(function(k){
+      return ''
+        + '<div class="mc-card" data-from="'+mc.esc(k)+'">'
+        +   '<div class="ic">⤵</div>'
+        +   '<div class="body">'
+        +     '<div class="ti">'+mc.esc(k)+'</div>'
+        +     '<div class="de">→ '+mc.esc(s.fallback_map[k])+'</div>'
+        +   '</div>'
+        +   '<button class="mc-btn sm ghost" data-act="rm">🗑</button>'
+        + '</div>';
+    });
+    rows.push(''
+      + '<div class="mc-card" style="background:transparent;border-style:dashed">'
+      +   '<div class="ic">＋</div>'
+      +   '<div class="body">'
+      +     '<input id="fm-from" class="mc-input" placeholder="원본 모델 (예: gpt-4o)" style="margin-bottom:6px">'
+      +     '<input id="fm-to"   class="mc-input" placeholder="폴백 모델 (예: gpt-4o-mini)">'
+      +   '</div>'
+      +   '<button class="mc-btn sm primary" id="fm-add">추가</button>'
+      + '</div>');
+    document.getElementById('fallback-list').innerHTML = rows.join('');
+  }
+
+  // bind
+  document.getElementById('cap-usd').addEventListener('change', function(e){
+    s.usage_cap.monthly_usd = Math.max(0, Number(e.target.value)||0);
+    renderMeter();
+  });
+  document.querySelectorAll('[data-at]').forEach(function(b){
+    b.addEventListener('click', function(){
+      s.usage_cap.alert_at = Number(b.dataset.at);
+      document.querySelectorAll('[data-at]').forEach(function(x){ x.classList.toggle('on', x===b); });
+    });
+  });
+  document.getElementById('sw-fallback').addEventListener('change', function(e){ s.usage_cap.fallback = e.target.checked; });
+  document.getElementById('sw-hardstop').addEventListener('change', function(e){ s.usage_cap.hardstop = e.target.checked; });
+
+  document.getElementById('fallback-list').addEventListener('click', function(e){
+    var rm = e.target.closest('[data-act="rm"]');
+    if (rm){
+      var card = e.target.closest('[data-from]');
+      delete s.fallback_map[card.dataset.from];
+      renderFallback();
+      return;
+    }
+    if (e.target.id === 'fm-add'){
+      var from = document.getElementById('fm-from').value.trim();
+      var to   = document.getElementById('fm-to').value.trim();
+      if (!from || !to){ mc.toast('원본과 폴백 둘 다 적어주세요','warn'); return; }
+      s.fallback_map[from] = to;
+      renderFallback();
+    }
+  });
+
+  document.getElementById('btn-save').addEventListener('click', function(){
+    mc.saveSettings({ usage_cap: s.usage_cap, fallback_map: s.fallback_map });
+    mc.toast('💾 저장됨','ok');
+  });
+  document.getElementById('btn-test-add').addEventListener('click', function(){
+    mc.usageAdd('openai', 0.5);
+    renderMeter();
+  });
+  document.getElementById('btn-reset').addEventListener('click', function(){
+    if (!confirm('이번 달 사용량을 초기화할까요? (캡 설정은 유지)')) return;
+    mc.lsSet('mychat_usage_v1', null);
+    renderMeter();
+    mc.toast('초기화됨','ok',1200);
+  });
+
+  renderTop(); renderMeter(); renderFallback();
+})();
+</script>
+</body>
+</html>
