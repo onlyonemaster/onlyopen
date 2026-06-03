@@ -356,7 +356,7 @@
     draft.predict = localPredict();
 
     // best-effort server call (won't block UI)
-    mc.api('/aimessage/mychat/api/decisions.php', { action:'predict', draft: draft }).then(function(r){
+    mc.api('/aimessage/mychat/api/decisions_v2.php', { action:'predict', draft: draft }).then(function(r){
       if (r && r.ok && Array.isArray(r.predict) && r.predict.length){
         draft.predict = r.predict;
         renderPredict();

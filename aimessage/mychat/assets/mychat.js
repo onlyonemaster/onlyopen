@@ -129,7 +129,7 @@
     Object.keys(patch||{}).forEach(function(k){ s[k] = patch[k]; });
     lsSet(LS_KEY_SETTINGS, s);
     // optimistic server save (no-op if endpoint missing)
-    api('/aimessage/mychat/api/settings.php', { action:'save_settings', settings: s });
+    api('/aimessage/mychat/api/settings_byok.php', { action:'save_settings', settings: s });
     return s;
   }
 

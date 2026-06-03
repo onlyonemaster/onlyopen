@@ -1377,7 +1377,7 @@ function initStorageMode(){
     if (local) { _storageMode = local; applyStorageBadge(); }
   } catch(e){}
   // 2) 서버 동기화
-  fetch('/aimessage/mychat/api/settings.php?action=get_settings', {credentials:'include'})
+  fetch('/aimessage/mychat/api/settings_byok.php?action=get_settings', {credentials:'include'})
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(d){
       if (d && d.ok && d.storage_mode) {

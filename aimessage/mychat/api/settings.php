@@ -1,68 +1,96 @@
 <?php
 /**
- * /aimessage/mychat/api/settings.php
- *  Actions: save_settings, get_settings, save_api_key, get_api_key, test_api_key
- *  ⚠️ 실서버에서는 API 키를 반드시 KMS/암호화 컬럼에 저장하세요.
+ * 마이챗 설정 API
+ * GET  → 현재 설정 조회
+ * POST → 저장 (action: save_all | pin | cancel_sub)
  */
-declare(strict_types=1);
-require __DIR__.'/_helper.php';
-$ctx = mc_init();
-$uid = $ctx['uid']; $action = $ctx['action']; $body = $ctx['body'];
+require_once __DIR__ . '/auth.php';
+require_once __DIR__ . '/../../config/database.php';
 
-try {
-  switch ($action) {
-    case 'save_settings':
-      $s = $body['settings'] ?? [];
-      // never persist raw api keys here unless caller marked it
-      mc_store_set($uid, 'settings', $s);
-      mc_ok(['saved'=>true]);
-      break;
+mychat_cors();
+$user = mychat_auth(false); // 구독 없어도 조회 가능
+$mem_id = $user['mem_id'];
+$db = getDatabaseConnection();
+$esc = $db->real_escape_string($mem_id);
 
-    case 'get_settings':
-      $s = mc_store_get($uid, 'settings', null);
-      mc_ok(['settings'=>$s]);
-      break;
+// ── GET: 설정 조회 ────────────────────────────────────────────
+if ($_SERVER['REQUEST_METHOD'] === 'GET') {
+    $avatar = $db->query("SELECT avatar_name, persona_prompt, data_storage_mode, status FROM mychat_avatar WHERE mem_id='{$esc}'")?->fetch_assoc();
+    $sub    = $db->query("SELECT plan_id, api_type, user_api_provider, user_api_model, status, expires_at FROM mychat_subscriptions WHERE mem_id='{$esc}' AND status='active' ORDER BY id DESC LIMIT 1")?->fetch_assoc();
 
-    case 'save_api_key':
-      $provider = $body['provider'] ?? '';
-      $key      = $body['api_key'] ?? '';
-      $extra    = [
-        'chat_model'  => $body['chat_model']  ?? null,
-        'embed_model' => $body['embed_model'] ?? null,
-        'base_url'    => $body['base_url']    ?? null
-      ];
-      if (!$provider || !$key) { mc_fail('missing_provider_or_key'); break; }
-      // simple "encrypt at rest" using a passphrase env var (demo only)
-      $pass = getenv('MYCHAT_KEY_SECRET') ?: 'demo-secret-not-for-production';
-      $iv = random_bytes(16);
-      $cipher = openssl_encrypt($key, 'AES-128-CBC', md5($pass), OPENSSL_RAW_DATA, $iv);
-      $blob = base64_encode($iv.$cipher);
-      $keys = mc_store_get($uid, 'api_keys', []);
-      $keys[$provider] = ['cipher'=>$blob, 'mask'=>'••••'.substr($key, -4), 'meta'=>$extra, 'ts'=>time()];
-      mc_store_set($uid, 'api_keys', $keys);
-      mc_ok(['saved'=>true, 'mask'=>$keys[$provider]['mask']]);
-      break;
+    mychat_json(['ok'=>true, 'avatar'=>$avatar, 'subscription'=>$sub]);
+}
 
-    case 'get_api_key':
-      $provider = $body['provider'] ?? '';
-      $keys = mc_store_get($uid, 'api_keys', []);
-      if (!isset($keys[$provider])){ mc_fail('not_found'); break; }
-      // return mask only (never the raw key over JSON)
-      mc_ok(['mask'=>$keys[$provider]['mask'], 'meta'=>$keys[$provider]['meta']]);
-      break;
+// ── POST: 설정 저장 ───────────────────────────────────────────
+$b = json_decode(file_get_contents('php://input'), true) ?: [];
+$action = $b['action'] ?? 'save_all';
 
-    case 'test_api_key':
-      // demo: pretend to test — accept any non-empty
-      $provider = $body['provider'] ?? '';
-      $key      = $body['api_key'] ?? '';
-      if (!$provider || !$key) { mc_fail('missing'); break; }
-      if (strlen($key) < 10) { mc_fail('key_too_short'); break; }
-      mc_ok(['provider'=>$provider, 'ok_at'=>time(), 'note'=>'demo-test (실 OpenAI/Anthropic ping은 서버 구현 필요)']);
-      break;
+// PIN 변경
+if ($action === 'pin') {
+    $pin = preg_replace('/\D/', '', $b['pin'] ?? '');
+    if (strlen($pin) !== 4) mychat_json(['ok'=>false,'error'=>'PIN은 4자리여야 합니다'], 400);
+    $hash = hash('sha256', $mem_id . $pin . 'MYCHAT_PIN_2026');
+    $db->query("UPDATE mychat_avatar SET pin_hash='{$db->real_escape_string($hash)}' WHERE mem_id='{$esc}'");
+    if (!$db->affected_rows) {
+        $db->query("INSERT IGNORE INTO mychat_avatar (mem_id, pin_hash) VALUES ('{$esc}','{$db->real_escape_string($hash)}')");
+    }
+    mychat_json(['ok'=>true]);
+}
 
-    default:
-      mc_fail('unknown_action', ['received'=>$action]);
-  }
-} catch (\Throwable $e) {
-  mc_fail('server_error', ['detail'=> getenv('APP_DEBUG') ? $e->getMessage() : 'internal'], 500);
+// Panic Lock — 모든 외부 공개 데이터 즉시 비공개 전환
+if ($action === 'panic_lock') {
+    $db->query("UPDATE mychat_data_pool SET scope='private' WHERE mem_id='{$esc}' AND scope != 'private'");
+    $db->query("UPDATE mychat_avatar SET panic_lock=1, updated_at=NOW() WHERE mem_id='{$esc}'");
+    mychat_json(['ok'=>true, 'msg'=>'모든 외부 공개 데이터가 비공개 처리되었습니다.']);
+}
+if ($action === 'panic_unlock') {
+    $db->query("UPDATE mychat_avatar SET panic_lock=0, updated_at=NOW() WHERE mem_id='{$esc}'");
+    mychat_json(['ok'=>true]);
+}
+
+// 구독 해지
+
+if ($action === "cancel_sub") {
+    $db->query("UPDATE mychat_subscriptions SET status='cancelled' WHERE mem_id='{$esc}' AND status='active'");
+    mychat_json(['ok'=>true]);
+}
+
+// 전체 저장 (save_all)
+$name    = mb_substr(trim($b['avatar_name']      ?? '나의 아바타'), 0, 30);
+$persona = mb_substr(trim($b['persona_prompt']   ?? ''), 0, 2000);
+$storage = in_array($b['data_storage_mode'] ?? '', ['device','server','hybrid']) ? $b['data_storage_mode'] : 'server';
+$apiKey  = trim($b['api_key']     ?? '');
+$apiProv = trim($b['api_provider'] ?? 'deepseek');
+$apiMdl  = trim($b['api_model']   ?? 'deepseek-chat');
+
+// 아바타 upsert
+$esc_name    = $db->real_escape_string($name);
+$esc_persona = $db->real_escape_string($persona);
+$esc_storage = $db->real_escape_string($storage);
+$db->query("INSERT INTO mychat_avatar (mem_id, avatar_name, persona_prompt, data_storage_mode)
+            VALUES ('{$esc}','{$esc_name}','{$esc_persona}','{$esc_storage}')
+            ON DUPLICATE KEY UPDATE
+              avatar_name='{$esc_name}', persona_prompt='{$esc_persona}',
+              data_storage_mode='{$esc_storage}'");
+
+// API키 업데이트 (있을 때만)
+if ($apiKey) {
+    $encKey  = mychat_encrypt_key($apiKey, $mem_id);
+    $esc_enc = $db->real_escape_string($encKey);
+    $esc_prov= $db->real_escape_string($apiProv);
+    $esc_mdl = $db->real_escape_string($apiMdl);
+    $db->query("UPDATE mychat_subscriptions
+                SET api_type='user_key', user_api_key_enc='{$esc_enc}',
+                    user_api_provider='{$esc_prov}', user_api_model='{$esc_mdl}'
+                WHERE mem_id='{$esc}' AND status='active'");
+}
+
+mychat_json(['ok'=>true]);
+
+// ── 암호화 헬퍼 ──────────────────────────────────────────────
+function mychat_encrypt_key(string $raw, string $mem_id): string {
+    $key = hash('sha256', $mem_id . 'MYCHAT_ENC_SALT_2026', true);
+    $iv  = openssl_random_pseudo_bytes(16);
+    $enc = openssl_encrypt($raw, 'aes-256-cbc', $key, OPENSSL_RAW_DATA, $iv);
+    return base64_encode($iv . $enc);
 }

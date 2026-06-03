@@ -454,7 +454,7 @@ function saveStorageMode(){
   // 로컬 즉시 반영
   try { localStorage.setItem('mychatStorageMode', mode); } catch(e){}
   setStatus('storageStatus', '저장 중...', 'info');
-  fetch('/aimessage/mychat/api/settings.php', {
+  fetch('/aimessage/mychat/api/settings_byok.php', {
     method:'POST', credentials:'include',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({ action:'set_storage_mode', mode:mode })
@@ -513,7 +513,7 @@ document.getElementById('apiKeyInput').addEventListener('input', function(e){
 });
 
 function loadApiKeyForProvider(prov){
-  fetch('/aimessage/mychat/api/settings.php?action=get_api_key&provider='+encodeURIComponent(prov), {credentials:'include'})
+  fetch('/aimessage/mychat/api/settings_byok.php?action=get_api_key&provider='+encodeURIComponent(prov), {credentials:'include'})
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(d){
       if (d && d.ok && d.key_present) {
@@ -534,7 +534,7 @@ function testApiKey(){
   var key = document.getElementById('apiKeyInput').value.trim();
   if (!key) { setStatus('apiStatus', '키를 먼저 입력해주세요', 'err'); return; }
   setStatus('apiStatus', '🔌 연결 테스트 중...', 'info');
-  fetch('/aimessage/mychat/api/settings.php', {
+  fetch('/aimessage/mychat/api/settings_byok.php', {
     method:'POST', credentials:'include',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
@@ -561,7 +561,7 @@ function saveApiKey(){
   var key = document.getElementById('apiKeyInput').value.trim();
   if (!key) { setStatus('apiStatus', '키를 입력해주세요', 'err'); return; }
   setStatus('apiStatus', '저장 중...', 'info');
-  fetch('/aimessage/mychat/api/settings.php', {
+  fetch('/aimessage/mychat/api/settings_byok.php', {
     method:'POST', credentials:'include',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({
@@ -606,7 +606,7 @@ function saveApiKey(){
 function toggleSetting(key, el){
   var on = !el.classList.contains('on');
   el.classList.toggle('on', on);
-  fetch('/aimessage/mychat/api/settings.php', {
+  fetch('/aimessage/mychat/api/settings_byok.php', {
     method:'POST', credentials:'include',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({ action:'set_flag', key:key, value:on ? 1 : 0 })
@@ -623,7 +623,7 @@ function toggleSetting(key, el){
 function exportAll(){
   toast('📦 전체 데이터를 암호화 패키지로 내보내는 중...', '');
   // 서버에서 zip+enc 다운로드 URL 받기 (미구현시 안내)
-  fetch('/aimessage/mychat/api/settings.php?action=export_all', {credentials:'include'})
+  fetch('/aimessage/mychat/api/settings_byok.php?action=export_all', {credentials:'include'})
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(d){
       if (d && d.ok && d.url) {
@@ -644,7 +644,7 @@ function wipeAll(){
   if (!c1) return;
   var phrase = prompt('확인을 위해 다음 문장을 그대로 입력해주세요:\n\n  "모두 삭제합니다"');
   if (phrase !== '모두 삭제합니다') { toast('❌ 문구가 일치하지 않아 취소됨', 'err'); return; }
-  fetch('/aimessage/mychat/api/settings.php', {
+  fetch('/aimessage/mychat/api/settings_byok.php', {
     method:'POST', credentials:'include',
     headers:{'Content-Type':'application/json'},
     body:JSON.stringify({ action:'wipe_all' })
@@ -662,7 +662,7 @@ function wipeAll(){
 // ── 초기 로드 ────────────────────────────────────────
 function init(){
   // 1. 저장소 모드 로드
-  fetch('/aimessage/mychat/api/settings.php?action=get_settings', {credentials:'include'})
+  fetch('/aimessage/mychat/api/settings_byok.php?action=get_settings', {credentials:'include'})
     .then(function(r){ return r.ok ? r.json() : null; })
     .then(function(d){
       if (!d || !d.ok) {
