@@ -1,0 +1,96 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>MyChat Second-Me · 시뮬레이션 데모</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+<style>
+  .grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .grid a{
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius: var(--r-md); padding:14px; text-decoration:none; color:var(--text);
+    display:flex; align-items:center; gap:10px; transition: border-color .15s, transform .08s;
+  }
+  .grid a:hover{border-color:var(--accent); transform: translateY(-1px)}
+  .grid a .ic{font-size:24px}
+  .grid a .lb{font-weight:700; font-size:14px}
+  .grid a .de{font-size:11px; color:var(--text-mute); margin-top:2px}
+  .grid a.full{grid-column:1/-1}
+  .step{
+    background:var(--bg-elev); padding:10px 14px; border-radius:10px; margin:6px 0;
+    border-left: 3px solid var(--accent); font-size:13px; line-height:1.6;
+  }
+  .step b{color:var(--accent)}
+</style>
+</head>
+<body>
+<div class="mc-wrap">
+
+  <div class="mc-hero" style="background:linear-gradient(135deg,#3b1d6e,#1a2a5a)">
+    <h1 style="font-size:24px">🪞 MyChat — Second-Me</h1>
+    <p>
+      나보다 나를 더 잘 아는 또 하나의 나.<br>
+      이 데모는 <b>로컬 시뮬레이션 모드</b>입니다 — 모든 데이터는 사용자 기기 안에만 저장됩니다.
+    </p>
+  </div>
+
+  <div class="mc-section">
+    <h2>🗺️ 추천 동선 (5분 투어)</h2>
+    <div class="step">① <b>📥 라이프 인박스</b> — 데모로 미리 들어와 있는 5건의 신호를 확인하고, ⭐ 고정·🎯 의사결정 카드로 변환·🗑 삭제를 눌러보세요.</div>
+    <div class="step">② <b>🎯 의사결정 어시스턴트</b> — 질문 → 선택지 2개 → 예측 → 한 장 카드 → 결정 → 회고. 한 사이클 돌려보세요. 매칭률 KPI가 자라는 게 핵심.</div>
+    <div class="step">③ <b>🧠 매일의 나</b> — 30일 히트맵 + 오늘 요약 만들기 + 수정 모달.</div>
+    <div class="step">④ <b>🛡️ 위험 신호 워치독</b> — "지금 점검" 버튼으로 신호 발생 시뮬레이션, 룰 토글.</div>
+    <div class="step">⑤ <b>💸 API 사용량 가드</b> — 월 캡 설정 + "데모 $0.50 추가" 버튼으로 미터·임계치 알림 체험.</div>
+    <div class="step">⑥ <b>🪪 디지털 유산</b> — 신뢰 1인 정보·전달 범위·마지막 메시지 → 묶음 미리보기.</div>
+    <div class="step">⑦ <b>📱 폰 자동 동기화</b> — 소스별 정책, 취침 시간, Daily Self-Sync 옵션.</div>
+    <div class="step">⑧ <b>🎓 통합 학습 (learn-v2)</b> — 14 채널 × 5 입력 방식. 📱 폰 데이터 자동채움 모달.</div>
+    <div class="step">⑨ <b>💾 저장소·BYO API 키</b> — 서버/온디바이스/하이브리드, 4 제공자 키 마스킹.</div>
+  </div>
+
+  <div class="mc-section">
+    <h2>🎮 페이지 바로가기</h2>
+    <div class="grid">
+      <a href="/aimessage/mychat/life-inbox.html"><div class="ic">📥</div><div><div class="lb">라이프 인박스</div><div class="de">통합 수신함 (데모 5건)</div></div></a>
+      <a href="/aimessage/mychat/decision-assistant.html"><div class="ic">🎯</div><div><div class="lb">의사결정</div><div class="de">Predict→Decide→Reflect + 카드</div></div></a>
+      <a href="/aimessage/mychat/daily-sync.html"><div class="ic">🧠</div><div><div class="lb">매일의 나</div><div class="de">일일 자가 동기화</div></div></a>
+      <a href="/aimessage/mychat/anomaly-watchdog.html"><div class="ic">🛡️</div><div><div class="lb">워치독</div><div class="de">위험 신호 감지</div></div></a>
+      <a href="/aimessage/mychat/usage-guard.html"><div class="ic">💸</div><div><div class="lb">사용량 가드</div><div class="de">BYO 키 비용 캡</div></div></a>
+      <a href="/aimessage/mychat/digital-legacy.html"><div class="ic">🪪</div><div><div class="lb">디지털 유산</div><div class="de">신뢰 1인 전달</div></div></a>
+      <a href="/aimessage/mychat/phone-sync-settings.html"><div class="ic">📱</div><div><div class="lb">폰 자동 동기화</div><div class="de">소스별 정책</div></div></a>
+      <a href="/aimessage/mychat/learn-v2.html"><div class="ic">🎓</div><div><div class="lb">통합 학습</div><div class="de">14×5 입력</div></div></a>
+      <a href="/aimessage/mychat/storage-settings.html"><div class="ic">💾</div><div><div class="lb">저장소·API 키</div><div class="de">데이터 주권</div></div></a>
+      <a href="/aimessage/mychat/avatar-studio.html"><div class="ic">🎨</div><div><div class="lb">아바타 스튜디오</div><div class="de">얼굴·목소리</div></div></a>
+      <a href="/aimessage/mychat/index.html" class="full"><div class="ic">🏠</div><div><div class="lb">메인 채팅 + 메뉴 허브</div><div class="de">모든 메뉴 진입점</div></div></a>
+    </div>
+  </div>
+
+  <div class="mc-section">
+    <h2>💡 시뮬레이션 모드란?</h2>
+    <p class="hint" style="font-size:13px">
+      이 데모는 백엔드 DB 없이 <b>localStorage</b>로만 동작합니다.<br>
+      • 데이터는 사장님 브라우저에만 저장됩니다 (서버에 안 갑니다)<br>
+      • 새로고침해도 유지됩니다<br>
+      • 다 봤으면 아래 <b>전체 초기화</b>로 깨끗하게 지울 수 있습니다<br>
+      • API 호출은 모두 폴백 처리되어 UX는 정상 동작합니다
+    </p>
+    <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
+      <button class="mc-btn danger" onclick="if(confirm('데모 데이터 모두 삭제할까요?')){Object.keys(localStorage).filter(k=>k.startsWith('mychat')||k.startsWith('mc_')).forEach(k=>localStorage.removeItem(k));alert('초기화 완료');location.reload();}">🗑 전체 초기화</button>
+      <button class="mc-btn" onclick="alert('현재 저장: '+(Object.keys(localStorage).filter(k=>k.startsWith('mychat')||k.startsWith('mc_')).length)+'개 키, '+JSON.stringify(localStorage).length+' bytes')">📊 저장량</button>
+    </div>
+  </div>
+</div>
+
+<script src="/aimessage/mychat/assets/mychat.js"></script>
+<script>
+// auto-seed inbox on first visit
+(function(){
+  try{
+    if (window.mc && mc.seedInboxIfEmpty) mc.seedInboxIfEmpty();
+  }catch(e){}
+})();
+</script>
+</body>
+</html>
