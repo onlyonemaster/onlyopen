@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#7e22ce">
+<title>학습 데이터 · 마이챗</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f172a;--bg2:#1e293b;--border:#334155;
+  --pur:#7e22ce;--pur2:#9333ea;--gold:#b45309;
+  --text:#f1f5f9;--dim:#94a3b8;--dim2:#64748b;--green:#22c55e;
+}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;padding-bottom:60px}
+
+/* 헤더 */
+.hd{display:flex;align-items:center;gap:12px;padding:16px;
+    background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.hd-back{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px}
+.hd-title{font-size:16px;font-weight:700;flex:1}
+.hd-cnt{font-size:11px;color:var(--dim2);background:var(--bg);border:1px solid var(--border);
+        padding:4px 10px;border-radius:12px}
+
+/* 채널 그리드 */
+.ch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:16px}
+.ch-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+         padding:14px 12px;cursor:pointer;transition:all .2s;text-align:center;position:relative}
+.ch-card:active{transform:scale(.97)}
+.ch-card.selected{border-color:var(--pur2);background:rgba(147,51,234,.08)}
+.ch-icon{font-size:28px;margin-bottom:8px}
+.ch-name{font-size:13px;font-weight:700}
+.ch-desc{font-size:10px;color:var(--dim);margin-top:3px}
+.ch-cnt{font-size:10px;color:var(--pur2);margin-top:4px;font-weight:600}
+
+/* [P1 2026-06-04] 채널 카드 인라인 공개범위(scope) 토글 */
+.ch-scope{position:absolute;top:6px;right:6px;display:flex;gap:2px;
+          background:rgba(15,23,42,.7);border:1px solid var(--border);border-radius:8px;padding:2px}
+.ch-scope-btn{background:transparent;border:none;color:var(--dim2);
+              font-size:11px;line-height:1;padding:3px 5px;border-radius:5px;cursor:pointer;
+              transition:all .15s}
+.ch-scope-btn:hover{color:var(--text)}
+.ch-scope-btn.on{background:var(--pur);color:#fff}
+.ch-scope-btn.on[data-scope="public"]{background:#22c55e}
+.ch-scope-btn.on[data-scope="both"]{background:#d97706}
+.ch-scope-hint{font-size:10px;color:var(--dim2);text-align:center;padding:8px 16px 0;line-height:1.5}
+
+/* 입력 패널 */
+.input-panel{display:none;position:fixed;bottom:0;left:0;right:0;z-index:100;
+             background:var(--bg2);border-top:1px solid var(--border);
+             padding:16px;max-height:80vh;overflow-y:auto}
+.input-panel.open{display:block}
+.panel-head{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+.panel-icon{font-size:22px}
+.panel-title{font-size:15px;font-weight:700;flex:1}
+.panel-close{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer}
+
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--dim);font-weight:600;margin-bottom:5px}
+.field input,.field textarea,.field select{
+  width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+  padding:10px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--pur2)}
+
+/* scope 토글 */
+.scope-group{display:flex;gap:6px}
+.scope-btn{flex:1;padding:7px 0;border-radius:8px;border:1px solid var(--border);
+           background:transparent;color:var(--dim);font-size:12px;font-weight:600;cursor:pointer}
+.scope-btn.active{background:var(--pur);border-color:var(--pur);color:#fff}
+
+/* 저장 버튼 */
+.btn-save{width:100%;padding:13px;border-radius:12px;margin-top:4px;
+          background:linear-gradient(135deg,var(--pur),var(--gold));
+          border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer}
+.btn-save:active{opacity:.85}
+
+/* 데이터 목록 */
+.data-list{padding:0 16px}
+.data-item{background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+           padding:12px 14px;margin-bottom:8px;display:flex;align-items:flex-start;gap:10px}
+.data-item-body{flex:1;min-width:0}
+.data-item-title{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.data-item-meta{font-size:11px;color:var(--dim2);margin-top:3px}
+.data-item-scope{font-size:10px;padding:1px 6px;border-radius:6px;font-weight:700}
+.scope-pri{background:rgba(147,51,234,.15);color:#c4b5fd}
+.scope-pub{background:rgba(34,197,94,.15);color:var(--green)}
+.data-del{background:none;border:none;color:var(--dim2);font-size:14px;cursor:pointer;padding:4px;flex-shrink:0}
+.data-del:hover{color:var(--red)}
+
+/* 빈 상태 */
+.empty{text-align:center;padding:40px 20px;color:var(--dim2)}
+.empty-icon{font-size:36px;margin-bottom:10px}
+
+/* 탭 (채널 선택 후) */
+.back-btn{display:flex;align-items:center;gap:8px;padding:12px 16px;
+          background:transparent;border:none;color:var(--dim);cursor:pointer;font-size:13px}
+.back-btn:hover{color:var(--text)}
+
+.toast{position:fixed;bottom:80px;left:50%;transform:translateX(-50%);
+       background:#1e293b;border:1px solid var(--pur);color:#c4b5fd;
+       padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;
+       opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+.overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);z-index:99}
+.overlay.open{display:block}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <button class="hd-back" onclick="goBack()"><i class="fas fa-arrow-left"></i></button>
+  <div class="hd-title" id="hdTitle">학습 데이터</div>
+  <div class="hd-cnt" id="hdCnt">0건</div>
+</div>
+
+<!-- 채널 그리드 -->
+<div id="chGrid">
+  <div style="padding:14px 16px 6px;font-size:12px;color:var(--dim);font-weight:700;letter-spacing:.5px;text-transform:uppercase">
+    📡 데이터 채널 선택
+  </div>
+  <!-- [P1 2026-06-04] 채널 카드 우측 상단 아이콘이 그 채널의 기본 공개범위입니다.
+       🔒 나만 / 🌐 외부도 / ⚖️ 둘다 — 별도 '공개범위 관리' 메뉴는 제거됨 -->
+  <div class="ch-scope-hint">
+    각 채널 우측 상단의 🔒 🌐 ⚖️ 를 눌러 <b>이 채널의 기본 공개범위</b>를 정하세요.
+  </div>
+  <div class="ch-grid" id="chGridInner"></div>
+</div>
+
+<!-- 채널별 데이터 목록 -->
+<div id="dataView" style="display:none">
+  <button class="back-btn" onclick="showGrid()"><i class="fas fa-arrow-left"></i> 채널 목록</button>
+  <div style="padding:0 16px 12px">
+    <div id="dvTitle" style="font-size:16px;font-weight:700"></div>
+    <div id="dvCnt" style="font-size:12px;color:var(--dim2);margin-top:3px"></div>
+  </div>
+  <div class="data-list" id="dataList"></div>
+  <div style="padding:0 16px;margin-top:8px">
+    <button class="btn-save" onclick="openPanel()" style="font-size:13px;padding:11px">
+      <i class="fas fa-plus"></i> 이 채널에 데이터 추가
+    </button>
+  </div>
+</div>
+
+<!-- 입력 패널 -->
+<div class="overlay" id="overlay" onclick="closePanel()"></div>
+<div class="input-panel" id="inputPanel">
+  <div class="panel-head">
+    <div class="panel-icon" id="panelIcon"></div>
+    <div class="panel-title" id="panelTitle">데이터 추가</div>
+    <button class="panel-close" onclick="closePanel()"><i class="fas fa-times"></i></button>
+  </div>
+  <div class="field">
+    <label>제목 (선택)</label>
+    <input type="text" id="inTitle" placeholder="예: 2024년 중요한 결정">
+  </div>
+  <div class="field">
+    <label>내용 <span style="color:#ef4444">*</span></label>
+    <textarea id="inContent" rows="5" placeholder="자유롭게 입력하세요. 더 많을수록 아바타가 더 잘 이해합니다."></textarea>
+  </div>
+  <div class="field">
+    <label>공개 범위</label>
+    <div class="scope-group">
+      <button class="scope-btn active" data-scope="private" onclick="setScope(this)">🔒 나만</button>
+      <button class="scope-btn" data-scope="public" onclick="setScope(this)">🌐 외부도</button>
+      <button class="scope-btn" data-scope="both" onclick="setScope(this)">⚖️ 둘 다</button>
+    </div>
+    <div style="font-size:11px;color:var(--dim2);margin-top:5px">기본값: 나만 보기 (권장)</div>
+  </div>
+  <button class="btn-save" onclick="saveData()">
+    <i class="fas fa-save"></i> 저장하기
+  </button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+  <!-- 폰 데이터 연동 안내 (앱에서 자동 동기화) -->
+  <div id="phoneSection" style="display:none;margin:14px 16px;background:#1e293b;border:1px solid #334155;border-radius:14px;padding:16px">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px">
+      <div style="width:32px;height:32px;border-radius:8px;background:linear-gradient(135deg,#7e22ce,#b45309);display:flex;align-items:center;justify-content:center;font-size:14px">📱</div>
+      <div style="font-size:14px;font-weight:700">폰 데이터 자동 연동</div>
+      <span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;background:rgba(34,197,94,.15);color:#22c55e;margin-left:auto" id="phoneSyncBadge">미연동</span>
+    </div>
+    <div style="font-size:12px;color:#94a3b8;margin-bottom:12px;line-height:1.6">
+      아이엠 앱(iamapp)에서 마이챗 연동을 활성화하면<br>
+      통화기록·문자·건강·캘린더가 자동으로 수집됩니다.
+    </div>
+    <div id="phoneSyncItems">
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #334155">
+        <span style="font-size:16px">📞</span>
+        <div style="flex:1;font-size:12px">통화 기록</div>
+        <span style="font-size:11px;color:#64748b" id="callCount">0건</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #334155">
+        <span style="font-size:16px">💬</span>
+        <div style="flex:1;font-size:12px">문자 요약</div>
+        <span style="font-size:11px;color:#64748b" id="smsCount">0건</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid #334155">
+        <span style="font-size:16px">🏃</span>
+        <div style="flex:1;font-size:12px">건강 데이터</div>
+        <span style="font-size:11px;color:#64748b" id="healthCount">0건</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 0">
+        <span style="font-size:16px">📅</span>
+        <div style="flex:1;font-size:12px">캘린더 일정</div>
+        <span style="font-size:11px;color:#64748b" id="calCount">0건</span>
+      </div>
+    </div>
+    <div style="margin-top:12px;padding:10px;background:rgba(147,51,234,.08);border:1px solid rgba(147,51,234,.3);border-radius:8px;font-size:11px;color:#c4b5fd">
+      <i class="fas fa-info-circle"></i>
+      아이엠 앱 → 설정 → 마이챗 연동 → 데이터 동기화 켜기
+    </div>
+  </div>
+
+<script>
+var CHANNELS = [
+  {v:'basic',       label:'기본 정보',   icon:'👤', desc:'이름·직업·가치관·인생관'},
+  {v:'childhood',   label:'어린 시절',   icon:'🧸', desc:'성장 스토리·기억·경험'},
+  {v:'diary',       label:'일기·메모',   icon:'📔', desc:'감정·생각·하루 기록'},
+  {v:'health',      label:'건강 기록',   icon:'🏃', desc:'걸음수·심박·수면·운동'},
+  {v:'phone',       label:'통화·문자',   icon:'📱', desc:'중요 통화 내용·연락처 메모'},
+  {v:'file',        label:'파일 자료',   icon:'📁', desc:'문서·PDF·계약서·자격증'},
+  {v:'voice',       label:'음성 기록',   icon:'🎙️', desc:'녹음 → 텍스트 자동 변환'},
+  {v:'image',       label:'이미지',      icon:'🖼️', desc:'사진 분석·OCR·감정 기록'},
+  {v:'fingerprint', label:'지문',        icon:'☝️', desc:'성격·기질 분석 데이터'},
+  {v:'palmistry',   label:'손금',        icon:'🖐️', desc:'운세·기질·건강 지표'},
+  {v:'physiognomy', label:'관상',        icon:'👁️', desc:'인상·성격 AI 분석'},
+  {v:'saju',        label:'사주',        icon:'🔮', desc:'생년월일시 기반 운세'},
+  {v:'astrology',   label:'점성술',      icon:'⭐', desc:'별자리 기반 성향'},
+  {v:'etc',         label:'기타',        icon:'📝', desc:'분류하기 어려운 데이터'},
+];
+
+var _curCh = null;
+var _scope = 'private';
+var _counts = {};
+// [P1 2026-06-04] 채널별 기본 공개범위 (private/public/both)
+// 서버 동기화 실패시 로컬 폴백
+var _channelScopes = {};
+var SCOPES_LOCAL_KEY = 'mychatChannelScopes_v1';
+
+function loadChannelScopesLocal(){
+  try {
+    var raw = localStorage.getItem(SCOPES_LOCAL_KEY);
+    if (raw) _channelScopes = JSON.parse(raw) || {};
+  } catch(e){ _channelScopes = {}; }
+}
+function saveChannelScopesLocal(){
+  try { localStorage.setItem(SCOPES_LOCAL_KEY, JSON.stringify(_channelScopes)); } catch(e){}
+}
+
+// ── 초기화 ───────────────────────────────────────
+function init() {
+  loadChannelScopesLocal();
+  loadChannelScopesServer();
+  loadCounts();
+  renderGrid();
+  loadPhoneStats();
+  // URL 파라미터로 채널 바로 열기
+  var ch = new URLSearchParams(location.search).get('ch');
+  if (ch) setTimeout(()=>openChannel(ch), 300);
+}
+
+function loadChannelScopesServer(){
+  // 서버에 저장된 채널별 scope 동기화 (API 미존재시 무시)
+  fetch('/aimessage/mychat/api/data.php?action=channel_scopes', {credentials:'include'})
+    .then(r=>r.ok ? r.json() : null)
+    .then(d=>{
+      if (d && d.ok && d.scopes) {
+        _channelScopes = Object.assign({}, _channelScopes, d.scopes);
+        saveChannelScopesLocal();
+        renderGrid();
+      }
+    }).catch(()=>{});
+}
+
+function loadCounts() {
+  fetch('/aimessage/mychat/api/data.php?action=counts', {credentials:'include'})
+    .then(r=>r.json()).then(d=>{
+      if (d.ok) {
+        _counts = d.counts || {};
+        document.getElementById('hdCnt').textContent = (d.total||0) + '건';
+        renderGrid();
+      }
+    });
+}
+
+function renderGrid() {
+  var grid = document.getElementById('chGridInner');
+  grid.innerHTML = CHANNELS.map(function(ch){
+    var cnt = _counts[ch.v] || 0;
+    var sc = _channelScopes[ch.v] || 'private';
+    // [P1] 채널 카드 우측 상단의 scope 미니 토글 (3택)
+    var scopeBtns = ''
+      + '<button class="ch-scope-btn '+(sc==='private'?'on':'')+'" data-scope="private" '
+      +   'data-ch="'+ch.v+'" title="나만">🔒</button>'
+      + '<button class="ch-scope-btn '+(sc==='public'?'on':'')+'"  data-scope="public" '
+      +   'data-ch="'+ch.v+'" title="외부도">🌐</button>'
+      + '<button class="ch-scope-btn '+(sc==='both'?'on':'')+'"    data-scope="both" '
+      +   'data-ch="'+ch.v+'" title="둘 다">⚖️</button>';
+    return '<div class="ch-card" data-ch="'+ch.v+'">'
+      + '<div class="ch-scope" data-role="scope">'+scopeBtns+'</div>'
+      + '<div class="ch-icon">'+ch.icon+'</div>'
+      + '<div class="ch-name">'+ch.label+'</div>'
+      + '<div class="ch-desc">'+ch.desc+'</div>'
+      + (cnt ? '<div class="ch-cnt">'+cnt+'건 저장됨</div>' : '<div class="ch-cnt">추가하기</div>')
+      + '</div>';
+  }).join('');
+
+  // [P1] 위임 클릭: scope 버튼은 카드 클릭과 분리, 카드 본체는 채널 진입
+  if (!grid.dataset.bound) {
+    grid.addEventListener('click', function(e){
+      var sb = e.target.closest('.ch-scope-btn');
+      if (sb) {
+        e.stopPropagation();
+        setChannelScope(sb.dataset.ch, sb.dataset.scope);
+        return;
+      }
+      var card = e.target.closest('.ch-card');
+      if (card && card.dataset.ch) openChannel(card.dataset.ch);
+    });
+    grid.dataset.bound = '1';
+  }
+}
+
+// [P1 2026-06-04] 채널별 기본 scope 설정 — 클릭 즉시 반영
+function setChannelScope(chV, scope){
+  if (!chV || !scope) return;
+  _channelScopes[chV] = scope;
+  saveChannelScopesLocal();
+  // 시각 즉시 반영
+  document.querySelectorAll('.ch-scope-btn[data-ch="'+chV+'"]').forEach(function(b){
+    b.classList.toggle('on', b.dataset.scope === scope);
+  });
+  // 서버에도 저장 시도 (실패해도 로컬 보존)
+  fetch('/aimessage/mychat/api/data.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'set_channel_scope', channel:chV, scope:scope})
+  }).then(r=>r.json()).then(d=>{
+    if (d && d.ok) {
+      // 조용히 표시 (너무 시끄럽지 않게)
+    } else {
+      showToast('💾 로컬 저장됨 (서버 동기화는 다음에)');
+    }
+  }).catch(()=>{ showToast('💾 로컬 저장됨 (오프라인)'); });
+}
+
+// ── 채널 열기 ────────────────────────────────────
+function openChannel(v) {
+  _curCh = CHANNELS.find(c=>c.v===v);
+  if (!_curCh) return;
+  document.getElementById('chGrid').style.display = 'none';
+  document.getElementById('dataView').style.display = 'block';
+  document.getElementById('dvTitle').textContent = _curCh.icon + ' ' + _curCh.label;
+  document.getElementById('hdTitle').textContent = _curCh.label;
+  loadData(v);
+}
+
+function showGrid() {
+  document.getElementById('chGrid').style.display = 'block';
+  document.getElementById('dataView').style.display = 'none';
+  document.getElementById('hdTitle').textContent = '학습 데이터';
+  _curCh = null;
+  loadCounts();
+}
+
+function goBack() {
+  if (_curCh) { showGrid(); } else { history.back(); }
+}
+
+// ── 데이터 로드 ──────────────────────────────────
+function loadData(cat) {
+  var list = document.getElementById('dataList');
+  list.innerHTML = '<div class="empty"><div class="empty-icon">⏳</div><div>불러오는 중...</div></div>';
+  fetch('/aimessage/mychat/api/data.php?category='+cat, {credentials:'include'})
+    .then(r=>r.json()).then(d=>{
+      var items = d.items || [];
+      document.getElementById('dvCnt').textContent = items.length + '건';
+      if (!items.length) {
+        list.innerHTML = '<div class="empty"><div class="empty-icon">'+_curCh.icon+'</div>'
+          + '<div>아직 데이터가 없습니다.<br>아래 버튼으로 첫 번째 데이터를 추가하세요.</div></div>';
+        return;
+      }
+      list.innerHTML = items.map(it=>{
+        var sc = {private:'🔒 나만',public:'🌐 외부도',both:'⚖️ 둘다'}[it.scope]||it.scope;
+        var cls = {private:'scope-pri',public:'scope-pub',both:'scope-pri'}[it.scope]||'scope-pri';
+        var preview = (it.payload_preview||'').replace(/</g,'&lt;').substr(0,80);
+        return '<div class="data-item">'
+          + '<div style="font-size:20px;flex-shrink:0">'+(_curCh.icon)+'</div>'
+          + '<div class="data-item-body">'
+          + (it.title ? '<div class="data-item-title">'+it.title+'</div>' : '')
+          + '<div class="data-item-meta">'+preview+'</div>'
+          + '<div class="data-item-meta" style="margin-top:4px">'
+          + '<span class="data-item-scope '+cls+'">'+sc+'</span>'
+          + ' · '+(it.created_at||'').substr(0,10)+'</div>'
+          + '</div>'
+          + '<button class="data-del" onclick="delData('+it.id+',this)" title="삭제"><i class="fas fa-trash-alt"></i></button>'
+          + '</div>';
+      }).join('');
+    });
+}
+
+// ── 입력 패널 ────────────────────────────────────
+function openPanel() {
+  if (!_curCh) return;
+  document.getElementById('panelIcon').textContent = _curCh.icon;
+  document.getElementById('panelTitle').textContent = _curCh.label + ' 데이터 추가';
+  document.getElementById('inTitle').value = '';
+  document.getElementById('inContent').value = '';
+  // [P1 2026-06-04] 채널별 기본 공개범위를 자동 적용 (수동 변경 가능)
+  var defScope = _channelScopes[_curCh.v] || 'private';
+  var defBtn = document.querySelector('.scope-btn[data-scope="'+defScope+'"]');
+  setScope(defBtn || document.querySelector('.scope-btn[data-scope="private"]'));
+  document.getElementById('inputPanel').classList.add('open');
+  document.getElementById('overlay').classList.add('open');
+  document.getElementById('inContent').focus();
+}
+
+function closePanel() {
+  document.getElementById('inputPanel').classList.remove('open');
+  document.getElementById('overlay').classList.remove('open');
+}
+
+function setScope(btn) {
+  document.querySelectorAll('.scope-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  _scope = btn.dataset.scope;
+}
+
+function saveData() {
+  var content = document.getElementById('inContent').value.trim();
+  if (!content) { toast('내용을 입력해 주세요', true); return; }
+  var payload = {
+    category: _curCh.v,
+    scope: _scope,
+    title: document.getElementById('inTitle').value.trim(),
+    content_text: content,
+    source: 'manual'
+  };
+  fetch('/aimessage/mychat/api/data.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) {
+      toast('✅ 저장 완료 — 아바타가 학습합니다');
+      closePanel();
+      loadData(_curCh.v);
+      loadCounts();
+    } else {
+      toast('❌ 저장 실패: '+(d.error||''), true);
+    }
+  });
+}
+
+function delData(id, btn) {
+  if (!confirm('이 데이터를 삭제할까요?')) return;
+  fetch('/aimessage/mychat/api/data.php?id='+id, {
+    method:'DELETE', credentials:'include'
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) {
+      btn.closest('.data-item').remove();
+      toast('삭제 완료');
+      loadCounts();
+    }
+  });
+}
+
+function toast(msg, err) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderColor = err ? '#ef4444' : 'var(--pur)';
+  el.style.color = err ? '#fca5a5' : '#c4b5fd';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2500);
+}
+
+init();
+
+function loadPhoneStats() {
+  fetch('/aimessage/mychat/api/data.php?action=counts', {credentials:'include'})
+    .then(r=>r.json()).then(d=>{
+      if (!d.ok) return;
+      var counts = d.counts || {};
+      var phoneTotal = (counts['phone']||0) + (counts['health']||0);
+      var sec = document.getElementById('phoneSection');
+      if (sec) sec.style.display = 'block';
+      var badge = document.getElementById('phoneSyncBadge');
+      if (badge) {
+        badge.textContent = phoneTotal > 0 ? phoneTotal + '건 연동됨' : '미연동';
+        badge.style.background = phoneTotal > 0 ? 'rgba(34,197,94,.15)' : 'rgba(100,116,139,.15)';
+        badge.style.color = phoneTotal > 0 ? '#22c55e' : '#64748b';
+      }
+      if (document.getElementById('callCount')) document.getElementById('callCount').textContent = (counts['phone']||0) + '건';
+      if (document.getElementById('healthCount')) document.getElementById('healthCount').textContent = (counts['health']||0) + '건';
+    }).catch(()=>{});
+}
+</script>
+</body>
+</html>
