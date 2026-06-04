@@ -229,7 +229,9 @@ try {
             $st = $db->prepare("INSERT INTO ss_sanctum_log
                 (speaker, chapter, title, content, content_type, related_atom_id, git_commit, files_changed, mood)
                 VALUES (?,?,?,?,?,?,?,?,?)");
-            $st->bind_param('sssssiSss',
+            // 타입: speaker(s), chapter(s), title(s), content(s), content_type(s),
+            //       related_atom_id(i), git_commit(s), files_changed(s/json), mood(s)
+            $st->bind_param('sssssisss',
                 $log_spk, $chapter, $title, $content, $ctype, $rel_atom, $git_c, $files_j, $mood);
             $st->execute();
             $log_id = $st->insert_id;

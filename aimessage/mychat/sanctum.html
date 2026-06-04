@@ -614,7 +614,8 @@
       document.querySelector('.tab[data-tab="feed"]').click();
       loadFeed();
     } else {
-      toast(r.message || '저장 실패', 'err');
+      const detail = r.detail ? ' — ' + r.detail : '';
+      toast((r.message || '저장 실패') + detail, 'err');
     }
   }
 
@@ -640,7 +641,8 @@
       document.querySelector('.tab[data-tab="atoms"]').click();
       loadAtoms();
     } else {
-      toast(r.message || '저장 실패', 'err');
+      const detail = r.detail ? ' — ' + r.detail : '';
+      toast((r.message || '저장 실패') + detail, 'err');
     }
   }
 
