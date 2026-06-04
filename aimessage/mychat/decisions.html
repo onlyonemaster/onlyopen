@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#7e22ce">
+<title>의사결정 추적 · 마이챗</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--pur:#7e22ce;--pur2:#9333ea;--gold:#b45309;--text:#f1f5f9;--dim:#94a3b8;--dim2:#64748b;--green:#22c55e;--red:#ef4444;--yellow:#f59e0b}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;padding-bottom:80px}
+.hd{display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.hd-back{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px}
+.hd-title{font-size:16px;font-weight:700;flex:1}
+.hd-new{background:linear-gradient(135deg,var(--pur),var(--gold));border:none;color:#fff;
+         font-size:13px;font-weight:700;padding:7px 16px;border-radius:20px;cursor:pointer}
+
+/* 요약 카드 */
+.summary{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:14px}
+.sum-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:12px;text-align:center}
+.sum-val{font-size:22px;font-weight:800}
+.sum-lbl{font-size:10px;color:var(--dim);margin-top:3px}
+
+/* 탭 */
+.tabs{display:flex;gap:0;border-bottom:1px solid var(--border);margin:0 14px}
+.tab{flex:1;padding:10px 0;text-align:center;font-size:13px;font-weight:600;color:var(--dim);
+     cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:var(--pur2);border-color:var(--pur2)}
+
+/* 결정 카드 */
+.dec-list{padding:12px 14px}
+.dec-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+          padding:14px;margin-bottom:10px;cursor:pointer;transition:border-color .2s}
+.dec-card:hover{border-color:var(--pur2)}
+.dec-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:8px}
+.dec-status{font-size:11px;font-weight:700;padding:3px 8px;border-radius:8px;flex-shrink:0;margin-top:1px}
+.st-pending{background:rgba(148,163,184,.15);color:var(--dim)}
+.st-decided{background:rgba(147,51,234,.15);color:#c4b5fd}
+.st-reflected{background:rgba(34,197,94,.15);color:var(--green)}
+.dec-sit{font-size:13px;font-weight:600;flex:1;line-height:1.4}
+.dec-date{font-size:10px;color:var(--dim2)}
+.dec-choice{font-size:12px;color:var(--pur2);margin-top:4px}
+.match-badge{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:700;padding:2px 8px;border-radius:8px;margin-top:6px}
+.hit{background:rgba(34,197,94,.15);color:var(--green)}
+.partial{background:rgba(245,158,11,.15);color:var(--yellow)}
+.miss{background:rgba(239,68,68,.15);color:var(--red)}
+
+/* 빈 상태 */
+.empty{text-align:center;padding:50px 20px;color:var(--dim2)}
+.empty-icon{font-size:40px;margin-bottom:12px}
+.empty-title{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--dim)}
+.empty-desc{font-size:12px;line-height:1.6}
+
+/* FAB */
+.fab{position:fixed;bottom:24px;right:20px;width:56px;height:56px;border-radius:50%;
+     background:linear-gradient(135deg,var(--pur),var(--gold));
+     border:none;color:#fff;font-size:22px;cursor:pointer;
+     box-shadow:0 4px 20px rgba(126,34,206,.5);z-index:50}
+
+/* 모달 */
+.modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100}
+.modal-overlay.open{display:flex;align-items:flex-end}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;width:100%;
+       padding:20px;max-height:90vh;overflow-y:auto}
+.modal-head{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.modal-title{font-size:16px;font-weight:700;flex:1}
+.modal-close{background:none;border:none;color:var(--dim);font-size:20px;cursor:pointer}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--dim);font-weight:600;margin-bottom:5px}
+.field input,.field textarea,.field select{width:100%;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.field input:focus,.field textarea:focus{border-color:var(--pur2)}
+.option-list{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
+.option-btn{padding:10px 14px;border:1px solid var(--border);border-radius:8px;background:var(--bg);color:var(--text);font-size:13px;font-weight:600;cursor:pointer;text-align:left;transition:all .2s}
+.option-btn:hover{border-color:var(--pur2);background:rgba(147,51,234,.08)}
+.option-btn.chosen{border-color:var(--pur2);background:rgba(147,51,234,.15);color:#c4b5fd}
+.btn-save{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--pur),var(--gold));border:none;color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
+.btn-outline{width:100%;padding:11px;border-radius:12px;background:transparent;border:1px solid var(--border);color:var(--dim);font-size:13px;font-weight:600;cursor:pointer;margin-top:6px}
+.ai-box{background:rgba(147,51,234,.08);border:1px solid rgba(147,51,234,.3);border-radius:10px;padding:12px;margin-bottom:10px;font-size:13px;line-height:1.6}
+.ai-label{font-size:10px;font-weight:700;color:#c4b5fd;margin-bottom:6px}
+.score-bar{height:8px;background:var(--bg);border-radius:4px;overflow:hidden;margin-top:6px}
+.score-fill{height:100%;border-radius:4px;transition:width .6s}
+
+.toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%);background:#1e293b;border:1px solid var(--pur);color:#c4b5fd;padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <button class="hd-back" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+  <div class="hd-title">의사결정 추적</div>
+</div>
+
+<!-- 요약 -->
+<div class="summary" id="summary">
+  <div class="sum-card"><div class="sum-val" id="sTot">-</div><div class="sum-lbl">전체</div></div>
+  <div class="sum-card"><div class="sum-val" id="sAcc" style="color:var(--green)">-</div><div class="sum-lbl">적중률</div></div>
+  <div class="sum-card"><div class="sum-val" id="sPend" style="color:var(--yellow)">-</div><div class="sum-lbl">추적 중</div></div>
+</div>
+
+<!-- 탭 -->
+<div class="tabs">
+  <div class="tab active" data-tab="all" onclick="switchTab(this)">전체</div>
+  <div class="tab" data-tab="pending" onclick="switchTab(this)">⏳ 대기</div>
+  <div class="tab" data-tab="decided" onclick="switchTab(this)">✅ 결정</div>
+  <div class="tab" data-tab="reflected" onclick="switchTab(this)">🔍 회고</div>
+</div>
+
+<div class="dec-list" id="decList">
+  <div class="empty"><div class="empty-icon">⏳</div><div>불러오는 중...</div></div>
+</div>
+
+<button class="fab" onclick="openNew()" title="새 의사결정 등록"><i class="fas fa-plus"></i></button>
+
+<!-- 새 의사결정 모달 -->
+<div class="modal-overlay" id="newModal">
+  <div class="modal">
+    <div class="modal-head">
+      <div style="font-size:20px">🧭</div>
+      <div class="modal-title" id="modalTitle">새 의사결정 등록</div>
+      <button class="modal-close" onclick="closeModal('newModal')"><i class="fas fa-times"></i></button>
+    </div>
+    <div id="modalBody"></div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var _tab = 'all';
+var _decs = [];
+var _curDec = null;
+
+// ── 초기화 ───────────────────────────────────────
+function init() {
+  loadDecisions();
+}
+
+function switchTab(el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  _tab = el.dataset.tab;
+  renderList();
+}
+
+// ── 데이터 로드 ──────────────────────────────────
+function loadDecisions() {
+  fetch('/aimessage/mychat/api/decisions.php', {credentials:'include'})
+    .then(r=>r.json()).then(d=>{
+      if (!d.ok) { if(d.error==='SUBSCRIPTION_REQUIRED') location.href='/aimessage/mychat/subscribe.html'; return; }
+      _decs = d.decisions || [];
+      updateSummary();
+      renderList();
+    }).catch(()=>showToast('데이터 로드 실패', true));
+}
+
+function updateSummary() {
+  var total    = _decs.length;
+  var reflected = _decs.filter(d=>d.status==='reflected');
+  var hits     = reflected.filter(d=>d.match_label==='hit').length;
+  var acc      = reflected.length ? Math.round(hits/reflected.length*100) : 0;
+  var pending  = _decs.filter(d=>d.status==='pending'||d.status==='decided').length;
+  document.getElementById('sTot').textContent  = total;
+  document.getElementById('sAcc').textContent  = acc + '%';
+  document.getElementById('sPend').textContent = pending;
+}
+
+function renderList() {
+  var list = document.getElementById('decList');
+  var filtered = _tab==='all' ? _decs : _decs.filter(d=>d.status===_tab);
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty">'
+      +'<div class="empty-icon">🧭</div>'
+      +'<div class="empty-title">'+(_tab==='all'?'의사결정 기록이 없습니다':'이 단계의 항목이 없습니다')+'</div>'
+      +'<div class="empty-desc">우측 하단 + 버튼으로<br>첫 번째 의사결정을 등록해보세요</div>'
+      +'</div>';
+    return;
+  }
+  list.innerHTML = filtered.map(dec=>{
+    var stMap   = {pending:'대기',decided:'결정함',reflected:'회고완료'};
+    var stClass = {pending:'st-pending',decided:'st-decided',reflected:'st-reflected'}[dec.status]||'st-pending';
+    var matchBadge = '';
+    if (dec.match_label) {
+      var mMap = {hit:'🎯 적중',partial:'△ 부분',miss:'✗ 빗나감'};
+      matchBadge = '<span class="match-badge '+dec.match_label+'">'+mMap[dec.match_label]+'</span>';
+    }
+    var opts = JSON.parse(dec.ai_options||'[]');
+    var chosen = dec.chosen_option ? opts.find(o=>o.key===dec.chosen_option) : null;
+    return '<div class="dec-card" onclick="openDetail('+JSON.stringify(dec).replace(/'/g,"&#39;")+')">'
+      +'<div class="dec-head">'
+      +'<span class="dec-status '+stClass+'">'+stMap[dec.status]+'</span>'
+      +'<span class="dec-sit">'+dec.situation.substr(0,60)+(dec.situation.length>60?'...':'')+'</span>'
+      +'</div>'
+      +(chosen?'<div class="dec-choice"><i class="fas fa-check-circle"></i> 선택: '+chosen.label+'</div>':'')
+      +matchBadge
+      +'<div class="dec-date" style="margin-top:6px">'+dec.created_at.substr(0,10)+'</div>'
+      +'</div>';
+  }).join('');
+}
+
+// ── 새 의사결정 등록 ─────────────────────────────
+function openNew() {
+  _curDec = null;
+  document.getElementById('modalTitle').textContent = '새 의사결정 등록';
+  document.getElementById('modalBody').innerHTML =
+    '<div class="field"><label>상황 설명 <span style="color:var(--red)">*</span></label>'
+    +'<textarea id="fSit" rows="3" placeholder="예: 새 사업 파트너의 투자 제안을 받아들일지 결정해야 한다. 조건은..."></textarea></div>'
+    +'<div style="margin-top:4px">'
+    +'<button class="btn-save" onclick="requestAI()"><i class="fas fa-brain"></i> AI에게 분석 요청</button>'
+    +'</div>'
+    +'<div id="aiSection" style="display:none;margin-top:14px"></div>';
+  openModal('newModal');
+}
+
+function requestAI() {
+  var sit = document.getElementById('fSit').value.trim();
+  if (!sit) { showToast('상황을 입력해 주세요', true); return; }
+  var aiSec = document.getElementById('aiSection');
+  aiSec.style.display = 'block';
+  aiSec.innerHTML = '<div style="text-align:center;padding:20px;color:var(--dim)"><i class="fas fa-spinner fa-spin"></i> AI 분석 중...</div>';
+
+  fetch('/aimessage/mychat/api/decisions.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'predict', situation:sit})
+  }).then(r=>r.json()).then(d=>{
+    if (!d.ok) { aiSec.innerHTML='<div style="color:var(--red);font-size:13px">'+d.error+'</div>'; return; }
+    _curDec = d.decision;
+    renderOptionsUI(d.decision);
+  });
+}
+
+function renderOptionsUI(dec) {
+  var opts = JSON.parse(dec.ai_options||'[]');
+  var pred = dec.ai_prediction || '';
+  var opHtml = opts.map(o=>
+    '<button class="option-btn" data-key="'+o.key+'" onclick="selectOption(this,\''+o.key+'\')">'+o.label+'</button>'
+  ).join('');
+  document.getElementById('aiSection').innerHTML =
+    '<div class="ai-box"><div class="ai-label">🧠 AI 분석 결과</div>'+pred+'</div>'
+    +'<div class="field"><label>선택지 — 클릭해서 선택하세요</label>'
+    +'<div class="option-list">'+opHtml+'</div></div>'
+    +'<button class="btn-save" id="saveDecBtn" onclick="saveDecision()" disabled style="opacity:.4">선택 후 저장</button>'
+    +'<button class="btn-outline" onclick="closeModal(\'newModal\')">닫기</button>';
+}
+
+function selectOption(el, key) {
+  document.querySelectorAll('.option-btn').forEach(b=>b.classList.remove('chosen'));
+  el.classList.add('chosen');
+  var btn = document.getElementById('saveDecBtn');
+  if (btn) { btn.disabled=false; btn.style.opacity='1'; btn.dataset.key=key; }
+}
+
+function saveDecision() {
+  if (!_curDec) return;
+  var btn = document.getElementById('saveDecBtn');
+  var chosenKey = btn.dataset.key;
+  fetch('/aimessage/mychat/api/decisions.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'decide', id:_curDec.id, chosen_option:chosenKey})
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) { showToast('✅ 의사결정 저장 완료'); closeModal('newModal'); loadDecisions(); }
+    else showToast('❌ '+d.error, true);
+  });
+}
+
+// ── 상세 보기 / 회고 ─────────────────────────────
+function openDetail(dec) {
+  _curDec = dec;
+  var opts = JSON.parse(dec.ai_options||'[]');
+  var chosen = dec.chosen_option ? opts.find(o=>o.key===dec.chosen_option) : null;
+  var st = dec.status;
+
+  var body = '<div class="ai-box"><div class="ai-label">📝 상황</div>'+dec.situation+'</div>';
+  if (dec.ai_prediction) body += '<div class="ai-box"><div class="ai-label">🧠 AI 분석</div>'+dec.ai_prediction+'</div>';
+  if (chosen) body += '<div class="ai-box"><div class="ai-label">✅ 선택</div>'+chosen.label+'</div>';
+
+  if (st==='decided') {
+    body += '<div class="field"><label>실제 결과 입력 (회고)</label>'
+      +'<textarea id="fOutcome" rows="3" placeholder="실제로 어떻게 되었나요?"></textarea></div>'
+      +'<div class="field"><label>결과 평가</label>'
+      +'<div class="option-list">'
+      +'<button class="option-btn" data-label="hit" onclick="selectOption(this,\'hit\')">🎯 적중 — AI 예측대로 됐어요</button>'
+      +'<button class="option-btn" data-label="partial" onclick="selectOption(this,\'partial\')">△ 부분 — 절반쯤 맞았어요</button>'
+      +'<button class="option-btn" data-label="miss" onclick="selectOption(this,\'miss\')">✗ 빗나감 — 달랐어요</button>'
+      +'</div></div>'
+      +'<button class="btn-save" id="saveDecBtn" onclick="saveReflect()" disabled style="opacity:.4">회고 저장</button>';
+  } else if (st==='reflected') {
+    var score = Math.round((parseFloat(dec.match_score)||0)*100);
+    var mColor = score>=70?'var(--green)':score>=40?'var(--yellow)':'var(--red)';
+    var mLabel = {hit:'적중',partial:'부분',miss:'빗나감'}[dec.match_label]||'';
+    body += '<div class="ai-box"><div class="ai-label">🔍 회고 결과</div>'
+      +dec.outcome_text+'<br>'
+      +'<div class="score-bar"><div class="score-fill" style="width:'+score+'%;background:'+mColor+'"></div></div>'
+      +'<span class="match-badge '+dec.match_label+'">'+mLabel+' ('+score+'%)</span>'
+      +'</div>';
+  }
+
+  document.getElementById('modalTitle').textContent = st==='pending'?'의사결정 대기':st==='decided'?'회고 입력':'회고 완료';
+  document.getElementById('modalBody').innerHTML = body + '<button class="btn-outline" onclick="closeModal(\'newModal\')" style="margin-top:6px">닫기</button>';
+  openModal('newModal');
+}
+
+function saveReflect() {
+  var outcome = (document.getElementById('fOutcome')||{}).value||'';
+  var btn = document.getElementById('saveDecBtn');
+  var label = btn.dataset.label||btn.dataset.key||'miss';
+  var scoreMap = {hit:1.0, partial:0.5, miss:0.0};
+  fetch('/aimessage/mychat/api/decisions.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'reflect', id:_curDec.id, outcome_text:outcome, match_label:label, match_score:scoreMap[label]})
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) { showToast('✅ 회고 완료! 아바타가 학습합니다'); closeModal('newModal'); loadDecisions(); }
+    else showToast('❌ '+d.error, true);
+  });
+}
+
+function openModal(id) { document.getElementById(id).classList.add('open'); }
+function closeModal(id) { document.getElementById(id).classList.remove('open'); }
+
+function showToast(msg, err) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderColor = err?'var(--red)':'var(--pur)';
+  el.style.color = err?'#fca5a5':'#c4b5fd';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2500);
+}
+init();
+</script>
+</body>
+</html>

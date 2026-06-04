@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<!--
+================================================================
+  [MYCHAT-v1] 마이챗 독립 대화 페이지
+  ----------------------------------------------------------------
+  · 목업 S-7 디자인 기반의 단독 채팅 화면
+  · /aimessage/mychat/index.html
+  · 사이드바 토글 또는 채팅 리스트 핀카드에서 진입
+  · 데이터: 임시 localStorage 저장 (key: oneMeChatHistory)
+  · AI 응답: 임시 로컬 로직 (B-5 에서 실 API/RAG 로 교체)
+  · 기존 8화면 목업은 me/_mockup.html 로 백업 보존됨
+  생성: 2026-05-23 / 조은 × 아리(GenSpark)
+================================================================
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#7e22ce">
+<title>마이챗 · 나의 라이프 아바타</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   [ME-B3] 나의 아바타 채팅 — 보라/금색 톤
+============================================================ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --me-50:#faf5ff; --me-100:#f3e8ff; --me-500:#a855f7; --me-600:#9333ea; --me-700:#7e22ce; --me-800:#6b21a8;
+  --me-gold:#fbbf24; --me-gold-2:#f59e0b;
+  --bg:#f3f4f6; --surface:#ffffff; --border:#e5e7eb;
+  --text:#111827; --text2:#4b5563; --text3:#9ca3af;
+  --danger:#ef4444; --warn:#f59e0b; --ok:#10b981;
+  --font:'Noto Sans KR','Apple SD Gothic Neo',-apple-system,BlinkMacSystemFont,sans-serif;
+}
+html,body{
+  width:100%;height:100%;
+  font-family:var(--font);color:var(--text);
+  background:linear-gradient(180deg,#faf5ff 0%,#f9fafb 100%);
+  -webkit-font-smoothing:antialiased;
+  overflow:hidden;
+}
+
+/* ── 페이지 컨테이너 ────────────────────────────────────────── */
+.me-page{
+  display:flex;flex-direction:column;
+  width:100%;height:100vh;height:100dvh;
+  max-width:760px;margin:0 auto;
+  background:linear-gradient(180deg,#faf5ff 0%,#f9fafb 100%);
+}
+
+/* ── 상단 헤더 ──────────────────────────────────────────────── */
+.me-head{
+  background:#fff;
+  padding:11px 14px;
+  padding-top:calc(env(safe-area-inset-top) + 11px);
+  border-bottom:1px solid var(--border);
+  display:flex;align-items:center;gap:11px;
+  flex-shrink:0;
+  box-shadow:0 2px 8px rgba(0,0,0,.04);
+}
+.me-head .back{
+  width:34px;height:34px;border:none;background:#f3f4f6;border-radius:10px;
+  font-size:15px;color:var(--text);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  transition:background .15s ease;
+}
+.me-head .back:hover{background:#e5e7eb}
+.me-head .av{
+  width:40px;height:40px;border-radius:12px;
+  background:linear-gradient(135deg,var(--me-500),var(--me-gold));
+  display:flex;align-items:center;justify-content:center;
+  color:#fff;font-size:17px;
+  position:relative;flex-shrink:0;
+  box-shadow:0 2px 8px rgba(168,85,247,.25);
+}
+.me-head .av::after{
+  content:'';position:absolute;bottom:1px;right:1px;
+  width:10px;height:10px;background:#10b981;
+  border:2px solid #fff;border-radius:50%;
+}
+.me-head .info{flex:1;min-width:0}
+.me-head .info .n{
+  font-size:14px;font-weight:700;color:var(--text);
+  display:flex;align-items:center;gap:5px;
+}
+.me-head .info .s{
+  font-size:10.5px;color:var(--ok);
+  display:flex;align-items:center;gap:4px;margin-top:2px;
+}
+.me-head .info .s::before{
+  content:'';width:5px;height:5px;background:var(--ok);border-radius:50%;
+}
+.me-head .lock{
+  background:var(--me-50);color:var(--me-700);
+  font-size:9.5px;font-weight:700;
+  padding:4px 8px;border-radius:7px;
+  border:1px solid #e9d5ff;
+  display:flex;align-items:center;gap:4px;
+  flex-shrink:0;
+}
+.me-head .menu-btn{
+  width:34px;height:34px;border:none;background:#f3f4f6;border-radius:10px;
+  font-size:14px;color:var(--text2);cursor:pointer;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+}
+.me-head .menu-btn:hover{background:#e5e7eb;color:var(--me-700)}
+
+/* ── 메시지 영역 ────────────────────────────────────────────── */
+.me-msgs{
+  flex:1;
+  overflow-y:auto;
+  padding:14px 12px 8px;
+  display:flex;flex-direction:column;gap:10px;
+  -webkit-overflow-scrolling:touch;
+}
+.me-msgs::-webkit-scrollbar{width:6px}
+.me-msgs::-webkit-scrollbar-thumb{background:rgba(168,85,247,.3);border-radius:3px}
+
+.msg{display:flex;gap:8px;max-width:88%;animation:fadeUp .25s ease}
+@keyframes fadeUp{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+.msg.ai{align-self:flex-start}
+.msg.me{align-self:flex-end;flex-direction:row-reverse}
+.msg .av{
+  width:30px;height:30px;border-radius:9px;
+  display:flex;align-items:center;justify-content:center;
+  font-size:13px;flex-shrink:0;font-weight:700;
+}
+.msg.ai .av{
+  background:linear-gradient(135deg,var(--me-500),var(--me-gold));
+  color:#fff;
+}
+.msg.me .av{background:#1f2937;color:#fff}
+.msg .bubble{
+  padding:10px 13px;border-radius:14px;
+  font-size:13px;line-height:1.6;
+  white-space:pre-wrap;word-break:break-word;
+}
+.msg.ai .bubble{
+  background:#fff;color:var(--text);
+  border-top-left-radius:4px;
+  box-shadow:0 2px 6px rgba(0,0,0,.05);
+  border:1px solid #f3e8ff;
+}
+.msg.me .bubble{
+  background:linear-gradient(135deg,var(--me-600),var(--me-700));
+  color:#fff;
+  border-top-right-radius:4px;
+  box-shadow:0 2px 8px rgba(147,51,234,.25);
+}
+.msg .bubble b{font-weight:700}
+.msg .bubble .citation{
+  display:block;
+  font-size:10.5px;color:var(--me-700);
+  background:var(--me-50);
+  padding:6px 8px;border-radius:7px;margin-top:7px;
+  border-left:2px solid var(--me-500);
+}
+.msg .meta{
+  font-size:10px;color:var(--text3);
+  margin-top:3px;padding:0 4px;
+}
+.msg.me .meta{text-align:right}
+
+/* 타이핑 인디케이터 */
+.msg.ai.typing .bubble{
+  display:flex;gap:4px;align-items:center;padding:13px 14px;
+}
+.msg.ai.typing .bubble span{
+  width:6px;height:6px;background:var(--me-500);border-radius:50%;
+  animation:blink 1.4s infinite;
+}
+.msg.ai.typing .bubble span:nth-child(2){animation-delay:.2s}
+.msg.ai.typing .bubble span:nth-child(3){animation-delay:.4s}
+@keyframes blink{0%,60%,100%{opacity:.3}30%{opacity:1}}
+
+/* ── 빠른 액션 ──────────────────────────────────────────────── */
+.me-quick{
+  display:flex;gap:6px;padding:6px 12px;
+  overflow-x:auto;flex-shrink:0;
+  background:transparent;
+  -webkit-overflow-scrolling:touch;
+}
+.me-quick::-webkit-scrollbar{display:none}
+.me-quick button{
+  background:#fff;border:1px solid #e9d5ff;
+  color:var(--me-700);font-size:11.5px;font-weight:600;
+  padding:7px 12px;border-radius:14px;
+  cursor:pointer;white-space:nowrap;flex-shrink:0;
+  box-shadow:0 2px 4px rgba(0,0,0,.04);
+  font-family:inherit;
+  transition:all .15s ease;
+}
+.me-quick button:hover{
+  background:var(--me-50);transform:translateY(-1px);
+  box-shadow:0 4px 8px rgba(168,85,247,.15);
+}
+.me-quick button:active{transform:translateY(0)}
+
+/* ── 입력창 ────────────────────────────────────────────────── */
+.me-input{
+  display:flex;gap:8px;align-items:flex-end;
+  padding:10px 12px calc(env(safe-area-inset-bottom) + 12px);
+  background:#fff;
+  border-top:1px solid var(--border);
+  flex-shrink:0;
+  box-shadow:0 -2px 12px rgba(0,0,0,.04);
+}
+.me-input .attach{
+  width:38px;height:38px;border:none;background:#f3f4f6;border-radius:50%;
+  color:var(--text2);font-size:14px;cursor:pointer;flex-shrink:0;
+  display:flex;align-items:center;justify-content:center;
+}
+.me-input .attach:hover{background:#e9d5ff;color:var(--me-700)}
+.me-input textarea{
+  flex:1;
+  border:1.5px solid var(--border);
+  border-radius:18px;
+  padding:9px 14px;
+  font-size:13px;
+  background:#f9fafb;
+  font-family:inherit;
+  outline:none;
+  resize:none;
+  min-height:38px;max-height:120px;
+  line-height:1.5;
+  transition:border-color .15s ease, background .15s ease;
+}
+.me-input textarea:focus{border-color:var(--me-500);background:#fff}
+.me-input .send{
+  width:38px;height:38px;border-radius:50%;
+  background:linear-gradient(135deg,var(--me-600),var(--me-700));
+  color:#fff;border:none;cursor:pointer;font-size:13px;
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;
+  box-shadow:0 2px 8px rgba(147,51,234,.3);
+  transition:transform .15s ease, box-shadow .15s ease;
+}
+.me-input .send:hover{transform:scale(1.05);box-shadow:0 4px 12px rgba(147,51,234,.45)}
+.me-input .send:active{transform:scale(.95)}
+.me-input .send:disabled{
+  background:#e5e7eb;color:#9ca3af;cursor:not-allowed;
+  transform:none;box-shadow:none;
+}
+
+/* ── 메뉴 오버레이 (옵션) ──────────────────────────────────── */
+.me-menu-overlay{
+  position:fixed;inset:0;background:rgba(0,0,0,.4);
+  z-index:90;display:none;
+  animation:fadeIn .2s ease;
+}
+.me-menu-overlay.open{display:block}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.me-menu-sheet{
+  position:fixed;left:50%;bottom:0;transform:translateX(-50%);
+  width:100%;max-width:760px;
+  background:#fff;
+  border-radius:18px 18px 0 0;
+  padding:14px 14px calc(env(safe-area-inset-bottom) + 14px);
+  z-index:91;
+  box-shadow:0 -8px 24px rgba(0,0,0,.15);
+  display:none;
+  animation:slideUp .25s ease;
+}
+.me-menu-overlay.open + .me-menu-sheet{display:block}
+@keyframes slideUp{from{transform:translate(-50%,100%)}to{transform:translate(-50%,0)}}
+.me-menu-sheet h4{
+  font-size:12px;color:var(--text3);text-transform:uppercase;
+  letter-spacing:.5px;margin-bottom:8px;padding:0 6px;
+}
+.me-menu-sheet button{
+  width:100%;text-align:left;
+  background:transparent;border:none;
+  padding:11px 12px;font-size:13.5px;color:var(--text);
+  border-radius:10px;cursor:pointer;font-family:inherit;
+  display:flex;align-items:center;gap:11px;
+}
+.me-menu-sheet button:hover{background:var(--me-50);color:var(--me-700)}
+.me-menu-sheet button i{
+  width:24px;text-align:center;color:var(--me-600);font-size:14px;
+}
+.me-menu-sheet button.danger i{color:var(--danger)}
+.me-menu-sheet button.danger:hover{background:#fef2f2;color:var(--danger)}
+
+/* ── 첫 진입 환영 카드 ─────────────────────────────────────── */
+.me-welcome{
+  background:linear-gradient(135deg,#fff 0%,var(--me-50) 100%);
+  border:1px solid #e9d5ff;
+  border-radius:14px;
+  padding:14px;
+  margin-bottom:6px;
+  box-shadow:0 4px 12px rgba(168,85,247,.08);
+}
+.me-welcome .title{
+  font-size:13.5px;font-weight:700;color:var(--me-800);
+  display:flex;align-items:center;gap:6px;margin-bottom:6px;
+}
+.me-welcome .desc{
+  font-size:12px;color:var(--text2);line-height:1.55;
+}
+.me-welcome .desc b{color:var(--me-700)}
+
+/* 데스크탑 적응 */
+@media (min-width:880px){
+  body{background:#f3f4f6}
+  .me-page{
+    box-shadow:0 0 32px rgba(0,0,0,.08);
+  }
+}
+</style>
+<script>
+// 마이챗 구독 체크 — 미구독 시 자동 리다이렉트
+(function(){
+  fetch('/aimessage/mychat/api/chat.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({message:'__ping__'})
+  }).then(function(r){return r.json();}).then(function(d){
+    if(d.error==='SUBSCRIPTION_REQUIRED'){
+      window.location.href='/aimessage/mychat/subscribe.html';
+    }
+  }).catch(function(){});
+})();
+</script>
+</head>
+<body>
+
+<div class="me-page" id="mePage">
+  <!-- 헤더 -->
+  <header class="me-head">
+    <button class="back" id="meBackBtn" title="원챗 메인으로" aria-label="원챗 메인으로 돌아가기">
+      <i class="fas fa-arrow-left"></i>
+    </button>
+    <div class="av" aria-hidden="true">
+      <i class="fas fa-brain"></i>
+    </div>
+    <div class="info">
+      <div class="n">🧠 나의 아바타</div>
+      <div class="s" id="meHeadSub">학습 데이터 0건 · 항상 대기중</div>
+    </div>
+    <div class="lock" title="이 대화는 나만 볼 수 있습니다">
+      <i class="fas fa-lock"></i> 나만
+    </div>
+    <button class="menu-btn" id="meMenuBtn" title="메뉴" aria-label="메뉴">
+      <i class="fas fa-ellipsis-v"></i>
+    </button>
+  </header>
+
+  <!-- 메시지 영역 -->
+  <main class="me-msgs" id="meMsgs" aria-live="polite">
+    <!-- 환영 카드 (저장된 대화가 없을 때만 표시) -->
+    <div class="me-welcome" id="meWelcome">
+      <div class="title">
+        <i class="fas fa-sparkles" style="color:var(--me-gold)"></i>
+        나의 아바타에 오신 것을 환영합니다
+      </div>
+      <div class="desc">
+        이곳은 <b>나만 볼 수 있는 비공개 공간</b>이에요.<br>
+        과거의 일기·결정·기록을 기반으로 답하며, 시간이 지날수록 더 똑똑해집니다.<br>
+        <b>인생의 결정·고민·감정</b> 무엇이든 편하게 이야기해 주세요.
+      </div>
+    </div>
+  </main>
+
+  <!-- 빠른 액션 -->
+  <div class="me-quick" id="meQuick">
+    <button data-quick="decision">📝 의사결정 등록</button>
+    <button data-quick="data">📊 관련 데이터</button>
+    <button data-quick="remind">📅 D-7 리마인드</button>
+    <button data-quick="deep">🔍 더 깊이 분석</button>
+    <button data-quick="emotion">💭 감정 기록</button>
+    <button data-quick="pattern">🌀 패턴 찾기</button>
+  </div>
+
+  <!-- 입력창 -->
+  <form class="me-input" id="meForm" autocomplete="off">
+    <button type="button" class="attach" id="meAttachBtn" title="파일 첨부" aria-label="파일 첨부">
+      <i class="fas fa-paperclip"></i>
+    </button>
+    <textarea id="meInput" rows="1"
+              placeholder="나의 아바타에게 무엇이든 물어보세요..."
+              aria-label="메시지 입력"></textarea>
+    <button type="submit" class="send" id="meSendBtn" title="보내기" aria-label="보내기" disabled>
+      <i class="fas fa-paper-plane"></i>
+    </button>
+  </form>
+</div>
+
+<!-- 메뉴 시트 -->
+<div class="me-menu-overlay" id="meMenuOverlay"></div>
+<div class="me-menu-sheet">
+  <h4>나의 아바타</h4>
+  <button data-menu="studio" onclick="location.href='/aimessage/mychat/avatar-studio.html'">
+    <i class="fas fa-wand-magic-sparkles"></i> 아바타 스튜디오
+  </button>
+  <button data-menu="learn">
+    <i class="fas fa-graduation-cap"></i> 아바타 학습시키기 (데이터 추가)
+  </button>
+  <!-- [P1 2026-06-04] '공개범위 관리'는 학습 페이지 채널 카드에 인라인 토글로 통합되어 별도 메뉴 제거 -->
+  <button data-menu="storage">
+    <i class="fas fa-database"></i> 저장소 · API 키 설정
+  </button>
+  <!-- [P2 2026-06-04] Second-Me 신규 모듈 -->
+  <button data-menu="phonesync">
+    <i class="fas fa-mobile-screen"></i> 폰 데이터 자동 동기화
+  </button>
+  <button data-menu="inbox">
+    <i class="fas fa-inbox"></i> 라이프 인박스
+  </button>
+  <button data-menu="dailysync">
+    <i class="fas fa-brain"></i> 매일의 나 (Daily Self-Sync)
+  </button>
+  <button data-menu="anomaly">
+    <i class="fas fa-shield-halved"></i> 위험 신호 워치독
+  </button>
+  <button data-menu="usage">
+    <i class="fas fa-coins"></i> API 사용량 가드
+  </button>
+  <button data-menu="legacy">
+    <i class="fas fa-clipboard-user"></i> 디지털 유산 모드
+  </button>
+  <!-- [ME-C6] 비상 잠금 토글 (Panic Lock) -->
+  <button data-menu="panic" class="danger">
+    <i class="fas fa-lock"></i> 비상 잠금 (Panic Lock)
+  </button>
+  <button data-menu="dashboard">
+    <i class="fas fa-chart-bar"></i> 나의 인생 분석 대시보드
+  </button>
+  <button data-menu="decisions">
+    <i class="fas fa-clipboard-list"></i> 의사결정 어시스턴트
+  </button>
+  <h4 style="margin-top:10px">대화 관리</h4>
+  <button data-menu="clear" class="danger">
+    <i class="fas fa-trash"></i> 이 대화 기록 모두 지우기
+  </button>
+  <button data-menu="close">
+    <i class="fas fa-times"></i> 닫기
+  </button>
+</div>
+
+<script>
+/* ============================================================
+   [ME-B3] 나의 아바타 채팅 — 클라이언트 로직
+   - 데이터: localStorage 임시 저장 (B-4 에서 DB 연동 예정)
+   - AI: 임시 로컬 응답 (B-5 에서 실 API/RAG 교체)
+============================================================ */
+(function(){
+  'use strict';
+
+  var STORAGE_KEY  = 'oneMeChatHistory';   // 메시지 배열
+  var MODE_KEY     = 'oneMeMode';          // 메인 토글과 공유
+  var MAX_KEEP     = 200;                  // 최근 200개까지만 보관 (임시)
+
+  var $msgs    = document.getElementById('meMsgs');
+  var $welcome = document.getElementById('meWelcome');
+  var $form    = document.getElementById('meForm');
+  var $input   = document.getElementById('meInput');
+  var $send    = document.getElementById('meSendBtn');
+  var $back    = document.getElementById('meBackBtn');
+  var $menuBtn = document.getElementById('meMenuBtn');
+  var $overlay = document.getElementById('meMenuOverlay');
+  var $sub     = document.getElementById('meHeadSub');
+  var $quick   = document.getElementById('meQuick');
+  var $attach  = document.getElementById('meAttachBtn');
+
+  // ── 진입 시 운영 모드 자동을 'private' 로 ──────────────────
+  try {
+    localStorage.setItem(MODE_KEY, 'private');
+  } catch(e) {}
+
+  // ── 헬퍼 ────────────────────────────────────────────────
+  function escHtml(s){
+    return String(s == null ? '' : s)
+      .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+      .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+  }
+  function nowTime(){
+    var d = new Date();
+    var h = d.getHours(), m = d.getMinutes();
+    var ampm = h < 12 ? '오전' : '오후';
+    var hh = h % 12; if (hh === 0) hh = 12;
+    return ampm + ' ' + hh + ':' + String(m).padStart(2,'0');
+  }
+
+  // ── 저장/로드 ───────────────────────────────────────────
+  function loadHistory(){
+    try {
+      var raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      var arr = JSON.parse(raw);
+      return Array.isArray(arr) ? arr : [];
+    } catch(e) { return []; }
+  }
+  function saveHistory(arr){
+    try {
+      if (arr.length > MAX_KEEP) arr = arr.slice(-MAX_KEEP);
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(arr));
+    } catch(e) {}
+  }
+  function clearHistory(){
+    try { localStorage.removeItem(STORAGE_KEY); } catch(e) {}
+  }
+
+  var history = loadHistory();
+
+  // ── 메시지 렌더 ─────────────────────────────────────────
+  function renderMessage(msg, opts){
+    opts = opts || {};
+    var el = document.createElement('div');
+    el.className = 'msg ' + (msg.role === 'me' ? 'me' : 'ai');
+    if (msg.typing) el.classList.add('typing');
+
+    var avHtml = msg.role === 'me'
+      ? '조'
+      : '<i class="fas fa-brain"></i>';
+
+    var bubbleHtml;
+    if (msg.typing) {
+      bubbleHtml = '<span></span><span></span><span></span>';
+    } else {
+      var safe = escHtml(msg.text || '')
+        .replace(/\n/g,'<br>')
+        .replace(/\*\*(.+?)\*\*/g,'<b>$1</b>');
+      bubbleHtml = safe;
+      if (msg.citation) {
+        bubbleHtml += '<span class="citation"><i class="fas fa-quote-left"></i> ' +
+                      escHtml(msg.citation) + '</span>';
+      }
+    }
+
+    el.innerHTML =
+      '<div class="av">' + avHtml + '</div>' +
+      '<div>' +
+        '<div class="bubble">' + bubbleHtml + '</div>' +
+        (msg.time && !msg.typing ? '<div class="meta">' + escHtml(msg.time) + '</div>' : '') +
+      '</div>';
+
+    if (opts.id) el.dataset.id = opts.id;
+    $msgs.appendChild(el);
+    scrollToBottom();
+    return el;
+  }
+  function scrollToBottom(){
+    requestAnimationFrame(function(){
+      $msgs.scrollTop = $msgs.scrollHeight;
+    });
+  }
+
+  function renderAll(){
+    // 환영 카드는 그대로 두고, 그 뒤에 메시지를 그린다
+    // 이미 그려진 메시지가 있다면 제거
+    Array.prototype.slice.call($msgs.querySelectorAll('.msg')).forEach(function(n){ n.remove(); });
+
+    if (history.length === 0) {
+      $welcome.style.display = '';
+    } else {
+      $welcome.style.display = 'none';
+      history.forEach(function(m){ renderMessage(m); });
+    }
+    updateSubText();
+  }
+
+  function updateSubText(){
+    // 임시: 메시지 수 기반으로 학습 데이터 카운트 (B-4 에서 실 데이터풀 카운트로 교체)
+    var n = history.length;
+    $sub.textContent = '대화 ' + n + '건 · 항상 대기중';
+  }
+
+  // ── 실 API 호출 (마이챗 chat.php) ──────────────────────────
+  function generateReply(userText, callback) {
+    fetch('/aimessage/mychat/api/chat.php', {
+      method: 'POST',
+      credentials: 'include',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message: userText })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(d) {
+      if (d.ok && d.reply) {
+        callback({ text: d.reply, citation: d.rag_used ? '[📚 내 데이터 참조]' : null });
+      } else if (d.error === 'SUBSCRIPTION_REQUIRED') {
+        window.location.href = '/aimessage/mychat/subscribe.html';
+      } else if (d.error === 'QUOTA_EXCEEDED') {
+        callback({ text: '⚠️ 이번 달 대화 한도를 초과했습니다.\n플랜 업그레이드 또는 자체 API키를 등록해 주세요.\n[설정 → API키 등록]', citation: null });
+      } else {
+        callback({ text: '잠시 후 다시 시도해 주세요. (오류: ' + (d.error || '알 수 없음') + ')', citation: null });
+      }
+    })
+    .catch(function() {
+      callback({ text: '네트워크 오류가 발생했습니다. 연결을 확인해 주세요.', citation: null });
+    });
+  }
+
+  // ── 빠른 액션 프리셋 ────────────────────────────────────
+  var QUICK_PRESETS = {
+    decision: '지금 고민 중인 결정을 정리해줘. 등록할 의사결정이 있어.',
+    data:     '최근 내 데이터에서 보이는 흐름을 알려줘.',
+    remind:   '이 주제로 7일 뒤에 다시 물어봐줘. (D-7 리마인드)',
+    deep:     '방금 이야기한 주제를 더 깊이 분석해줘. 비슷한 과거 사례도 같이.',
+    emotion:  '오늘의 감정을 기록하고 싶어. 안내해줘.',
+    pattern:  '최근 내가 반복하고 있는 패턴을 찾아줘.'
+  };
+
+  // ── 전송 ────────────────────────────────────────────────
+  function sendUser(text){
+    text = String(text || '').trim();
+    if (!text) return;
+
+    $welcome.style.display = 'none';
+
+    var userMsg = { role:'me', text:text, time:nowTime(), ts:Date.now() };
+    history.push(userMsg);
+    saveHistory(history);
+    renderMessage(userMsg);
+
+    // 입력창 비우기
+    $input.value = '';
+    autoResize();
+    refreshSendBtn();
+
+    // 타이핑 인디케이터 → 실 API 호출
+    var typingEl = renderMessage({ role:'ai', typing:true });
+    generateReply(text, function(reply) {
+      if (typingEl && typingEl.parentNode) typingEl.parentNode.removeChild(typingEl);
+      var aiMsg = {
+        role:'ai',
+        text:reply.text,
+        citation:reply.citation,
+        time:nowTime(),
+        ts:Date.now()
+      };
+      history.push(aiMsg);
+      saveHistory(history);
+      renderMessage(aiMsg);
+      updateSubText();
+    });  // generateReply callback 종료
+
+    updateSubText();
+  }
+
+  // ── 입력창 자동 높이 ───────────────────────────────────
+  function autoResize(){
+    $input.style.height = 'auto';
+    var h = Math.min($input.scrollHeight, 120);
+    $input.style.height = h + 'px';
+  }
+  function refreshSendBtn(){
+    $send.disabled = $input.value.trim().length === 0;
+  }
+
+  $input.addEventListener('input', function(){ autoResize(); refreshSendBtn(); });
+  $input.addEventListener('keydown', function(e){
+    // Enter 전송 (Shift+Enter 줄바꿈)
+    if (e.key === 'Enter' && !e.shiftKey && !e.isComposing) {
+      e.preventDefault();
+      sendUser($input.value);
+    }
+  });
+
+  $form.addEventListener('submit', function(e){
+    e.preventDefault();
+    sendUser($input.value);
+  });
+
+  // ── 빠른 액션 ───────────────────────────────────────────
+  $quick.addEventListener('click', function(e){
+    var btn = e.target.closest('button[data-quick]');
+    if (!btn) return;
+    var key = btn.dataset.quick;
+    var preset = QUICK_PRESETS[key];
+    if (preset) {
+      $input.value = preset;
+      autoResize();
+      refreshSendBtn();
+      $input.focus();
+    }
+  });
+
+  // ── 뒤로가기 (원챗 메인) ───────────────────────────────
+  $back.addEventListener('click', function(){
+    location.href = '/m/';
+  });
+
+  // ── 첨부 → 학습 페이지(v2) ───────────────────────────────────
+  // [P1 2026-06-04] 통합 학습 페이지 v2 로 이동 (5가지 입력방식 + 14채널)
+  $attach.addEventListener('click', function(){
+    location.href = '/aimessage/mychat/learn-v2.html';
+  });
+
+  // ── 메뉴 시트 ──────────────────────────────────────────
+  function openMenu(){ $overlay.classList.add('open'); }
+  function closeMenu(){ $overlay.classList.remove('open'); }
+
+  $menuBtn.addEventListener('click', openMenu);
+  $overlay.addEventListener('click', closeMenu);
+
+  document.querySelectorAll('.me-menu-sheet button').forEach(function(btn){
+    btn.addEventListener('click', function(){
+      var key = btn.dataset.menu;
+      closeMenu();
+      switch(key){
+        case 'learn':
+          // [P1 2026-06-04] 통합 학습 v2 (5입력×14채널)로 이동
+          location.href = '/aimessage/mychat/learn-v2.html';
+          break;
+        case 'storage':
+          // [P1 2026-06-04] 신규: 저장소 모드(서버/온디바이스) + BYO API 키 설정
+          location.href = '/aimessage/mychat/storage-settings.html';
+          break;
+        case 'phonesync':
+          location.href = '/aimessage/mychat/phone-sync-settings.html';
+          break;
+        case 'inbox':
+          location.href = '/aimessage/mychat/life-inbox.html';
+          break;
+        case 'dailysync':
+          location.href = '/aimessage/mychat/daily-sync.html';
+          break;
+        case 'anomaly':
+          location.href = '/aimessage/mychat/anomaly-watchdog.html';
+          break;
+        case 'usage':
+          location.href = '/aimessage/mychat/usage-guard.html';
+          break;
+        case 'legacy':
+          location.href = '/aimessage/mychat/digital-legacy.html';
+          break;
+        case 'panic':
+          if (confirm('⚠️ 긴급 차단 — 모든 외부 공개 데이터를 즉시 비공개로 전환합니다.\n계속하시겠습니까?')) {
+            fetch('/aimessage/mychat/api/settings.php', {
+              method:'POST', credentials:'include',
+              headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({action:'panic_lock'})
+            }).then(r=>r.json()).then(d=>{
+              if (d.ok) {
+                alert('✅ 긴급 차단 완료. 모든 데이터가 비공개 처리되었습니다.');
+              } else {
+                alert('처리 실패: ' + (d.error||''));
+              }
+            });
+          }
+          break;
+        case 'dashboard':
+          location.href = '/aimessage/mychat/dashboard.html';
+          break;
+        case 'decisions':
+          // [P2 2026-06-04] decisions.html → decision-assistant.html (Predict→Decide→Reflect + Decision Card)
+          location.href = '/aimessage/mychat/decision-assistant.html';
+          break;
+        case 'clear':
+          if (confirm('대화 기록을 모두 지울까요?')) {
+            fetch('/aimessage/mychat/api/chat.php', {
+              method:'POST', credentials:'include',
+              headers:{'Content-Type':'application/json'},
+              body:JSON.stringify({message:'__clear_history__'})
+            }).catch(()=>{});
+            clearHistory();
+            history = [];
+            renderAll();
+          }
+          break;
+        case 'close':
+        default:
+          break;
+      }
+    });
+  });
+
+  // ESC 로 메뉴 닫기
+  document.addEventListener('keydown', function(e){
+    if (e.key === 'Escape') closeMenu();
+  });
+
+  // ── 초기 렌더 ──────────────────────────────────────────
+  renderAll();
+  refreshSendBtn();
+
+  // 디버그용 노출
+  window.OneMeChat = {
+    history: function(){ return history.slice(); },
+    clear: function(){ clearHistory(); history = []; renderAll(); },
+    send: sendUser
+  };
+})();
+</script>
+
+<!-- [ME-B6] 데이터 풀 패널 (Scope 토글 + me_data.php 연동) -->
+
+<!-- [ME-C3] 내 아바타 대시보드 (me_stats.php 연동, SVG 차트, Health Score) -->
+
+<!-- [ME-C2] 의사결정 추적 (me_decisions.php 연동, Predict→Decide→Reflect 루프) -->
+
+</body>
+</html>

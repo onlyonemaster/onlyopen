@@ -1,0 +1,19 @@
+RewriteEngine On
+RewriteBase /vermanager/
+
+# If file/directory exists, serve directly
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+
+# Route everything else to index.php
+RewriteRule ^(.*)$ index.php?route=$1 [QSA,L]
+
+# Security
+<FilesMatch "\.(json|log)$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>
+<FilesMatch "^config\.php$">
+    Order Deny,Allow
+    Deny from all
+</FilesMatch>

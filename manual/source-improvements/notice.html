@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공지사항 연동 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">📋 소개 및 개요</a></div>
+    <div class="sb-section"><div class="sb-section-title">기본 사용법</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">📊 대시보드 화면 구성</a><a href="/manual/source-improvements/list.html" class="sb-link">🔍 개선 항목 조회·필터링</a><a href="/manual/source-improvements/register.html" class="sb-link">✏️ 새 개선 항목 등록</a><a href="/manual/source-improvements/detail.html" class="sb-link">👁️ 상세보기 및 수정</a></div>
+    <div class="sb-section"><div class="sb-section-title">심화</div><a href="/manual/source-improvements/lifecycle.html" class="sb-link">🔄 상태 라이프사이클</a><a href="/manual/source-improvements/notice.html" class="sb-link active">📢 공지사항 연동</a><a href="/manual/source-improvements/auto-register.html" class="sb-link">🤖 AI 자동 등록</a></div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">연동 개요</a>
+    <a href="#button" class="toc-link">공지 발행 버튼</a>
+    <a href="#notice-id" class="toc-link">notice_id 추적</a>
+    <a href="#flow" class="toc-link">연동 플로우</a>
+    <a href="#ai-write" class="toc-link">notice_ai-write.php</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">📢 공지사항 연동</h1>
+    <p class="lead">완료된 개선 사항을 공지사항 시스템과 연동하여, 사용자에게 배포 소식을 자동으로 알릴 수 있습니다.</p>
+
+    <div class="info-box"><strong>🔗 연동 진입점:</strong> 목록 페이지의 각 행 우측 「공지」 버튼 → <code>notice_ai-write.php?source_id=X</code></div>
+
+    <h2 id="button">공지 발행 버튼</h2>
+    <p>목록 테이블의 「액션」 컬럼에서 3번째 버튼으로 표시됩니다:</p>
+    <pre class="code-block"><code>&lt;?php if (!$row['notice_id']): ?&gt;
+  &lt;a href="notice_ai-write.php?source_id=&lt;?php echo $row['id']; ?&gt;"
+     class="btn-sm btn-notice"&gt;공지&lt;/a&gt;
+&lt;?php endif; ?&gt;</code></pre>
+
+    <h2 id="notice-id">notice_id 추적 메커니즘</h2>
+    <p>각 개선 항목은 <code>notice_id</code> 컬럼을 통해 공지 발행 여부를 추적합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>notice_id 값</th><th>의미</th><th>「공지」버튼</th></tr></thead>
+      <tbody>
+        <tr><td><code>NULL</code></td><td>아직 공지가 발행되지 않음</td><td><span class="badge-green">표시됨</span></td></tr>
+        <tr><td><code>정수값</code></td><td>이미 공지가 발행됨 (공지사항 ID)</td><td><span class="badge-gray">숨겨짐</span></td></tr>
+      </tbody>
+    </table>
+    <p><strong>중복 발행 방지:</strong> 한 번 공지가 발행되면 버튼이 사라지므로, 동일한 개선사항이 중복 공지되는 것을 막습니다.</p>
+
+    <h2 id="flow">전체 연동 플로우</h2>
+    <pre class="code-block"><code>목록 페이지 (admin_source_improvements.php)
+  │
+  ├─ notice_id == NULL → 「공지」 버튼 활성화
+  │   │
+  │   └─ 클릭 → notice_ai-write.php?source_id=X
+  │              │
+  │              ├─ source_improvements에서 해당 항목 조회
+  │              ├─ AI가 공지 초안 자동 생성
+  │              ├─ 관리자가 내용 확인·수정
+  │              └─ 발행 → notice_id 업데이트
+  │
+  └─ notice_id != NULL → 「공지」 버튼 숨김
+                          (이미 발행됨)</code></pre>
+
+    <h2 id="ai-write">notice_ai-write.php 분석</h2>
+    <p><code>source_id</code> 파라미터로 개선 항목 ID를 받아:</p>
+    <ol class="feature-list">
+      <li><code>source_improvements</code> 테이블에서 해당 행 전체 조회</li>
+      <li>제목·상세설명·카테고리 정보를 기반으로 AI가 공지 초안 생성</li>
+      <li>관리자 UI에서 내용 확인·수정 가능</li>
+      <li>발행 완료 시 해당 <code>source_improvements</code> 행의 <code>notice_id</code>를 발행된 공지의 ID로 업데이트</li>
+    </ol>
+
+    <div class="tip-box"><strong>💡 활용 팁:</strong> 「배포됨」 상태의 개선사항을 공지로 발행하면, 사용자들에게 어떤 개선이 이루어졌는지 투명하게 알릴 수 있습니다.</div>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/lifecycle.html" class="next-link">← 이전: 상태 라이프사이클</a>
+      <a href="/manual/source-improvements/auto-register.html" class="next-link">다음: AI 자동 등록 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.info-box{background:var(--blue-bg);border-left:4px solid var(--brand);padding:16px 20px;border-radius:8px;margin-bottom:20px;font-size:14px;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.m-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;}
+.m-table th{background:var(--bg3);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);}
+.m-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.badge-green{background:#dcfce7;color:#16a34a;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;}
+.badge-gray{background:#f1f5f9;color:#64748b;padding:2px 8px;border-radius:3px;font-size:11px;font-weight:700;}
+.feature-list{margin-bottom:20px;padding-left:20px;}
+.feature-list li{margin-bottom:8px;font-size:14px;}
+.tip-box{background:var(--green-bg);border-left:4px solid var(--green);padding:14px 18px;border-radius:8px;margin-bottom:28px;font-size:14px;}
+.prev-next{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

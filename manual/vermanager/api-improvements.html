@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>개선사항 API — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.api-method { display:inline-block; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; margin-right:6px; }
+.method-get { background:#d1fae5; color:#065f46; }
+.method-post { background:#fef3c7; color:#92400e; }
+.method-delete { background:#fee2e2; color:#991b1b; }
+.endpoint-box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; margin:16px 0; font-family:monospace; font-size:13px; }
+.param-table { width:100%; border-collapse:collapse; margin:12px 0; }
+.param-table th,.param-table td { padding:8px 12px; border:1px solid var(--border); font-size:13px; }
+.param-table th { background:var(--bg2); text-align:left; }
+.resp-box { background:#1e293b; color:#e2e8f0; border-radius:8px; padding:16px; margin:12px 0; font-size:13px; line-height:1.7; overflow-x:auto; }
+</style>
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link active">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>개선사항 API</span></div>
+<h1>🔧 소스 개선사항 API (api/improvements.php)</h1>
+<p class="page-desc">소스 개선 항목의 CRUD를 담당하는 다중 사이트 지원 API입니다. GET/POST/DELETE 메서드를 지원하며 사이트별 독립된 improvements.json 파일을 읽고 씁니다.</p>
+
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/improvements?site=kiam-prod</code></div>
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/improvements?site=all</code></div>
+<div class="endpoint-box"><span class="api-method method-post">POST</span> <code>/vermanager/api/improvements</code></div>
+<div class="endpoint-box"><span class="api-method method-delete">DELETE</span> <code>/vermanager/api/improvements?id=imp_xxx&site=kiam-prod</code></div>
+
+<h2 id="get-params">GET 파라미터</h2>
+<table class="param-table">
+  <tr><th>파라미터</th><th>타입</th><th>필수</th><th>설명</th></tr>
+  <tr><td><code>site</code></td><td>string</td><td>선택</td><td>사이트 ID. <code>all</code>이면 모든 사이트의 개선사항 병합 반환. 생략 시 현재 선택된 사이트 기준.</td></tr>
+</table>
+
+<h2 id="get-response">GET 응답 — site=kiam-prod</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"site_id"</code>: "kiam-prod",
+  <code>"data"</code>: [
+    {
+      <code>"id"</code>: "imp_4",
+      <code>"title"</code>: "메시지 발송 속도 최적화",
+      <code>"category"</code>: "성능",
+      <code>"content"</code>: "대량 메시지 발송 시 배치 처리를 도입...",
+      <code>"date"</code>: "2026-05-01",
+      <code>"released_in"</code>: "1.0.1",
+      <code>"created_at"</code>: "2026-05-01T10:30:00+09:00"
+    },
+    { ... }
+  ],
+  <code>"total"</code>: 5,
+  <code>"unreleased"</code>: 3
+}</pre></div>
+
+<h2 id="get-all-response">GET 응답 — site=all</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"mode"</code>: "all",
+  <code>"data"</code>: [
+    { "id":"imp_4", "title":"...", "site_id":"kiam-prod", "site_name":"kiam.kr (운영)", ... },
+    { "id":"imp_dev_1", "title":"...", "site_id":"kiam-dev", "site_name":"dev.kiam.kr", ... }
+  ],
+  <code>"total"</code>: 7
+}</pre></div>
+
+<h2 id="post-body">POST 요청 Body</h2>
+<table class="param-table">
+  <tr><th>필드</th><th>타입</th><th>필수</th><th>설명</th></tr>
+  <tr><td><code>site</code></td><td>string</td><td><b>필수</b></td><td>대상 사이트 ID</td></tr>
+  <tr><td><code>title</code></td><td>string</td><td><b>필수</b></td><td>개선 제목</td></tr>
+  <tr><td><code>category</code></td><td>string</td><td><b>필수</b></td><td>카테고리 (버그 수정, 기능 추가, 성능 개선, 보안, 리팩토링, 문서화)</td></tr>
+  <tr><td><code>content</code></td><td>string</td><td><b>필수</b></td><td>상세 설명</td></tr>
+</table>
+
+<div class="resp-box"><pre>// POST 요청 예시
+{
+  <code>"site"</code>: "kiam-prod",
+  <code>"title"</code>: "햄버거 메뉴 아이콘 추가",
+  <code>"category"</code>: "UI",
+  <code>"content"</code>: "모바일 네비게이션용 햄버거 메뉴 아이콘 추가 및 사이드바 토글 기능"
+}
+
+// 응답
+{
+  <code>"ok"</code>: true,
+  <code>"site_id"</code>: "kiam-prod",
+  <code>"id"</code>: "imp_6",
+  <code>"message"</code>: "✅ 새로운 개선사항이 추가되었습니다."
+}</pre></div>
+
+<h2 id="server-logic">서버 처리 로직 (완전 추적)</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// ── GET 처리 ──
+if ($method === 'GET') {
+    $site_id = $_GET['site'] ?? get_current_site_id();
+
+    if ($site_id === 'all') {
+        // 모든 활성 사이트 순회 → improvements.json 병합
+        $all_data = [];
+        foreach (get_active_sites() as $sid => $s) {
+            $imps = site_read_json($sid, 'improvements.json');
+            foreach ($imps as $imp) {
+                $imp['site_id'] = $sid;
+                $imp['site_name'] = $s['name'] ?? $sid;
+                $all_data[] = $imp;
+            }
+        }
+        return json_encode(['ok'=>true,'mode'=>'all','data'=>$all_data,'total'=>count($all_data)]);
+    }
+
+    // 특정 사이트
+    if (!get_site($site_id)) { return error_json('사이트를 찾을 수 없습니다.'); }
+    $data = site_read_json($site_id, 'improvements.json');
+    $unreleased = count(array_filter($data, fn($i) => empty($i['released_in'])));
+    return json_encode(['ok'=>true,'site_id'=>$site_id,'data'=>$data,'total'=>count($data),'unreleased'=>$unreleased]);
+}
+
+// ── POST 처리 ──
+if ($method === 'POST') {
+    $input = json_decode(file_get_contents('php://input'), true);
+    $site_id = $input['site'] ?? null;
+    validate_site($site_id);
+
+    $new_imp = [
+        'id'         => uniqid('imp_'),            // 고유 ID 생성
+        'title'      => $input['title'],
+        'category'   => $input['category'],
+        'content'    => $input['content'],
+        'date'       => date('Y-m-d'),
+        'created_at' => date('c'),
+        'released_in'=> null,                      // 아직 릴리즈 안 됨
+    ];
+
+    $current = site_read_json($site_id, 'improvements.json');
+    $current[] = $new_imp;
+    site_write_json($site_id, 'improvements.json', $current);
+
+    return json_encode(['ok'=>true,'site_id'=>$site_id,'id'=>$new_imp['id'],'message'=>'✅ 새로운 개선사항이 추가되었습니다.']);
+}
+
+// ── DELETE 처리 ──
+if ($method === 'DELETE') {
+    $site_id = $_GET['site'] ?? null;
+    $imp_id = $_GET['id'] ?? null;
+    validate_site($site_id);
+
+    $current = site_read_json($site_id, 'improvements.json');
+    $current = array_values(array_filter($current, fn($i) => $i['id'] !== $imp_id));
+    site_write_json($site_id, 'improvements.json', $current);
+
+    return json_encode(['ok'=>true,'message'=>'✅ 개선사항이 삭제되었습니다.']);
+}</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> POST로 등록된 개선사항의 <code>released_in</code> 필드는 null입니다. 이후 <a href="api-release.html">릴리즈 API</a>가 실행될 때 해당 버전으로 채워집니다. <code>site=all</code> 모드는 모든 활성 사이트의 improvements.json을 읽어 하나의 배열로 병합하며, 각 항목에 <code>site_id</code>와 <code>site_name</code>을 추가합니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

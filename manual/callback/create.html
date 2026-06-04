@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>콜백 메시지 만들기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">IAM 콜백</div>
+      <a href="/manual/callback/" class="sb-link">📞 IAM 콜백 소개</a>
+      <a href="/manual/callback/create.html" class="sb-link active">콜백 메시지 만들기</a>
+      <a href="/manual/callback/list.html" class="sb-link">콜백 리스트 관리</a>
+      <a href="/manual/callback/send.html" class="sb-link">콜백 발송하기</a>
+      <a href="/manual/callback/settings.html" class="sb-link">콜백 설정 상세</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sharecallback/" class="sb-link">공유콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/callback/">IAM 콜백</a> › 콜백 메시지 만들기</nav>
+    <h1 class="page-title">✏️ 콜백 메시지 만들기</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#entry">진입 방법</a></li>
+        <li><a href="#step1">1단계: 콜백 메시지 설정하기 모달</a></li>
+        <li><a href="#step2">2단계: 콜백 메시지 등록하기</a></li>
+        <li><a href="#step3">3단계: 상세 정보 입력</a></li>
+        <li><a href="#step4">4단계: 등록 완료</a></li>
+        <li><a href="#ai">AI와 함께 만들기</a></li>
+        <li><a href="#validation">입력 검증 규칙</a></li>
+      </ul>
+    </div>
+    <section id="entry">
+      <h2>진입 방법</h2>
+      <p>콜백 메시지를 만들려면 다음 두 가지 경로로 진입할 수 있습니다:</p>
+      <ol class="step-list">
+        <li><div class="step-num">A</div><div class="step-body"><strong>메인 메뉴 경로</strong>: <code>kiam.kr/m</code> → [문자발송관리] 영역 → <strong>[콜백발송]</strong> 아이콘 클릭<br>→ <code>goCallbackApp()</code> 함수가 호출되어 <strong>콜백 메시지 설정하기</strong> 모달이 열립니다.</div></li>
+        <li><div class="step-num">B</div><div class="step-body"><strong>내정보 경로</strong>: <code>kiam.kr/m</code> → 우측 상단 [내정보] 드롭다운 → <strong>[콜백등록관리]</strong> 클릭<br>→ <code>goCallbackList()</code> 함수가 호출되어 앱 내 콜백 관리 화면으로 이동합니다.</div></li>
+      </ol>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>📌 참고</strong>: 경로 A는 웹에서 바로 콜백 메시지를 등록할 수 있고, 경로 B는 앱(AppScript)을 통해 콜백등록관리로 이동합니다. PC에서는 경로 A를 이용하세요.
+      </div>
+    </section>
+    <section id="step1">
+      <h2>1단계: 콜백 메시지 설정하기 모달</h2>
+      <p>[콜백발송] 아이콘을 클릭하면 아래 내용이 담긴 <strong>콜백 메시지 설정하기</strong> 팝업(모달)이 나타납니다:</p>
+      <table class="m-table">
+        <thead><tr><th>영역</th><th>내용</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>안내 문구</strong></td><td>"콜백 메시지 세팅을 동의한 회원의 콜백 메시지함에 들어갈 메시지를 설정할 수 있습니다."</td><td>이 기능이 어떤 역할을 하는지 설명합니다.</td></tr>
+          <tr><td><strong>포인트 충전</strong></td><td>포인트로 충전하기 / 보유포인트 확인 / 포인트 쉐어하기</td><td>콜백 메시지 등록 전 포인트를 확인하고 충전합니다.</td></tr>
+          <tr><td><strong>버튼 영역</strong></td><td>콜백리스트보기 / 포인트내역보기</td><td>기존 등록된 메시지를 확인하거나 포인트 사용 내역을 볼 수 있습니다.</td></tr>
+          <tr><td><strong>결제 전 확인사항</strong></td><td>1명당 300포인트 차감 / 디폴트 메시지로 등록 / 추후 변경 가능</td><td>결제 관련 주의사항을 안내합니다.</td></tr>
+          <tr><td><strong>하단 버튼</strong></td><td>취소하기 / 콜백 메시지 설정하기</td><td><strong>[콜백 메시지 설정하기]</strong> 클릭 시 <code>settlement('callmake')</code> 함수가 호출됩니다.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;"><strong>[콜백 메시지 설정하기]</strong> 버튼을 클릭하면 결제 확인 후 <strong>콜백 메시지 등록하기</strong> 모달로 이동합니다.</p>
+    </section>
+    <section id="step2">
+      <h2>2단계: 콜백 메시지 등록하기</h2>
+      <p>콜백 메시지 등록하기 모달(<code>callback_making_modal</code>)에서 다음 항목들을 작성합니다:</p>
+      <table class="m-table">
+        <thead><tr><th>필드명</th><th>입력 방식</th><th>필수</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>제목</strong></td><td>텍스트 입력 (<code>msgtitle_call</code>)</td><td>✅</td><td>콜백 메시지의 제목입니다. 가운데 정렬된 큰 글씨로 표시됩니다.</td></tr>
+          <tr><td><strong>메시지 내용</strong></td><td>텍스트 영역 (<code>msgdesc_call</code>)</td><td>✅</td><td>실제 발송될 메시지 본문입니다. 최대한 자연스럽게 작성하세요.</td></tr>
+          <tr><td><strong>AI와 대화하기</strong></td><td>버튼 (<code>show_chat()</code>)</td><td>❌</td><td>AI 채팅으로 메시지 작성을 도와줍니다.</td></tr>
+        </tbody>
+      </table>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>💡 팁</strong>: <strong>[+ AI와 대화하기]</strong> 버튼을 누르면 AI 챗봇이 메시지 작성을 도와줍니다. 어떤 느낌의 메시지를 원하는지 말로 설명하면 AI가 적절한 문구를 제안해 줍니다.
+      </div>
+    </section>
+    <section id="step3">
+      <h2>3단계: 콜백메시지 상세정보 입력</h2>
+      <p>제목과 메시지 내용 아래에는 <strong>콜백메시지상세정보</strong> 테이블이 있습니다:</p>
+      <table class="m-table">
+        <thead><tr><th>필드명</th><th>변수명</th><th>필수</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>메시지 타이틀</strong></td><td><code>call_title</code></td><td>✅</td><td>리스트에서 구분할 수 있는 짧은 타이틀</td></tr>
+          <tr><td><strong>메시지 콘텐츠</strong></td><td><code>call_content</code></td><td>✅</td><td>상세 메시지 콘텐츠 (100px 높이 텍스트 영역)</td></tr>
+          <tr><td><strong>이미지</strong></td><td><code>call_img</code></td><td>❌</td><td>MMS 이미지 첨부 파일 (.jpg, .jpeg, .png, .gif)</td></tr>
+          <tr><td><strong>링크주소</strong></td><td><code>iam_link</code></td><td>❌</td><td>메시지에 포함될 링크. 미입력 시 이용자의 IAM 주소가 자동 사용됨</td></tr>
+          <tr><td><strong>메시지 단축주소</strong></td><td><code>call_msg_surl</code></td><td>자동</td><td>등록 후 자동 생성되는 단축 URL. [메시지 단축주소 복사하기] 버튼으로 복사 가능</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="step4">
+      <h2>4단계: 등록 완료</h2>
+      <p>모든 내용을 입력한 후 하단의 <strong>[등록하기]</strong> 버튼을 클릭하면 <code>form_save_call()</code> 함수가 실행됩니다.</p>
+      <div class="code-block">
+        <pre><code>// form_save_call() 함수의 처리 흐름 (index.js)
+function form_save_call() {
+  // 1. 필수 입력값 검증
+  if ($("#call_title").val() == "") → "메시지 타이틀을 입력해주세요."
+  if ($("#call_content").val() == "") → "메시지 콘텐츠를 입력해주세요."
+  if ($("#msgtitle_call").val() == "" || $("#msgdesc_call").val() == "")
+    → "제목/메시지 내용을 입력해 주세요."
+
+  // 2. AJAX로 서버 전송
+  $.ajax({
+    url: "/admin/ajax/mms_callback_save.php",
+    data: new FormData($("#dForm_call")[0])
+  });
+
+  // 3. 등록 완료 → 단축 URL 자동 생성
+  // 4. "등록되었습니다." 알림 표시
+}</code></pre>
+      </div>
+      <p style="margin-top:12px;">등록이 완료되면 <strong>"등록되었습니다."</strong> 알림이 나타나고, 생성된 단축 URL이 자동으로 저장됩니다.</p>
+    </section>
+    <section id="ai">
+      <h2>AI와 함께 메시지 만들기</h2>
+      <p>콜백 메시지 등록 화면 우측 상단의 <strong>[+ AI와 대화하기]</strong> 버튼을 클릭하면 AI 챗봇이 활성화됩니다. 다음과 같이 활용할 수 있습니다:</p>
+      <ul>
+        <li><strong>메시지 초안 작성</strong>: "부재중 전화 왔을 때 보낼 정중한 메시지 만들어줘"</li>
+        <li><strong>톤앤매너 조정</strong>: "좀 더 친근하게 바꿔줘" 또는 "더 공식적인 느낌으로"</li>
+        <li><strong>길이 조절</strong>: "문자 90바이트 이내로 줄여줘"</li>
+        <li><strong>여러 버전 생성</strong>: "다른 버전으로 3개만 더 만들어줘"</li>
+      </ul>
+    </section>
+    <section id="validation">
+      <h2>입력 검증 규칙</h2>
+      <table class="m-table">
+        <thead><tr><th>검증 항목</th><th>조건</th><th>실패 시 메시지</th></tr></thead>
+        <tbody>
+          <tr><td>메시지 타이틀</td><td>call_title이 비어있지 않아야 함</td><td>"메시지 타이틀을 입력해주세요."</td></tr>
+          <tr><td>메시지 콘텐츠</td><td>call_content가 비어있지 않아야 함</td><td>"메시지 콘텐츠를 입력해주세요."</td></tr>
+          <tr><td>제목 + 메시지 내용</td><td>msgtitle_call 또는 msgdesc_call 중 하나라도 비어있으면 안 됨</td><td>"제목/메시지 내용을 입력해 주세요."</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/callback/" class="btn-prev">← IAM 콜백 소개</a>
+      <a href="/manual/callback/list.html" class="btn-next">콜백 리스트 관리 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#entry">진입 방법</a></li>
+      <li><a href="#step1">1단계: 설정하기 모달</a></li>
+      <li><a href="#step2">2단계: 메시지 등록</a></li>
+      <li><a href="#step3">3단계: 상세정보 입력</a></li>
+      <li><a href="#step4">4단계: 등록 완료</a></li>
+      <li><a href="#ai">AI와 함께 만들기</a></li>
+      <li><a href="#validation">입력 검증 규칙</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

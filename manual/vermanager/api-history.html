@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>히스토리 API — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.api-method { display:inline-block; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; margin-right:6px; }
+.method-get { background:#d1fae5; color:#065f46; }
+.endpoint-box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; margin:16px 0; font-family:monospace; font-size:13px; }
+.param-table { width:100%; border-collapse:collapse; margin:12px 0; }
+.param-table th,.param-table td { padding:8px 12px; border:1px solid var(--border); font-size:13px; }
+.param-table th { background:var(--bg2); text-align:left; }
+.resp-box { background:#1e293b; color:#e2e8f0; border-radius:8px; padding:16px; margin:12px 0; font-size:13px; line-height:1.7; overflow-x:auto; }
+</style>
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link active">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>히스토리 API</span></div>
+<h1>📜 버전 히스토리 API (api/history.php)</h1>
+<p class="page-desc">사이트별 또는 전체 사이트의 버전 변경 이력을 조회합니다. 릴리즈 유형(major/minor/patch)으로 필터링하고 개수 제한을 둘 수 있습니다.</p>
+
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/history?site=kiam-prod</code></div>
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/history?site=all</code></div>
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/history?site=kiam-prod&type=patch&limit=5</code></div>
+
+<h2 id="params">GET 파라미터</h2>
+<table class="param-table">
+  <tr><th>파라미터</th><th>타입</th><th>필수</th><th>설명</th></tr>
+  <tr><td><code>site</code></td><td>string</td><td>선택</td><td>사이트 ID. <code>all</code>이면 모든 사이트의 히스토리 병합 반환. 기본값: 현재 선택 사이트.</td></tr>
+  <tr><td><code>type</code></td><td>string</td><td>선택</td><td>필터: <code>major</code> | <code>minor</code> | <code>patch</code>. 지정 시 해당 유형만 반환.</td></tr>
+  <tr><td><code>limit</code></td><td>int</td><td>선택</td><td>결과 개수 제한. 지정하지 않으면 전체 반환.</td></tr>
+</table>
+
+<h2 id="response-single">응답 — site=kiam-prod</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"site_id"</code>: "kiam-prod",
+  <code>"site_name"</code>: "kiam.kr (운영)",
+  <code>"environment"</code>: "production",
+  <code>"current_version"</code>: { "major":1, "minor":0, "patch":1, "raw":"1.0.1" },
+  <code>"data"</code>: [
+    {
+      <code>"id"</code>: "rel_69f557e96c558",
+      <code>"from"</code>: "1.0.0",
+      <code>"to"</code>: "1.0.1",
+      <code>"type"</code>: "patch",
+      <code>"date"</code>: "2026-05-02T10:48:25+09:00",
+      <code>"note"</code>: "테스트 자동 릴리즈",
+      <code>"linked_improvements"</code>: ["imp_4", "imp_5"],
+      <code>"total_improvements"</code>: 2
+    }
+  ],
+  <code>"total"</code>: 1
+}</pre></div>
+
+<h2 id="response-all">응답 — site=all</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"mode"</code>: "all",
+  <code>"data"</code>: [
+    {
+      "id": "rel_69f...", "from":"1.0.0", "to":"1.0.1",
+      "type":"patch", "date":"2026-05-02T10:48:25+09:00",
+      <code>"site_id"</code>: "kiam-prod",
+      <code>"site_name"</code>: "kiam.kr (운영)"
+    },
+    { ..., <code>"site_id"</code>:"kiam-dev", <code>"site_name"</code>:"dev.kiam.kr" }
+  ],
+  <code>"total"</code>: 3
+}</pre></div>
+
+<h2 id="server-logic">서버 처리 로직 (완전 추적)</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// 1) site=all — 전체 사이트 병합
+if ($site_id === 'all') {
+    $all_data = [];
+    foreach (get_active_sites() as $sid => $s) {
+        $history = site_read_json($sid, 'version_history.json');
+        foreach ($history as $entry) {
+            $entry['site_id'] = $sid;
+            $entry['site_name'] = $s['name'] ?? $sid;
+            $all_data[] = $entry;
+        }
+    }
+    // 날짜 기준 정렬 (최신순)
+    usort($all_data, fn($a, $b) => ($b['date'] ?? '') <=> ($a['date'] ?? ''));
+
+    // type 필터 적용
+    if ($filter_type) {
+        $all_data = array_filter($all_data, fn($e) => ($e['type'] ?? '') === $filter_type);
+    }
+
+    // limit 적용
+    if ($limit > 0) {
+        $all_data = array_slice(array_values($all_data), 0, $limit);
+    }
+
+    return json_encode(['ok'=>true,'mode'=>'all','data'=>array_values($all_data),'total'=>count($all_data)]);
+}
+
+// 2) 단일 사이트
+if (!get_site($site_id)) { return error_json('사이트를 찾을 수 없습니다.'); }
+
+$history = site_read_json($site_id, 'version_history.json');
+// 최신순 정렬
+usort($history, fn($a, $b) => ($b['date'] ?? '') <=> ($a['date'] ?? ''));
+
+// type 필터
+if ($filter_type) {
+    $history = array_filter($history, fn($e) => ($e['type'] ?? '') === $filter_type);
+}
+
+// limit
+if ($limit > 0) {
+    $history = array_slice(array_values($history), 0, $limit);
+}
+
+$site = get_site($site_id);
+$current_version = site_get_current_version($site_id);
+
+return json_encode([
+    'ok' => true,
+    'site_id' => $site_id,
+    'site_name' => $site['name'] ?? $site_id,
+    'environment' => $site['environment'] ?? 'unknown',
+    'current_version' => $current_version,
+    'data' => array_values($history),
+    'total' => count($history),
+]);</pre>
+
+<h2 id="usage">사용 예시</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// 최근 3개의 패치 릴리즈만 조회
+curl "https://kiam.kr/vermanager/api/history?site=kiam-prod&type=patch&limit=3"
+
+// 전체 사이트의 히스토리 (타임라인 뷰)
+curl "https://kiam.kr/vermanager/api/history?site=all"
+
+// JavaScript fetch
+fetch('/vermanager/api/history?site=kiam-prod&limit=5')
+  .then(r => r.json())
+  .then(data => {
+    data.data.forEach(entry => {
+      console.log(`${entry.from} → ${entry.to} (${entry.type})`);
+    });
+  });</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> 각 히스토리 항목은 <code>linked_improvements</code> 배열로 해당 릴리즈에 포함된 소스 개선 ID들을 추적합니다. <code>site=all</code> 모드는 사이트 간 히스토리를 날짜 기준으로 병합하여 전체 타임라인을 제공합니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

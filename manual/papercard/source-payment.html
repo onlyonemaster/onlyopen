@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>결제 시스템 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link active">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>결제 시스템</span></div>
+<h1>💰 결제 시스템 — 완전 분석</h1>
+<p class="page-desc">명함 발송에 필요한 결제 시스템의 모든 로직을 분석합니다. 포인트 충전부터 실제 결제 처리까지.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#settlement">settlement() 함수 — 결제의 중심</a></li>
+<li><a href="#paymethod">결제 수단</a></li>
+<li><a href="#point">포인트 시스템</a></li>
+<li><a href="#flow">전체 결제 흐름</a></li>
+<li><a href="#follow">따라하기</a></li>
+</ul>
+</div>
+
+<h2 id="settlement">⚙️ settlement(val, frm, auto_up) — 결제의 중심</h2>
+<p>이 함수 하나가 모든 결제 로직을 처리합니다. <code>val</code> 파라미터로 동작이 완전히 바뀝니다.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;">
+function settlement(val, frm, auto_up) {
+    // val 값에 따른 6가지 모드:
+    //
+    // "set"       → 상품 선택, 수량 입력 단계
+    // "auto"      → 자동 충전 설정
+    // "finish"    → 최종 결제 실행
+    // "make"      → 명함 제작 요청
+    // "card_send" → 명함 발송 결제 실행
+    // "card_con_send" → 명함 콘텐츠 발송
+
+    // === 공통 변수 수집 ===
+    var item_price = $('#item_price').val();   // 상품 단가
+    var item_cnt   = $('#item_cnt').val();     // 수량
+    var total_amt  = item_cnt * item_price;    // 총액
+    var member_type = $('#member_type').val(); // 회원 유형
+    var [결제수단변수] = ...; // 결제수단
+
+    // === "card_send" 모드 (명함 발송 결제) ===
+    if (val === "card_send") {
+        // 1. 메시지 수집
+        var msg = $('#message').val();
+        var card_url = $('#card_url').val();
+        var send_mode = $("input[name=card_send_mode]:checked").val();
+
+        // 2. 주문번호 생성 (날짜 + 랜덤)
+        var now = new Date();
+        var orderNo = '' + now.getFullYear() +
+            ('0' + (now.getMonth()+1)).slice(-2) +
+            ('0' + now.getDate()).slice(-2) +
+            ('0' + now.getHours()).slice(-2) +
+            ('0' + now.getMinutes()).slice(-2) +
+            ('0' + now.getSeconds()).slice(-2) +
+            Math.floor(Math.random() * 1000);
+        // 예: 2026050121361877 → YYYYMMDDHHmmss + 랜덤3자리
+
+        // 3. AJAX 결제 요청
+        $.ajax({
+            url: "[내부API]/[명함발송]",
+            type: "POST",
+            data: {
+                [정산유형]: [모드],           // "card_send""
+                [결제수단]: [결제수단변수],       // "bank" or "card""
+                member_type: member_type,
+                [결제금액파라미터]: [총액],       // 결제 금액
+                [수수료비율]: 90,            // 수수료 10% 차감
+                [주문번호파라미터]: [주문번호],    // 주문번호
+                point_val: point_val,
+                card_url: card_url,         // 명함 URL
+                message: msg,               // 발송 메시지
+                card_send_mode: send_mode   // clone(0) / share(1)
+            },
+            success: function(res) {
+                if (res === 'success' || res.result === 'success') {
+                    alert('발송이 완료되었습니다!');
+                    refresh_page();
+                } else {
+                    // 결제 실패 → 오류 페이지로
+                    location.href = "[내부페이지]/[결제오류]?err=1";
+                }
+            },
+            error: function() {
+                // 네트워크 오류 → 안내 페이지로
+                location.href = "[내부페이지]/[결제오류]?err=2";
+            }
+        });
+    }
+}
+</pre>
+
+<h2 id="paymethod">💳 결제 수단별 처리</h2>
+
+<table class="data-table">
+<thead><tr><th>결제 수단</th><th>결제수단 값</th><th>특징</th></tr></thead>
+<tbody>
+<tr><td><strong>계좌이체</strong></td><td><code>"bank"</code></td><td>수동 승인 필요, 영업시간 내 처리</td></tr>
+<tr><td><strong>카드결제</strong></td><td><code>"card"</code></td><td>즉시 승인, Allat PG 연동</td></tr>
+</tbody>
+</table>
+
+<div class="notice-box">
+<div class="notice-title">⚠️ 결제 중요 상수</div>
+<p><strong><code>[수수료비율] = 90</code></strong><br>
+이 값은 모든 발송 결제에 적용됩니다. 사용자가 결제한 금액의 90%만 실제 발송 비용으로 사용되고, 10%는 수수료입니다.<br>
+예: 10,000원 결제 → 9,000원만 발송 가능 금액, 1,000원은 수수료</p>
+</div>
+
+<h2 id="point">🪙 포인트 시스템</h2>
+
+<p>포인트 관련 AJAX 엔드포인트와 로직:</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// === 포인트 충전 ===
+function cashtoseed_chung(win) {
+    // win = 'paper_card' 로 호출됨
+    // 포인트 충전 팝업 표시
+}
+
+// === AJAX 포인트 결제 ===
+$.ajax({
+    url: "[내부API]/[포인트결제]",
+    type: "POST",
+    data: {
+        point_val: amount,     // 충전할 포인트 금액
+        method: [결제수단변수],     // bank / card
+        cur_win: 'paper_card'
+    }
+});
+
+// === 결제 내역 조회 ===
+// get_pay_platform_list() → type=platform
+// get_pay_goods_list()    → type=goods
+// get_pay_point_list()    → type=point
+// 모두 [내부API]/[결제내역] 호출
+</pre>
+
+<h2 id="flow">🌊 전체 결제 흐름도</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.8;">
+사용자                        프론트엔드                    서버
+  │                              │                          │
+  │ 1. 발송 버튼 클릭            │                          │
+  │─────────────────────────────→│                          │
+  │                              │                          │
+  │                    2. settlement("card_send")           │
+  │                    3. 데이터 검증                       │
+  │                    4. 주문번호 생성                     │
+  │                              │                          │
+  │                    5. $.ajax POST                       │
+  │                              │─────────────────────────→│
+  │                              │                          │
+  │                              │      6. 결제 검증        │
+  │                              │      7. 잔액 확인        │
+  │                              │      8. 포인트 차감      │
+  │                              │      9. 발송 실행        │
+  │                              │     10. 로그 저장        │
+  │                              │←─────────────────────────│
+  │                              │                          │
+  │                    11. success 응답                     │
+  │                    12. alert("완료!")                   │
+  │                    13. refresh_page()                   │
+  │←─────────────────────────────│                          │
+  │                              │                          │
+  │ 14. 화면 갱신 확인           │                          │
+</pre>
+
+<div class="tip-box">
+<div class="tip-title">💡 실패 케이스 처리</div>
+<p>결제가 실패하면 두 가지 경로로 처리됩니다:</p>
+<ul>
+<li><strong>err=1</strong>: 결제 승인 거절 (잔액 부족, 한도 초과 등) → <code>[내부페이지]/[결제오류]?err=1</code></li>
+<li><strong>err=2</strong>: 네트워크 오류 (서버 연결 실패, 타임아웃 등) → <code>[내부페이지]/[결제오류]?err=2</code></li>
+</ul>
+</div>
+
+<h2 id="follow">🎓 초등학생도 따라하는 결제 분석</h2>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Network 탭 열기</strong><br>F12 → Network → XHR 필터</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>발송 버튼 클릭</strong><br>새로운 요청이 Network 탭에 나타나요.</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Payload 확인</strong><br>클릭해서 어떤 값이 서버로 갔는지 확인:<br><code>[수수료비율]: 90, [결제수단]: "card", [결제금액파라미터]: 5000...</code></div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>응답 확인</strong><br>Response 탭에서 서버가 뭐라고 답했는지 확인:<br><code>{"result":"success", "order_no":"2026050121361877"}</code></div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>주문번호 이해하기</strong><br><code>2026050121361877</code> = 2026년 05월 01일 21시 36분 18초 + 랜덤 3자리(877)</div></div>
+</div>
+
+<div class="nav-bottom"><a href="/manual/papercard/source-utils.html" class="nav-prev">← 이전: 유틸리티 함수</a><a href="/manual/papercard/source-mobile.html" class="nav-next">다음: 모바일 연동 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

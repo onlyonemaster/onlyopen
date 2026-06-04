@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>릴리즈 이력 — 버전 관리 시스템 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">🔄 시스템 소개</a></div>
+    <div class="sb-section"><div class="sb-section-title">핵심 기능</div><a href="/manual/vermanager/dashboard.html" class="sb-link">📊 대시보드</a><a href="/manual/vermanager/sites.html" class="sb-link">🌐 사이트 관리</a><a href="/manual/vermanager/release.html" class="sb-link">🚀 버전 릴리즈</a><a href="/manual/vermanager/history.html" class="sb-link active">📜 릴리즈 이력</a><a href="/manual/vermanager/improvements.html" class="sb-link">💡 소스 개선사항</a><a href="/manual/vermanager/changelog.html" class="sb-link">📝 체인지로그</a></div>
+    <div class="sb-section"><div class="sb-section-title">고급 기능</div><a href="/manual/vermanager/remote.html" class="sb-link">🖥️ 원격 서버 연동</a><a href="/manual/vermanager/git.html" class="sb-link">🔧 Git/GitHub 자동화</a><a href="/manual/vermanager/settings.html" class="sb-link">⚙️ 설정 관리</a></div>
+  </nav>
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">릴리즈 이력 개요</a>
+    <a href="#api" class="toc-link">이력 API (GET)</a>
+    <a href="#filter" class="toc-link">타입·개수 필터</a>
+    <a href="#timeline" class="toc-link">타임라인 UI</a>
+    <a href="#linked" class="toc-link">Linked Improvements 추적</a>
+  </div>
+  <main class="m-content">
+    <h1 id="overview">📜 릴리즈 이력</h1>
+    <p class="lead">모든 릴리즈의 버전 변경 내역을 타임라인 형태로 조회할 수 있습니다. MAJOR/MINOR/PATCH 타입별로 필터링하고, 각 릴리즈에 포함된 개선사항을 추적합니다.</p>
+
+    <h2 id="api">이력 API (GET /api/history)</h2>
+    <pre class="code-block"><code>GET /vermanager/api/history?site=kiam-prod
+GET /vermanager/api/history?site=kiam-prod&type=patch
+GET /vermanager/api/history?site=kiam-prod&limit=5</code></pre>
+    <table class="m-table">
+      <thead><tr><th>파라미터</th><th>기본값</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><code>site</code></td><td>(선택된 사이트)</td><td>대상 사이트 ID</td></tr>
+        <tr><td><code>type</code></td><td>all</td><td>major / minor / patch</td></tr>
+        <tr><td><code>limit</code></td><td>all</td><td>최대 조회 건수</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="filter">타입·개수 필터</h2>
+    <p>UI에서는 필터 탭으로 전환: <span class="tag">전체</span> <span class="tag tag-major">MAJOR</span> <span class="tag tag-minor">MINOR</span> <span class="tag tag-patch">PATCH</span></p>
+    <p>최신순 정렬, 각 항목에 <span class="badge-major">MAJOR</span> <span class="badge-minor">MINOR</span> <span class="badge-patch">PATCH</span> 배지가 표시됩니다.</p>
+
+    <h2 id="timeline">타임라인 UI</h2>
+    <p>릴리즈 이력은 좌측에 타임라인 마커가 있는 카드 형태로 표시됩니다:</p>
+    <pre class="code-block"><code> ●  2026-05-02 10:48    [PATCH]
+ │  ─────────────────────────────────
+ │  v1.0.0 → v1.0.1
+ │  테스트 자동 릴리즈
+ │  📎 linked: imp_4, imp_5 (2건)
+ │
+ ●  2026-05-02 09:00    [MINOR]
+    ─────────────────────────────────
+    v1.0.0 → v1.1.0
+    신규 기능 추가</code></pre>
+
+    <h2 id="linked">Linked Improvements 추적</h2>
+    <p>각 릴리즈 항목은 <code>linked_improvements</code> 배열과 <code>imp_count</code> 필드로 연결된 개선사항을 추적합니다. 「📎」 링크로 개선사항 상세를 바로 확인할 수 있습니다.</p>
+
+    <div class="prev-next"><a href="/manual/vermanager/release.html" class="next-link">← 이전: 버전 릴리즈</a><a href="/manual/vermanager/improvements.html" class="next-link">다음: 소스 개선사항 →</a></div>
+  </main>
+</div>
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.m-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:28px;}
+.m-table th{background:var(--bg3);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);}
+.m-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.tag{display:inline-block;padding:2px 10px;border-radius:4px;font-size:12px;font-weight:700;margin:0 2px;background:var(--bg3);color:var(--text2);}
+.tag-major{background:#fee2e2;color:#dc2626;}
+.tag-minor{background:#fef9c3;color:#ca8a04;}
+.tag-patch{background:#dcfce7;color:#16a34a;}
+.badge-major,.badge-minor,.badge-patch{display:inline-block;padding:2px 8px;border-radius:3px;font-size:10px;font-weight:700;}
+.badge-major{background:#fee2e2;color:#dc2626;}
+.badge-minor{background:#fef9c3;color:#ca8a04;}
+.badge-patch{background:#dcfce7;color:#16a34a;}
+.prev-next{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+</style>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

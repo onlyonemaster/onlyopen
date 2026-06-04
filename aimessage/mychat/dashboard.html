@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#7e22ce">
+<title>나의 인생 분석 · 마이챗</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{--bg:#0f172a;--bg2:#1e293b;--border:#334155;--pur:#7e22ce;--pur2:#9333ea;--gold:#b45309;--text:#f1f5f9;--dim:#94a3b8;--dim2:#64748b;--green:#22c55e;--red:#ef4444}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;padding-bottom:40px}
+.hd{display:flex;align-items:center;gap:12px;padding:16px;background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.hd-back{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px}
+.hd-title{font-size:16px;font-weight:700;flex:1}
+.hd-refresh{background:none;border:none;color:var(--dim);font-size:16px;cursor:pointer;padding:4px 8px}
+.widgets{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;padding:16px}
+.widget{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:16px}
+.widget.wide{grid-column:1/-1}
+.w-icon{font-size:24px;margin-bottom:8px}
+.w-label{font-size:11px;color:var(--dim);font-weight:700;letter-spacing:.4px;text-transform:uppercase;margin-bottom:6px}
+.w-value{font-size:28px;font-weight:800}
+.w-sub{font-size:11px;color:var(--dim2);margin-top:4px}
+.category-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;padding:6px 0;border-bottom:1px solid rgba(51,65,85,.5)}
+.category-row:last-of-type{border-bottom:none}
+.cat-icon{font-size:16px;width:24px;text-align:center;flex-shrink:0}
+.cat-name{font-size:12px;flex:1}
+.cat-cnt{font-size:12px;font-weight:700;color:var(--pur2)}
+.cat-bar{height:4px;background:#1e293b;border-radius:2px;margin-top:4px;overflow:hidden}
+.cat-fill{height:100%;background:linear-gradient(90deg,var(--pur),var(--gold));border-radius:2px;transition:width .5s}
+.decision-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid rgba(51,65,85,.5)}
+.decision-row:last-child{border-bottom:none}
+.d-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0}
+.d-text{flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.d-badge{font-size:10px;font-weight:700;padding:2px 7px;border-radius:8px;flex-shrink:0}
+.hit{background:rgba(34,197,94,.15);color:var(--green)}
+.partial{background:rgba(245,158,11,.15);color:#f59e0b}
+.miss{background:rgba(239,68,68,.15);color:var(--red)}
+.pending{background:rgba(148,163,184,.15);color:var(--dim)}
+.ring-wrap{position:relative;width:80px;height:80px;margin:0 auto 8px}
+.ring-wrap svg{transform:rotate(-90deg)}
+.ring-pct{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:18px;font-weight:800}
+.btn-action{display:block;width:100%;padding:11px;border-radius:10px;
+            background:linear-gradient(135deg,var(--pur),var(--gold));
+            border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;margin-top:10px;text-align:center;text-decoration:none}
+.quota-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.quota-name{font-size:12px;flex:1}
+.quota-used{font-size:11px;color:var(--dim2)}
+.quota-bar{height:4px;background:#1e293b;border-radius:2px;flex:1;overflow:hidden}
+.quota-fill{height:100%;border-radius:2px;transition:width .4s}
+</style>
+</head>
+<body>
+<div class="hd">
+  <button class="hd-back" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+  <div class="hd-title">나의 인생 분석</div>
+  <button class="hd-refresh" id="refreshBtn" onclick="loadDash()"><i class="fas fa-sync-alt"></i></button>
+</div>
+
+<div class="widgets" id="widgets">
+  <div class="widget wide" style="text-align:center;padding:40px">
+    <i class="fas fa-spinner fa-spin" style="font-size:28px;color:var(--dim)"></i>
+    <div style="margin-top:12px;color:var(--dim2);font-size:13px">데이터 분석 중...</div>
+  </div>
+</div>
+
+<script>
+var CATS = [
+  {v:'basic',i:'👤',n:'기본 정보'},{v:'childhood',i:'🧸',n:'어린 시절'},
+  {v:'diary',i:'📔',n:'일기·메모'},{v:'health',i:'🏃',n:'건강 기록'},
+  {v:'phone',i:'📱',n:'통화·문자'},{v:'file',i:'📁',n:'파일 자료'},
+  {v:'voice',i:'🎙️',n:'음성 기록'},{v:'image',i:'🖼️',n:'이미지'},
+  {v:'fingerprint',i:'☝️',n:'지문'},{v:'palmistry',i:'🖐️',n:'손금'},
+  {v:'saju',i:'🔮',n:'사주'},{v:'etc',i:'📝',n:'기타'},
+];
+
+function loadDash() {
+  var btn = document.getElementById('refreshBtn');
+  if (btn) btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i>';
+  fetch('/aimessage/mychat/api/stats.php', {credentials:'include'})
+    .then(r=>r.json())
+    .then(d=>{
+      if (btn) btn.innerHTML = '<i class="fas fa-sync-alt"></i>';
+      if (!d.ok) {
+        if (d.error==='SUBSCRIPTION_REQUIRED') { location.href='/aimessage/mychat/subscribe.html'; return; }
+        showError(d.error||'오류 발생');
+        return;
+      }
+      renderDash(d.stats||{}, d.usage||{}, d.plan||{});
+    })
+    .catch(()=>{ if(btn) btn.innerHTML='<i class="fas fa-sync-alt"></i>'; showError('연결 오류'); });
+}
+
+function showError(msg) {
+  document.getElementById('widgets').innerHTML =
+    '<div class="widget wide" style="text-align:center;padding:40px;color:var(--red)">'
+    +'<i class="fas fa-exclamation-circle" style="font-size:28px"></i>'
+    +'<div style="margin-top:10px;font-size:13px">'+msg+'</div>'
+    +'<button class="btn-action" style="margin-top:16px" onclick="loadDash()">다시 시도</button>'
+    +'</div>';
+}
+
+function renderDash(s, usage, plan) {
+  var total      = s.data_total || 0;
+  var matchRate  = Math.round((s.match_rate||0)*100);
+  var decTotal   = s.decision_total || 0;
+  var categories = s.categories || {};
+  var maxCnt     = Math.max(...Object.values(categories), 1);
+  var recentDec  = s.recent_decisions || [];
+
+  // 매칭률 색상
+  var mColor = matchRate>=70 ? 'var(--green)' : matchRate>=40 ? '#f59e0b' : 'var(--red)';
+  var dashR  = 35, dashC = 2*Math.PI*dashR;
+  var offset = dashC*(1-matchRate/100);
+
+  // 카테고리 행
+  var catRows = CATS.filter(c=>categories[c.v]).map(c=>{
+    var pct = Math.round(categories[c.v]/maxCnt*100);
+    return '<div class="category-row">'
+      +'<div class="cat-icon">'+c.i+'</div>'
+      +'<div style="flex:1"><div style="display:flex;justify-content:space-between"><span class="cat-name">'+c.n+'</span><span class="cat-cnt">'+categories[c.v]+'건</span></div>'
+      +'<div class="cat-bar"><div class="cat-fill" style="width:'+pct+'%"></div></div></div>'
+      +'</div>';
+  }).join('');
+  if (!catRows) catRows = '<div style="color:var(--dim2);font-size:12px;text-align:center;padding:12px">학습 데이터를 추가하면 분석이 시작됩니다</div>';
+
+  // 의사결정 행
+  var decRows = recentDec.map(dec=>{
+    var lbl = {hit:'적중',partial:'부분',miss:'빗나감',pending:'대기'}[dec.match_label||dec.status]||'';
+    var cls = dec.match_label || dec.status || 'pending';
+    return '<div class="decision-row">'
+      +'<div class="d-dot" style="background:'+(cls==='hit'?'var(--green)':cls==='partial'?'#f59e0b':cls==='miss'?'var(--red)':'var(--dim)')+'"></div>'
+      +'<div class="d-text">'+(dec.situation||'').substr(0,35)+'</div>'
+      +'<span class="d-badge '+cls+'">'+lbl+'</span>'
+      +'</div>';
+  }).join('');
+  if (!decRows) decRows = '<div style="color:var(--dim2);font-size:12px;text-align:center;padding:12px">의사결정 기록이 없습니다</div>';
+
+  // 사용량 (플랜 기준)
+  var limits = plan.limits || {};
+  var quotaRows = [
+    {key:'chat',label:'AI 대화',icon:'💬'},
+    {key:'voice',label:'음성 대화',icon:'🎙️'},
+    {key:'video',label:'화상 통화',icon:'📹'},
+  ].map(q=>{
+    var used = usage[q.key+'_cnt']||0;
+    var lim  = limits[q.key]||0;
+    var pct  = lim>0&&lim<9999 ? Math.min(Math.round(used/lim*100),100) : 0;
+    var color = pct>80?'var(--red)':pct>50?'#f59e0b':'var(--pur2)';
+    var limStr = lim>=9999?'무제한':lim+'회';
+    return '<div class="quota-row">'
+      +'<div style="font-size:14px;width:20px;text-align:center">'+q.icon+'</div>'
+      +'<div class="quota-name">'+q.label+'</div>'
+      +(lim>0&&lim<9999?
+        '<div class="quota-bar"><div class="quota-fill" style="width:'+pct+'%;background:'+color+'"></div></div>':
+        '<div style="font-size:11px;color:var(--green)">∞ 무제한</div>')
+      +'<div class="quota-used">'+used+'/'+limStr+'</div>'
+      +'</div>';
+  }).join('');
+
+  document.getElementById('widgets').innerHTML =
+    // 총 데이터
+    '<div class="widget"><div class="w-icon">📊</div>'
+    +'<div class="w-label">총 학습 데이터</div>'
+    +'<div class="w-value" style="color:var(--pur2)">'+total+'</div>'
+    +'<div class="w-sub">건 저장됨</div></div>'
+    // 예측 정확도
+    +'<div class="widget"><div class="ring-wrap">'
+    +'<svg width="80" height="80"><circle cx="40" cy="40" r="35" fill="none" stroke="var(--border)" stroke-width="8"/>'
+    +'<circle cx="40" cy="40" r="35" fill="none" stroke="'+mColor+'" stroke-width="8"'
+    +' stroke-dasharray="'+dashC+'" stroke-dashoffset="'+offset+'" stroke-linecap="round"/></svg>'
+    +'<div class="ring-pct" style="color:'+mColor+'">'+matchRate+'%</div></div>'
+    +'<div class="w-label" style="text-align:center">AI 예측 정확도</div>'
+    +'<div class="w-sub" style="text-align:center">'+decTotal+'건 추적 중</div></div>'
+    // 채널별 현황
+    +'<div class="widget wide"><div class="w-icon">📡</div>'
+    +'<div class="w-label">채널별 데이터 현황</div>'
+    +catRows
+    +'<a href="/aimessage/mychat/learn.html" class="btn-action"><i class="fas fa-plus"></i> 데이터 추가하기</a>'
+    +'</div>'
+    // 의사결정
+    +'<div class="widget wide"><div class="w-icon">🧭</div>'
+    +'<div class="w-label">최근 의사결정 추적</div>'
+    +decRows
+    +'<a href="/aimessage/mychat/decisions.html" class="btn-action"><i class="fas fa-arrow-right"></i> 의사결정 페이지</a>'
+    +'</div>'
+    // 이번 달 사용량
+    +'<div class="widget wide"><div class="w-icon">📈</div>'
+    +'<div class="w-label">이번 달 사용량 ('+new Date().toISOString().substr(0,7)+')</div>'
+    +quotaRows
+    +'<a href="/aimessage/mychat/subscribe.html" style="display:block;text-align:center;margin-top:8px;font-size:11px;color:var(--pur2);text-decoration:none">플랜 업그레이드 →</a>'
+    +'</div>';
+}
+loadDash();
+</script>
+</body>
+</html>

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>모바일 연동 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link active">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>모바일 연동</span></div>
+<h1>📱 모바일 앱 연동 — 완전 분석</h1>
+<p class="page-desc">웹 페이지가 네이티브 앱(Android/iOS)과 어떻게 통신하는지, 앱 브릿지와 딥링크 시스템을 분석합니다.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#bridge">callAppBridge() — 앱 통신의 핵심</a></li>
+<li><a href="#appdetect">앱 환경 감지</a></li>
+<li><a href="#deeplink">딥링크 시스템</a></li>
+<li><a href="#camera">카메라 연동</a></li>
+<li><a href="#phone">전화 상태 & GPS</a></li>
+<li><a href="#follow">따라하기</a></li>
+</ul>
+</div>
+
+<h2 id="bridge">🌉 callAppBridge() — 웹과 앱을 잇는 다리</h2>
+<p>이 함수는 웹 페이지(WebView) 안에서 네이티브 앱 기능을 호출할 때 사용됩니다. JavaScript에서 Android/iOS 네이티브 코드를 직접 호출하는 마법 같은 함수예요.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;overflow-x:auto;">
+function callAppBridge(action, data) {
+    // action에 따라 분기 처리
+    switch (action) {
+        case 'camera':
+            // 명함 사진 촬영 → 네이티브 카메라 앱 실행
+            if (isAndroidApp()) {
+                window.Android.callCamera();
+            } else if (isIOSApp()) {
+                window.webkit.messageHandlers.callCamera.postMessage(data);
+            }
+            break;
+
+        case 'gallery':
+            // 갤러리에서 명함 이미지 선택
+            if (isAndroidApp()) {
+                window.Android.openGallery();
+            } else if (isIOSApp()) {
+                window.webkit.messageHandlers.openGallery.postMessage(data);
+            }
+            break;
+
+        case 'share':
+            // 카카오톡/인스타 등 외부 공유
+            if (isAndroidApp()) {
+                window.Android.shareContent(JSON.stringify(data));
+            } else if (isIOSApp()) {
+                window.webkit.messageHandlers.shareContent.postMessage(data);
+            }
+            break;
+
+        case 'phone_call':
+            // 전화 걸기
+            if (isAndroidApp()) {
+                window.Android.makePhoneCall(data.number);
+            } else if (isIOSApp()) {
+                window.webkit.messageHandlers.makePhoneCall.postMessage(data);
+            }
+            break;
+
+        case 'map':
+            // 지도 앱 열기
+            if (isAndroidApp()) {
+                window.Android.openMap(data.address);
+            } else if (isIOSApp()) {
+                window.webkit.messageHandlers.openMap.postMessage(data);
+            }
+            break;
+    }
+}
+</pre>
+
+<h2 id="appdetect">🔍 앱 환경 감지 — 웹인가 앱인가?</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 1. UserAgent 기반 감지
+function isAndroidApp() {
+    var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf('[앱식별자]') > -1;
+}
+
+function isIOSApp() {
+    var ua = navigator.userAgent.toLowerCase();
+    return ua.indexOf('[앱식별자-iOS]') > -1;
+}
+
+function isApp() {
+    return isAndroidApp() || isIOSApp();
+}
+
+// 2. URL 스킴 기반 감지
+function isAppInstalled() {
+    // Android: intent:// 스킴 시도
+    // iOS: [앱스킴]:// 스킴 시도
+    // → 타이머로 실패 감지 (일정 시간 내 반응 없으면 미설치)
+}
+
+// 3. 감지 결과에 따른 분기
+if (isApp()) {
+    // 앱 내부 WebView → callAppBridge() 사용
+    // UI 요소 중 일부 숨김 (앱 설치 버튼 등)
+    $('.app-only').show();
+    $('.web-only').hide();
+} else {
+    // 일반 브라우저 → 웹 전용 UI 표시
+    $('.app-only').hide();
+    $('.web-only').show();
+}
+</pre>
+
+<h2 id="deeplink">🔗 딥링크 시스템</h2>
+<p>웹에서 앱을 열거나, 앱이 설치되어 있지 않으면 Play Store로 보내는 시스템입니다.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// === goOnlyOneApp() 함수 분석 ===
+function goOnlyOneApp() {
+    // 1. Android인지 확인
+    if (!isAndroidApp()) {
+        // 2. 일반 브라우저에서 앱 실행 시도
+        var now = new Date().getTime();
+
+        // 3. 커스텀 URL 스킴으로 앱 열기 시도
+        //    [앱스킴]://open?url=... 형태
+        location.href = "[앱스킴]://open?url=" +
+            encodeURIComponent(window.location.href);
+
+        // 4. 2초 후에도 페이지에 남아있으면
+        //    → 앱이 설치되지 않은 것!
+        setTimeout(function() {
+            if (new Date().getTime() - now < 2200) {
+                // 5. Play Store로 이동
+                location.href =
+                    "[PlayStore앱URL]";
+            }
+        }, 2000);
+    }
+}
+
+// === goIamHome() 함수 ===
+function goIamHome() {
+    // Android 앱 환경이면 AppScript로 /m 페이지 이동
+    if (isAndroidApp()) {
+        // WebView에서 JavaScript 인터페이스로 이동
+        window.AppScript.movePage('[앱내부경로]');
+    } else {
+        // 일반 웹 → 직접 /m 페이지로 이동
+        location.href = '[웹홈URL]';
+    }
+}
+</pre>
+
+<div class="notice-box">
+<div class="notice-title">⚠️ 딥링크의 마법 같은 트릭</div>
+<p>2초 타이머가 핵심이에요! <code>location.href</code>로 앱 스킴을 호출하면:
+1. 앱이 설치되어 있다면 → 앱이 열리고, 타이머는 앱으로 이동하면서 중단됨
+2. 앱이 없으면 → 아무 일도 안 일어나고, 2초 후 Play Store로 이동!
+
+이게 바로 "Fallback URL" 패턴이에요. 초등학생도 이해할 수 있죠?</p>
+</div>
+
+<h2 id="camera">📸 카메라 연동 — 명함 사진 촬영</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// === app_camera_paper() 함수 ===
+function app_camera_paper() {
+    if (isApp()) {
+        // 앱 환경 → 네이티브 카메라 호출
+        callAppBridge('camera', {
+            type: 'paper_card',     // 어떤 용도의 촬영인지
+            quality: 0.8,           // 이미지 품질 80%
+            maxWidth: 1200,         // 최대 너비 1200px
+            callback: 'onCameraResult'  // 결과 콜백 함수명
+        });
+    } else {
+        // 웹 환경 → 파일 업로드 input 표시
+        $('#paper_card_upload').click();
+    }
+}
+
+// === 네이티브 카메라 결과 콜백 ===
+function onCameraResult(imageData) {
+    // imageData = base64 인코딩된 이미지 또는 파일 경로
+    $('#paper_card_img').attr('src', imageData);
+    $('#paper_card_url').val(imageData);
+
+    // OCR 처리를 위해 서버로 전송
+    $.ajax({
+        url: "[OCR서버URL]/[이미지처리]",
+        type: "POST",
+        data: { image: imageData },
+        success: function(ocrResult) {
+            // OCR 결과로 폼 자동 채우기
+            fillCardForm(ocrResult);
+        }
+    });
+}
+</pre>
+
+<h2 id="phone">📞 전화 상태 & GPS 연동</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// === recvPhoneStatus() — 전화 상태 수신 ===
+function recvPhoneStatus(status) {
+    // status: "IDLE" | "RINGING" | "OFFHOOK"
+    // 앱에서 전화 상태가 바뀔 때마다 WebView로 알려줌
+
+    switch (status) {
+        case "RINGING":
+            // 전화 오는 중 → 자동 저장, 입력 중단 알림
+            autoSave();
+            showToast("전화가 와서 임시 저장했어요!");
+            break;
+        case "OFFHOOK":
+            // 통화 중 → 페이지 잠금
+            lockPage();
+            break;
+        case "IDLE":
+            // 통화 끝 → 잠금 해제
+            unlockPage();
+            break;
+    }
+}
+
+// === recvPhonePos() — GPS 위치 수신 ===
+function recvPhonePos(lat, lng) {
+    // 현재 위치를 받아서 주소 검색에 활용
+    $('#current_lat').val(lat);
+    $('#current_lng').val(lng);
+
+    // 지도 API로 역지오코딩 (위도/경도 → 주소)
+    reverseGeocode(lat, lng, function(address) {
+        $('#paper_address').val(address);
+    });
+}
+</pre>
+
+<h2 id="follow">🎓 초등학생도 따라하는 모바일 분석법</h2>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>크롬 Device Mode 켜기</strong><br>F12 → 좌측 상단 "Toggle device toolbar" (Ctrl+Shift+M)</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>모바일 기기 선택</strong><br>상단 드롭다운에서 "Galaxy S20" 또는 "iPhone 12" 선택</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>UserAgent 확인</strong><br>Console에서 <code>navigator.userAgent</code> 입력 → 모바일 UA 확인</div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>앱 환경 시뮬레이션</strong><br>Console에서 <code>isApp = function(){ return true; }</code> 로 강제 설정</div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>callAppBridge 추적</strong><br><code>var orig = callAppBridge; callAppBridge = function(a,d){ console.log(a,d); orig(a,d); }</code></div></div>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">💡 WebView 디버깅 꿀팁</div>
+<p>실제 안드로이드 앱의 WebView를 디버깅하려면:</p>
+<ol>
+<li>안드로이드 폰을 USB로 연결</li>
+<li>폰에서 "개발자 옵션" → "USB 디버깅" 활성화</li>
+<li>PC 크롬에서 <code>chrome://inspect</code> 입력</li>
+<li>연결된 기기의 WebView 목록에서 "inspect" 클릭</li>
+<li>PC에서 폰의 WebView 콘솔/네트워크/요소 검사 가능!</li>
+</ol>
+</div>
+
+<h3>📱 모바일 관련 주요 상수</h3>
+<table class="data-table">
+<thead><tr><th>항목</th><th>값</th></tr></thead>
+<tbody>
+<tr><td>Android 패키지명</td><td><code>[앱패키지명]</code></td></tr>
+<tr><td>커스텀 URL 스킴</td><td><code>[앱스킴]://</code></td></tr>
+<tr><td>Play Store 링크</td><td><code>[PlayStore앱URL]</code></td></tr>
+<tr><td>웹 홈 URL</td><td><code>[웹홈URL]</code></td></tr>
+<tr><td>Android WebView JS 인터페이스</td><td><code>[JS인터페이스1]</code>, <code>[JS인터페이스2]</code></td></tr>
+<tr><td>iOS WebView 메시지 핸들러</td><td><code>[iOS메시지핸들러]</code></td></tr>
+</tbody>
+</table>
+
+<div class="nav-bottom"><a href="/manual/papercard/source-payment.html" class="nav-prev">← 이전: 결제 시스템</a><a href="/manual/papercard/css-analysis.html" class="nav-next">다음: CSS 분석 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

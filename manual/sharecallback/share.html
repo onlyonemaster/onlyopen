@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>콜백 공유하기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">공유콜백</div>
+      <a href="/manual/sharecallback/" class="sb-link">🔗 공유콜백 소개</a>
+      <a href="/manual/sharecallback/setup.html" class="sb-link">공유콜백 설정하기</a>
+      <a href="/manual/sharecallback/manage.html" class="sb-link">공유콜백 관리</a>
+      <a href="/manual/sharecallback/share.html" class="sb-link active">콜백 공유하기</a>
+      <a href="/manual/sharecallback/settings.html" class="sb-link">공유콜백 상세 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/callback/" class="sb-link">IAM 콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sharecallback/">공유콜백</a> › 콜백 공유하기</nav>
+    <h1 class="page-title">📤 콜백 공유하기 — 다양한 방법으로 공유</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#ways">공유 방법 총정리</a></li>
+        <li><a href="#sns">SNS 공유 팝업</a></li>
+        <li><a href="#kakao">카톡 공유</a></li>
+        <li><a href="#facebook">페이스북 공유</a></li>
+        <li><a href="#sms">문자로 공유</a></li>
+        <li><a href="#daily">데일리 문자발송</a></li>
+        <li><a href="#copy">주소 복사</a></li>
+        <li><a href="#compare">공유 방식 비교</a></li>
+      </ul>
+    </div>
+    <section id="ways">
+      <h2>공유 방법 총정리</h2>
+      <p>kiam.kr에서는 콜백 메시지(및 IAM 카드)를 다양한 채널로 공유할 수 있습니다. <strong>SNS 공유 팝업</strong>(<code>sns-modalwindow</code>)을 통해 다음 방법들을 이용할 수 있습니다:</p>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">📱</div>
+          <div class="fc-title">데일리 문자발송</div>
+          <div class="fc-desc"><code>daily_send_pop()</code> — 매일 자동으로 지인들에게 IAM 카드 발송</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">💬</div>
+          <div class="fc-title">문자 보내기</div>
+          <div class="fc-desc"><code>sns_sendSMS()</code> — SMS 앱을 통해 직접 문자 전송</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📋</div>
+          <div class="fc-title">주소 복사</div>
+          <div class="fc-desc"><code>sns_copyContacts()</code> — 내 IAM 링크를 클립보드에 복사</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">💚</div>
+          <div class="fc-title">카톡 공유</div>
+          <div class="fc-desc"><code>sns_shareKakaoTalk()</code> — 카카오톡으로 공유</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📘</div>
+          <div class="fc-title">페이스북 공유</div>
+          <div class="fc-desc"><code>sns_shareFaceBook()</code> — 페이스북에 공유</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🔗</div>
+          <div class="fc-title">콜백 공유</div>
+          <div class="fc-desc"><code>share_callback()</code> — 콜백 메시지를 다른 회원과 공유</div>
+        </div>
+      </div>
+    </section>
+    <section id="sns">
+      <h2>SNS 공유 팝업 (sns-modalwindow)</h2>
+      <p>SNS 공유 팝업은 <code>showSNSModal()</code> 함수 호출 시 나타나며, 카드 편집 모달의 <strong>[카드별 공유하기]</strong> 메뉴에서 접근할 수 있습니다:</p>
+      <div class="code-block">
+        <pre><code>// 카드 편집 모달 → 카드별 공유하기 클릭 시
+onclick="$('#card_con_modal').modal('hide');showSNSModal('','Y');"
+
+// SNS 공유 팝업 구성:
+// 1. 데일리 문자발송 (daily_send_pop)
+// 2. 문자 보내기 (sns_sendSMS)
+// 3. 주소 복사 (sns_copyContacts)
+// 4. 카톡 공유 (sns_shareKakaoTalk) — 주석 처리됨
+// 5. 페이스북 공유 (sns_shareFaceBook) — 주석 처리됨
+// 6. 콜백 공유 (share_callback) — 주석 처리됨</code></pre>
+      </div>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>📌 참고</strong>: 카톡 공유, 페이스북 공유, 콜백 공유는 현재 HTML에서 주석 처리(<code>&lt;!-- --&gt;</code>)되어 있어 기본적으로는 보이지 않습니다. 향후 활성화될 수 있는 기능입니다.
+      </div>
+    </section>
+    <section id="kakao">
+      <h2>카톡 공유 (sns_shareKakaoTalk)</h2>
+      <p>카카오톡으로 IAM 카드나 콜백 메시지를 공유하는 기능입니다. 현재는 주석 처리되어 있으나, 다음과 같은 방식으로 동작할 것으로 예상됩니다:</p>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>호출 함수</strong></td><td><code>sns_shareKakaoTalk()</code></td></tr>
+          <tr><td><strong>공유 대상</strong></td><td>카카오톡 친구 또는 채팅방</td></tr>
+          <tr><td><strong>공유 내용</strong></td><td>내 IAM 카드 링크 또는 콜백 메시지</td></tr>
+          <tr><td><strong>필요 조건</strong></td><td>카카오톡 앱 설치, JavaScript SDK 연동</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="facebook">
+      <h2>페이스북 공유 (sns_shareFaceBook)</h2>
+      <p>페이스북으로 IAM 카드나 콜백 메시지를 공유하는 기능입니다:</p>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>호출 함수</strong></td><td><code>sns_shareFaceBook()</code></td></tr>
+          <tr><td><strong>공유 대상</strong></td><td>페이스북 타임라인 또는 메신저</td></tr>
+          <tr><td><strong>공유 내용</strong></td><td>내 IAM 카드 링크 (og:image 등 메타태그 활용)</td></tr>
+          <tr><td><strong>필요 조건</strong></td><td>페이스북 앱 또는 웹 로그인</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="sms">
+      <h2>문자로 공유하기 (sns_sendSMS)</h2>
+      <p>SMS 문자 메시지를 통해 IAM 카드를 공유하는 방법입니다. <code>sns_sendSMS(val)</code> 함수가 처리합니다:</p>
+      <div class="code-block">
+        <pre><code>// sns_sendSMS 함수 흐름:
+// 1. val이 "app_home"이면 → 메인 카드 정보를 AJAX로 가져옴
+//    → 카드 이름, 회사, 직책, 전화번호, 단축 URL을 SMS 본문에 포함
+// 2. 일반 공유면 → 현재 페이지 카드 정보를 SMS 본문에 포함
+// 3. location.href = "sms:" + 전화번호 + "?body=" + 메시지내용
+
+// 예시 SMS 내용:
+// "홍길동님의 명함
+//  ABC회사 과장 010-1234-5678
+//  https://kiam.kr/?shorturl%26preview=N"</code></pre>
+      </div>
+      <p style="margin-top:12px;">SMS 공유는 Android 기기의 기본 문자 앱을 호출하여 동작합니다. iPhone에서는 <code>alert("휴대폰에서 이용해주세요.")</code> 메시지가 표시됩니다.</p>
+    </section>
+    <section id="daily">
+      <h2>데일리 문자발송 (daily_send_pop)</h2>
+      <p><strong>데일리 문자발송</strong>은 내 폰 주소록의 모든 지인에게 <strong>매일 자동으로</strong> IAM 카드를 발송하는 기능입니다:</p>
+      <table class="m-table">
+        <thead><tr><th>절차</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>1단계</strong></td><td>회원가입 먼저 하기</td></tr>
+          <tr><td><strong>2단계</strong></td><td>온리원문자 앱 설치하기 (Google Play)</td></tr>
+          <tr><td><strong>3단계</strong></td><td>데일리발송 시작하기</td></tr>
+        </tbody>
+      </table>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>💡 안내</strong>: IAM 카드 발송은 무료이지만, 일반 메시지 발송은 유료입니다. 데일리발송 기능은 앱이 설치된 Android 기기에서만 사용할 수 있습니다.
+      </div>
+    </section>
+    <section id="copy">
+      <h2>주소 복사 (sns_copyContacts)</h2>
+      <p><code>sns_copyContacts()</code> 함수는 내 IAM 링크를 클립보드에 복사합니다. 복사된 링크는 원하는 곳(메신저, 이메일, 메모장 등)에 붙여넣기 하여 공유할 수 있습니다.</p>
+      <p style="margin-top:12px;">이 기능은 <code>copy_msg_link()</code>와 유사한 방식으로 동작하며, 임시 input 요소를 생성하여 텍스트를 선택 후 <code>document.execCommand("copy")</code>로 복사합니다.</p>
+    </section>
+    <section id="compare">
+      <h2>공유 방식 비교</h2>
+      <table class="m-table">
+        <thead><tr><th>공유 방식</th><th>도달 범위</th><th>비용</th><th>자동화</th><th>앱 필요</th></tr></thead>
+        <tbody>
+          <tr><td><strong>데일리 문자발송</strong></td><td>주소록 전체</td><td>무료(IAM) / 유료(일반)</td><td>✅ 매일 자동</td><td>✅</td></tr>
+          <tr><td><strong>문자 보내기</strong></td><td>선택한 연락처</td><td>통신사 요금</td><td>❌ 수동</td><td>❌</td></tr>
+          <tr><td><strong>카톡 공유</strong></td><td>카톡 친구</td><td>무료</td><td>❌ 수동</td><td>✅</td></tr>
+          <tr><td><strong>페이스북 공유</strong></td><td>전체 공개</td><td>무료</td><td>❌ 수동</td><td>❌</td></tr>
+          <tr><td><strong>주소 복사</strong></td><td>제한 없음</td><td>무료</td><td>❌ 수동</td><td>❌</td></tr>
+          <tr><td><strong>콜백 공유</strong></td><td>회원 간</td><td>포인트 차감</td><td>❌ 수동</td><td>✅</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/sharecallback/manage.html" class="btn-prev">← 공유콜백 관리</a>
+      <a href="/manual/sharecallback/settings.html" class="btn-next">공유콜백 상세 설정 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#ways">공유 방법 총정리</a></li>
+      <li><a href="#sns">SNS 공유 팝업</a></li>
+      <li><a href="#kakao">카톡 공유</a></li>
+      <li><a href="#facebook">페이스북 공유</a></li>
+      <li><a href="#sms">문자로 공유</a></li>
+      <li><a href="#daily">데일리 문자발송</a></li>
+      <li><a href="#copy">주소 복사</a></li>
+      <li><a href="#compare">공유 방식 비교</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

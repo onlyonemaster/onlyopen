@@ -1,0 +1,516 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원챗(ONE Chat) - 후보자 프레젠테이션</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: 'Noto Sans KR', 'Malgun Gothic', sans-serif;
+    background: #0a0e27;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  /* 슬라이드 */
+  .slide {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 60px 40px;
+    position: relative;
+    scroll-snap-align: start;
+  }
+
+  .container {
+    max-width: 900px;
+    width: 100%;
+    margin: 0 auto;
+  }
+
+  /* ---------- 슬라이드 1: 커버 ---------- */
+  .slide-1 {
+    background: linear-gradient(135deg, #0a0e27 0%, #1a1040 40%, #0d1b3e 100%);
+    text-align: center;
+  }
+  .slide-1 .logo-badge {
+    display: inline-block;
+    background: rgba(0,212,255,0.15);
+    border: 1px solid rgba(0,212,255,0.3);
+    border-radius: 50px;
+    padding: 8px 24px;
+    font-size: 14px;
+    color: #00d4ff;
+    margin-bottom: 30px;
+    letter-spacing: 2px;
+  }
+  .slide-1 h1 {
+    font-size: 56px;
+    font-weight: 900;
+    line-height: 1.3;
+    margin-bottom: 20px;
+  }
+  .slide-1 h1 .accent { color: #00d4ff; }
+  .slide-1 .subtitle {
+    font-size: 22px;
+    color: #8892b0;
+    margin-bottom: 50px;
+    line-height: 1.6;
+  }
+  .slide-1 .big-question {
+    background: rgba(255,255,255,0.05);
+    border-left: 4px solid #00d4ff;
+    padding: 20px 30px;
+    border-radius: 8px;
+    font-size: 20px;
+    color: #ccd6f6;
+    text-align: left;
+    margin-top: 20px;
+  }
+
+  /* ---------- 슬라이드 2: PAIN ---------- */
+  .slide-2 {
+    background: #0a0e27;
+  }
+  .section-label {
+    display: inline-block;
+    background: #ff4757;
+    color: #fff;
+    font-weight: 900;
+    font-size: 14px;
+    padding: 6px 20px;
+    border-radius: 50px;
+    margin-bottom: 30px;
+    letter-spacing: 3px;
+  }
+  .slide-2 h2, .slide-3 h2, .slide-4 h2, .slide-5 h2 {
+    font-size: 40px;
+    font-weight: 900;
+    margin-bottom: 50px;
+    text-align: center;
+  }
+  .pain-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .pain-card {
+    background: rgba(255,71,87,0.08);
+    border: 1px solid rgba(255,71,87,0.2);
+    border-radius: 16px;
+    padding: 30px;
+    transition: transform 0.3s;
+  }
+  .pain-card:hover { transform: translateY(-4px); }
+  .pain-card .icon { font-size: 36px; margin-bottom: 16px; }
+  .pain-card h3 { font-size: 20px; margin-bottom: 12px; color: #ff6b7a; }
+  .pain-card p { font-size: 15px; color: #8892b0; line-height: 1.7; }
+
+  .stat-shock {
+    margin-top: 40px;
+    text-align: center;
+    background: rgba(255,71,87,0.12);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .stat-shock .big-num { font-size: 64px; font-weight: 900; color: #ff4757; }
+  .stat-shock p { color: #8892b0; margin-top: 8px; }
+
+  /* ---------- 슬라이드 3: SOLUTION ---------- */
+  .slide-3 {
+    background: linear-gradient(180deg, #0a0e27 0%, #0d1b3e 100%);
+  }
+  .slide-3 .section-label { background: #00d4ff; }
+  .solution-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 20px;
+  }
+  .solution-card {
+    background: rgba(0,212,255,0.06);
+    border: 1px solid rgba(0,212,255,0.15);
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    transition: transform 0.3s;
+  }
+  .solution-card:hover { transform: translateY(-6px); border-color: rgba(0,212,255,0.4); }
+  .solution-card .emoji { font-size: 48px; margin-bottom: 16px; }
+  .solution-card h3 { font-size: 18px; color: #00d4ff; margin-bottom: 12px; }
+  .solution-card p { font-size: 14px; color: #8892b0; line-height: 1.7; }
+
+  .one-click-highlight {
+    margin-top: 40px;
+    background: linear-gradient(90deg, rgba(0,212,255,0.1), rgba(0,212,255,0.02));
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+  }
+  .one-click-highlight .click-icon {
+    font-size: 56px;
+    flex-shrink: 0;
+  }
+  .one-click-highlight h3 { color: #00d4ff; font-size: 22px; margin-bottom: 8px; }
+  .one-click-highlight p { color: #8892b0; font-size: 15px; line-height: 1.6; }
+
+  /* ---------- 슬라이드 4: VISION ---------- */
+  .slide-4 {
+    background: #0a0e27;
+  }
+  .slide-4 .section-label { background: #7c4dff; }
+  .vision-timeline {
+    position: relative;
+    padding-left: 40px;
+  }
+  .vision-timeline::before {
+    content: '';
+    position: absolute;
+    left: 18px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, #7c4dff, #00d4ff, #7c4dff);
+  }
+  .vision-step {
+    position: relative;
+    margin-bottom: 40px;
+    padding: 24px 30px;
+    background: rgba(124,77,255,0.06);
+    border-radius: 12px;
+    border-left: 3px solid #7c4dff;
+  }
+  .vision-step::before {
+    content: '';
+    position: absolute;
+    left: -49px;
+    top: 28px;
+    width: 16px;
+    height: 16px;
+    background: #7c4dff;
+    border-radius: 50%;
+    border: 3px solid #0a0e27;
+  }
+  .vision-step .phase { font-size: 12px; color: #7c4dff; font-weight: 900; letter-spacing: 2px; margin-bottom: 6px; }
+  .vision-step h3 { font-size: 20px; margin-bottom: 8px; color: #fff; }
+  .vision-step p { color: #8892b0; font-size: 15px; line-height: 1.7; }
+
+  .forever-badge {
+    text-align: center;
+    margin-top: 30px;
+    background: linear-gradient(135deg, rgba(124,77,255,0.2), rgba(0,212,255,0.1));
+    border-radius: 20px;
+    padding: 30px;
+  }
+  .forever-badge .big-text { font-size: 36px; font-weight: 900; margin-bottom: 10px; }
+  .forever-badge .big-text .purple { color: #7c4dff; }
+  .forever-badge .big-text .cyan { color: #00d4ff; }
+  .forever-badge p { color: #8892b0; font-size: 16px; }
+
+  /* ---------- 슬라이드 5: COMPARISON + CLOSE ---------- */
+  .slide-5 {
+    background: linear-gradient(180deg, #0d1b3e 0%, #0a0e27 100%);
+  }
+  .slide-5 .section-label { background: #ffa502; }
+
+  .compare-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 40px;
+  }
+  .compare-table th {
+    background: rgba(255,255,255,0.05);
+    padding: 16px;
+    text-align: center;
+    font-size: 16px;
+  }
+  .compare-table th.old { color: #ff4757; }
+  .compare-table th.new { color: #00d4ff; }
+  .compare-table td {
+    padding: 14px 16px;
+    text-align: center;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 15px;
+  }
+  .compare-table td.label { text-align: left; color: #8892b0; font-weight: 600; }
+  .compare-table .fail { color: #ff4757; }
+  .compare-table .win { color: #00d4ff; font-weight: 700; }
+
+  .close-section {
+    text-align: center;
+    margin-top: 20px;
+  }
+  .close-section .final-message {
+    font-size: 32px;
+    font-weight: 900;
+    line-height: 1.5;
+    margin-bottom: 20px;
+  }
+  .close-section .final-message .hl { color: #00d4ff; }
+  .close-section .cta-text {
+    font-size: 18px;
+    color: #8892b0;
+    line-height: 1.8;
+  }
+
+  /* 네비게이션 */
+  .nav-dots {
+    position: fixed;
+    right: 30px;
+    top: 50%;
+    transform: translateY(-50%);
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    z-index: 100;
+  }
+  .nav-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    cursor: pointer;
+    transition: all 0.3s;
+  }
+  .nav-dot.active { background: #00d4ff; box-shadow: 0 0 12px rgba(0,212,255,0.5); }
+
+  /* 반응형 */
+  @media (max-width: 768px) {
+    .slide-1 h1 { font-size: 32px; }
+    .pain-grid, .solution-cards { grid-template-columns: 1fr; }
+    .compare-table { font-size: 13px; }
+    .close-section .final-message { font-size: 22px; }
+  }
+
+  /* 스크롤 스냅 */
+  html { scroll-snap-type: y mandatory; scroll-behavior: smooth; }
+</style>
+</head>
+<body>
+
+<!-- ==================== 슬라이드 1: 커버 ==================== -->
+<div class="slide slide-1" id="s1">
+  <div class="container">
+    <div class="logo-badge">🚀 ONE CHAT</div>
+    <h1>
+      유권자가 <span class="accent">당신을 모른다</span>는 건,<br>
+      이제 <span class="accent">변명</span>이 아닙니다.
+    </h1>
+    <p class="subtitle">
+      클릭 한 번이면 유권자가 후보와 대화를 시작하고,<br>
+      선거가 끝나도 당신의 팬덤은 계속됩니다.
+    </p>
+    <div class="big-question">
+      ❓ "교육감 이름도 모르고 찍는 세상.<br>
+      &nbsp;&nbsp;&nbsp;&nbsp;당신은 왜 아직도 문자에 돈을 쓰고 있습니까?"
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 슬라이드 2: PAIN ==================== -->
+<div class="slide slide-2" id="s2">
+  <div class="container">
+    <div class="section-label">PAIN · 지금 겪고 있는 현실</div>
+    <h2>당신이 느끼는 이 고통,<br>혼자만 겪는 게 아닙니다.</h2>
+
+    <div class="pain-grid">
+      <div class="pain-card">
+        <div class="icon">😶‍🌫️</div>
+        <h3>이름도 모르고 찍는 유권자</h3>
+        <p>특히 교육감 선거. 유권자의 80% 이상이 후보 이름조차 모른 채 투표장에 갑니다. 당신의 공약, 철학, 비전 — 아무도 모릅니다.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">💸</div>
+        <h3>문자 한 통에 30원, 도달은 10%</h3>
+        <p>10만 명에게 문자 보내면 300만 원. 그중 실제로 읽는 사람은 채 10%도 안 됩니다. 돈은 돈대로 쓰고, 표는 표대로 안 옵니다.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">📉</div>
+        <h3>선거 끝나면 관계도 끝</h3>
+        <p>수백만 원 들여서 명함 돌리고 전화 돌리고, 선거 당일이 지나면 그 모든 접촉이 사라집니다. 다음 선거 때 또 제로에서 시작합니다.</p>
+      </div>
+      <div class="pain-card">
+        <div class="icon">🔇</div>
+        <h3>계속 정보를 제공해야 하는데 방법이 없다</h3>
+        <p>유권자는 정보를 원합니다. 그런데 전달할 채널이 문자 말고는 없습니다. SNS는 알고리즘이 막고, 지면 광고는 돈이 너무 듭니다.</p>
+      </div>
+    </div>
+
+    <div class="stat-shock">
+      <div class="big-num">500만 원</div>
+      <p>평균적으로 한 선거에서 '버려지는' 홍보비입니다.<br>이 돈으로 원챗에서는 평생 팬덤을 삽니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 슬라이드 3: SOLUTION ==================== -->
+<div class="slide slide-3" id="s3">
+  <div class="container">
+    <div class="section-label">SOLUTION · 원챗이 바꾸는 것</div>
+    <h2>한 번의 클릭이<br>모든 걸 바꿉니다.</h2>
+
+    <div class="solution-cards">
+      <div class="solution-card">
+        <div class="emoji">👆</div>
+        <h3>클릭 한 번으로 대화 시작</h3>
+        <p>유권자가 QR 한 번 찍거나 링크 한 번 누르면, 그 순간부터 당신과의 대화가 시작됩니다. 앱 설치도, 회원가입도 필요 없습니다.</p>
+      </div>
+      <div class="solution-card">
+        <div class="emoji">🤖</div>
+        <h3>AI 챗봇이 자동으로 메시지 발송</h3>
+        <p>당신의 아바타 정보를 학습한 AI가 유권자 한 명 한 명에게 맞춤형 메시지를 보냅니다. 밤에도, 주말에도, 쉬지 않고.</p>
+      </div>
+      <div class="solution-card">
+        <div class="emoji">📢</div>
+        <h3>관리자 Hi 공지로 일괄 메시지</h3>
+        <p>중요한 소식은 관리자 페이지에서 한 번에 모든 유권자에게 Hi 공지를 보낼 수 있습니다. 문자비 0원, 도달률 90%+.</p>
+      </div>
+    </div>
+
+    <div class="one-click-highlight">
+      <div class="click-icon">🔄</div>
+      <div>
+        <h3>이 모든 게 '한 번의 연결'에서 시작됩니다</h3>
+        <p>유권자가 한 번만 클릭하면, 그다음부터는 원챗이 알아서 합니다. 대화를 걸고, 정보를 주고, 관계를 만듭니다. 당신은 정책과 비전에만 집중하세요. 나머지는 원챗이 합니다.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 슬라이드 4: VISION ==================== -->
+<div class="slide slide-4" id="s4">
+  <div class="container">
+    <div class="section-label">VISION · 선거 그 이후</div>
+    <h2>선거는 하루지만,<br>정치는 평생입니다.</h2>
+
+    <div class="vision-timeline">
+      <div class="vision-step">
+        <div class="phase">PHASE 1</div>
+        <h3>📌 선거 전 — 유권자와의 첫 연결</h3>
+        <p>QR 코드 하나로 유권자가 대화방에 들어옵니다. AI 아바타가 즉시 공약, 경력, 비전을 맞춤형으로 설명합니다. 전단지 10만 장보다 강력한 첫인상.</p>
+      </div>
+      <div class="vision-step">
+        <div class="phase">PHASE 2</div>
+        <h3>📣 선거 중 — 지속적 정보 제공 & 신뢰 구축</h3>
+        <p>AI 챗봇이 매일 새로운 정책 브리핑을 보내고, 유권자 질문에 실시간 응답합니다. 관리자는 Hi 공지로 핵심 메시지를 한 번에 전달. 유권자는 점점 당신을 '아는 사람'으로 인식합니다.</p>
+      </div>
+      <div class="vision-step">
+        <div class="phase">PHASE 3</div>
+        <h3>🗳️ 투표 당일 — 확신을 가진 한 표</h3>
+        <p>이름도 몰랐던 유권자가, 이제는 당신의 이름을 가장 먼저 찾습니다. '아는 후보'에게 투표하는 겁니다. 이것이 정보 비대칭을 깬 결과입니다.</p>
+      </div>
+      <div class="vision-step">
+        <div class="phase">PHASE 4</div>
+        <h3>♾️ 선거 이후 — 평생 지속되는 팬덤</h3>
+        <p>원챗의 가장 강력한 기능. 선거가 끝나도 유권자와의 연결은 계속됩니다. 당신이 시장으로, 교육감으로 재임하는 4년 내내, 그리고 다음 선거까지. 유권자는 단순한 투표자가 아니라 당신의 정치적 자산이 됩니다.</p>
+      </div>
+    </div>
+
+    <div class="forever-badge">
+      <div class="big-text">
+        <span class="purple">이 플랫폼 하나로</span><br>
+        <span class="cyan">정치 인생 10년을 준비하십시오.</span>
+      </div>
+      <p>문자비 0원. 유권자 이탈 0%. 팬덤은 계속 성장.<br>지금 당신에게 필요한 유일한 정치 플랫폼입니다.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== 슬라이드 5: COMPARISON + CLOSE ==================== -->
+<div class="slide slide-5" id="s5">
+  <div class="container">
+    <div class="section-label">COMPARISON · 숫자가 증명합니다</div>
+    <h2>안 쓰면 손해입니다.<br>말 그대로, 돈으로 따져도.</h2>
+
+    <table class="compare-table">
+      <thead>
+        <tr>
+          <th style="text-align:left; color:#8892b0;">항목</th>
+          <th class="old">기존 방식</th>
+          <th class="new">원챗</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="label">메시지 발송 비용 (10만 명 기준)</td>
+          <td class="fail">300만 원 (문자)</td>
+          <td class="win">0원</td>
+        </tr>
+        <tr>
+          <td class="label">메시지 열람률</td>
+          <td class="fail">10% 미만</td>
+          <td class="win">90% 이상</td>
+        </tr>
+        <tr>
+          <td class="label">유권자와의 관계 지속</td>
+          <td class="fail">선거 당일 종료</td>
+          <td class="win">평생 유지</td>
+        </tr>
+        <tr>
+          <td class="label">1:1 맞춤형 소통</td>
+          <td class="fail">불가능</td>
+          <td class="win">AI가 24시간 자동</td>
+        </tr>
+        <tr>
+          <td class="label">후보 정보 전달 방식</td>
+          <td class="fail">일방적 (전단지, 현수막)</td>
+          <td class="win">양방향 대화형</td>
+        </tr>
+        <tr>
+          <td class="label">다음 선거 준비</td>
+          <td class="fail">제로부터 다시 시작</td>
+          <td class="win">기존 팬덤에서 출발</td>
+        </tr>
+        <tr>
+          <td class="label">데이터 기반 유권자 분석</td>
+          <td class="fail">없음</td>
+          <td class="win">모든 대화 정밀 검색·분석</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="close-section">
+      <p class="final-message">
+        당신의 정치 인생에서<br>
+        <span class="hl">'꼭 해야 하는'</span> 단 하나의 선택.
+      </p>
+      <p class="cta-text">
+        원챗은 이미 만들어져 있습니다. 관리자 시스템도 준비되어 있습니다.<br>
+        당신은 그냥 시작만 하면 됩니다.<br><br>
+        <strong style="color:#00d4ff; font-size:22px;">오늘, 원챗과 함께하십시오.</strong>
+      </p>
+    </div>
+  </div>
+</div>
+
+<!-- 네비게이션 -->
+<div class="nav-dots">
+  <div class="nav-dot active" onclick="document.getElementById('s1').scrollIntoView()"></div>
+  <div class="nav-dot" onclick="document.getElementById('s2').scrollIntoView()"></div>
+  <div class="nav-dot" onclick="document.getElementById('s3').scrollIntoView()"></div>
+  <div class="nav-dot" onclick="document.getElementById('s4').scrollIntoView()"></div>
+  <div class="nav-dot" onclick="document.getElementById('s5').scrollIntoView()"></div>
+</div>
+
+<script>
+  // 네비게이션 도트 활성화
+  const slides = document.querySelectorAll('.slide');
+  const dots = document.querySelectorAll('.nav-dot');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const idx = Array.from(slides).indexOf(entry.target);
+        dots.forEach(d => d.classList.remove('active'));
+        if (dots[idx]) dots[idx].classList.add('active');
+      }
+    });
+  }, { threshold: 0.5 });
+  slides.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>

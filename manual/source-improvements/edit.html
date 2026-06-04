@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수정 & 보기 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔧 소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">개요 & 전체 구조</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 대시보드</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">KPI & 개선현황</a><a href="/manual/source-improvements/filter.html" class="sb-link">필터 & 검색</a></div>
+  <div class="sb-section"><div class="sb-section-title">📝 등록 & 수정</div><a href="/manual/source-improvements/register.html" class="sb-link">신규 등록</a><a href="/manual/source-improvements/edit.html" class="sb-link active">수정 & 보기</a></div>
+  <div class="sb-section"><div class="sb-section-title">⚙️ DB & 구조</div><a href="/manual/source-improvements/database.html" class="sb-link">DB 테이블 구조</a><a href="/manual/source-improvements/integration.html" class="sb-link">연동 & 공지</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/source-improvements/">소스 개선 관리</a><span class="sep">›</span><span>수정 & 보기</span></div>
+<h1>✏️ 수정 & 보기 모드</h1>
+<p class="page-desc">동일한 <code>admin_source_improvements_form.php</code>에서 edit/view 모드로 동작하는 방식과 보기 전용(readonly) UI의 차이를 분석합니다.</p>
+
+<h2 id="data-load">데이터 로드</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// edit / view 모드 공통
+$id = intval($_GET['id']);
+$sql = "SELECT * FROM source_improvements WHERE id = {$id}";
+$result = mysqli_query($self_con, $sql);
+$data = mysqli_fetch_array($result);
+
+if (!$data) {
+    echo '&lt;script&gt;alert("존재하지 않는 항목입니다.");history.back();&lt;/script&gt;';
+    exit;
+}</pre>
+
+<h2 id="readonly-mode">보기 전용 vs 편집 가능</h2>
+<p><code>$_GET['action']</code> 값에 따라 폼 요소의 <code>readonly</code>/<code>disabled</code> 속성이 동적으로 설정됩니다:</p>
+
+<table>
+  <tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">구분</th><th style="padding:8px 12px;border:1px solid var(--border);">action=view</th><th style="padding:8px 12px;border:1px solid var(--border);">action=edit</th></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">input</td><td style="padding:8px 12px;border:1px solid var(--border);">readonly</td><td style="padding:8px 12px;border:1px solid var(--border);">편집 가능</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">select</td><td style="padding:8px 12px;border:1px solid var(--border);">disabled</td><td style="padding:8px 12px;border:1px solid var(--border);">선택 가능</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">textarea</td><td style="padding:8px 12px;border:1px solid var(--border);">readonly</td><td style="padding:8px 12px;border:1px solid var(--border);">편집 가능</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">제출 버튼</td><td style="padding:8px 12px;border:1px solid var(--border);"><b>숨김</b></td><td style="padding:8px 12px;border:1px solid var(--border);"><b>표시</b></td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">목록으로 버튼</td><td style="padding:8px 12px;border:1px solid var(--border);">표시</td><td style="padding:8px 12px;border:1px solid var(--border);">표시</td></tr>
+</table>
+
+<h2 id="update-sql">UPDATE SQL</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">UPDATE source_improvements SET
+    date = '{$date}',
+    project = '{$project}',
+    category = '{$category}',
+    title = '{$title}',
+    description = '{$description}',
+    developer = '{$developer}',
+    files_changed = {$files_changed},
+    lines_added = {$lines_added},
+    lines_deleted = {$lines_deleted},
+    status = '{$status}',
+    test_result = '{$test_result}',
+    environments = '{$environments}',
+    impact_level = '{$impact_level}',
+    updated_at = NOW()
+WHERE id = {$id}</pre>
+
+<h2 id="ui-flow">UI 흐름</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;">[목록 페이지] → "보기" 버튼 클릭
+    │  href="admin_source_improvements_form.php?id=N&amp;action=view"
+    ▼
+[보기 모드] → 모든 필드 readOnly · 저장버튼 없음
+    │  "수정" 버튼 클릭 (또는 목록에서 "수정" 직접)
+    ▼
+[수정 모드] → 기존 값 pre-filled · 편집 가능 · 저장 시 UPDATE
+    │  "목록으로" 버튼
+    ▼
+[목록 페이지] → 변경사항 즉시 반영</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> view/edit은 동일한 PHP 파일에서 <code>action=view</code>일 때만 <code>readonly</code>/<code>disabled</code>를 적용해 구분합니다. <code>action=edit</code>이거나 action 파라미터가 없으면 편집 가능 상태로 렌더링됩니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

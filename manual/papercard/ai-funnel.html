@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI명함퍼널 발신자 설정 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link active">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>AI명함퍼널</span></div>
+<h1>🤖 AI명함퍼널 발신자정보 — 완전 분석</h1>
+<p class="page-desc">AI가 맞춤 메시지를 생성할 때 사용하는 발신자 정보 설정 시스템의 모든 로직을 분석합니다.</p>
+
+<h2 id="what-is">AI명함퍼널이란?</h2>
+<p><strong>AI명함퍼널</strong>은 사용자의 정보를 AI에게 제공해서, AI가 상대방에게 <strong>맞춤형 소개 메시지를 자동으로 생성</strong>해주는 시스템입니다. 이 메시지는 퍼널(단계별 마케팅) 형태로 발송됩니다.</p>
+
+<h2 id="modal">발신자정보 모달 (#paper_sender_edit_modal)</h2>
+<p><code>edit_papersender()</code> 함수로 열리는 이 모달은 3개의 탭으로 구성됩니다:</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+┌─────────────────────────────────────────────────┐
+│  [기본정보]  [프롬프트 설정 ●]          [퍼널발송채널]  │
+├─────────────────────────────────────────────────┤
+│                                                  │
+│  탭1: 기본정보 — 발신자 신상정보 입력            │
+│  ├── 고객아이디 (customer_id)       ← readonly  │
+│  ├── 사업체명 (vendor_name)                      │
+│  ├── 사업체업종 (vendor_industry)                │
+│  ├── 발신자이름 (sender_name)                    │
+│  ├── 발신자직책 (sender_position)                │
+│  ├── 소속 (sender_affiliation)                   │
+│  ├── 회사주소 (sender_companyaddress)             │
+│  ├── 자택주소 (sender_homeaddress)                │
+│  ├── 소개정보 (sender_introduction)              │
+│  ├── 발송회차 (ai_step)            ← select(1-9) │
+│  ├── 발송주기 (ai_day)                           │
+│  ├── 발송시간 (ai_hour)                          │
+│  ├── 메시지길이 (msg_length)                     │
+│  ├── 챗봇이름 (chatbot_name)                     │
+│  ├── 챗봇사용 (사용안함/사용함 radio)             │
+│  ├── 소개파일 (intro_file)         ← file upload │
+│  ├── 회사파일 (company_file)        ← file upload │
+│  ├── 상품파일 (product_file)        ← file upload │
+│  └── 서비스파일 (service_file)      ← file upload │
+│                                                  │
+│  탭2: 프롬프트 설정 — AI 지시문 작성              │
+│  ├── 관리자 기본 프롬프트 (접이식 참고용)         │
+│  ├── 프롬프트 자동 생성기                         │
+│  │   ├── 메시지예시 입력                         │
+│  │   └── 추가 요청사항                           │
+│  ├── 직접 입력                                   │
+│  │   ├── 세트제목                                │
+│  │   ├── 시스템 프롬프트 (500자 제한)             │
+│  │   └── 유저 프롬프트 (2000자 제한)             │
+│  └── 메시지 생성 방식: 예약 생성 / 실시간 생성    │
+│                                                  │
+│  탭3: 퍼널발송채널                                │
+│  └── 📱 폰문자  /  💬 웹문자                     │
+└─────────────────────────────────────────────────┘
+</pre>
+
+<h2 id="edit-function">edit_papersender() 상세 분석</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function edit_papersender() {
+    // 1. 현재 저장된 프롬프트 값 읽기
+    var sysp = $('#user_gpt_sysprompt').val() || '';
+    var userp = $('#gpt_userprompt').val() || '';
+
+    // 2. 글자수 카운트 업데이트
+    var syspEl = document.getElementById('sysprompt_count');
+    var userpEl = document.getElementById('userprompt_count');
+    if (syspEl) syspEl.textContent = sysp.length;
+    if (userpEl) userpEl.textContent = userp.length;
+
+    // 3. 생성 모드 UI 업데이트
+    toggle_generation_mode();
+
+    // 4. 프롬프트 탭 뱃지 업데이트
+    update_prompt_badge();
+
+    // 5. 미리보기 숨김
+    $('#generated_preview').hide();
+
+    // 6. 모달 표시
+    $("#paper_sender_edit_modal").modal("show");
+
+    // 7. 모달 열린 후 기본정보 탭 활성화
+    $('#paper_sender_edit_modal').one('shown.bs.modal', function() {
+        $('#aipaperTabs li').removeClass('active');
+        $('#paper_sender_edit_modal .tab-pane').removeClass('active');
+        $('#aipaperTabs a[href="#tab-basic"]').tab('show');
+    });
+}
+</pre>
+
+<h2 id="save-sender">save_aipaper_sender() — 저장 함수</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function save_aipaper_sender() {
+    var formData = new FormData();
+
+    // 기본정보 필드 수집
+    formData.append('mode', 'save_aipaper');
+    formData.append('vendor_name', $('#vendor_name').val());
+    formData.append('vendor_industry', $('#vendor_industry').val());
+    formData.append('sender_name', $('#sender_name').val());
+    formData.append('sender_position', $('#sender_position').val());
+    formData.append('sender_affiliation', $('#sender_affiliation').val());
+    formData.append('sender_companyaddress', $('#sender_companyaddress').val());
+    formData.append('sender_homeaddress', $('#sender_homeaddress').val());
+    formData.append('sender_introduction', $('#sender_introduction').val());
+    formData.append('ai_step', $('#ai_step').val());
+    formData.append('ai_day', $('#ai_day').val());
+    formData.append('ai_hour', $('#ai_hour').val());
+    formData.append('msg_length', $('#msg_length').val());
+    formData.append('chatbot_name', $('#chatbot_name').val());
+    formData.append('chatbot_use', $('input[name=chatbot_use]:checked').val());
+
+    // 프롬프트 필드
+    formData.append('sys_prompt', $('#user_gpt_sysprompt').val());
+    formData.append('user_prompt', $('#gpt_userprompt').val());
+    formData.append('generation_mode', generationMode);
+
+    // 파일 첨부 (4개)
+    if ($('#intro_file')[0].files.length) formData.append('intro_file', $('#intro_file')[0].files[0]);
+    if ($('#company_file')[0].files.length) formData.append('company_file', $('#company_file')[0].files[0]);
+    if ($('#product_file')[0].files.length) formData.append('product_file', $('#product_file')[0].files[0]);
+    if ($('#service_file')[0].files.length) formData.append('service_file', $('#service_file')[0].files[0]);
+
+    $.ajax({
+        type: "POST",
+        url: "[내부API]/[명함관리]",
+        data: formData,
+        contentType: false,   // FormData 사용 시 필수
+        processData: false,   // FormData 사용 시 필수
+        dataType: "json",
+        success: function(data) {
+            if (data.result == "ok") {
+                alert("저장되었습니다.");
+                $("#paper_sender_edit_modal").modal("hide");
+                refresh_page();
+            }
+        }
+    });
+}
+</pre>
+
+<h2 id="key-fields">주요 필드 설명</h2>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+<tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">필드</th><th style="padding:8px 12px;border:1px solid var(--border);">타입</th><th style="padding:8px 12px;border:1px solid var(--border);">AI 사용 용도</th></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">발신자이름</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">메시지에 "OOO입니다"로 포함</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">사업체명/업종</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">비즈니스 소개 맥락 생성</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">소개정보</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">한 줄 자기소개 자동 생성</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">발송회차</td><td style="padding:8px 12px;border:1px solid var(--border);">select(1-9)</td><td style="padding:8px 12px;border:1px solid var(--border);">총 몇 번의 메시지를 보낼지 결정</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">발송주기</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">며칠 간격으로 보낼지</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);">소개/회사/상품/서비스파일</td><td style="padding:8px 12px;border:1px solid var(--border);">file</td><td style="padding:8px 12px;border:1px solid var(--border);">PDF/TXT/CSV 내용을 AI 컨텍스트로 주입</td></tr>
+</table>
+
+<div class="tip"><strong>💡 초등학생을 위한 비유:</strong> AI명함퍼널은 마치 내 소개서를 AI 비서에게 주는 것과 같아요. "나는 이런 사람이고, 이런 회사에서 일하고, 연락처는 이거야"라고 알려주면, AI 비서가 그 정보로 상대방에게 딱 맞는 소개 편지를 자동으로 써주는 거예요!</div>
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

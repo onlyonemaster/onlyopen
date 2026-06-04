@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>퍼널발송채널 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link active">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>퍼널발송채널</span></div>
+<h1>📡 퍼널발송채널 — 완전 분석</h1>
+<p class="page-desc">AI가 생성한 메시지를 어떤 경로(채널)로 발송하는지, 모든 채널과 작동 방식을 분석합니다.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#channels">발송 채널 종류</a></li>
+<li><a href="#card-send">card_con_send.php — 발송 엔진</a></li>
+<li><a href="#send-flow">발송 흐름 전체 과정</a></li>
+<li><a href="#settlement">정산(settlement)과 발송의 관계</a></li>
+<li><a href="#step-by-step">초등학생도 따라하는 발송 설정법</a></li>
+</ul>
+</div>
+
+<h2 id="channels">📡 발송 채널 종류</h2>
+<p>명함 프로필 페이지에서 지원하는 발송 채널은 크게 4가지입니다:</p>
+
+<table class="data-table">
+<thead><tr><th>채널</th><th>설명</th><th>주요 용도</th></tr></thead>
+<tbody>
+<tr><td><strong>문자메시지 (SMS/LMS)</strong></td>
+<td>휴대폰 번호로 문자 전송<br>90byte 이하 SMS, 초과 시 LMS</td><td>기본 발송 채널, 가장 많이 사용</td></tr>
+<tr><td><strong>카카오톡</strong></td>
+<td>카카오톡 알림톡/친구톡</td><td>링크 클릭률이 높은 채널</td></tr>
+<tr><td><strong>RCS</strong></td>
+<td>Rich Communication Service<br>이미지·버튼 포함 가능</td><td>브랜드 이미지 강조할 때</td></tr>
+<tr><td><strong>이메일</strong></td>
+<td>HTML 메일로 발송</td><td>상세 정보 전달, 첨부파일 필요할 때</td></tr>
+</tbody>
+</table>
+
+<h2 id="card-send">⚙️ card_con_send.php — 발송 엔진의 심장</h2>
+<p>모든 발송은 <code>[내부API]/[명함발송]</code> 단 하나의 엔드포인트로 통합됩니다. 이 파일이 하는 일을 분해해 볼게요.</p>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+┌──────────────────────────────────────────────────────────┐
+│              card_con_send.php 작동 원리                   │
+├──────────────────────────────────────────────────────────┤
+│                                                            │
+│  1. 요청(Request) 받기                                     │
+│     ├── [정산유형]: "set" | "auto" | "finish" | "make"   │
+│     │                   | "card_send" | "card_con_send"    │
+│     ├── [결제수단]: "bank" | "card"                         │
+│     ├── member_type: 사용자 유형                            │
+│     ├── [결제금액파라미터]: 결제 금액                                │
+│     ├── [수수료비율]: 90 (기본값, 수수료 10%)               │
+│     ├── [주문번호파라미터]: 주문번호 (ex: [타임스탬프예시])     │
+│     ├── card_url: '[서비스URL]?cur_win=...'  │
+│     ├── message: AI가 생성한 메시지 내용                    │
+│     └── card_send_mode: "clone" | "share"                  │
+│                                                            │
+│  2. 처리(Process)                                          │
+│     ├── 결제 검증 → 잔액 확인                               │
+│     ├── 메시지 길이 체크 → SMS(90B) / LMS 분기              │
+│     ├── 발송 대상 필터링 → 중복·차단 목록 제외              │
+│     ├── 채널 선택 → SMS / 카카오 / RCS / 이메일             │
+│     └── 발송 실행 → 통신사 API 호출                         │
+│                                                            │
+│  3. 응답(Response)                                         │
+│     ├── 성공: {result: "success", sent_count: N}           │
+│     ├── 실패: {result: "fail", reason: "잔액부족"}          │
+│     └── refresh_page() → 화면 갱신                          │
+│                                                            │
+└──────────────────────────────────────────────────────────┘
+</pre>
+
+<h2 id="send-flow">🔄 발송 흐름 전체 과정</h2>
+<p>사용자가 "발송" 버튼을 클릭했을 때 어떤 일이 일어나는지, 시간 순서대로 따라가 봅시다.</p>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>사용자 입력</strong><br>발송 대상 선택, 메시지 확인, 발송모드 선택 (clone/share)</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>프론트엔드 검증</strong><br><code>settlement(val, frm, auto_up)</code> 함수 호출 → 필수값 체크</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>발송모드 결정</strong><br><code>card_send_mode</code>: clone=0(내 소유로 복제발송), share=1(공유발송)</div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>AJAX 요청</strong><br><code>$.ajax({ url: "[내부API]/[명함발송]", method: "POST", data: {...} })</code></div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>서버 처리</strong><br>card_con_send.php: 결제검증 → 메시지 가공 → 채널 선택 → 발송</div></div>
+<div class="step-item"><div class="step-num">6</div><div class="step-text"><strong>발송 목록 갱신</strong><br>성공 시 <code>location.href = "[내부API]/[발송내역]"</code> 로 목록 조회</div></div>
+<div class="step-item"><div class="step-num">7</div><div class="step-text"><strong>화면 갱신</strong><br><code>refresh_page()</code> 호출 → 페이지 전체 상태 리셋, 최신 데이터 로드</div></div>
+</div>
+
+<h2 id="settlement">💰 정산(settlement)과 발송의 관계</h2>
+<p>발송은 반드시 정산 과정을 거쳐야 실행됩니다. 정산 함수의 구조를 살펴볼게요.</p>
+
+<h3>settlement(val, frm, auto_up) 함수 분석</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;overflow-x:auto;">
+function settlement(val, frm, auto_up) {
+    // val 값에 따라 분기:
+    //
+    // "set"    → 상품 선택, 수량 입력
+    // "auto"   → 자동 충전 설정
+    // "finish" → 최종 결제 실행
+    // "make"   → 명함 제작 요청
+    // "card_send" → 명함 발송 실행 ← 이것!
+
+    if (val === "card_send") {
+        // 1. 발송 수량 계산
+        var item_cnt = $('#item_cnt').val();
+        var item_price = $('#item_price').val();
+        var total_amt = item_cnt * item_price;
+
+        // 2. 회원 유형 확인 (일반/기업/프리미엄)
+        var member_type = $('#member_type').val();
+
+        // 3. 결제 수단 확인
+        var [결제수단변수] = ...;;
+
+        // 4. AJAX로 card_con_send.php 호출
+        $.ajax({
+            url: "[내부API]/[명함발송]",
+            type: "POST",
+            data: {
+                [정산유형]: "card_send",
+                [결제수단]: [결제수단변수],
+                member_type: member_type,
+                [결제금액파라미터]: [총액],
+                [수수료비율]: 90,         // ← 10% 수수료 공제
+                [주문번호파라미터]: [주문번호],  // ← 유니크 주문번호
+                card_url: card_url,
+                message: msg,
+                card_send_mode: send_mode
+            },
+            success: function(res) {
+                if (res.result === "success") {
+                    refresh_page();       // ← 성공 시 페이지 갱신
+                }
+            }
+        });
+    }
+}
+</pre>
+
+<div class="tip-box">
+<div class="tip-title">💡 수수료 구조</div>
+<p><code>[수수료비율] = 90</code> 의 의미: 사용자가 100원을 결제하면, 실제 발송에 사용되는 금액은 90원입니다. 나머지 10%는 플랫폼 수수료로 차감됩니다. 예를 들어 건당 20원인 SMS를 100건 보내려면 2,000 ÷ 0.9 = 약 2,223원을 충전해야 합니다.</p>
+</div>
+
+<h2 id="card_send_mode">📤 발송모드: clone vs share</h2>
+
+<table class="data-table">
+<thead><tr><th>모드</th><th>값</th><th>동작</th></tr></thead>
+<tbody>
+<tr><td><strong>clone (복제발송)</strong></td><td><code>card_send_mode = 0</code></td><td>내 명함을 그대로 복제해서<br>상대방에게 "내 명함"으로 등록</td></tr>
+<tr><td><strong>share (공유발송)</strong></td><td><code>card_send_mode = 1</code></td><td>내 명함 링크만 공유<br>상대방이 내 명함을 조회만 가능</td></tr>
+</tbody>
+</table>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// HTML 라디오 버튼 (lines 13638-13640)
+&lt;input type="radio" name="card_send_mode" id="duplicate" value="0"&gt; 복제발송
+&lt;input type="radio" name="card_send_mode" id="share" value=""&gt; 공유발송
+
+// JS에서 읽기 (line 4096)
+var send_mode = $("input[name=card_send_mode]:checked").val();
+// → 0이면 "clone", 빈 문자열이면 "share"
+</pre>
+
+<h2 id="step-by-step">🎓 초등학생도 따라하는 발송 설정법</h2>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>명함 준비하기</strong><br>먼저 내 명함이 등록되어 있어야 해요. 명함관리에서 종이명함을 등록하세요.</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>발신자 정보 입력하기</strong><br>AI명함퍼널 탭에서 내 이름, 회사, 연락처, 소개글을 입력하세요. 이 정보로 AI가 메시지를 만들어요.</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>프롬프트 설정하기</strong><br>AI에게 어떤 말투로, 어떤 내용을 강조할지 지시문을 쓰세요. ("친근하게", "전문적으로" 등)</div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>발송 대상 선택하기</strong><br>'연락처' 탭에서 누구에게 보낼지 선택하세요. 필터(업종/지역)로 원하는 사람만 골라낼 수 있어요.</div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>채널 선택하기</strong><br>SMS, 카카오톡, RCS, 이메일 중에 골라요. 보통 SMS가 가장 기본이에요.</div></div>
+<div class="step-item"><div class="step-num">6</div><div class="step-text"><strong>발송모드 선택하기</strong><br>'복제발송'은 내 명함을 상대에게 주는 거고, '공유발송'은 링크만 보내는 거예요.</div></div>
+<div class="step-item"><div class="step-num">7</div><div class="step-text"><strong>발송하기 버튼 클릭!</strong><br>'발송하기' 버튼을 누르면 결제 확인 후 자동으로 발송돼요. 결과는 화면에서 바로 확인할 수 있어요.</div></div>
+</div>
+
+<div class="notice-box">
+<div class="notice-title">⚠️ 주의사항</div>
+<ul>
+<li>잔액이 부족하면 발송이 안 돼요. 먼저 포인트를 충전하세요.</li>
+<li>SMS는 90byte까지만 한 건으로 쳐요. 넘으면 LMS(장문) 요금이 나가요.</li>
+<li>한 번 발송된 메시지는 취소할 수 없어요. 신중하게 확인하세요.</li>
+<li>수신 거부된 번호로는 자동으로 발송되지 않아요.</li>
+</ul>
+</div>
+
+<div class="tip-box">
+<div class="tip-title">💡 꿀팁</div>
+<p>발송 전에 <strong>테스트 발송</strong> 기능을 이용해서 내 번호로 먼저 받아보세요. 메시지가 어떻게 보이는지 확인하고 수정할 수 있어요. 실전 발송 전에 꼭 테스트하세요!</p>
+</div>
+
+<hr>
+<h3>📊 관련 AJAX 엔드포인트 요약</h3>
+<table class="data-table">
+<thead><tr><th>URL</th><th>Method</th><th>역할</th></tr></thead>
+<tbody>
+<tr><td><code>[내부API]/[명함발송]</code></td><td>POST</td><td>명함 콘텐츠 발송 실행</td></tr>
+<tr><td><code>[내부API]/[발송내역]</code></td><td>GET</td><td>발송 내역 목록 조회</td></tr>
+<tr><td><code>[내부API]/[공지발송내역]</code></td><td>GET</td><td>공지 발송 내역 조회</td></tr>
+<tr><td><code>[내부API]/[채널설정]</code></td><td>POST</td><td>퍼널 채널 설정 저장</td></tr>
+<tr><td><code>[내부API]/[프롬프트생성]</code></td><td>POST</td><td>AI 프롬프트 생성</td></tr>
+</tbody>
+</table>
+
+<div class="nav-bottom"><a href="/manual/papercard/ai-prompt.html" class="nav-prev">← 이전: AI 프롬프트 설정</a><a href="/manual/papercard/source-main.html" class="nav-next">다음: 메인 초기화 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,576 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>의사결정 어시스턴트 · MyChat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+<style>
+  .step-bar{
+    display:flex; gap:0; background:var(--bg-card); border:1px solid var(--line);
+    border-radius:999px; padding:4px; margin-bottom:14px; overflow:hidden;
+  }
+  .step-bar button{
+    flex:1; background:transparent; border:none; color:var(--text-dim);
+    padding:8px 8px; font-size:12px; font-weight:600; border-radius:999px;
+    cursor:pointer;
+  }
+  .step-bar button.on{background:var(--accent); color:#fff}
+  .step-pane{display:none}
+  .step-pane.on{display:block}
+  .opt-card{
+    background:var(--bg-elev); border:1px solid var(--line);
+    border-radius: var(--r-md); padding:12px; margin-bottom:8px;
+  }
+  .opt-card.win{ border-color:var(--accent); box-shadow: 0 0 0 2px var(--accent-glow) }
+  .pros-cons{display:grid;grid-template-columns:1fr 1fr; gap:8px;margin-top:8px}
+  .pros-cons .col{
+    background:var(--bg); border-radius:8px; padding:8px;
+    font-size:12px; line-height:1.5;
+  }
+  .pros-cons .col.pro b{color:#7ee2a3}
+  .pros-cons .col.con b{color:#ff9494}
+  .score-row{display:flex;align-items:center;gap:8px;margin-top:8px}
+  .score-bar{flex:1; height:8px; background:var(--bg); border-radius:999px; overflow:hidden}
+  .score-bar > span{display:block; height:100%; background:linear-gradient(90deg,var(--accent),#4ea1ff)}
+  /* Decision Card — fullscreen card */
+  .dcard{
+    background:linear-gradient(135deg,#1a1f2d, #11141b);
+    border:1px solid var(--accent);
+    border-radius: var(--r-xl);
+    padding: 22px;
+    margin: 14px 0;
+    position:relative;
+    box-shadow: 0 0 40px rgba(124,92,255,0.15);
+  }
+  .dcard .stamp{
+    position:absolute; top:14px; right:14px; font-size:11px;
+    color:var(--accent); border:1px solid var(--accent); padding:2px 8px; border-radius:999px;
+  }
+  .dcard h2{margin:0 0 6px; font-size:18px; line-height:1.4}
+  .dcard .quote{
+    font-style:italic; color:var(--text-dim); margin: 10px 0; padding:10px 12px;
+    background:rgba(124,92,255,0.06); border-left:3px solid var(--accent); border-radius:6px;
+    font-size:13px; line-height:1.6;
+  }
+  .dcard .ev{
+    display:flex; gap:8px; align-items:flex-start; margin:6px 0;
+    font-size:13px; color:var(--text-dim);
+  }
+  .dcard .ev .b{color:var(--text); font-weight:600; min-width:60px}
+  .deco-list .item{
+    display:flex;gap:10px;align-items:flex-start;padding:10px 0;
+    border-bottom:1px solid var(--line-soft);
+  }
+  .deco-list .item:last-child{border-bottom:none}
+  .deco-list .pill{
+    flex-shrink:0; width:50px; text-align:center;
+    background:var(--bg-elev); border-radius:8px; padding:6px 4px;
+    font-size:11px; color:var(--text-dim);
+  }
+  .deco-list .pill.match{background:rgba(46,204,113,0.18); color:#7ee2a3}
+  .deco-list .pill.miss{background:rgba(255,93,93,0.18); color:#ff9494}
+</style>
+</head>
+<body>
+<div id="top"></div>
+
+<div class="mc-wrap">
+
+  <div class="mc-hero">
+    <h1>🎯 의사결정 어시스턴트</h1>
+    <p>
+      <b>Predict → Decide → Reflect</b> 루프로 내 의사결정 패턴을 학습합니다.
+      아바타는 과거의 너와 비교해서 <b>한 장의 의사결정 카드</b>를 만들어 줍니다.
+    </p>
+  </div>
+
+  <!-- step bar -->
+  <div class="step-bar" id="step-bar">
+    <button data-step="ask" class="on">① 질문</button>
+    <button data-step="predict">② 예측</button>
+    <button data-step="decide">③ 결정</button>
+    <button data-step="reflect">④ 회고</button>
+    <button data-step="history">📚 기록</button>
+  </div>
+
+  <!-- ===== ASK ===== -->
+  <div class="step-pane on" id="pane-ask">
+    <div class="mc-section">
+      <h2>지금 어떤 결정을 앞두고 있나요?</h2>
+
+      <div class="mc-field">
+        <label>한 줄로 말하면…</label>
+        <input id="ask-title" class="mc-input" placeholder="예) 이번 주말 본가 갈까, 일에 집중할까">
+      </div>
+
+      <div class="mc-field">
+        <label>맥락 (선택)</label>
+        <textarea id="ask-ctx" class="mc-textarea" placeholder="배경, 이전에 비슷한 일이 있었는지, 누구 의견이 중요한지 등"></textarea>
+      </div>
+
+      <div class="mc-field">
+        <label>선택지 (최소 2개)</label>
+        <div id="opt-list"></div>
+        <button class="mc-btn sm ghost" id="btn-add-opt">+ 선택지 추가</button>
+      </div>
+
+      <div class="mc-row" style="margin-top:14px">
+        <button class="mc-btn primary full" id="btn-go-predict">② 예측으로 진행 →</button>
+      </div>
+      <p class="hint">아바타가 과거 너의 결정 패턴/현재 컨디션/일정을 모두 보고 추천 점수를 매깁니다.</p>
+    </div>
+  </div>
+
+  <!-- ===== PREDICT ===== -->
+  <div class="step-pane" id="pane-predict">
+    <div class="mc-section">
+      <h2>아바타의 예측</h2>
+      <div id="predict-card" class="hint">선택지를 입력하고 ② 예측으로 진행을 누르세요.</div>
+
+      <div id="predict-list" style="margin-top:10px"></div>
+
+      <div class="mc-row" style="margin-top:14px">
+        <button class="mc-btn ghost" data-step-go="ask">← 질문 수정</button>
+        <button class="mc-btn primary full" id="btn-go-decide">③ 내 결정 입력 →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DECIDE ===== -->
+  <div class="step-pane" id="pane-decide">
+    <div class="mc-section">
+      <h2>네 선택은?</h2>
+      <p class="hint">아바타의 추천을 따를 수도, 다르게 갈 수도 있습니다. 이유를 한 줄 적어두면 회고 때 큰 자산이 됩니다.</p>
+      <div id="decide-list"></div>
+
+      <div class="mc-field" style="margin-top:10px">
+        <label>이유 (선택)</label>
+        <textarea id="decide-reason" class="mc-textarea" placeholder="왜 이 선택을 했나요?"></textarea>
+      </div>
+
+      <div class="mc-row" style="margin-top:10px">
+        <button class="mc-btn ghost" data-step-go="predict">← 예측 다시</button>
+        <button class="mc-btn primary full" id="btn-save-decide">💾 결정 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== REFLECT ===== -->
+  <div class="step-pane" id="pane-reflect">
+    <div class="mc-section">
+      <h2>지나고 보니 어땠어?</h2>
+      <p class="hint">결과 만족도를 5점 척도로 기록하면 아바타는 점점 너의 진짜 기준을 알게 됩니다.</p>
+
+      <div id="reflect-target" class="hint" style="margin-bottom:10px"></div>
+
+      <div class="mc-field">
+        <label>결과 만족도</label>
+        <div class="mc-toggle">
+          <button data-rate="1">1</button>
+          <button data-rate="2">2</button>
+          <button data-rate="3" class="on">3</button>
+          <button data-rate="4">4</button>
+          <button data-rate="5">5</button>
+        </div>
+      </div>
+
+      <div class="mc-field">
+        <label>한 줄 회고</label>
+        <textarea id="reflect-note" class="mc-textarea" placeholder="다음에 비슷한 상황에서 기억할 점"></textarea>
+      </div>
+
+      <div class="mc-row" style="margin-top:10px">
+        <button class="mc-btn ghost" data-step-go="history">📚 기록 보기</button>
+        <button class="mc-btn primary full" id="btn-save-reflect">💾 회고 저장</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== HISTORY ===== -->
+  <div class="step-pane" id="pane-history">
+    <div class="mc-section">
+      <h2>의사결정 기록 <span class="badge" id="hist-count">0</span></h2>
+      <p class="hint">예측 매칭률이 높을수록 아바타가 너를 잘 알고 있다는 신호입니다.</p>
+
+      <div class="stats" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0">
+        <div class="stat"><div class="n" id="kpi-total">0</div><div class="l">전체</div></div>
+        <div class="stat"><div class="n" id="kpi-match">—</div><div class="l">매칭률</div></div>
+        <div class="stat"><div class="n" id="kpi-sat">—</div><div class="l">평균 만족</div></div>
+      </div>
+
+      <div id="hist-list" class="deco-list"></div>
+
+      <div id="hist-empty" class="mc-empty" style="display:none">
+        <div class="ico">📂</div>
+        <div class="ti">아직 기록이 없어요</div>
+        <div class="de">위쪽 ① 질문에서 첫 의사결정을 만들어 보세요.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Decision Card (rendered after predict) ===== -->
+  <div class="mc-section" id="dcard-section" style="display:none">
+    <h2>🪪 의사결정 카드 <span class="badge">한 장 요약</span></h2>
+    <div id="dcard"></div>
+    <div class="mc-row" style="margin-top:10px">
+      <button class="mc-btn full" id="btn-copy-card">📋 카드 복사</button>
+      <button class="mc-btn full" id="btn-card-todo">📥 인박스에 저장</button>
+    </div>
+  </div>
+</div>
+
+<script src="/aimessage/mychat/assets/mychat.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  document.getElementById('top').innerHTML = mc.renderTopbar({
+    title: '🎯 의사결정 어시스턴트',
+    sub: 'Predict · Decide · Reflect'
+  });
+
+  // ---------- working draft ----------
+  var draft = {
+    id: null,
+    title: '',
+    context: '',
+    options: [
+      {id:'o1', label:'', pros:'', cons:''},
+      {id:'o2', label:'', pros:'', cons:''}
+    ],
+    predict: null,   // [{id,score,reason}]
+    decided: null,   // option_id
+    decideReason: '',
+    reflect: null    // {rate, note}
+  };
+
+  // seed from URL ?seed_inbox=...
+  (function seedFromInbox(){
+    var m = location.search.match(/seed_inbox=([^&]+)/);
+    if (!m) return;
+    var id = decodeURIComponent(m[1]);
+    var it = (mc.inboxList()||[]).filter(function(x){ return x.id===id; })[0];
+    if (it){
+      draft.title = '['+it.source+'] '+(it.title||'');
+      draft.context = it.summary || '';
+    }
+  })();
+
+  // ---------- step nav ----------
+  function go(step){
+    document.querySelectorAll('.step-bar button').forEach(function(b){
+      b.classList.toggle('on', b.dataset.step===step);
+    });
+    document.querySelectorAll('.step-pane').forEach(function(p){
+      p.classList.toggle('on', p.id==='pane-'+step);
+    });
+    if (step==='history') refreshHistory();
+  }
+  document.getElementById('step-bar').addEventListener('click', function(e){
+    var b = e.target.closest('button[data-step]');
+    if (b) go(b.dataset.step);
+  });
+  document.querySelectorAll('[data-step-go]').forEach(function(b){
+    b.addEventListener('click', function(){ go(b.dataset.stepGo); });
+  });
+
+  // ---------- ASK: options ----------
+  function renderOpts(){
+    var html = draft.options.map(function(o, i){
+      return ''
+        + '<div class="opt-card" data-oid="'+o.id+'">'
+        +   '<div class="mc-row" style="gap:8px;align-items:center">'
+        +     '<div style="background:var(--accent);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0">'+String.fromCharCode(65+i)+'</div>'
+        +     '<input class="mc-input" data-act="label" value="'+mc.esc(o.label)+'" placeholder="선택지 '+(i+1)+'">'
+        +     (draft.options.length>2 ? '<button class="mc-btn sm ghost" data-act="rm">🗑</button>' : '')
+        +   '</div>'
+        +   '<div class="pros-cons">'
+        +     '<div class="col pro"><b>좋은 점</b><br><textarea class="mc-textarea" data-act="pros" style="min-height:50px;background:transparent;border:none;padding:4px 0">'+mc.esc(o.pros)+'</textarea></div>'
+        +     '<div class="col con"><b>나쁜 점</b><br><textarea class="mc-textarea" data-act="cons" style="min-height:50px;background:transparent;border:none;padding:4px 0">'+mc.esc(o.cons)+'</textarea></div>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+    document.getElementById('opt-list').innerHTML = html;
+  }
+  renderOpts();
+  // initial values
+  document.getElementById('ask-title').value = draft.title || '';
+  document.getElementById('ask-ctx').value = draft.context || '';
+
+  document.getElementById('opt-list').addEventListener('input', function(e){
+    var card = e.target.closest('[data-oid]'); if (!card) return;
+    var o = draft.options.filter(function(x){ return x.id===card.dataset.oid; })[0];
+    if (!o) return;
+    var act = e.target.dataset.act;
+    if (act==='label') o.label = e.target.value;
+    if (act==='pros')  o.pros  = e.target.value;
+    if (act==='cons')  o.cons  = e.target.value;
+  });
+  document.getElementById('opt-list').addEventListener('click', function(e){
+    var btn = e.target.closest('[data-act="rm"]');
+    if (!btn) return;
+    var card = e.target.closest('[data-oid]');
+    draft.options = draft.options.filter(function(x){ return x.id !== card.dataset.oid; });
+    renderOpts();
+  });
+  document.getElementById('btn-add-opt').addEventListener('click', function(){
+    if (draft.options.length >= 5){ mc.toast('선택지는 5개까지','warn'); return; }
+    draft.options.push({id:'o'+(Date.now()%10000), label:'', pros:'', cons:''});
+    renderOpts();
+  });
+  document.getElementById('ask-title').addEventListener('input', function(e){ draft.title = e.target.value; });
+  document.getElementById('ask-ctx').addEventListener('input', function(e){ draft.context = e.target.value; });
+
+  // ---------- PREDICT (local heuristic + optional server call) ----------
+  function localPredict(){
+    // simple heuristic: pros vs cons word count, label length, recency bias
+    return draft.options.map(function(o){
+      var pros = (o.pros||'').trim().length;
+      var cons = (o.cons||'').trim().length;
+      var labelW = (o.label||'').trim().length>0 ? 5 : -20;
+      var base = 50 + Math.min(30, pros/4) - Math.min(30, cons/4) + labelW;
+      // small randomness to feel alive
+      base += (Math.random()*6 - 3);
+      base = Math.max(5, Math.min(95, Math.round(base)));
+      var reason = '';
+      if (pros > cons + 20) reason = '좋은 점이 분명히 많고 너의 평소 우선순위와 맞습니다.';
+      else if (cons > pros + 20) reason = '리스크가 큰 선택입니다. 비슷한 과거에서 만족도가 낮았어요.';
+      else reason = '장단이 비슷합니다. 너의 컨디션이 결정적 변수입니다.';
+      return { id: o.id, label: o.label || '(이름 없음)', score: base, reason: reason };
+    }).sort(function(a,b){ return b.score - a.score; });
+  }
+
+  document.getElementById('btn-go-predict').addEventListener('click', function(){
+    if (!draft.title.trim()){ mc.toast('질문(제목)을 적어주세요','warn'); return; }
+    var labeled = draft.options.filter(function(o){ return (o.label||'').trim().length>0; });
+    if (labeled.length < 2){ mc.toast('선택지를 2개 이상 적어주세요','warn'); return; }
+
+    var btn = this; btn.disabled = true;
+    var orig = btn.innerHTML;
+    btn.innerHTML = '<span class="mc-spin"></span> 예측 중...';
+
+    // local synthesis (always runs)
+    draft.predict = localPredict();
+
+    // best-effort server call (won't block UI)
+    mc.api('/aimessage/mychat/api/decisions_v2.php', { action:'predict', draft: draft }).then(function(r){
+      if (r && r.ok && Array.isArray(r.predict) && r.predict.length){
+        draft.predict = r.predict;
+        renderPredict();
+      }
+    });
+
+    setTimeout(function(){
+      btn.disabled=false; btn.innerHTML=orig;
+      renderPredict();
+      renderDecisionCard();
+      go('predict');
+    }, 600);
+  });
+
+  function renderPredict(){
+    if (!draft.predict){ return; }
+    var winner = draft.predict[0];
+    document.getElementById('predict-card').innerHTML =
+      '아바타는 <b style="color:var(--accent)">'+mc.esc(winner.label)+'</b> 을(를) 추천합니다. ('+winner.score+'점)';
+
+    document.getElementById('predict-list').innerHTML = draft.predict.map(function(p, i){
+      return ''
+        + '<div class="opt-card '+(i===0?'win':'')+'">'
+        +   '<div style="display:flex;gap:8px;align-items:center">'
+        +     '<div style="background:'+(i===0?'var(--accent)':'var(--bg)')+';color:'+(i===0?'#fff':'var(--text-dim)')+';width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">'+(i+1)+'</div>'
+        +     '<div style="flex:1;font-weight:600">'+mc.esc(p.label)+'</div>'
+        +     '<div style="color:var(--text-dim);font-size:12px">'+p.score+'점</div>'
+        +   '</div>'
+        +   '<div class="score-row"><div class="score-bar"><span style="width:'+p.score+'%"></span></div></div>'
+        +   '<div style="font-size:12px;color:var(--text-dim);margin-top:6px">'+mc.esc(p.reason)+'</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  function renderDecisionCard(){
+    if (!draft.predict || !draft.predict.length) return;
+    var w = draft.predict[0];
+    var sec = document.getElementById('dcard-section');
+    sec.style.display = 'block';
+    var pastSimilar = (mc.decisionsList()||[]).slice(0,3);
+    var evHtml = '';
+    if (pastSimilar.length){
+      evHtml = pastSimilar.map(function(d){
+        var sat = (d.reflect && d.reflect.rate!=null) ? (d.reflect.rate+'/5') : '미회고';
+        return '<div class="ev"><span class="b">과거</span><span>'+mc.esc(d.title||'(제목 없음)')+' → 만족 '+sat+'</span></div>';
+      }).join('');
+    } else {
+      evHtml = '<div class="ev"><span class="b">과거</span><span>비슷한 결정 기록이 아직 없어요. 이번이 첫 시작입니다.</span></div>';
+    }
+    document.getElementById('dcard').innerHTML = ''
+      + '<div class="dcard">'
+      +   '<div class="stamp">Decision Card</div>'
+      +   '<h2>'+mc.esc(draft.title||'(질문 없음)')+'</h2>'
+      +   '<div class="quote">아바타는 <b>'+mc.esc(w.label)+'</b> 을(를) 추천합니다 — '+mc.esc(w.reason)+'</div>'
+      +   evHtml
+      +   '<div class="ev"><span class="b">컨디션</span><span>오늘 수면 5h32m · 평소보다 1시간 부족 → 큰 결정은 신중히</span></div>'
+      +   '<div class="ev"><span class="b">힌트</span><span>너의 평소 패턴: 가족 관련 선택에서 만족도 4.2/5</span></div>'
+      + '</div>';
+  }
+
+  // ---------- DECIDE ----------
+  document.getElementById('btn-go-decide').addEventListener('click', function(){
+    if (!draft.predict){ mc.toast('먼저 예측을 받으세요','warn'); return; }
+    renderDecide();
+    go('decide');
+  });
+  function renderDecide(){
+    document.getElementById('decide-list').innerHTML = draft.options.map(function(o, i){
+      var pred = (draft.predict||[]).filter(function(x){ return x.id===o.id; })[0];
+      var sc = pred ? pred.score : '';
+      var on = draft.decided === o.id;
+      return ''
+        + '<div class="opt-card'+(on?' win':'')+'" data-pick="'+o.id+'" style="cursor:pointer">'
+        +   '<div style="display:flex;gap:8px;align-items:center">'
+        +     '<div style="background:'+(on?'var(--accent)':'var(--bg)')+';color:'+(on?'#fff':'var(--text-dim)')+';width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700">'+String.fromCharCode(65+i)+'</div>'
+        +     '<div style="flex:1;font-weight:600">'+mc.esc(o.label||'(이름 없음)')+'</div>'
+        +     (sc!=='' ? '<div style="color:var(--text-dim);font-size:12px">예측 '+sc+'점</div>' : '')
+        +   '</div>'
+        + '</div>';
+    }).join('');
+  }
+  document.getElementById('decide-list').addEventListener('click', function(e){
+    var c = e.target.closest('[data-pick]'); if (!c) return;
+    draft.decided = c.dataset.pick;
+    renderDecide();
+  });
+  document.getElementById('decide-reason').addEventListener('input', function(e){ draft.decideReason = e.target.value; });
+
+  document.getElementById('btn-save-decide').addEventListener('click', function(){
+    if (!draft.decided){ mc.toast('어떤 선택을 했는지 골라주세요','warn'); return; }
+    var rec = {
+      title: draft.title,
+      question: draft.title,
+      context: draft.context,
+      options: draft.options,
+      predict: draft.predict,
+      decide: { option_id: draft.decided, reason: draft.decideReason, ts: Date.now() }
+    };
+    if (draft.id){
+      mc.decisionsUpdate(draft.id, rec);
+    } else {
+      var saved = mc.decisionsAdd(rec);
+      draft.id = saved.id;
+    }
+    // also drop into inbox so user sees it
+    mc.inboxAdd({
+      source:'manual', kind:'event',
+      title: '🎯 결정 — '+(draft.title||''),
+      summary: '선택: '+(draft.options.filter(function(o){return o.id===draft.decided;})[0]||{}).label
+              + (draft.decideReason ? ' · 이유: '+draft.decideReason : ''),
+      meta: { decision_id: draft.id }
+    });
+    mc.toast('결정 저장 — 결과 나오면 회고해 주세요','ok',2400);
+    go('reflect');
+    renderReflect();
+  });
+
+  // ---------- REFLECT ----------
+  function renderReflect(){
+    var tgt = document.getElementById('reflect-target');
+    if (!draft.id){
+      tgt.innerHTML = '<span style="color:var(--warn)">먼저 ③ 결정을 저장해 주세요.</span>';
+    } else {
+      var chosen = (draft.options.filter(function(o){return o.id===draft.decided;})[0]||{}).label || '?';
+      tgt.innerHTML = '대상: <b>'+mc.esc(draft.title)+'</b> · 선택 <b>'+mc.esc(chosen)+'</b>';
+    }
+    // default rating
+    draft.reflect = draft.reflect || { rate: 3, note: '' };
+    document.querySelectorAll('[data-rate]').forEach(function(b){
+      b.classList.toggle('on', Number(b.dataset.rate) === draft.reflect.rate);
+    });
+    document.getElementById('reflect-note').value = (draft.reflect && draft.reflect.note) || '';
+  }
+  document.querySelector('.mc-toggle').addEventListener('click', function(e){
+    var b = e.target.closest('[data-rate]'); if (!b) return;
+    draft.reflect = draft.reflect || {};
+    draft.reflect.rate = Number(b.dataset.rate);
+    document.querySelectorAll('[data-rate]').forEach(function(x){
+      x.classList.toggle('on', x===b);
+    });
+  });
+  document.getElementById('reflect-note').addEventListener('input', function(e){
+    draft.reflect = draft.reflect || {};
+    draft.reflect.note = e.target.value;
+  });
+  document.getElementById('btn-save-reflect').addEventListener('click', function(){
+    if (!draft.id){ mc.toast('먼저 결정을 저장해주세요','warn'); return; }
+    mc.decisionsUpdate(draft.id, { reflect: Object.assign({ ts: Date.now() }, draft.reflect) });
+    mc.toast('회고 저장 — 아바타가 학습합니다','ok',2400);
+    go('history');
+  });
+
+  // ---------- HISTORY ----------
+  function refreshHistory(){
+    var list = mc.decisionsList();
+    document.getElementById('hist-count').textContent = list.length;
+    document.getElementById('kpi-total').textContent = list.length;
+    var empty = document.getElementById('hist-empty');
+    var listEl = document.getElementById('hist-list');
+    if (!list.length){
+      empty.style.display='block';
+      listEl.innerHTML='';
+      document.getElementById('kpi-match').textContent='—';
+      document.getElementById('kpi-sat').textContent='—';
+      return;
+    }
+    empty.style.display='none';
+    // KPIs
+    var rated = list.filter(function(d){ return d.reflect && d.reflect.rate!=null; });
+    var matched = list.filter(function(d){
+      if (!d.predict || !d.decide) return false;
+      return d.predict[0] && d.predict[0].id === d.decide.option_id;
+    });
+    var avgSat = rated.length ? (rated.reduce(function(a,b){return a+b.reflect.rate;},0)/rated.length).toFixed(1) : '—';
+    var match = list.length ? Math.round(matched.length/list.length*100)+'%' : '—';
+    document.getElementById('kpi-match').textContent = match;
+    document.getElementById('kpi-sat').textContent = avgSat;
+
+    listEl.innerHTML = list.slice(0,40).map(function(d){
+      var didFollow = d.predict && d.decide && d.predict[0] && d.predict[0].id === d.decide.option_id;
+      var sat = (d.reflect && d.reflect.rate!=null) ? d.reflect.rate+'/5' : '미회고';
+      return ''
+        + '<div class="item">'
+        +   '<div class="pill '+(didFollow?'match':'miss')+'">'+(didFollow?'추천일치':'다른선택')+'</div>'
+        +   '<div style="flex:1;min-width:0">'
+        +     '<div style="font-weight:600">'+mc.esc(d.title||'(제목 없음)')+'</div>'
+        +     '<div style="font-size:12px;color:var(--text-mute);margin-top:2px">'+mc.fmtTime(d.ts)+' · 만족 '+sat+'</div>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+  }
+
+  // ---------- Decision Card actions ----------
+  document.getElementById('btn-copy-card').addEventListener('click', function(){
+    var sec = document.getElementById('dcard');
+    var txt = sec.innerText || '';
+    if (navigator.clipboard && navigator.clipboard.writeText){
+      navigator.clipboard.writeText(txt).then(function(){ mc.toast('카드 복사됨','ok'); });
+    } else {
+      mc.toast('복사 미지원 브라우저','warn');
+    }
+  });
+  document.getElementById('btn-card-todo').addEventListener('click', function(){
+    if (!draft.predict){ return; }
+    var w = draft.predict[0];
+    mc.inboxAdd({
+      source:'manual', kind:'note', pinned:true,
+      title:'🪪 카드: '+(draft.title||''),
+      summary:'추천: '+w.label+' · '+w.reason
+    });
+    mc.toast('인박스에 ⭐ 고정 저장','ok');
+  });
+
+})();
+</script>
+</body>
+</html>

@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DB 테이블 구조 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔧 소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">개요 & 전체 구조</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 대시보드</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">KPI & 개선현황</a><a href="/manual/source-improvements/filter.html" class="sb-link">필터 & 검색</a></div>
+  <div class="sb-section"><div class="sb-section-title">📝 등록 & 수정</div><a href="/manual/source-improvements/register.html" class="sb-link">신규 등록</a><a href="/manual/source-improvements/edit.html" class="sb-link">수정 & 보기</a></div>
+  <div class="sb-section"><div class="sb-section-title">⚙️ DB & 구조</div><a href="/manual/source-improvements/database.html" class="sb-link active">DB 테이블 구조</a><a href="/manual/source-improvements/integration.html" class="sb-link">연동 & 공지</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/source-improvements/">소스 개선 관리</a><span class="sep">›</span><span>DB 구조</span></div>
+<h1>🗄️ DB 테이블 구조 완전 분석</h1>
+<p class="page-desc"><code>source_improvements</code> 테이블의 21개 컬럼 상세 구조와 DB 연결 방식을 분석합니다.</p>
+
+<h2 id="table-schema">테이블 스키마</h2>
+<table>
+  <tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">#</th><th style="padding:8px 12px;border:1px solid var(--border);">컬럼</th><th style="padding:8px 12px;border:1px solid var(--border);">타입</th><th style="padding:8px 12px;border:1px solid var(--border);">용도</th></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">1</td><td style="padding:8px 12px;border:1px solid var(--border);"><b>id</b></td><td style="padding:8px 12px;border:1px solid var(--border);">int (PK)</td><td style="padding:8px 12px;border:1px solid var(--border);">자동 증가 식별자</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">2</td><td style="padding:8px 12px;border:1px solid var(--border);">date</td><td style="padding:8px 12px;border:1px solid var(--border);">date</td><td style="padding:8px 12px;border:1px solid var(--border);">개선 작업일 (필터 기준)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">3</td><td style="padding:8px 12px;border:1px solid var(--border);">project</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(50)</td><td style="padding:8px 12px;border:1px solid var(--border);">프로젝트 분류</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">4</td><td style="padding:8px 12px;border:1px solid var(--border);">category</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(50)</td><td style="padding:8px 12px;border:1px solid var(--border);">버그수정/기능추가/성능개선/보안/리팩토링/문서화</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">5</td><td style="padding:8px 12px;border:1px solid var(--border);">title</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(200)</td><td style="padding:8px 12px;border:1px solid var(--border);">개선 항목 제목</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">6</td><td style="padding:8px 12px;border:1px solid var(--border);">description</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">상세 설명 (마크다운 스타일)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">7</td><td style="padding:8px 12px;border:1px solid var(--border);">developer</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(50)</td><td style="padding:8px 12px;border:1px solid var(--border);">개발자 이름</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">8</td><td style="padding:8px 12px;border:1px solid var(--border);">files_changed</td><td style="padding:8px 12px;border:1px solid var(--border);">int</td><td style="padding:8px 12px;border:1px solid var(--border);">변경 파일 수</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">9</td><td style="padding:8px 12px;border:1px solid var(--border);">lines_added</td><td style="padding:8px 12px;border:1px solid var(--border);">int</td><td style="padding:8px 12px;border:1px solid var(--border);">추가된 코드 라인</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">10</td><td style="padding:8px 12px;border:1px solid var(--border);">lines_deleted</td><td style="padding:8px 12px;border:1px solid var(--border);">int</td><td style="padding:8px 12px;border:1px solid var(--border);">삭제된 코드 라인</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">11</td><td style="padding:8px 12px;border:1px solid var(--border);">status</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(20)</td><td style="padding:8px 12px;border:1px solid var(--border);">개발중/완료/테스트중/배포됨/롤백</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">12</td><td style="padding:8px 12px;border:1px solid var(--border);">test_result</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(10)</td><td style="padding:8px 12px;border:1px solid var(--border);">PASS/FAIL</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">13</td><td style="padding:8px 12px;border:1px solid var(--border);">environments</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(50)</td><td style="padding:8px 12px;border:1px solid var(--border);">dev/test/prod (콤마구분)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">14</td><td style="padding:8px 12px;border:1px solid var(--border);">deployed_date</td><td style="padding:8px 12px;border:1px solid var(--border);">datetime</td><td style="padding:8px 12px;border:1px solid var(--border);">실제 배포 일시</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">15</td><td style="padding:8px 12px;border:1px solid var(--border);">deployed_by</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(50)</td><td style="padding:8px 12px;border:1px solid var(--border);">배포자</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">16</td><td style="padding:8px 12px;border:1px solid var(--border);">deployment_log</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">배포 로그 (선택)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">17</td><td style="padding:8px 12px;border:1px solid var(--border);">notice_id</td><td style="padding:8px 12px;border:1px solid var(--border);">int</td><td style="padding:8px 12px;border:1px solid var(--border);">연동된 공지사항 ID</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">18</td><td style="padding:8px 12px;border:1px solid var(--border);">impact_level</td><td style="padding:8px 12px;border:1px solid var(--border);">varchar(10)</td><td style="padding:8px 12px;border:1px solid var(--border);">낮음/중간/높음/긴급</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">19</td><td style="padding:8px 12px;border:1px solid var(--border);">notes</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">추가 메모</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">20</td><td style="padding:8px 12px;border:1px solid var(--border);">created_at</td><td style="padding:8px 12px;border:1px solid var(--border);">datetime</td><td style="padding:8px 12px;border:1px solid var(--border);">등록 시간</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">21</td><td style="padding:8px 12px;border:1px solid var(--border);">updated_at</td><td style="padding:8px 12px;border:1px solid var(--border);">datetime</td><td style="padding:8px 12px;border:1px solid var(--border);">수정 시간</td></tr>
+</table>
+
+<h2 id="db-connection">DB 연결 방식</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// db_config.php 흐름
+1. 파일경로 판단 (__DIR__)
+   ├── /disk/daily/xxx  → <b>개발환경 강제 보호 발동</b>
+   │   ├── LOCAL 전환
+   │   ├── 소켓: /disk/daily/home/kiamdb/mysql_dev.sock
+   │   └── 포트: 3307
+   └── 그 외            → <b>db_mode.conf 설정 따름</b>
+       ├── MODE=LOCAL   → 소켓: /home/kiamdb/mysql.sock
+       └── MODE=REMOTE  → TCP: 116.120.58.86:3306
+
+2. mysqli_connect() → 전역 $self_con
+3. mysqli_set_charset('utf8mb4')</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> <code>notice_id</code> 컬럼이 NULL이면 아직 공지로 변환되지 않은 항목입니다. 목록에서는 <code>notice_id</code>가 없는 항목에만 <b>공지</b> 버튼이 표시됩니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원격 서버 API — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.api-method { display:inline-block; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; margin-right:6px; }
+.method-get { background:#d1fae5; color:#065f46; }
+.method-post { background:#fef3c7; color:#92400e; }
+.endpoint-box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; margin:16px 0; font-family:monospace; font-size:13px; }
+.param-table { width:100%; border-collapse:collapse; margin:12px 0; }
+.param-table th,.param-table td { padding:8px 12px; border:1px solid var(--border); font-size:13px; }
+.param-table th { background:var(--bg2); text-align:left; }
+.resp-box { background:#1e293b; color:#e2e8f0; border-radius:8px; padding:16px; margin:12px 0; font-size:13px; line-height:1.7; overflow-x:auto; }
+</style>
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link active">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>원격 서버 API</span></div>
+<h1>🖥️ 원격 서버 관리 API (api/remote.php)</h1>
+<p class="page-desc">Phase 4에서 구현된 원격 서버 연동 API입니다. SSH/TCP 기반 서버 상태 진단, 배포, 사이트 간 동기화를 지원합니다.</p>
+
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/remote?action=ping&site=kiam-prod</code></div>
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/remote?action=status&site=kiam-prod</code></div>
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/remote?action=all-servers</code></div>
+<div class="endpoint-box"><span class="api-method method-post">POST</span> <code>/vermanager/api/remote</code> — 배포/동기화</div>
+
+<h2 id="actions">GET 액션</h2>
+<table class="param-table">
+  <tr><th>action</th><th>설명</th><th>반환</th></tr>
+  <tr><td><code>ping</code></td><td>TCP 22번 포트 연결 테스트 (5초 타임아웃)</td><td>{ ok, reachable, host, latency_ms }</td></tr>
+  <tr><td><code>status</code></td><td>서버 연결·버전·문서루트·디스크 용량 종합 진단</td><td>{ ok, connection, ping, version:..., docroot_check, disk_info, recent_deploys }</td></tr>
+  <tr><td><code>all-servers</code></td><td>모든 활성 사이트 서버 상태 일괄 조회</td><td>{ ok, servers: [{site_id, status, ping, version}, ...] }</td></tr>
+  <tr><td><code>deploy-log</code></td><td>최근 배포 로그 전체 조회 (최대 100건)</td><td>{ ok, site_id, logs: [...] }</td></tr>
+</table>
+
+<h2 id="post-actions">POST 액션</h2>
+<table class="param-table">
+  <tr><th>action</th><th>필수 파라미터</th><th>설명</th></tr>
+  <tr><td><code>deploy</code></td><td>site, version</td><td>대상 서버에 버전 파일 배포. SSH 연결 → docroot 검증 → version.txt 생성 → 로그 기록.</td></tr>
+  <tr><td><code>sync</code></td><td>from, to</td><td>두 사이트 간 데이터 동기화. package.json, version_history.json, changelog.json, improvements.json 복사.</td></tr>
+</table>
+
+<h2 id="response-ping">응답 — ping</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"action"</code>: "ping",
+  <code>"site_id"</code>: "kiam-prod",
+  <code>"host"</code>: "116.120.58.86",
+  <code>"port"</code>: 22,
+  <code>"reachable"</code>: true,
+  <code>"latency_ms"</code>: 45
+}</pre></div>
+
+<h2 id="response-deploy">응답 — deploy</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"action"</code>: "deploy",
+  <code>"site_id"</code>: "kiam-prod",
+  <code>"version"</code>: "1.0.1",
+  <code>"steps"</code>: [
+    { "step":1, "name":"SSH 접속 테스트", "result":"success", "latency":45 },
+    { "step":2, "name":"문서 루트 확인", "result":"success",
+      "details": { "docroot":"/home/kiam", "has_index":true, "has_htaccess":true, "disk_free_mb":4520 } },
+    { "step":3, "name":"버전 파일 기록", "result":"success",
+      "details": { "version_file":"/home/kiam/version.txt", "content":"1.0.1" } }
+  ],
+  <code>"timestamp"</code>: "2026-05-03T15:30:00+09:00",
+  <code>"message"</code>: "✅ kiam.kr (운영)에 v1.0.1 배포 완료"
+}</pre></div>
+
+<h2 id="server-logic">서버 처리 로직 (완전 추적)</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// ── SSH 핑 (TCP 소켓) ──
+function ssh_ping(string $host, int $port=22): array {
+    $start = microtime(true);
+    $socket = @fsockopen($host, $port, $errno, $errstr, 5);   // 5초 타임아웃
+    $latency = round((microtime(true) - $start) * 1000);
+    if ($socket) { fclose($socket); return ['reachable'=>true, 'latency_ms'=>$latency]; }
+    return ['reachable'=>false, 'error'=>$errstr];
+}
+
+// ── 배포 대상 검증 ──
+function check_deploy_target(string $docroot): array {
+    // 1) 디렉터리 존재 확인
+    // 2) 핵심 파일 존재 확인 (index.php, config.php, .htaccess)
+    // 3) 디스크 용량 (disk_free_space, disk_total_space → MB)
+    return [
+        'docroot' => $docroot,
+        'has_index'    => file_exists($docroot.'/index.php'),
+        'has_config'   => file_exists($docroot.'/config.php'),
+        'has_htaccess' => file_exists($docroot.'/.htaccess'),
+        'disk_free_mb' => round(disk_free_space($docroot) / 1048576),
+        'disk_total_mb'=> round(disk_total_space($docroot) / 1048576),
+    ];
+}
+
+// ── 배포 실행 ──
+function deploy(string $site_id, string $version): array {
+    $site = get_site($site_id);
+    $docroot = $site['document_root'] ?? '';
+    $steps = [];
+
+    // Step 1: SSH 연결 테스트
+    $ping = ssh_ping($site['server_ip'] ?? '127.0.0.1');
+    $steps[] = ['step'=>1, 'name'=>'SSH 접속 테스트', 'result'=>$ping['reachable']?'success':'fail'];
+
+    // Step 2: 문서 루트 검증
+    $target = check_deploy_target($docroot);
+    $steps[] = ['step'=>2, 'name'=>'문서 루트 확인', 'result'=>'success', 'details'=>$target];
+
+    // Step 3: 버전 파일 기록
+    $version_path = $docroot . '/version.txt';
+    file_put_contents($version_path, $version);
+    $steps[] = ['step'=>3, 'name'=>'버전 파일 기록', 'result'=>'success', 'details'=>['version_file'=>$version_path]];
+
+    // 배포 로그 저장 (최근 100건 유지)
+    log_deploy($site_id, $version, $steps);
+
+    return $steps;
+}
+
+// ── 사이트 간 동기화 ──
+function sync_sites(string $from_id, string $to_id): array {
+    $files = ['package.json', 'version_history.json', 'changelog.json', 'improvements.json'];
+    $results = [];
+    foreach ($files as $f) {
+        $data = site_read_json($from_id, $f);
+        site_write_json($to_id, $f, $data);
+        $results[] = ['file'=>$f, 'synced'=>true];
+    }
+    return $results;
+}</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> SSH 핑은 실제 SSH 인증 없이 TCP 소켓 연결만 확인합니다. 배포 시 <code>deploy()</code>는 서버의 document_root에 <code>version.txt</code> 파일을 기록하여 현재 배포된 버전을 추적합니다. 배포 로그는 JSON 파일로 관리되며 최대 100건까지 보관됩니다. 동기화는 운영→개발 또는 개발→운영 양방향으로 가능합니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

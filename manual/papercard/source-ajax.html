@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AJAX 통신 분석 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link active">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>AJAX 통신</span></div>
+<h1>🔌 AJAX 통신 — 완전 분석</h1>
+<p class="page-desc">페이지와 서버 간의 모든 데이터 통신을 분석합니다. 어떤 주소로, 어떤 데이터를 보내고, 어떤 응답을 받는지 완전 정리.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#overview">AJAX 개요</a></li>
+<li><a href="#endpoints">전체 엔드포인트 맵</a></li>
+<li><a href="#pattern">통신 패턴 분석</a></li>
+<li><a href="#dataflow">데이터 흐름도</a></li>
+<li><a href="#follow">따라하기</a></li>
+</ul>
+</div>
+
+<h2 id="overview">📡 AJAX 개요</h2>
+<p>paper_card 페이지는 총 <strong>25개 이상의 AJAX 엔드포인트</strong>와 통신합니다. jQuery의 <code>$.ajax()</code>를 사용하며, 모든 통신은 <strong>비동기(Async)</strong>로 이루어집니다.</p>
+
+<h2 id="endpoints">🗺️ 전체 엔드포인트 맵</h2>
+
+<h3>📇 종이명함 관련 (핵심)</h3>
+<table class="data-table">
+<thead><tr><th>URL</th><th>Method</th><th>보내는 데이터</th><th>응답</th></tr></thead>
+<tbody>
+<tr><td><code>[내부API]/[명함목록]</code></td><td>GET</td><td>[회원ID], [페이지], [개수], [정렬]</td><td>명함 목록 HTML</td></tr>
+<tr><td><code>[내부API]/[연락처처리]</code></td><td>POST</td><td>[액션](등록/수정/삭제), [명함정보]</td><td>{result: "success"}</td></tr>
+<tr><td><code>[내부API]/[콘텐츠처리]</code></td><td>POST</td><td>[액션], [콘텐츠ID], [화면명]</td><td>처리 결과</td></tr>
+<tr><td><code>[내부API]/[모드변경]</code></td><td>POST</td><td>[모드], [카드ID]</td><td>상태 변경 결과</td></tr>
+<tr><td><code>[내부API]/[즐겨찾기]</code></td><td>POST</td><td>[카드ID], [상태값]</td><td>즐겨찾기 토글</td></tr>
+<tr><td><code>[내부API]/[순서변경]</code></td><td>POST</td><td>[카드ID목록]</td><td>순서 변경 결과</td></tr>
+<tr><td><code>[내부API]/[게시글등록]</code></td><td>POST</td><td>[게시글정보]</td><td>게시글 등록 결과</td></tr>
+</tbody>
+</table>
+
+<h3>👥 연락처 & 친구</h3>
+<table class="data-table">
+<thead><tr><th>URL</th><th>Method</th><th>보내는 데이터</th><th>응답</th></tr></thead>
+<tbody>
+<tr><td><code>[내부API]/[연락처조회]</code></td><td>GET</td><td>[소유자], [관리자], [범위], [번호개수], [페이지], [종이여부]</td><td>연락처 목록 JSON</td></tr>
+<tr><td><code>[내부API]/[친구조회]</code></td><td>GET</td><td>[회원ID], [페이지]</td><td>친구 목록 HTML</td></tr>
+<tr><td><code>[내부API]/[친구처리]</code></td><td>POST</td><td>[액션], [친구정보]</td><td>친구 추가/삭제</td></tr>
+<tr><td><code>[내부API]/[요청목록]</code></td><td>GET</td><td>[회원ID]</td><td>요청 목록</td></tr>
+<tr><td><code>[내부API]/[추천목록]</code></td><td>GET</td><td>[회원ID]</td><td>추천 목록</td></tr>
+</tbody>
+</table>
+
+<h3>🛒 IAM 몰 & 결제</h3>
+<table class="data-table">
+<thead><tr><th>URL</th><th>Method</th><th>보내는 데이터</th><th>응답</th></tr></thead>
+<tbody>
+<tr><td><code>[내부API]/[상품조회]</code></td><td>GET</td><td>[개수], [위치], [화면명]</td><td>상품 목록 HTML</td></tr>
+<tr><td><code>[내부API]/[결제내역]</code></td><td>GET</td><td>[유형]</td><td>결제 내역</td></tr>
+<tr><td><code>[내부API]/[포인트결제]</code></td><td>POST</td><td>[금액], [방식]</td><td>포인트 결제</td></tr>
+<tr><td><code>[내부API]/[링크조회]</code></td><td>GET</td><td>[유형]</td><td>IAM 링크</td></tr>
+</tbody>
+</table>
+
+<h3>🤖 AI & 발송</h3>
+<table class="data-table">
+<thead><tr><th>URL</th><th>Method</th><th>보내는 데이터</th><th>응답</th></tr></thead>
+<tbody>
+<tr><td><code>[내부API]/[발송처리]</code></td><td>POST</td><td>[정산유형], [결제수단], [금액], [메시지], [카드URL], [발송모드]</td><td>발송 결과</td></tr>
+<tr><td><code>[내부API]/[발송내역]</code></td><td>GET</td><td>[회원ID], [페이지]</td><td>발송 내역</td></tr>
+<tr><td><code>[내부API]/[프롬프트생성]</code></td><td>POST</td><td>[발신자정보]</td><td>생성된 프롬프트</td></tr>
+<tr><td><code>[내부API]/[채널설정]</code></td><td>POST</td><td>[채널설정값]</td><td>채널 설정 저장</td></tr>
+<tr><td><code>[내부API]/[서비스신청]</code></td><td>POST</td><td>[서비스정보]</td><td>서비스 신청</td></tr>
+<tr><td><code>[내부API]/[프로필확장]</code></td><td>POST</td><td>[프로필정보]</td><td>프로필 확장</td></tr>
+</tbody>
+</table>
+
+<h3>🔐 인증 & 기타</h3>
+<table class="data-table">
+<thead><tr><th>URL</th><th>Method</th><th>보내는 데이터</th><th>응답</th></tr></thead>
+<tbody>
+<tr><td><code>[내부API]/[세션처리]</code></td><td>POST</td><td>[액션]</td><td>세션 종료</td></tr>
+<tr><td><code>[내부API]/[아이디확인]</code></td><td>POST</td><td>[아이디]</td><td>중복 확인</td></tr>
+<tr><td><code>[내부API]/[콘텐츠사용]</code></td><td>POST</td><td>[콘텐츠ID]</td><td>콘텐츠 사용</td></tr>
+<tr><td><code>[내부API]/[주소조회]</code></td><td>GET</td><td></td><td>회원 주소</td></tr>
+<tr><td><code>[내부API]/[추가콘텐츠]</code></td><td>GET</td><td>[위치]</td><td>추가 콘텐츠</td></tr>
+<tr><td><code>[내부API]/[알림조회]</code></td><td>GET</td><td></td><td>알림 메시지</td></tr>
+</tbody>
+</table>
+
+<h2 id="pattern">🔍 통신 패턴 분석</h2>
+
+<h3>패턴 1: 목록 조회 (GET)</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function getIamContact(card_owner, card_master, search_range, phone_count, page, paper_yn) {
+    $.ajax({
+        url: "[내부API]/[연락처조회]",          // ← 내부 API 주소
+        type: "GET",                            // ← GET 방식
+        data: {                                  // ← 쿼리 파라미터
+            card_owner: card_owner,              //    '[사용자ID]'
+            card_master: card_master,            //    '[관리자ID]'
+            search_range: search_range,          //    검색 범위 (1~4)
+            phone_count: phone_count,            //    전화번호 개수
+            page: page,                          //    페이지 번호
+            paper_yn: paper_yn                   //    종이명함 여부 (0/1)
+        },
+        dataType: "json",                        // ← JSON 응답 기대
+        beforeSend: function() {
+            busy = true;                         // ← 중복 요청 방지
+            $("#ajax_loading").show();           // ← 로딩 표시
+        },
+        success: function(response) {
+            // 응답 HTML을 .sample_main에 추가
+            $(".sample_main").append(response.html);
+        },
+        complete: function() {
+            busy = false;
+            $("#ajax_loading").hide();
+        }
+    });
+}
+</pre>
+
+<h3>패턴 2: 데이터 변경 (POST)</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// contact_submit_paper() - 종이명함 저장
+function contact_submit_paper() {
+    $.ajax({
+        url: "[내부API]/[연락처처리]",
+        type: "POST",
+        data: {
+            action: "[액션]",              // ← 액션 구분자
+            name: $("#paper_name").val(),        // ← 폼 데이터
+            job: $("#paper_job").val(),
+            organization: $("#paper_organization").val(),
+            mobile: $("#paper_mobile").val(),
+            // ... 더 많은 필드 ...
+        },
+        success: function(res) {
+            if (res.result === "success") {
+                refresh_page();                  // ← 성공 시 갱신
+            }
+        }
+    });
+}
+</pre>
+
+<h2 id="dataflow">🌊 데이터 흐름도</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.8;">
+                        ┌──────────────┐
+                        │   사용자     │
+                        │  (브라우저)  │
+                        └──┬───────┬──┘
+                           │       │
+              클릭/입력    │       │  AJAX 응답 (JSON/HTML)
+                           ▼       ▲
+              ┌────────────────────────┐
+              │   JavaScript 함수      │
+              │                        │
+              │  getIamContact()       │
+              │  getIamPaper()         │
+              │  contact_submit()      │
+              │  settlement()          │
+              │  ...                   │
+              └───────────┬────────────┘
+                          │
+              $.ajax()    │
+              POST/GET    ▼
+              ┌────────────────────────┐
+              │   PHP 서버             │
+              │                        │
+              │  [내부API]/*.php       │
+              │  [내부API]/*.php           │
+              │  [내부API]/[명함발송]│
+              └───────────┬────────────┘
+                          │
+              SQL 쿼리    │
+                          ▼
+              ┌────────────────────────┐
+              │   MySQL DB             │
+              │   - paper_cards        │
+              │   - contacts           │
+              │   - payments           │
+              │   - ai_prompts         │
+              └────────────────────────┘
+</pre>
+
+<div class="notice-box">
+<div class="notice-title">⚠️ 중요한 보안 포인트</div>
+<ul>
+<li>모든 AJAX 요청은 <code>cur_win=paper_card</code> 파라미터를 포함해서 서버가 현재 페이지를 식별하게 합니다.</li>
+<li><code>busy</code> 플래그로 중복 요청을 방지합니다 (true일 땐 새 요청 거부).</li>
+<li>로그인 상태는 PHP 세션 + AJAX 응답에서 확인합니다.</li>
+<li><code>cur_win_name</code> 변수는 [보안패치] 마크가 붙어있어 XSS 방지 목적입니다.</li>
+</ul>
+</div>
+
+<h2 id="follow">🎓 초등학생도 따라하는 AJAX 분석</h2>
+
+<div class="step-box">
+<div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>F12 → Network 탭</strong><br>크롬에서 F12 누르고 Network 탭 클릭</div></div>
+<div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>XHR 필터 적용</strong><br>Network 탭 위쪽에서 "XHR" 버튼 클릭 → AJAX만 보기</div></div>
+<div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>페이지 새로고침</strong><br>F5 누르면 모든 AJAX 요청이 목록에 쭉 뜹니다!</div></div>
+<div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>요청 하나 클릭</strong><br>오른쪽에 Headers(요청 정보), Preview(응답 미리보기), Response(원본 응답) 탭 확인</div></div>
+<div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>Payload 확인</strong><br>어떤 데이터를 서버에 보냈는지 확인 가능. 종이명함 정보가 그대로 보여요!</div></div>
+</div>
+
+<div class="nav-bottom"><a href="/manual/papercard/source-main.html" class="nav-prev">← 이전: 메인 초기화</a><a href="/manual/papercard/source-utils.html" class="nav-next">다음: 유틸리티 함수 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

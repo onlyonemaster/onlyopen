@@ -1,0 +1,171 @@
+/* ==========================================
+   VerManager Style — Onlyone OneChat
+   ========================================== */
+
+:root {
+  --bg: #0f1117; --bg2: #1a1d28; --bg3: #242838;
+  --text: #e4e6ed; --text2: #8b8fa3; --text3: #5e6278;
+  --accent: #82c736; --accent2: #6aaf2a;
+  --red: #ef4444; --orange: #f59e0b; --green: #22c55e;
+  --blue: #3b82f6; --purple: #8b5cf6; --pink: #ec4899;
+  --red-bg: rgba(239,68,68,.15); --orange-bg: rgba(245,158,11,.15); --green-bg: rgba(34,197,94,.15);
+  --blue-bg: rgba(59,130,246,.15); --purple-bg: rgba(139,92,246,.15);
+  --border: #2a2e3c; --radius: 12px; --radius-sm: 8px;
+  --shadow: 0 2px 12px rgba(0,0,0,.25);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system,BlinkMacSystemFont,'Segoe UI','Apple SD Gothic Neo',sans-serif; background:var(--bg); color:var(--text); line-height:1.6; }
+a { color: var(--accent); text-decoration: none; }
+
+/* ── Layout ── */
+.vmw { max-width: 1140px; margin: 0 auto; padding: 0 24px; }
+.vmm { padding-top: 24px; padding-bottom: 60px; }
+
+/* ── Header ── */
+.vmh { background: var(--bg2); border-bottom: 1px solid var(--border); position: sticky; top:0; z-index:100; }
+.vmh-i { display:flex; align-items:center; justify-content:space-between; height:60px; }
+.vmh-l { display:flex; align-items:center; gap:10px; }
+.vmh-ico { font-size: 22px; }
+.vmh-t { font-size: 17px; font-weight: 800; color: var(--accent); letter-spacing: -0.5px; }
+.vmh-sub { font-size: 11px; color: var(--text3); font-weight:400; margin-left:4px; }
+.vmh-n { display:flex; gap:4px; }
+.vmh-n a { padding: 8px 14px; border-radius: var(--radius-sm); font-size:13px; font-weight:500; color:var(--text2); transition:.15s; }
+.vmh-n a:hover, .vmh-n a.on { background: var(--bg3); color: var(--text); }
+
+/* ── Hero ── */
+.vm-hero { background: linear-gradient(135deg, #1a1d28 0%, #1e3524 100%); border: 1px solid rgba(130,199,54,.15); border-radius: var(--radius); padding: 36px 40px; display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; }
+.vm-hero-lbl { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--text3); margin-bottom: 4px; }
+.vm-hero-name { font-size: 28px; font-weight: 700; color: #fff; letter-spacing: -1px; }
+.vm-hero-name strong { color: var(--accent); }
+.vm-hero-date { font-size: 13px; color: var(--text2); margin-top: 4px; }
+.vm-hero-btns { display:flex; gap:10px; flex-shrink:0; }
+
+/* ── Buttons ── */
+.vmb { padding: 10px 20px; border-radius: var(--radius-sm); border: none; font-size: 14px; font-weight: 600; cursor: pointer; transition: .15s; display: inline-flex; align-items:center; gap: 6px; }
+.vmb1 { background: var(--accent); color: #0f1117; }
+.vmb1:hover { background: var(--accent2); }
+.vmb2 { background: var(--bg3); color: var(--text); border: 1px solid var(--border); }
+.vmb2:hover { background: var(--border); }
+.vmb-sm { padding: 6px 14px; font-size: 12px; }
+.vmb-ico { width: 30px; height: 30px; border-radius: 6px; border: 1px solid var(--border); background: var(--bg2); color: var(--text2); cursor: pointer; font-size: 13px; transition: .15s; }
+.vmb-ico:hover { background: var(--bg3); color: var(--text); }
+.vmb-ico-d:hover { background: var(--red-bg); color: var(--red); }
+
+/* ── Stat Cards ── */
+.vm-sc { display:grid; grid-template-columns:repeat(4,1fr); gap:16px; margin-bottom:24px; }
+.vm-sc-i { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 20px; text-align:center; }
+.vm-sc-i b { display:block; font-size: 32px; font-weight: 800; color: #fff; margin-bottom: 4px; }
+.vm-sc-i { font-size: 12px; color: var(--text2); font-weight: 500; }
+.vm-sc-w { border-color: rgba(239,68,68,.3); }
+.vm-sc-w b { color: var(--red); }
+
+/* ── Suggestion Bar ── */
+.vm-sug { background: rgba(245,158,11,.1); border: 1px solid rgba(245,158,11,.25); border-radius: var(--radius); padding: 14px 20px; display:flex; align-items:center; justify-content:space-between; margin-bottom: 24px; font-size: 14px; }
+
+/* ── Cards ── */
+.vm-card { background: var(--bg2); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 20px; }
+.vm-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 16px; }
+.vm-ch { display:flex; align-items:center; justify-content:space-between; margin-bottom: 16px; }
+.vm-ch h3 { margin-bottom: 0; }
+
+/* ── 2-col Grid ── */
+.vm-g2 { display:grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+@media(max-width:860px){ .vm-g2{grid-template-columns:1fr;} .vm-sc{grid-template-columns:1fr 1fr;} .vm-hero{flex-direction:column;gap:16px;text-align:center;} }
+
+/* ── Category Bar ── */
+.vm-cb { display:flex; align-items:center; gap:10px; margin-bottom:10px; font-size:13px; }
+.vm-cbt { flex:1; height:8px; background:var(--bg3); border-radius:4px; overflow:hidden; }
+.vm-cbf { height:100%; background:var(--accent); border-radius:4px; transition:width .5s; }
+
+/* ── Improvement Item ── */
+.vm-ii { padding: 12px 0; border-bottom: 1px solid var(--border); }
+.vm-ii:last-child { border-bottom: none; }
+.vm-ii-h { display:flex; align-items:center; gap:8px; margin-bottom:4px; }
+.vm-ii-d { font-size:11px; color:var(--text3); }
+.vm-ii-t { font-size:14px; font-weight:600; }
+.vm-ii-de { font-size:12px; color:var(--text2); margin-top:2px; }
+.vm-ii-u { font-size:10px; background:var(--red-bg); color:var(--red); padding:1px 6px; border-radius:4px; }
+.vm-ii-v { font-size:10px; color:var(--green); }
+
+/* ── Timeline ── */
+.vm-ti { display:flex; gap:14px; padding: 12px 0; border-left: 2px solid var(--border); padding-left:18px; margin-left:6px; font-size:14px; }
+.vm-ti-d { width: 10px; height: 10px; border-radius: 50%; flex-shrink:0; margin-top:4px; }
+.vm-ti-d.patch { background: var(--green); }
+.vm-ti-d.minor { background: var(--orange); }
+.vm-ti-d.major { background: var(--red); }
+.vm-ti-dt { font-size:12px; color:var(--text3); margin-left:4px; }
+.vm-ti-n { font-size:13px; color:var(--text2); margin-top:2px; }
+
+/* ── Table ── */
+.vm-to { overflow-x:auto; }
+.vmt { width:100%; border-collapse:collapse; font-size:13px; }
+.vmt th { text-align:left; padding:10px 12px; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:.5px; color:var(--text3); border-bottom:1px solid var(--border); white-space:nowrap; }
+.vmt td { padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:middle; }
+.vmt tr:hover td { background: rgba(255,255,255,.02); }
+.vmt th:first-child, .vmt td:first-child { padding-left:16px; }
+.vmt th:last-child, .vmt td:last-child { padding-right:16px; }
+
+/* ── Filter Bar ── */
+.vm-fb { display:flex; align-items:center; gap:10px; margin-bottom:16px; }
+
+/* ── Form Elements ── */
+.vms, .vmi, .vmta { background: var(--bg); border: 1px solid var(--border); border-radius: var(--radius-sm); padding: 8px 12px; font-size:13px; color:var(--text); outline:none; font-family:inherit; transition:.15s; }
+.vms:focus, .vmi:focus, .vmta:focus { border-color: var(--accent); }
+.vms { min-width: 140px; }
+.vmi { width:100%; }
+.vmta { width:100%; resize:vertical; }
+.vmfg { margin-bottom: 16px; }
+.vmfg label { display:block; font-size: 12px; font-weight: 600; color: var(--text2); margin-bottom: 6px; }
+.vmfr { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+
+/* ── Badges ── */
+.badge { font-size:10px; font-weight:700; padding:2px 8px; border-radius:4px; text-transform:uppercase; letter-spacing:.5px; white-space:nowrap; }
+.badge-red { background:var(--red-bg); color:var(--red); }
+.badge-orange { background:var(--orange-bg); color:var(--orange); }
+.badge-green { background:var(--green-bg); color:var(--green); }
+.badge-blue { background:var(--blue-bg); color:var(--blue); }
+.badge-purple { background:var(--purple-bg); color:var(--purple); }
+.badge-pink { background: rgba(236,72,153,.15); color: var(--pink); }
+
+/* ── Imp Action Bar ── */
+.vm-ia { display:flex; align-items:center; justify-content:space-between; margin-top:14px; font-size:13px; }
+
+/* ── Modal ── */
+.vmo { position:fixed; inset:0; background:rgba(0,0,0,.6); z-index:1000; display:flex; align-items:center; justify-content:center; }
+.vmmd { background:var(--bg2); border:1px solid var(--border); border-radius: var(--radius); width: 560px; max-width: 95vw; max-height:85vh; overflow-y:auto; box-shadow: 0 12px 48px rgba(0,0,0,.4); }
+.vmmd-h { display:flex; align-items:center; justify-content:space-between; padding:18px 24px; border-bottom:1px solid var(--border); }
+.vmmd-h h3 { font-size:16px; }
+.vmmd-x { width:30px; height:30px; border-radius:50%; border:1px solid var(--border); background:transparent; color:var(--text2); cursor:pointer; font-size:14px; transition:.15s; }
+.vmmd-x:hover { background: var(--red-bg); color: var(--red); }
+.vmmd-b { padding: 20px 24px; }
+.vmmd-f { display:flex; justify-content:flex-end; gap:8px; padding:14px 24px; border-top:1px solid var(--border); }
+
+/* ── Type Selector ── */
+.vmts { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+.vmtc { border: 2px solid var(--border); border-radius: var(--radius); padding: 16px 12px; text-align:center; cursor:pointer; transition:.15s; font-size:13px; }
+.vmtc:hover { border-color: var(--text3); }
+.vmtci { font-size: 24px; margin-bottom: 4px; }
+.vmtc strong { display:block; font-size:15px; margin-top:4px; }
+.vmtp input:checked + .vmtc { border-color: var(--green); background: var(--green-bg); }
+.vmtm input:checked + .vmtc { border-color: var(--orange); background: var(--orange-bg); }
+.vmtM input:checked + .vmtc { border-color: var(--red); background: var(--red-bg); }
+
+/* ── Imp Select List ── */
+.vmis { max-height:200px; overflow-y:auto; border:1px solid var(--border); border-radius:var(--radius-sm); padding:8px; }
+.vmio { display:flex; align-items:center; gap:8px; padding:6px 8px; font-size:13px; cursor:pointer; border-radius:4px; transition:.1s; }
+.vmio:hover { background: var(--bg3); }
+
+/* ── Toast ── */
+.vmtoast { position:fixed; top:20px; right:20px; z-index:9999; padding:12px 20px; border-radius: var(--radius-sm); font-size:13px; font-weight:600; box-shadow: var(--shadow); animation: slideIn .3s ease; }
+.vmtoast-success { background: var(--green); color: #fff; }
+.vmtoast-error { background: var(--red); color: #fff; }
+@keyframes slideIn { from{transform:translateX(100px);opacity:0} to{transform:translateX(0);opacity:1} }
+
+/* ── Misc ── */
+.vm-empty { color: var(--text3); font-size:13px; text-align:center; padding:20px; }
+.vm-cl { font-size:14px; line-height:1.8; }
+.vm-cl h2 { font-size: 18px; margin-top: 24px; color: var(--accent); }
+.vm-cl li { margin-left: 20px; color: var(--text2); }
+
+/* ── Radio Hide ── */
+.vmts input[type="radio"] { display:none; }

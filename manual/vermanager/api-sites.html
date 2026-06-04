@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사이트 CRUD API — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.api-method { display:inline-block; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; margin-right:6px; }
+.method-get { background:#d1fae5; color:#065f46; }
+.method-post { background:#fef3c7; color:#92400e; }
+.method-put { background:#dbeafe; color:#1e40af; }
+.method-delete { background:#fee2e2; color:#991b1b; }
+.endpoint-box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; margin:16px 0; font-family:monospace; font-size:13px; }
+.param-table { width:100%; border-collapse:collapse; margin:12px 0; }
+.param-table th,.param-table td { padding:8px 12px; border:1px solid var(--border); font-size:13px; }
+.param-table th { background:var(--bg2); text-align:left; }
+.resp-box { background:#1e293b; color:#e2e8f0; border-radius:8px; padding:16px; margin:12px 0; font-size:13px; line-height:1.7; overflow-x:auto; }
+</style>
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link active">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>사이트 API</span></div>
+<h1>🌐 사이트 등록부 CRUD API (api/sites.php)</h1>
+<p class="page-desc">사이트 등록부(site-registry.json)를 관리하는 완전한 RESTful CRUD API입니다. GET/POST/PUT/DELETE 메서드를 지원하며, 새 사이트 등록 시 자동으로 데이터 디렉터리와 기본 JSON 파일들을 생성합니다.</p>
+
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/sites</code> — 전체 목록</div>
+<div class="endpoint-box"><span class="api-method method-get">GET</span> <code>/vermanager/api/sites?id=kiam-prod</code> — 특정 사이트</div>
+<div class="endpoint-box"><span class="api-method method-post">POST</span> <code>/vermanager/api/sites</code> — 신규 등록</div>
+<div class="endpoint-box"><span class="api-method method-put">PUT</span> <code>/vermanager/api/sites</code> — 정보 수정</div>
+<div class="endpoint-box"><span class="api-method method-delete">DELETE</span> <code>/vermanager/api/sites?id=kiam-prod</code> — 비활성화</div>
+
+<h2 id="get-response">GET 응답 (전체)</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"sites"</code>: [
+    {
+      <code>"id"</code>: "kiam-prod",
+      <code>"name"</code>: "kiam.kr (운영)",
+      <code>"domain"</code>: "kiam.kr",
+      <code>"aliases"</code>: ["www.kiam.kr"],
+      <code>"environment"</code>: "production",
+      <code>"document_root"</code>: "/home/kiam",
+      <code>"app_name"</code>: "Onlyone OneChat",
+      <code>"server_hostname"</code>: "kiam-web",
+      <code>"server_ip"</code>: "116.120.58.86",
+      <code>"parent_site"</code>: null,
+      <code>"status"</code>: "active",
+      <code>"current_version"</code>: { "major":1, "minor":0, "patch":1, "raw":"1.0.1" },
+      <code>"release_count"</code>: 1,
+      <code>"improvement_count"</code>: 5,
+      <code>"created_at"</code>: "2026-05-02T...",
+      <code>"updated_at"</code>: "2026-05-03T..."
+    },
+    { ... }
+  ],
+  <code>"total"</code>: 2,
+  <code>"system_stats"</code>: {
+    "production_sites": 1,
+    "development_sites": 1,
+    "total_servers": 1
+  }
+}</pre></div>
+
+<h2 id="post-body">POST 요청 Body (사이트 등록)</h2>
+<table class="param-table">
+  <tr><th>필드</th><th>타입</th><th>필수</th><th>설명</th></tr>
+  <tr><td><code>id</code></td><td>string</td><td><b>필수</b></td><td>고유 사이트 ID (예: kiam-prod). 중복 불가.</td></tr>
+  <tr><td><code>name</code></td><td>string</td><td>선택</td><td>표시명 (기본값: id)</td></tr>
+  <tr><td><code>domain</code></td><td>string</td><td>선택</td><td>도메인 주소</td></tr>
+  <tr><td><code>environment</code></td><td>string</td><td>선택</td><td>production | development | staging</td></tr>
+  <tr><td><code>document_root</code></td><td>string</td><td>선택</td><td>서버 내 문서 루트 경로</td></tr>
+  <tr><td><code>server_hostname</code></td><td>string</td><td>선택</td><td>서버 호스트명</td></tr>
+  <tr><td><code>server_ip</code></td><td>string</td><td>선택</td><td>서버 IP 주소</td></tr>
+  <tr><td><code>parent_site</code></td><td>string</td><td>선택</td><td>부모 사이트 ID (운영↔개발 연결)</td></tr>
+</table>
+
+<div class="resp-box"><pre>// POST 응답
+{
+  <code>"ok"</code>: true,
+  <code>"message"</code>: "✅ 사이트 'kiam-staging'이(가) 생성되었습니다. (staging 환경)",
+  <code>"site_id"</code>: "kiam-staging",
+  <code>"created_files"</code>: [
+    "data/sites/kiam-staging/package.json",
+    "data/sites/kiam-staging/version_history.json",
+    "data/sites/kiam-staging/improvements.json",
+    "data/sites/kiam-staging/changelog.json"
+  ]
+}
+
+// 에러: 중복 ID
+{ <code>"ok"</code>: false, <code>"error"</code>: "ID 'kiam-prod'는 이미 존재합니다." }</pre></div>
+
+<h2 id="put-body">PUT 요청 Body (사이트 수정)</h2>
+<div class="resp-box"><pre>// 요청: id는 변경 불가, 나머지 필드는 부분 업데이트
+{
+  <code>"id"</code>: "kiam-prod",
+  <code>"name"</code>: "kiam.kr (운영 v2)",
+  <code>"server_ip"</code>: "192.168.1.100"
+}
+
+// 응답
+{
+  <code>"ok"</code>: true,
+  <code>"message"</code>: "✅ 사이트 'kiam-prod' 정보가 업데이트되었습니다.",
+  <code>"updated_fields"</code>: ["name", "server_ip"]
+}</pre></div>
+
+<h2 id="server-logic">서버 처리 로직 (완전 추적)</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// ── GET ──
+// GET /api/sites        → get_all_sites() + 각 사이트 current_version, release_count, improvement_count 추가
+// GET /api/sites?id=xxx → get_site($id) + 상세 정보 + child_sites 배열 탐색
+
+// ── POST (사이트 생성) ──
+// 1) id 유효성 검증 (필수, 중복 불가)
+// 2) site-registry.json에 새 항목 추가 (status='active')
+// 3) save_registry() → JSON 파일 쓰기
+// 4) site_data_dir($id) 호출 → data/sites/{id}/ 디렉터리 생성
+// 5) 기본 JSON 파일 생성:
+//    - package.json:      {"name":"...","version":"1.0.0","lastRelease":null}
+//    - version_history.json: []
+//    - improvements.json: []
+//    - changelog.json:    []
+
+// ── PUT (사이트 수정) ──
+// 1) id 필드 검증 (존재 확인, id 자체는 변경 불가)
+// 2) 기존 데이터와 새 데이터를 array_merge
+// 3) updated_at 갱신 → save_registry()
+
+// ── DELETE (소프트 삭제) ──
+// 1) id 검증
+// 2) status를 'inactive'로 변경 (데이터는 보존)
+// 3) save_registry()
+// ※ 실제 파일 삭제는 하지 않음. 필요 시 수동 복구 가능.</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> 사이트 등록 시 4개의 기본 JSON 파일이 자동 생성됩니다. DELETE는 완전 삭제가 아닌 <b>소프트 삭제</b>(status=inactive)로 처리되어 데이터 복구가 가능합니다. <code>parent_site</code> 필드로 운영↔개발 사이트의 부모-자식 관계를 설정할 수 있습니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

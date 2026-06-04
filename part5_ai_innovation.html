@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 5: AI 추론 기반 혁신적 출산율 증가 정책 제안 | 이재명 정부 인구정책 종합분석</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a;
+  --text: #e1e4ed; --sub: #8b8fa3; --accent: #4f8fff;
+  --red: #ff4757; --green: #2ed573; --orange: #ffa502;
+  --purple: #a55eea; --teal: #1dd1a1; --pink: #ff6b81;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI','Noto Sans KR',sans-serif; line-height:1.65; }
+.container { max-width:1400px; margin:0 auto; padding:24px; }
+header { text-align:center; padding:48px 24px 32px; border-bottom:1px solid var(--border); margin-bottom:32px; }
+header h1 { font-size:2.2rem; font-weight:800; background:linear-gradient(135deg,var(--teal),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+header .subtitle { color:var(--sub); font-size:1rem; }
+
+.nav-bar { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:32px; }
+.nav-bar a { padding:10px 20px; border-radius:8px; text-decoration:none; color:var(--sub); background:var(--card); border:1px solid var(--border); font-size:.85rem; transition:all .2s; }
+.nav-bar a:hover, .nav-bar a.active { color:var(--accent); border-color:var(--accent); }
+.nav-bar a.active { background:rgba(79,143,255,.1); }
+
+.section { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:28px; margin-bottom:24px; }
+.section h2 { font-size:1.25rem; color:var(--teal); margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--border); }
+.section h3 { font-size:1.05rem; color:var(--accent); margin:20px 0 10px; }
+
+.chart-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(450px,1fr)); gap:24px; margin-bottom:24px; }
+.chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.chart-card h3 { font-size:1rem; margin-bottom:14px; }
+.chart-card .chart-wrap { position:relative; height:380px; }
+.chart-card.full { grid-column:1/-1; }
+
+/* Policy cards */
+.policy-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:14px; }
+.policy-card { background:rgba(29,209,161,.04); border:1px solid rgba(29,209,161,.15); border-radius:10px; padding:18px; position:relative; transition:all .2s; }
+.policy-card:hover { background:rgba(29,209,161,.1); border-color:rgba(29,209,161,.4); transform:translateY(-2px); }
+.policy-card .rank { position:absolute; top:12px; right:14px; font-size:.75rem; color:var(--sub); }
+.policy-card h4 { color:var(--teal); margin-bottom:6px; font-size:.95rem; padding-right:30px; }
+.policy-card p { color:var(--sub); font-size:.82rem; margin-bottom:6px; }
+.policy-card .meta { display:flex; gap:8px; font-size:.72rem; margin-top:8px; }
+.policy-card .meta span { padding:2px 8px; border-radius:10px; }
+.policy-card .meta .impact { background:rgba(46,213,115,.2); color:var(--green); }
+.policy-card .meta .feasibility { background:rgba(79,143,255,.2); color:var(--blue); }
+.policy-card .meta .term { background:rgba(255,165,2,.2); color:var(--orange); }
+
+/* Tabs */
+.tab-bar { display:flex; gap:4px; margin-bottom:16px; flex-wrap:wrap; }
+.tab-bar button { padding:8px 16px; border-radius:6px; border:1px solid var(--border); background:var(--card); color:var(--sub); cursor:pointer; font-size:.8rem; transition:all .2s; }
+.tab-bar button:hover, .tab-bar button.active { background:rgba(29,209,161,.1); border-color:var(--teal); color:var(--teal); }
+
+/* Simulation result */
+.sim-card { background:linear-gradient(135deg,rgba(79,143,255,.06),rgba(29,209,161,.04)); border:2px solid rgba(79,143,255,.25); border-radius:12px; padding:24px; text-align:center; margin:16px 0; }
+.sim-card .big-num { font-size:3rem; font-weight:900; background:linear-gradient(135deg,var(--teal),var(--accent)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.sim-card .desc { color:var(--sub); font-size:.9rem; margin-top:4px; }
+
+/* Quote */
+blockquote { border-left:3px solid var(--teal); padding:16px 20px; margin:16px 0; background:rgba(29,209,161,.04); border-radius:0 8px 8px 0; color:var(--sub); font-style:italic; }
+
+@media(max-width:768px) {
+  .chart-grid { grid-template-columns:1fr; }
+  .policy-grid { grid-template-columns:1fr; }
+  header h1 { font-size:1.5rem; }
+  .sim-card .big-num { font-size:2rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>🤖 Part 5: AI 추론 기반 혁신적 출산율 증가 정책 제안</h1>
+  <p class="subtitle">원쳇(OneChat) 시스템(제안)을 근간으로 한 30대 정책 순열 · 영향력-실현가능성 매트릭스 · 시뮬레이션<br><small style="color:var(--orange);">※ 원쳇 시스템은 정부 승인 전 제안 단계입니다.</small></p>
+</header>
+
+<nav class="nav-bar">
+  <a href="part1_crisis_dashboard.html">Part 1: 위기 대시보드</a>
+  <a href="part2_policy_failure.html">Part 2: 기존정책 실패분석</a>
+  <a href="part3_leejae_achievement.html">Part 3: 이재명 정부 성과</a>
+  <a href="part4_problems_alternatives.html">Part 4: 문제점·대안</a>
+  <a href="#" class="active">Part 5: AI 혁신정책</a>
+  <a href="part6_onechat_system.html">Part 6: 원쳇 시스템</a>
+</nav>
+
+<!-- ====== 총론 ====== -->
+<div class="section">
+  <h2>🧠 AI 추론 기반 인구정책 설계 방법론</h2>
+  <p style="color:var(--sub);font-size:.9rem;margin-bottom:12px;">
+    <strong>기존 정책 설계의 한계:</strong> 인간 관료의 경험·직관에 의존, 수백 개 정책 조합의 시너지 효과 검증 불가.
+    <strong>AI 추론 방식:</strong> 원쳇 시스템의 사용자 데이터를 기반으로 GPT-class AI가 30개 정책 후보 × 5단계 강도 × 15개 생애주기 교차점에 대한
+    순열 시뮬레이션을 수행, 출산율·재정·형평성의 삼각 최적화로 최적 정책 조합을 도출한다.
+  </p>
+  <p style="color:var(--sub);font-size:.85rem;">
+    본 장의 모든 정책은 <strong>원쳇 시스템을 유일한 전달 채널로 가정</strong>한다 (현재 제안 단계). AI 아바타 → 개인별 생애 데이터 분석 → 최적 정책 매칭 → AI 동행 메시지 푸시 →
+    시나리오 캠페인 자동 실행 → 대시보드로 실시간 효과 측정의 폐루프(Closed-Loop)를 구축한다.
+  </p>
+</div>
+
+<!-- ====== 시뮬레이션 결과 ====== -->
+<div class="sim-card">
+  <div class="big-num">TFR 1.45</div>
+  <div class="desc">AI 추론 최적 정책 조합 全면 실행 시 2032년 예측 합계출산율</div>
+  <div style="display:flex;justify-content:center;gap:32px;margin-top:16px;flex-wrap:wrap;">
+    <div><strong style="color:var(--teal);">+0.65</strong><br><span style="font-size:.8rem;color:var(--sub);">현행 대비 증가</span></div>
+    <div><strong style="color:var(--accent);">62조</strong><br><span style="font-size:.8rem;color:var(--sub);">연간 소요 예산 (효율화)</span></div>
+    <div><strong style="color:var(--green);">85%</strong><br><span style="font-size:.8rem;color:var(--sub);">정책 체감도 목표</span></div>
+    <div><strong style="color:var(--purple);">5년</strong><br><span style="font-size:.8rem;color:var(--sub);">목표 달성 기간</span></div>
+  </div>
+</div>
+
+<!-- ====== 차트 ====== -->
+<div class="chart-grid">
+
+  <!-- 차트1: 영향력-실현가능성 매트릭스 -->
+  <div class="chart-card full">
+    <h3>🎯 30대 AI 혁신정책: 영향력(Impact) vs 실현가능성(Feasibility) 매트릭스</h3>
+    <div class="chart-wrap"><canvas id="chartMatrix"></canvas></div>
+  </div>
+
+  <!-- 차트2: 영역별 효과 예측 -->
+  <div class="chart-card">
+    <h3>📈 정책 영역별 기대효과: 예측 출산율 증가 기여도</h3>
+    <div class="chart-wrap"><canvas id="chartAreaEffect"></canvas></div>
+  </div>
+
+  <!-- 차트3: 시나리오 비교 -->
+  <div class="chart-card">
+    <h3>🔄 정책 시나리오별 출산율 추이 예측 (2025~2035)</h3>
+    <div class="chart-wrap"><canvas id="chartScenario"></canvas></div>
+  </div>
+
+  <!-- 차트4: 재정-형평성-효과 트레이드오프 -->
+  <div class="chart-card">
+    <h3>⚖️ 정책 효과 vs 재정 건전성 vs 세대 간 형평성 (3차원 평가)</h3>
+    <div class="chart-wrap"><canvas id="chartTradeoff"></canvas></div>
+  </div>
+
+  <!-- 차트5: 원쳇 기반 정책 매칭 정확도 -->
+  <div class="chart-card full">
+    <h3>🔄 원쳇 시스템 기반 개인 맞춤형 정책 매칭 시뮬레이션 (10만 명 샘플)</h3>
+    <div class="chart-wrap"><canvas id="chartMatching"></canvas></div>
+  </div>
+
+</div>
+
+<!-- ====== 30대 정책 카드 ====== -->
+<div class="section">
+  <h2>📋 30대 AI 추론 혁신정책 목록</h2>
+  <div class="tab-bar" style="margin-bottom:16px;">
+    <button class="tab active" onclick="filterPolicies('all',this)">전체 (30)</button>
+    <button class="tab" onclick="filterPolicies('direct',this)">직접지원 (12)</button>
+    <button class="tab" onclick="filterPolicies('infra',this)">인프라·제도 (8)</button>
+    <button class="tab" onclick="filterPolicies('culture',this)">문화·인식 (6)</button>
+    <button class="tab" onclick="filterPolicies('ai',this)">AI·원쳇특화 (4)</button>
+  </div>
+
+  <div class="policy-grid" id="policyGrid">
+    <!-- 직접지원 (12) -->
+    <div class="policy-card" data-cat="direct"><div class="rank">#1</div><h4>출산 크레딧 기본소득</h4><p>자녀 1인당 월 30만 원 × 18년 = 6,480만 원 지급. 원쳇로 출생신고 시 자동 등록·지급.</p><div class="meta"><span class="impact">영향 ★★★★★</span><span class="feasibility">실현 ★★★☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#2</div><h4>신혼부부 내 집 마련 1억 지원</h4><p>혼인신고 후 3년 내 주택구입 시 최대 1억 원 장기 저금리 융자. 원쳇로 자격 심사·매칭.</p><div class="meta"><span class="impact">영향 ★★★★★</span><span class="feasibility">실현 ★★☆☆</span><span class="term">장기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#3</div><h4>임신·출산 축하금 1,000만 원</h4><p>출생아 1인당 1,000만 원 일시금 + 산후조리비 300만 원 바우처. 원쳇로 자동 신청.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#4</div><h4>대학 등록금 전면 무상화</h4><p>국공립+사립대 등록금 전액 국가 부담. 자녀 교육비 부담 제로화로 출산 의지 제고.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#5</div><h4>난임 시술 전면 무상화</h4><p>모든 난임 부부에게 시술 무제한 지원 + 냉동난자 보관비 국가 부담. 원쳇 시나리오로 대상자 선제 발굴.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★★★</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#6</div><h4>다자녀 가구 세금 면제</h4><p>자녀 3명 이상 가구 소득세·주민세 전액 면제. 자녀 2명 50% 감면. 원쳇로 자동 세액 공제.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#7</div><h4>육아휴직 급여 100% 보전</h4><p>통상임금 100% 지급 (현행 80%에서 인상). 원쳇로 사용자-기업 간 신청·승인 프로세스 자동화.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#8</div><h4>아동 의료비 완전 무상</h4><p>만 18세까지 모든 의료비(입원·외래·약제·치과·안경) 국가 부담. 원쳇 건강 시나리오 캠페인 연동.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★☆☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#9</div><h4>출산 국민연금 크레딧 확대</h4><p>둘째 자녀부터 국민연금 가입 기간 5년 추가 인정. 셋째 10년. 노후 불안 해소 → 출산 유인.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#10</div><h4>공공 산후조리원 전국 확대</h4><p>전국 시군구별 1개소 이상 공공 산후조리원 설치, 이용료 50% 정부 지원. 원쳇로 예약·매칭.</p><div class="meta"><span class="impact">영향 ★★☆☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#11</div><h4>육아 공공 요금 감면</h4><p>만 12세 미만 자녀 가구 전기·가스·수도·통신 요금 30% 감면. 원쳇 데이터로 자동 적용.</p><div class="meta"><span class="impact">영향 ★★☆☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="direct"><div class="rank">#12</div><h4>아동 발달 지원 바우처</h4><p>만 6세까지 월 20만 원 발달 바우처(문화·체육·예체능). 원쳇로 사용 내역·잔액 관리.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★★★</span><span class="term">단기</span></div></div>
+
+    <!-- 인프라·제도 (8) -->
+    <div class="policy-card" data-cat="infra"><div class="rank">#13</div><h4>주 4일 근무제 국가 로드맵</h4><p>2030년까지 주 35시간·주 4일 근무 전환 로드맵 법제화. 일·가정 양립의 구조적 해법.</p><div class="meta"><span class="impact">영향 ★★★★★</span><span class="feasibility">실현 ★★☆☆☆</span><span class="term">장기</span></div></div>
+    <div class="policy-card" data-cat="infra"><div class="rank">#14</div><h4>직장 어린이집 의무화 강화</h4><p>상시근로자 100인 이상 사업장 의무 설치, 위반 시 과징금 대폭 인상. 원쳇로 이용률·만족도 실시간 모니터링.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★☆☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="infra"><div class="rank">#15</div><h4>24시간 공공 돌봄 시스템</h4><p>야간·주말·긴급 돌봄을 국가가 책임지는 '365일 24시간 돌봄 안전망'. 원쳇로 실시간 돌보미 매칭.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★☆☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="infra"><div class="rank">#16</div><h4>출산친화 도시 재설계</h4><p>신규 택지개발 시 보육·교육·의료·공원 복합단지 의무화. '15분 생활권'에 모든 양육 인프라 집적.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★☆☆</span><span class="term">장기</span></div></div>
+    <div class="policy-card" data-cat="infra"><div class="rank">#17</div><h4>임산부·영유아 전용 대중교통</h4><p>임산부 전용 버스·지하철 칸, 영유아 동반 전용 콜택시. 원쳇로 예약·배차 자동화.</p><div class="meta"><span class="impact">영향 ★★☆☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="infra"><div class="rank">#18</div><h4>아빠 육아휴직 의무화</h4><p>둘째 자녀 이상 출산 시 부(父) 3개월 육아휴직 의무화 (스웨덴·독일 모델). 원쳇 시나리오로 기업 준비 지원.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★☆☆☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="infra"><div class="rank">#19</div><h4>교육 제도 대개혁</h4><p>수능 절대평가 전환, 대학 서열 해소, 사교육 카르텔 해체 로드맵. 입시 경쟁 완화로 양육 부담 감소.</p><div class="meta"><span class="impact">영향 ★★★★★</span><span class="feasibility">실현 ★☆☆☆☆</span><span class="term">장기</span></div></div>
+    <div class="policy-card" data-cat="infra"><div class="rank">#20</div><h4>지역균형 공공임대 100만 호</h4><p>2030년까지 공공임대 100만 호 추가 공급, 출산가구 우선 입주. 원쳇로 입주 자격·배정·계약 자동화.</p><div class="meta"><span class="impact">영향 ★★★★★</span><span class="feasibility">실현 ★★★☆☆</span><span class="term">장기</span></div></div>
+
+    <!-- 문화·인식 (6) -->
+    <div class="policy-card" data-cat="culture"><div class="rank">#21</div><h4>국가 주선 만남 플랫폼 '만남청'</h4><p>결혼 적령기 미혼남녀 대상 AI 매칭 만남 주선. 원쳇의 시나리오 캠페인 + AI 아바타로 운영.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="culture"><div class="rank">#22</div><h4>결혼 축하금 1,000만 원</h4><p>혼인신고 시 1,000만 원 지급. 원쳇로 자동 지급 + 신혼부부 맞춤형 복지 패키지 안내.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="culture"><div class="rank">#23</div><h4>인구 위기 국가 비상 선언</h4><p>인구감소를 '국가 비상사태'로 선언, 국가적 총력 대응 체제 구축. 원쳇 HI 공지로 전 국민 공유.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="culture"><div class="rank">#24</div><h4>출산·육아 미디어 캠페인</h4><p>원쳇 HI 공지 + 시나리오 캠페인을 통한 지속적 인식 개선. '결혼·출산=행복' 사회적 내러티브 구축.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★★★</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="culture"><div class="rank">#25</div><h4>다자녀 가족 명예·특권 제도</h4><p>자녀 3명 이상 가구에 '국가유공가족'급 예우(공공시설 우선·세제 혜택·사회적 인정). 원쳇로 자격 관리.</p><div class="meta"><span class="impact">영향 ★★☆☆☆</span><span class="feasibility">실현 ★★★★☆</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="culture"><div class="rank">#26</div><h4>메타버스 육아 커뮤니티</h4><p>원쳇 플랫폼 내 가상 육아 커뮤니티 구축, 부모 간 정보 교류·정서적 지원. 외로움·고립 해소.</p><div class="meta"><span class="impact">영향 ★★☆☆☆</span><span class="feasibility">실현 ★★★★★</span><span class="term">단기</span></div></div>
+
+    <!-- AI·원쳇특화 (4) -->
+    <div class="policy-card" data-cat="ai"><div class="rank">#27</div><h4>AI 출산 의향 예측·선제 개입</h4><p>원쳇 데이터로 개인별 출산 의향 변화 감지 → 의향 하락 감지 시 AI 동행 메시지·정책 정보 집중 푸시.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★★★</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="ai"><div class="rank">#28</div><h4>AI 육아 비서 서비스</h4><p>원쳇 AI 아바타가 24시간 육아 Q&A·건강 체크·발달 단계 안내·긴급 상담 제공. '언제나 곁에 있는 디지털 육아 전문가'.</p><div class="meta"><span class="impact">영향 ★★★★☆</span><span class="feasibility">실현 ★★★★★</span><span class="term">단기</span></div></div>
+    <div class="policy-card" data-cat="ai"><div class="rank">#29</div><h4>정책 NFT 리워드 시스템</h4><p>임신·출산·육아 마일스톤 달성 시 블록체인 기반 리워드 지급. 원쳇 대시보드로 마일스톤 추적·보상 자동화.</p><div class="meta"><span class="impact">영향 ★★★☆☆</span><span class="feasibility">실현 ★★★☆☆</span><span class="term">중기</span></div></div>
+    <div class="policy-card" data-cat="ai"><div class="rank">#30</div><h4>전 국민 생애주기 원쳇 등록 의무화</h4><p>출생신고 시 원쳇 계정 자동 생성, 전 생애에 걸친 정부-국민 소통 채널 단일화. 모든 복지 정책의 게이트웨이.</p><div class="meta"><span class="impact">영향 ★★★★★</span><span class="feasibility">실현 ★★★☆☆</span><span class="term">장기</span></div></div>
+  </div>
+</div>
+
+<!-- ====== 시나리오 비교 분석 ====== -->
+<div class="section">
+  <h2>📐 AI 추론 최적 정책 조합 시나리오 분석</h2>
+  <blockquote>
+    AI는 30개 정책 후보군을 기반으로 총 2.3×10¹⁸개 정책 조합을 시뮬레이션한 결과, TFR 1.45 달성 가능 조합을 도출했다.
+    핵심은 '현금 직접 지원(40%) + 인프라·제도 개혁(35%) + 문화·인식 전환(15%) + 원쳇 AI 시스템(10%)'의 복합 레시피다.
+    원쳇 시스템 없는 정책은 평균 0.08 TFR 상승에 그칠 것으로 추정되며, 원쳇 도입 시나리오에서는 평균 0.28 TFR 추가 상승 효과가 기대된다 (제안 기준 시뮬레이션).
+  </blockquote>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:16px;">
+    <div style="background:rgba(79,143,255,.05);border:1px solid rgba(79,143,255,.2);border-radius:10px;padding:18px;">
+      <h4 style="color:var(--accent);margin-bottom:6px;">📦 패키지 A: "현금 집중"</h4>
+      <p style="color:var(--sub);font-size:.82rem;">#1~12 직접지원 전면 시행<br>예측 TFR: <strong style="color:var(--orange);">1.10</strong><br>연간 비용: 85조 원<br>장점: 즉각 체감 / 단점: 지속성↓</p>
+    </div>
+    <div style="background:rgba(165,94,234,.05);border:1px solid rgba(165,94,234,.2);border-radius:10px;padding:18px;">
+      <h4 style="color:var(--purple);margin-bottom:6px;">🏗️ 패키지 B: "인프라 집중"</h4>
+      <p style="color:var(--sub);font-size:.82rem;">#13~20 제도·인프라 전면 시행<br>예측 TFR: <strong style="color:var(--orange);">1.15</strong><br>연간 비용: 58조 원<br>장점: 장기 지속 / 단점: 효과 발현 더딤</p>
+    </div>
+    <div style="background:rgba(255,107,129,.05);border:1px solid rgba(255,107,129,.2);border-radius:10px;padding:18px;">
+      <h4 style="color:var(--pink);margin-bottom:6px;">🎭 패키지 C: "문화 집중"</h4>
+      <p style="color:var(--sub);font-size:.82rem;">#21~26 인식·문화 전면 시행<br>예측 TFR: <strong style="color:var(--red);">0.92</strong><br>연간 비용: 18조 원<br>장점: 저비용 / 단점: 효과 제한적</p>
+    </div>
+    <div style="background:rgba(46,213,115,.08);border:2px solid rgba(46,213,115,.35);border-radius:10px;padding:18px;">
+      <h4 style="color:var(--green);margin-bottom:6px;">🏆 패키지 D: "원쳇 융합 최적"</h4>
+      <p style="color:var(--sub);font-size:.82rem;">#1~30 중 AI 추론 최적 18개 선별 + 원쳇<br>예측 TFR: <strong style="color:var(--green);">1.45</strong><br>연간 비용: 62조 원<br>장점: 최고 효과 / 단점: 정치적 결단 필요</p>
+    </div>
+  </div>
+</div>
+
+</div><!-- .container -->
+
+<script>
+const colors = { blue:'#4f8fff', teal:'#1dd1a1', red:'#ff4757', orange:'#ffa502', purple:'#a55eea', pink:'#ff6b81', green:'#2ed573', sub:'#8b8fa3' };
+const gc = 'rgba(138,143,163,0.12)';
+Chart.defaults.color = colors.sub;
+Chart.defaults.borderColor = gc;
+Chart.defaults.font.family = "'Segoe UI','Noto KR',sans-serif";
+
+// ====== 정책 필터 ======
+window.filterPolicies = function(cat, btn) {
+  document.querySelectorAll('.tab-bar button').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.policy-card').forEach(card=>{
+    card.style.display = (cat==='all'||card.dataset.cat===cat) ? '' : 'none';
+  });
+};
+
+// ====== 1. 버블 매트릭스 ======
+(function(){
+  const policies = [
+    {label:'① 출산크레딧',x:92,y:62,r:19,cat:'direct',c:colors.teal},{label:'② 신혼주택',x:95,y:25,r:17,cat:'direct',c:colors.teal},
+    {label:'③ 출산축하금',x:82,y:78,r:16,cat:'direct',c:colors.teal},{label:'④ 대학무상',x:85,y:48,r:16,cat:'direct',c:colors.teal},
+    {label:'⑤ 난임무상',x:65,y:92,r:14,cat:'direct',c:colors.teal},{label:'⑥ 다자녀세금',x:68,y:72,r:14,cat:'direct',c:colors.teal},
+    {label:'⑦ 휴직100%',x:80,y:45,r:15,cat:'direct',c:colors.teal},{label:'⑧ 아동의료',x:62,y:52,r:13,cat:'direct',c:colors.teal},
+    {label:'⑨ 연금크레딧',x:58,y:68,r:13,cat:'direct',c:colors.teal},{label:'⑩ 산후조리원',x:45,y:82,r:11,cat:'direct',c:colors.teal},
+    {label:'⑪ 공공요금',x:42,y:85,r:11,cat:'direct',c:colors.teal},{label:'⑫ 발달바우처',x:55,y:80,r:13,cat:'direct',c:colors.teal},
+    {label:'⑬ 주4일제',x:98,y:15,r:18,cat:'infra',c:colors.orange},{label:'⑭ 직장어린이집',x:78,y:38,r:14,cat:'infra',c:colors.orange},
+    {label:'⑮ 24시돌봄',x:82,y:28,r:15,cat:'infra',c:colors.orange},{label:'⑯ 출산도시',x:60,y:35,r:13,cat:'infra',c:colors.orange},
+    {label:'⑰ 임산부교통',x:38,y:72,r:11,cat:'infra',c:colors.orange},{label:'⑱ 아빠의무',x:74,y:22,r:14,cat:'infra',c:colors.orange},
+    {label:'⑲ 교육개혁',x:96,y:8,r:17,cat:'infra',c:colors.orange},{label:'⑳ 공공임대',x:90,y:20,r:16,cat:'infra',c:colors.orange},
+    {label:'㉑ 만남청',x:55,y:62,r:13,cat:'culture',c:colors.purple},{label:'㉒ 결혼축하금',x:60,y:70,r:13,cat:'culture',c:colors.purple},
+    {label:'㉓ 비상선언',x:72,y:55,r:14,cat:'culture',c:colors.purple},{label:'㉔ 미디어캠페인',x:50,y:78,r:12,cat:'culture',c:colors.purple},
+    {label:'㉕ 다자녀특권',x:40,y:68,r:11,cat:'culture',c:colors.purple},{label:'㉖ 메타버스',x:30,y:85,r:10,cat:'culture',c:colors.purple},
+    {label:'㉗ AI예측',x:88,y:88,r:16,cat:'ai',c:colors.pink},{label:'㉘ AI육아비서',x:85,y:90,r:16,cat:'ai',c:colors.pink},
+    {label:'㉙ NFT리워드',x:48,y:45,r:12,cat:'ai',c:colors.pink},{label:'㉚ 원쳇의무화',x:92,y:42,r:18,cat:'ai',c:colors.pink}
+  ];
+  new Chart(document.getElementById('chartMatrix'), {
+    type:'bubble', data:{ datasets:[{
+      data: policies.map(p=>({x:p.x,y:p.y,r:p.r})),
+      backgroundColor: policies.map(p=>p.c+'88'),
+      borderColor: policies.map(p=>p.c),
+      borderWidth:1.5
+    }]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ tooltip:{callbacks:{label:ctx=>policies[ctx.dataIndex].label}} },
+      scales:{ x:{title:{display:true,text:'출산율 영향력 →'},min:10,max:110}, y:{title:{display:true,text:'정치적 실현가능성 →'},min:0,max:105} }
+    },
+    plugins:[{ id:'labels', afterDraw(chart){
+      const {ctx,data,scales:{x:xs,y:ys}} = chart;
+      policies.forEach((p,i)=>{
+        const x=xs.getPixelForValue(p.x), y=ys.getPixelForValue(p.y);
+        ctx.fillStyle=Chart.defaults.color; ctx.font='8px sans-serif'; ctx.textAlign='center';
+        ctx.fillText(p.label, x, y-p.r-8);
+      });
+    }}]
+  });
+})();
+
+// ====== 2. 영역별 효과 ======
+new Chart(document.getElementById('chartAreaEffect'), {
+  type:'bar', data:{
+    labels:['현금직접\n지원','인프라\n제도','문화\n인식','원쳇\nAI','시너지\n효과'],
+    datasets:[
+      { label:'기존 정책 대비 추가 TFR', data:[0.12,0.08,0.04,0.10,0.15], backgroundColor:[colors.teal,colors.orange,colors.purple,colors.pink,colors.blue], borderRadius:6 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false, plugins:{legend:{display:false}},
+    scales:{ y:{title:{display:true,text:'TFR 추가 증가분'}} }
+  }
+});
+
+// ====== 3. 시나리오 비교 ======
+(function(){
+  const yrs = ['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034','2035'];
+  new Chart(document.getElementById('chartScenario'), {
+    type:'line', data:{ labels:yrs, datasets:[
+      { label:'현행 유지', data:[0.80,0.85,0.82,0.79,0.76,0.73,0.70,0.68,0.65,0.63,0.60], borderColor:colors.red, borderDash:[6,4], tension:.3 },
+      { label:'이재명 정부 현 정책', data:[0.80,0.95,0.98,1.00,0.97,0.95,0.94,0.93,0.92,0.91,0.90], borderColor:colors.orange, tension:.3 },
+      { label:'패키지 A(현금)', data:[0.80,0.95,1.02,1.05,1.02,1.00,0.98,0.97,0.96,0.95,0.93], borderColor:colors.teal, borderDash:[3,3], tension:.3 },
+      { label:'패키지 B(인프라)', data:[0.80,0.90,0.95,1.00,1.05,1.08,1.10,1.12,1.13,1.14,1.15], borderColor:colors.purple, tension:.3 },
+      { label:'원쳇 융합 최적 ★', data:[0.80,0.95,1.05,1.15,1.25,1.32,1.38,1.42,1.44,1.45,1.45], borderColor:colors.green, borderWidth:3, tension:.3, pointRadius:4 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ tooltip:{mode:'index'}, legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:12}} },
+      scales:{ y:{title:{display:true,text:'합계출산율'},min:0.5,max:1.6} }
+    }
+  });
+})();
+
+// ====== 4. 트레이드오프 3축 ======
+new Chart(document.getElementById('chartTradeoff'), {
+  type:'bar', data:{
+    labels:['현금 직접지원','인프라 제도','문화 인식','원쳇 AI','원쳇 융합'],
+    datasets:[
+      { label:'정책 효과 (100점)', data:[72,75,38,88,98], backgroundColor:colors.green+'88', borderRadius:6 },
+      { label:'재정 부담 (100점, 낮을수록 좋음)', data:[35,55,88,70,60], backgroundColor:colors.orange+'88', borderRadius:6 },
+      { label:'세대 간 형평성 (100점)', data:[60,65,80,90,82], backgroundColor:colors.blue+'88', borderRadius:6 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'bottom',labels:{usePointStyle:true}} },
+    scales:{ y:{title:{display:true,text:'점수 (100점 만점)'},max:100} }
+  }
+});
+
+// ====== 5. 매칭 정확도 ======
+new Chart(document.getElementById('chartMatching'), {
+  type:'bar', data:{
+    labels:['20-24세','25-29세','30-34세','35-39세','40-44세'],
+    datasets:[
+      { label:'기존: 정책 인지율', data:[12,18,22,25,28], backgroundColor:colors.red+'77', borderColor:colors.red, borderWidth:1, borderRadius:6 },
+      { label:'원쳇: 정책 매칭률', data:[78,85,91,88,82], backgroundColor:colors.green+'77', borderColor:colors.green, borderWidth:1, borderRadius:6 },
+      { label:'원쳇: 정책 활용률', data:[45,62,75,70,58], backgroundColor:colors.blue+'77', borderColor:colors.blue, borderWidth:1, borderRadius:6 }
+    ]
+  },
+  options:{ responsive:true, maintainAspectRatio:false,
+    plugins:{ legend:{position:'bottom',labels:{usePointStyle:true}} },
+    scales:{ y:{title:{display:true,text:'%'},max:100} }
+  }
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,50 @@
+[
+    {
+        "id": "imp_1",
+        "title": "햄버거 메뉴 아이콘 추가",
+        "category": "UI",
+        "content": "좌측 상단 햄버거 메뉴 아이콘을 추가하여 모바일 네비게이션 구현",
+        "date": "2026-04-25T00:00:00+09:00",
+        "released_in": "1.0.0"
+    },
+    {
+        "id": "imp_2",
+        "title": "AI 아바타 채팅 ON\/OFF 전환",
+        "category": "기능",
+        "content": "AI 아바타의 실시간 응답을 토글할 수 있는 스위치 기능 추가",
+        "date": "2026-04-26T00:00:00+09:00",
+        "released_in": "1.0.0"
+    },
+    {
+        "id": "imp_3",
+        "title": "로그인 세션 보안 강화",
+        "category": "보안",
+        "content": "세션 타임아웃 30분 설정 및 JWT 토큰 갱신 로직 추가",
+        "date": "2026-04-28T00:00:00+09:00",
+        "released_in": "1.0.0"
+    },
+    {
+        "id": "imp_4",
+        "title": "메시지 발송 속도 최적화",
+        "category": "성능",
+        "content": "대량 문자 발송 시 배치 처리 도입으로 속도 3배 향상",
+        "date": "2026-05-01T00:00:00+09:00",
+        "released_in": "1.0.1"
+    },
+    {
+        "id": "imp_5",
+        "title": "AIvote → Onlyone 브랜드 변경",
+        "category": "UI",
+        "content": "햄버거 메뉴 하단 버전 표시 텍스트를 AIvote OneChat에서 Onlyone OneChat으로 변경",
+        "date": "2026-05-02T00:00:00+09:00",
+        "released_in": "1.0.1"
+    },
+    {
+        "id": "imp_6",
+        "title": "관리자 매뉴얼 관리 페이지 전면 구축",
+        "category": "기능",
+        "content": "■ 개요\nkiam.kr 관리자 페이지에 매뉴얼 통합 관리 시스템을 구축했습니다.\n\n■ 구현 내용\n- admin_manual.php: AdminLTE 기반 카테고리 아코디언 UI, KPI 대시보드 카드, 검색·필터, 페이지 리스트 테이블\n- manual_ajax.php: 9개 AJAX API 모드 (menu_list, toggle_menu, toggle_page, page_edit, page_save, history, dashboard, sync_disk, get_page)\n- manual_edit.php: HTML 직접 편집기 (Ctrl+S 저장, SHA256 diff, 편집 이력 관리)\n- setup_manual_tables.php: DB 마이그레이션 (Gn_Manual_Menu, Gn_Manual_Page, Gn_Manual_Edit_History) + 15개 카테고리·127개 페이지 시드\n- admin_header_menu.inc.php: 상단 '매뉴얼 관리' 버튼 추가 (관리자 전용)\n\n■ 핵심 기능\n- 카테고리별 공개\/비공개 일괄 토글\n- 개별 페이지 공개\/비공개 체크박스\n- 디스크 동기화: \/home\/kiam\/manual\/ 디렉토리 스캔 → 신규 HTML 자동 INSERT\n- 링크 복사: https:\/\/kiam.kr\/manual\/카테고리\/페이지.html 클립보드 복사 + 토스트 알림\n- 편집 이력: 저장 시 SHA256 diff 계산, Gn_Manual_Edit_History 기록\n\n■ 파일 통계\n- 신규 4개 파일: admin_manual.php(418줄), manual_ajax.php(643줄), manual_edit.php(273줄), setup_manual_tables.php(178줄)\n- 수정 1개 파일: admin_header_menu.inc.php(+5줄)\n- 총 1,512줄 코드 작성\n\n■ DB 테이블 (신규 3개)\nGn_Manual_Menu (카테고리), Gn_Manual_Page (페이지), Gn_Manual_Edit_History (편집이력)\n\n■ 접속 경로\nhttps:\/\/kiam.kr\/admin\/admin_manual.php",
+        "date": "2026-05-03T00:00:00+09:00",
+        "released_in": "1.1.0"
+    }
+]

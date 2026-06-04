@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>문제 해결 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">DB 수집 (온리원디버)</div>
+      <a href="/manual/diver/" class="sb-link">🔍 DB 수집 소개</a>
+      <a href="/manual/diver/install.html" class="sb-link">💿 설치 및 시작하기</a>
+      <a href="/manual/diver/search.html" class="sb-link">🔎 검색 기술 가이드</a>
+      <a href="/manual/diver/collect.html" class="sb-link">📊 디비 수집 방법</a>
+      <a href="/manual/diver/utilize.html" class="sb-link">📤 수집 DB 활용하기</a>
+      <a href="/manual/diver/updater.html" class="sb-link">🔄 디버 업데이터</a>
+      <a href="/manual/diver/troubleshoot.html" class="sb-link active">🛠️ 문제 해결</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/diver/">DB 수집(온리원디버)</a><span class="sep">›</span>
+      <span>문제 해결</span>
+    </div>
+    <h1>🛠️ 문제 해결 (Troubleshooting)</h1>
+    <p class="page-desc">온리원디버 사용 중 발생할 수 있는 주요 문제와 해결 방법, 검색 기술 교육, 위탁 수집 옵션을 안내합니다.</p>
+
+    <!-- 자주 묻는 질문 -->
+    <h2 id="faq">자주 묻는 질문 (FAQ)</h2>
+
+    <div class="faq-item" style="margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--card-bg);padding:16px;font-weight:700;display:flex;align-items:flex-start;gap:8px;">
+        <span style="color:var(--brand);flex-shrink:0;">❓</span>
+        <span>수집은 되는데 원하는 디비가 아닙니다. 왜 그런가요?</span>
+      </div>
+      <div style="padding:16px;line-height:1.8;">
+        <p>온리원디버는 <strong>고객이 입력한 검색어에 의해 작동하는 솔루션</strong>입니다. 원하는 DB가 나오지 않는 이유는 대부분 <strong>검색 기술 부족</strong> 때문입니다.</p>
+        <ul style="list-style:disc;padding-left:20px;margin-top:8px;">
+          <li>DB 공개자가 자신을 소개하는 방식(호칭·직위)을 정확히 이해해야 함</li>
+          <li>예: 의사는 "의사"보다 "전문의"로 소개 → "전문의"로 검색</li>
+          <li>네이버에서 먼저 검색어를 테스트(샘플링)한 후 디버에 입력하세요</li>
+          <li><a href="/manual/diver/search.html">→ 검색 기술 가이드 보기</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item" style="margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--card-bg);padding:16px;font-weight:700;display:flex;align-items:flex-start;gap:8px;">
+        <span style="color:var(--brand);flex-shrink:0;">❓</span>
+        <span>페이지 수는 늘어가는데 수집 건수가 안 늘어요.</span>
+      </div>
+      <div style="padding:16px;line-height:1.8;">
+        <ul style="list-style:disc;padding-left:20px;">
+          <li><strong>컴퓨터 속도 문제</strong>: 컴퓨터가 느리면 페이지 로딩이 지연되어 수집이 누락됩니다.</li>
+          <li><strong>인터넷 불안정</strong>: 와이파이가 불안정하면 페이지를 패스하게 됩니다.</li>
+          <li>해결: 유선 인터넷 사용, 불필요한 프로그램 종료, Chrome 캐시 정리</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item" style="margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--card-bg);padding:16px;font-weight:700;display:flex;align-items:flex-start;gap:8px;">
+        <span style="color:var(--brand);flex-shrink:0;">❓</span>
+        <span>검색 결과가 500개인데 실제 수집된 건수는 왜 다른가요?</span>
+      </div>
+      <div style="padding:16px;line-height:1.8;">
+        <p>검색 결과 수는 <strong>네이버의 페이지 수</strong>이고, 수집 결과 수는 그 페이지들 안에 있는 <strong>실제 DB의 건수</strong>입니다. 한 페이지 내에 오류 표기·중복·2개 이상의 DB가 있을 수 있어 차이가 발생합니다. 이는 정상적인 현상입니다.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" style="margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--card-bg);padding:16px;font-weight:700;display:flex;align-items:flex-start;gap:8px;">
+        <span style="color:var(--brand);flex-shrink:0;">❓</span>
+        <span>예상 수집 시간과 실제 시간이 너무 차이나요.</span>
+      </div>
+      <div style="padding:16px;line-height:1.8;">
+        <p>예상 시간은 단순히 "검색건수 × 검색시간"으로 계산되지만, 실제로는 각 페이지마다 포함된 DB의 형태가 달라 검색 시간이 달라집니다. 페이지에 DB가 많거나 복잡하면 더 오래 걸립니다.</p>
+      </div>
+    </div>
+
+    <div class="faq-item" style="margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--card-bg);padding:16px;font-weight:700;display:flex;align-items:flex-start;gap:8px;">
+        <span style="color:var(--brand);flex-shrink:0;">❓</span>
+        <span>저장이 안 되거나 오류가 발생해요.</span>
+      </div>
+      <div style="padding:16px;line-height:1.8;">
+        <ul style="list-style:disc;padding-left:20px;">
+          <li><strong>MS Excel 정식판 확인 문제</strong>: 2016 이상 버전에서 xls 저장 시 오류 발생 가능 → <strong>csv</strong>로 저장 후 변환</li>
+          <li><strong>저장 창을 못 찾는 경우</strong>: <strong>Alt+Tab</strong>을 눌러 저장 창을 찾으세요</li>
+          <li><strong>저장 중 창을 닫지 마세요</strong>: xls는 내부 처리량이 많아 시간이 더 걸립니다</li>
+          <li>컴퓨터를 끄거나 절전 모드로 전환하지 마세요</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item" style="margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--card-bg);padding:16px;font-weight:700;display:flex;align-items:flex-start;gap:8px;">
+        <span style="color:var(--brand);flex-shrink:0;">❓</span>
+        <span>디버 업데이터 실행 시 "실행파일을 찾을 수 없습니다" 오류가 떠요.</span>
+      </div>
+      <div style="padding:16px;line-height:1.8;">
+        <p>업데이트 완료 후 온리원.exe가 존재하지 않을 때 발생합니다.</p>
+        <ul style="list-style:disc;padding-left:20px;">
+          <li>디버 설치 폴더에 <strong>온리원.exe</strong> 파일이 있는지 확인</li>
+          <li>없으면 디버를 재설치하거나 관리자에게 문의</li>
+          <li>바이러스 백신이 파일을 삭제했을 가능성도 확인</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item" style="margin-bottom:24px;border:1px solid var(--border);border-radius:8px;overflow:hidden;">
+      <div style="background:var(--card-bg);padding:16px;font-weight:700;display:flex;align-items:flex-start;gap:8px;">
+        <span style="color:var(--brand);flex-shrink:0;">❓</span>
+        <span>ChromeDriver 관련 오류가 발생합니다.</span>
+      </div>
+      <div style="padding:16px;line-height:1.8;">
+        <p>Chrome 브라우저와 ChromeDriver 버전 불일치가 주요 원인입니다.</p>
+        <ul style="list-style:disc;padding-left:20px;">
+          <li>Chrome을 <strong>최신 버전으로 업데이트</strong>하세요</li>
+          <li><strong>드럼통 아이콘</strong>으로 실행하면 ChromeDriver 자동 업데이트</li>
+          <li>Chrome 115+ 사용 시 <a href="/manual/diver/updater.html#chromedriver">업데이터 매뉴얼</a> 참조</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- 오류 대처 -->
+    <h2 id="errors">주요 오류 코드 및 대처</h2>
+    <table class="m-table">
+      <thead><tr><th>오류 상황</th><th>원인</th><th>해결 방법</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>수집 건수 0</strong></td>
+          <td>검색 조건이 너무 좁거나 잘못된 검색어</td>
+          <td>네이버에서 검색어 샘플링 → 조건 완화 (따옴표 제거, OR 검색 활용)</td>
+        </tr>
+        <tr>
+          <td><strong>잔량 부족</strong></td>
+          <td>종량제 수집 건수 소진</td>
+          <td>관리자에게 유료 추가 요청 (1,000건당 10,000원)</td>
+        </tr>
+        <tr>
+          <td><strong>네이버 IP 차단</strong></td>
+          <td>검색 간격이 너무 짧음 (예: 1초)</td>
+          <td>검색 간격을 기본값으로 늘리기. 일시 중지 후 재개</td>
+        </tr>
+        <tr>
+          <td><strong>지도 수집 안 됨</strong></td>
+          <td>010→0507 변경으로 번호 감소 / 잘못된 지역·키워드 설정</td>
+          <td>지도 검색 지침 확인(물음표 클릭). 050X·지역번호 포함 선택</td>
+        </tr>
+        <tr>
+          <td><strong>와이파이 불안정</strong></td>
+          <td>여러 명 동시 사용 / 신호 약함</td>
+          <td>유선 인터넷 전환. 혼잡 시간대 피하기</td>
+        </tr>
+        <tr>
+          <td><strong>설치 시 차단</strong></td>
+          <td>보안 프로그램이 설치 막음</td>
+          <td>[추가 정보] → [계속 설치]. 보안 프로그램 일시 중지</td>
+        </tr>
+        <tr>
+          <td><strong>로그인 불가</strong></td>
+          <td>계정 정보 불일치 / 세션 만료</td>
+          <td>kiam.kr에서 재로그인. 계정 정보 확인</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- 검색 기술 교육 -->
+    <h2 id="education">검색 기술 교육 안내</h2>
+    <p>검색 기술이 부족하신 분들을 위해 다음의 교육 옵션을 제공합니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">👤</span>
+        <div class="tn">개인 코칭</div>
+        <div class="td">일대일로 검색 기술을 배우는 과정. 코치에게 별도 비용 지급</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">👥</span>
+        <div class="tn">단체 교육</div>
+        <div class="td">소수~다수 그룹이 모였을 때 검색 기술을 지도하는 과정</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🤝</span>
+        <div class="tn">디비 수집 대행</div>
+        <div class="td">직접 수집이 어려운 경우 전문가에게 맡겨서 수집</div>
+      </div>
+    </div>
+
+    <h3>교육 신청 방법</h3>
+    <p>위 교육·코칭·대행 서비스는 관리자에게 문의하여 신청할 수 있습니다.</p>
+    <div class="tip">
+      💡 <strong>추천</strong>: 검색 기술을 배워두면 디버의 진정한 가치를 100% 활용할 수 있습니다. 초기에는 개인 코칭을 통해 기본기를 익히고, 이후 자체적으로 운영하는 것을 권장합니다.
+    </div>
+
+    <!-- 디버 사용 시 팁 -->
+    <h2 id="tips">디버 사용 꿀팁</h2>
+    <ul style="list-style:disc;padding-left:24px;line-height:2.2;">
+      <li><strong>네이버 로그인 유지</strong> — 디버 실행 전 네이버에 항상 로그인해 두세요</li>
+      <li><strong>웹종류는 단일로</strong> — 여러 웹종류 동시 선택보다 한 종류씩 순차적으로 수집하는 것이 정확도가 높습니다</li>
+      <li><strong>검색 기간 활용</strong> — 최근 데이터가 필요하면 검색 기간을 좁게 설정하세요</li>
+      <li><strong>정확도보다 양</strong> — 따옴표 제거 + 이름 수집 OFF = 많은 건수</li>
+      <li><strong>양보다 정확도</strong> — "직업 010" + 이름 수집 ON + 정확도 1 = 정밀 타겟</li>
+      <li><strong>데이터 마이닝</strong> — 수집 후 엑셀에서 잘못된 결과를 제거하고 필요에 맞게 정리하세요</li>
+      <li><strong>CSV 먼저 저장</strong> — xls 저장 오류 시 CSV로 저장 후 xls 변환하여 업로드</li>
+      <li><strong>주기적 Chrome 업데이트</strong> — Chrome을 항상 최신으로 유지하면 ChromeDriver 호환성 문제 예방</li>
+    </ul>
+
+    <!-- 기술 지원 문의 -->
+    <h2 id="support">기술 지원 문의</h2>
+    <table class="m-table">
+      <thead><tr><th>문의 채널</th><th>연락처 / 링크</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>카카오 상담</strong></td>
+          <td><a href="https://pf.kakao.com/_jVafC/chat" target="_blank">pf.kakao.com/_jVafC/chat</a></td>
+          <td>실시간 상담 가능</td>
+        </tr>
+        <tr>
+          <td><strong>디버 소개 페이지</strong></td>
+          <td><a href="https://kiam.kr/sub_2.php" target="_blank">kiam.kr/sub_2.php</a></td>
+          <td>설치·무료체험·이용매뉴얼 링크</td>
+        </tr>
+        <tr>
+          <td><strong>디버 설치 페이지</strong></td>
+          <td><a href="https://kiam.kr/cliente_list.php?status=1&one_no=85" target="_blank">kiam.kr/cliente_list.php?status=1&one_no=85</a></td>
+          <td>디버 다운로드</td>
+        </tr>
+        <tr>
+          <td><strong>관리자 문의</strong></td>
+          <td>관리자에게 직접 연락</td>
+          <td>잔량 추가·무제한·광고·교육 문의</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="notice" style="margin-top:20px;">
+      📞 <strong>긴급 지원이 필요하신가요?</strong><br>
+      위의 문제 해결 가이드로 해결되지 않는 문제는 <strong>카카오 상담</strong> 또는 관리자에게 직접 문의해 주세요. 신속하게 도와드리겠습니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/diver/updater.html"><span class="nav-label">← 이전</span><span class="nav-title">🔄 디버 업데이터</span></a>
+      <a href="/manual/diver/"><span class="nav-label">처음으로 →</span><span class="nav-title">🔍 DB 수집 소개</span></a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#faq">자주 묻는 질문 (FAQ)</a></li>
+      <li><a href="#errors">주요 오류 코드 및 대처</a></li>
+      <li><a href="#education">검색 기술 교육 안내</a></li>
+      <li><a href="#tips">디버 사용 꿀팁</a></li>
+      <li><a href="#support">기술 지원 문의</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

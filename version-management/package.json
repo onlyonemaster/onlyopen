@@ -1,0 +1,17 @@
+{
+  "name": "onlyone-onechat",
+  "version": "1.1.0",
+  "description": "Onlyone OneChat - Version Management System",
+  "scripts": {
+    "build": "node scripts/inject-version.js",
+    "release": "node scripts/release.js patch",
+    "release:patch": "node scripts/release.js patch",
+    "release:minor": "node scripts/release.js minor",
+    "release:major": "node scripts/release.js major",
+    "version:show": "node scripts/show-version.js",
+    "version:history": "node scripts/version-log.js"
+  },
+  "devDependencies": {
+    "standard-version": "^9.5.0"
+  }
+}

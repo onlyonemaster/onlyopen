@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>매드스위치원 × 원챗 스타일동행 — 4060 여성의류 셀러 브리핑</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --plum:#4A154B;--plum2:#6B2D6E;--deepviolet:#2D1B4E;--wine:#722F37;
+  --gold:#D4A843;--gold2:#E8CC6E;--gold-light:#FCF6E8;
+  --cream:#FFFAF5;--warm-bg:#F5F0EB;--taupe:#6B5E56;
+  --chocolate:#3D2C2A;--heather:#9B8EC4;
+  --danger:#E74C3C;--success:#27AE60;--success2:#2ECC71;
+  --header-bg:#2D1B4E;--header-sub:#B8A8D0;
+  --chat-bg:#FFFAF5;--msg-ai-bg:#FFFFFF;--msg-ai-border:#E5D8CF;
+  --msg-user-bg:#F3EEF9;--msg-user-border:#C4B5E0;
+  --msg-text:#2D1B4E;--time-color:#9E8F80;
+  --tabbar-bg:#2D1B4E;--tab-active:#4A154B;
+}
+html,body{font-family:'Apple SD Gothic Neo','Malgun Gothic','Noto Sans KR',sans-serif;background:var(--deepviolet);color:#2D1B4E;height:100%;overflow:hidden}
+#app-shell{position:fixed;inset:0;display:flex;flex-direction:column;max-width:480px;margin:0 auto;background:var(--chat-bg);overflow:hidden}
+#inv-banner{flex-shrink:0;background:linear-gradient(90deg,#2D1B4E,#4A154B,#2D1B4E);border-bottom:1px solid rgba(212,168,67,0.4);padding:6px 14px;display:flex;align-items:center;gap:8px;z-index:100}
+.ib-brand{font-size:13px;font-weight:800;color:var(--gold);letter-spacing:1px}
+.ib-tag{font-size:11px;color:rgba(255,255,255,0.5);flex:1;text-align:center}
+.ib-badge{background:var(--gold);color:var(--deepviolet);font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px}
+#funnel-bar{flex-shrink:0;background:rgba(45,27,78,0.97);border-bottom:1px solid rgba(212,168,67,0.15);padding:6px 10px;display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;z-index:99}
+#funnel-bar::-webkit-scrollbar{display:none}
+.fs{display:flex;align-items:center;gap:4px;flex-shrink:0}
+.fs-dot{width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;border:1.5px solid rgba(255,255,255,0.12);background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);transition:all 0.2s}
+.fs-lbl{font-size:10px;color:rgba(255,255,255,0.25);white-space:nowrap;transition:all 0.4s}
+.fs.active .fs-dot{background:var(--gold);border-color:var(--gold2);color:var(--deepviolet);box-shadow:0 0 10px rgba(212,168,67,0.5)}
+.fs.active .fs-lbl{color:var(--gold);font-weight:700}
+.fs.done .fs-dot{background:rgba(212,168,67,0.2);border-color:var(--gold);color:var(--gold)}
+.fs.done .fs-lbl{color:rgba(212,168,67,0.55)}
+.fa{color:rgba(255,255,255,0.15);font-size:10px;padding:0 3px;flex-shrink:0}
+.screen{display:none;flex-direction:column;flex:1;min-height:0;overflow-y:auto;animation:fadeUp 0.35s ease both;-webkit-overflow-scrolling:touch}
+.screen.active{display:flex}
+.scr-dark{background:var(--deepviolet)}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+.kiam-header{flex-shrink:0;background:var(--header-bg);padding:11px 14px 9px;display:flex;align-items:flex-start;gap:10px}
+.kh-back{color:#fff;font-size:20px;opacity:0.7;cursor:pointer;margin-top:2px;flex-shrink:0}
+.kh-avatar-char{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0}
+.kh-center{flex:1}
+.kh-title{font-size:17px;font-weight:700;color:#fff;line-height:1.3}
+.kh-sub{font-size:12px;color:var(--header-sub);margin-top:2px}
+.kh-badges{display:flex;gap:5px;margin-top:5px}
+.kh-badge{border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;border:1px solid;display:flex;align-items:center;gap:3px}
+.kh-badge .bdot{width:5px;height:5px;border-radius:50%}
+.kh-badge.myai{color:#2ECC71;border-color:#2ECC71}
+.kh-badge.myai .bdot{background:#2ECC71}
+.kh-badge.user{color:#E8CC6E;border-color:#E8CC6E}
+.kh-badge.state,.kh-badge.aimode{color:#B8A8D0;border-color:#B8A8D0}
+.kh-badge.manager{color:var(--gold);border-color:var(--gold)}
+.kh-badge.manager .bdot{background:var(--gold)}
+.kh-badge.seller{color:#E8CC6E;border-color:#E8CC6E}
+.kh-badge.seller .bdot{background:#E8CC6E}
+.kh-info{font-size:20px;opacity:0.5;color:#fff;flex-shrink:0}
+.green-bar{flex-shrink:0;background:linear-gradient(90deg,#1A0D2E,#2D1B4E);padding:8px 14px;display:flex;align-items:center;gap:9px}
+.gb-icon{font-size:18px}
+.gb-main{font-size:13px;font-weight:700;color:var(--gold)}
+.gb-sub{font-size:11px;color:rgba(255,255,255,0.45)}
+.kiam-tabs{flex-shrink:0;background:var(--header-bg);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;padding:0 10px;gap:2px}
+.kt{padding:8px 12px;font-size:13px;color:rgba(255,255,255,0.38);border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.kt.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700}
+.kiam-msgs{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:11px;background:var(--chat-bg);scroll-behavior:smooth}
+.date-div{text-align:center;font-size:12px;color:var(--time-color);padding:4px 0}
+.row-ai{display:flex;align-items:flex-end;gap:7px;opacity:0;transform:translateY(10px)}
+.ai-av{width:32px;height:32px;border-radius:50%;background:var(--header-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.ai-bubble{max-width:74%;background:var(--msg-ai-bg);border:1px solid var(--msg-ai-border);border-radius:18px 18px 18px 4px;padding:11px 15px;font-size:16px;color:var(--msg-text);line-height:1.7;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
+.ai-time{font-size:10px;color:var(--time-color);margin-top:3px;padding-left:2px}
+.row-user{display:flex;align-items:flex-end;gap:7px;flex-direction:row-reverse;opacity:0;transform:translateY(10px)}
+.user-av{width:32px;height:32px;border-radius:50%;background:var(--plum);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0}
+.user-bubble{max-width:74%;background:var(--msg-user-bg);border:1px solid var(--msg-user-border);border-radius:18px 18px 4px 18px;padding:11px 15px;font-size:16px;color:var(--msg-text);line-height:1.7;box-shadow:0 1px 4px rgba(0,0,0,0.07)}
+.user-time{font-size:10px;color:var(--time-color);margin-top:3px;text-align:right;padding-right:2px}
+@keyframes msgSlideIn{from{opacity:0;transform:translateY(18px) scale(.97)}to{opacity:1;transform:translateY(0) scale(1)}}
+.row-ai.vis,.row-user.vis,.widget-card.vis,.style-result-card.vis,.cross-sell-card.vis,.promise-card.vis,.profile-transition.vis,.manager-profile.vis,.i-pill.vis,.choice-group.vis,.kpi-card-anim.vis{animation:msgSlideIn .38s ease both;opacity:1;transform:translateY(0)}
+.choice-group{display:flex;flex-wrap:wrap;gap:8px;padding:3px 0 3px 39px;opacity:0;transform:translateY(7px);transition:opacity 0.38s,transform 0.38s}
+.choice-group.vis{opacity:1;transform:translateY(0)}
+.choice-btn{padding:10px 18px;border:1.5px solid rgba(212,168,67,0.5);background:rgba(212,168,67,0.08);color:#D4A843;font-size:15px;font-weight:600;border-radius:22px;cursor:pointer;transition:all 0.22s;white-space:nowrap}
+.choice-btn:hover,.choice-btn.sel{background:var(--gold);color:var(--deepviolet);border-color:var(--gold)}
+.choice-btn:disabled{opacity:0.45;cursor:default}
+.widget-card{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:14px;padding:12px;opacity:0;transform:translateY(10px)}
+.widget-card.vis{opacity:1;transform:translateY(0)}
+.widget-card-img{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+.widget-card-body{flex:1;min-width:0}
+.widget-card-title{font-size:13px;font-weight:700;color:#1F2937}
+.widget-card-desc{font-size:11px;color:#6B7280;margin-top:2px}
+.widget-card-btn{background:var(--plum);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
+.style-result-card{display:flex;align-items:center;gap:12px;background:#fff;border:1px solid rgba(0,0,0,0.08);border-radius:16px;padding:14px;opacity:0;transform:translateY(10px);margin-bottom:10px}
+.style-result-card.vis{opacity:1;transform:translateY(0)}
+.src-thumb{width:80px;height:100px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:28px;flex-shrink:0;position:relative;overflow:hidden}
+.src-body{flex:1;min-width:0}
+.src-title{font-size:14px;font-weight:800;color:var(--chocolate);margin-bottom:3px}
+.src-desc{font-size:11px;color:#6B5E56;line-height:1.5;margin-bottom:6px}
+.src-meta{display:flex;align-items:center;gap:8px;font-size:11px}
+.src-price{font-weight:800;color:var(--plum);font-size:15px}
+.src-badge{background:#FFF3E0;color:#E65100;font-size:10px;font-weight:700;padding:2px 8px;border-radius:6px}
+.src-cta{background:var(--plum);color:#fff;border:none;border-radius:8px;padding:6px 14px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0}
+.booking-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:14px;padding:14px;margin-bottom:10px;opacity:0;transform:translateY(10px)}
+.bc-title{font-size:14px;font-weight:700;color:#1F2937;margin-bottom:6px}
+.countdown-bar{background:var(--plum);color:#fff;text-align:center;padding:10px;font-size:14px;font-weight:700;border-radius:8px;margin:8px 0;animation:pulse 2s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+.cross-sell-card{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:12px;padding:10px 12px;opacity:0;transform:translateY(10px)}
+.cross-sell-card.vis{opacity:1;transform:translateY(0)}
+.cross-sell-icon{font-size:28px;flex-shrink:0}
+.cross-sell-info{flex:1}
+.cross-sell-name{font-size:13px;font-weight:700;color:var(--chocolate)}
+.cross-sell-match{font-size:11px;color:var(--plum);font-weight:600}
+.cross-sell-price{font-size:13px;font-weight:800;color:var(--chocolate)}
+.cross-sell-btn{background:var(--gold);color:var(--deepviolet);border:none;border-radius:8px;padding:6px 12px;font-size:11px;font-weight:700;cursor:pointer}
+.profile-transition{text-align:center;font-size:11px;color:var(--time-color);padding:8px 0;opacity:0}
+.manager-profile{display:flex;align-items:center;gap:10px;padding:8px 0;opacity:0}
+.manager-avatar{width:36px;height:36px;border-radius:50%;background:var(--plum);display:flex;align-items:center;justify-content:center;font-size:18px}
+.manager-name{font-size:13px;font-weight:700;color:var(--msg-text)}
+.manager-role{font-size:11px;color:#6B7280}
+.promise-card{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:12px;padding:12px 14px;opacity:0;transform:translateY(10px)}
+.pc-icon{font-size:20px;flex-shrink:0;margin-top:2px}
+.pc-title{font-size:13px;font-weight:700;color:#1F2937;margin-bottom:3px}
+.pc-desc{font-size:12px;color:#6B7280;line-height:1.6}
+.i-pill{display:inline-flex;align-items:center;opacity:0;transform:translateY(7px);gap:5px;background:rgba(212,168,67,0.12);border:1px solid rgba(212,168,67,0.35);color:#E8CC6E;font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;margin:6px 0;letter-spacing:0.2px;line-height:1.5;flex-shrink:0}
+.i-pill::before{content:'F4A1';font-size:11px}
+.i-pill b{color:var(--gold)}
+.i-pill-warn{display:inline-flex;align-items:center;opacity:0;transform:translateY(7px);gap:5px;background:rgba(231,76,60,0.12);border:1px solid rgba(231,76,60,0.35);color:#E74C3C;font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;margin:6px 0;line-height:1.5}
+.i-pill-warn::before{content:'F6A8';font-size:11px}
+.i-pill-warn.vis{opacity:1;transform:translateY(0)}
+.i-pill-win{display:inline-flex;align-items:center;opacity:0;transform:translateY(7px);gap:5px;background:rgba(39,174,96,0.12);border:1px solid rgba(39,174,96,0.35);color:#27AE60;font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;margin:6px 0;line-height:1.5}
+.i-pill-win::before{content:'F680';font-size:11px}
+.i-pill-win.vis{opacity:1;transform:translateY(0)}
+.ai-toggle-bar{flex-shrink:0;background:#F7F4FC;border-top:1px solid rgba(0,0,0,0.06);padding:8px 14px;display:flex;align-items:center;gap:9px}
+.toggle-pill{width:40px;height:22px;background:#2ECC71;border-radius:11px;position:relative;flex-shrink:0;display:flex;align-items:center;padding:2px}
+.toggle-pill::after{content:'F916';font-size:12px;position:absolute;right:3px;width:18px;height:18px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1}
+.ai-toggle-lbl{font-size:13px;color:#6B5E56;display:flex;align-items:center;gap:5px}
+.chat-input-bar{flex-shrink:0;background:#F7F4FC;border-top:1px solid rgba(0,0,0,0.07);padding:9px 12px;display:flex;align-items:center;gap:8px}
+.chat-inp{flex:1;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.08);border-radius:22px;padding:10px 16px;color:var(--msg-text);font-size:15px;outline:none}
+.chat-inp::placeholder{color:#B8A8D0}
+.chat-send{width:38px;height:38px;border-radius:50%;background:var(--plum);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:white;flex-shrink:0}
+.bottom-nav{flex-shrink:0;background:var(--tabbar-bg);padding:8px 9px;display:flex;align-items:center;gap:4px}
+.bn-tab{flex:1;padding:8px 4px;border:none;border-radius:8px;background:transparent;color:rgba(255,255,255,0.35);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap}
+.bn-tab.active{background:var(--tab-active);color:#fff}
+#trans-overlay{position:fixed;inset:0;background:var(--deepviolet);z-index:9999;opacity:0;pointer-events:none;transition:opacity 0.28s ease}
+#trans-overlay.on{opacity:1;pointer-events:all}
+.dark-card{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px 18px;margin:0 16px 16px}
+.dark-card-title{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:13px;font-weight:600}
+.kpi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
+.kpi-card-anim{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 8px;text-align:center;opacity:0;transform:translateY(10px)}
+.kpi-val{font-size:22px;font-weight:900;color:#fff}
+.kpi-val.gold{color:var(--gold)}
+.kpi-val.green{color:#2ECC71}
+.kpi-val.red{color:#E74C3C}
+.kpi-label{font-size:10px;color:rgba(255,255,255,0.38);margin-top:3px}
+.compare-table{width:100%;border-collapse:collapse;font-size:12px}
+.compare-table th{color:rgba(255,255,255,0.35);font-weight:600;padding:6px 8px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.1)}
+.compare-table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.7)}
+.compare-table td.highlight{color:var(--gold);font-weight:700}
+.briefing-summary{padding:0 16px 30px;color:rgba(255,255,255,0.6);font-size:13px;line-height:1.8}
+.briefing-summary b{color:#fff}
+.roi-box{text-align:center;background:linear-gradient(135deg,rgba(212,168,67,0.15),rgba(212,168,67,0.05));border:1px solid rgba(212,168,67,0.35);border-radius:16px;padding:24px;margin:16px}
+.roi-val-big{font-size:42px;font-weight:900;color:var(--gold)}
+.roi-sub{font-size:14px;color:rgba(255,255,255,0.55);margin-top:8px;line-height:1.6}
+.roi-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px 16px}
+.roi-item{background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.06);border-radius:12px;padding:14px;text-align:center}
+.roi-item .num{font-size:26px;font-weight:900;color:var(--gold)}
+.roi-item .lbl{font-size:11px;color:rgba(255,255,255,0.4);margin-top:4px}
+</style>
+</head>
+<body>
+<div id="trans-overlay"></div>
+<div id="app-shell">
+<div id="inv-banner"><span class="ib-brand">매드스위치원 x 원챗 스타일동행</span><span class="ib-tag">4060 여성의류 · 5~10개사 특화 AI 영업 솔루션</span><span class="ib-badge">셀러 시연</span></div>
+<div id="funnel-bar">
+<div class="fs active" id="fs1" onclick="jumpToStep(1)" style="cursor:pointer"><div class="fs-dot">1</div><div class="fs-lbl">발견</div></div><div class="fa">&rsaquo;</div><div class="fs active" id="fs2" onclick="jumpToStep(2)" style="cursor:pointer"><div class="fs-dot">2</div><div class="fs-lbl">체험</div></div><div class="fa">&rsaquo;</div><div class="fs active" id="fs3" onclick="jumpToStep(3)" style="cursor:pointer"><div class="fs-dot">3</div><div class="fs-lbl">확정</div></div></div>
+
+<!-- STEP 1: Discovery - 운영자 문제 인식 -->
+<div id="scr-disc" class="screen active">
+  <div class="kiam-header">
+    <div class="kh-back" style="opacity:0">&larr;</div>
+    <div class="kh-avatar-char" style="background:linear-gradient(135deg,#4A154B,#6B2D6E)">M</div>
+    <div class="kh-center">
+      <div class="kh-title">매드스위치원 영업 컨설팅</div>
+      <div class="kh-sub">4060 여성의류 셀러 특화 · AI 전환 진단</div>
+      <div class="kh-badges"><span class="kh-badge seller"><span class="bdot"></span>셀러</span><span class="kh-badge state"><span class="bdot"></span>진단중</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div>
+    </div>
+    <span class="kh-info">&image;</span>
+  </div>
+  <div class="green-bar" style="background:linear-gradient(90deg,#1A0D2E,#2D1B4E)">
+    <span class="gb-icon">&#x1F4CA;</span>
+    <div><div class="gb-main" style="color:#D4A843">광고 효율 진단 리포트</div><div class="gb-sub">최근 30일 인스타그램 광고 성과 분석</div></div>
+  </div>
+  <div class="kiam-msgs" id="msgs-step1">
+    <div class="date-div">2026-05-12 · 운영자 대시보드</div>
+    <div class="row-ai"><div class="ai-av">&#x1F4CA;</div><div><div class="ai-bubble">대표님, 최근 30일 광고 성과 리포트입니다.<br><br>인스타 광고비 <b>월 280만원</b> 집행 중이신데, 결과 보실래요?</div><div class="ai-time">10:00</div></div></div>
+    <div class="dark-card" style="margin:0;background:rgba(45,27,78,0.95);border:1px solid rgba(212,168,67,0.2)">
+      <div class="dark-card-title" style="color:var(--gold)">&#x1F4C8; 인스타그램 광고 성과 (30일)</div>
+      <div class="kpi-grid">
+        <div class="kpi-card-anim"><div class="kpi-val red">1.8%</div><div class="kpi-label">구매 전환율</div></div>
+        <div class="kpi-card-anim"><div class="kpi-val gold">98,000</div><div class="kpi-label">월간 노출</div></div>
+        <div class="kpi-card-anim"><div class="kpi-val">3,528</div><div class="kpi-label">링크 클릭</div></div>
+        <div class="kpi-card-anim"><div class="kpi-val red">63</div><div class="kpi-label">실제 구매</div></div>
+      </div>
+    </div>
+    <div class="i-pill-warn">&#x26A0;&#xFE0F; 클릭한 고객 <b>98.2%</b>가 구매 없이 이탈. 광고비 280만원 중 <b>275만원</b>이 낭비되고 있습니다.</div>
+    <div class="row-ai"><div class="ai-av">&#x1F4A1;</div><div><div class="ai-bubble">여기서 질문 하나 드릴게요.<br><br>대표님 상세페이지에 들어온 고객이 <b>'내 체형에 맞을까?'</b>라는 질문에 답을 못 찾고 나가고 있다면?</div><div class="ai-time">10:01</div></div></div>
+    <div class="row-ai"><div class="ai-av">&#x1F4A1;</div><div><div class="ai-bubble">원챗 스타일동행은 광고 클릭 직후 AI 스타일리스트가 바로 대화를 시작합니다.<br><br>아래 버튼을 눌러 실제 고객이 보는 화면을 체험해보세요 &#x1F447;</div><div class="ai-time">10:02</div></div></div>
+    <div class="choice-group" id="q-start">
+      <button class="choice-btn" onclick="jumpToStep(2)">&#x1F50D; 원챗 스타일 진단 체험하기</button>
+    </div>
+    <div class="i-pill">&#x1F4A1; <b>대표님</b>, 광고로 데려온 소중한 고객 98%가 그냥 나갑니다. 원챗 스타일동행은 이들을 그냥 보내지 않고 <b>대화로 붙잡습니다</b>.</div>
+  </div>
+  <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">&#x1F916;</span>AI가 자동으로 응답합니다</div></div>
+  <div class="chat-input-bar"><input class="chat-inp" placeholder="메시지를 입력하세요..." readonly /><button class="chat-send">&rtrif;</button></div>
+  <div class="bottom-nav"><button class="bn-tab active">전체대화</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+</div>
+
+<!-- STEP 2: Engagement - AI Style Diagnosis Demo -->
+<div id="scr-engage" class="screen">
+  <div class="kiam-header">
+    <div class="kh-back" onclick="jumpToStep(1)">&larr;</div>
+    <div class="kh-avatar-char" style="background:linear-gradient(135deg,#4A154B,#D4A843)">&#x2728;</div>
+    <div class="kh-center">
+      <div class="kh-title">원챗 스타일동행 AI 진단</div>
+      <div class="kh-sub">4060 고객 맞춤 체형·스타일 분석</div>
+      <div class="kh-badges"><span class="kh-badge myai"><span class="bdot"></span>MY AI</span><span class="kh-badge user"><span class="bdot"></span>고객</span><span class="kh-badge state"><span class="bdot"></span>체험중</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div>
+    </div>
+    <span class="kh-info">&image;</span>
+  </div>
+  <div class="green-bar" style="background:linear-gradient(90deg,#1A0D2E,#2D1B4E)">
+    <span class="gb-icon">&#x1F484;</span>
+    <div><div class="gb-main" style="color:#D4A843">AI 스타일리스트 체험 모드</div><div class="gb-sub">지금 대표님이 보시는 화면이 실제 고객이 경험하는 화면입니다</div></div>
+  </div>
+  <div class="kiam-msgs" id="msgs-step2">
+    <div class="date-div">고객 시점 · 광고 클릭 직후</div>
+    <div class="row-ai"><div class="ai-av">&#x2728;</div><div><div class="ai-bubble">안녕하세요! 원챗 AI 스타일리스트 <b>'스타일동행'</b>이에요 &#x1F60A;<br><br>4060 여성의류 전문 셀러가 큐레이션한 맞춤 코디, 지금 바로 찾아드릴게요!</div><div class="ai-time">14:05</div></div></div>
+    <div class="row-ai"><div class="ai-av">&#x2728;</div><div><div class="ai-bubble">어떤 고민으로 찾아오셨나요?</div><div class="ai-time">14:05</div></div></div>
+  </div>
+  <div class="choice-group" id="q2-start">
+    <button class="choice-btn" onclick="engageQ1(this)">&#x1F457; 뱃살 커버가 고민이에요</button>
+    <button class="choice-btn" onclick="engageQ1(this)">&#x1F4AA; 팔뚝살을 가리고 싶어요</button>
+    <button class="choice-btn" onclick="engageQ1(this)">&#x2728; 화사해 보이고 싶어요</button>
+    <button class="choice-btn" onclick="engageQ1(this)">&#x1F45C; 하체 라인을 커버하고 싶어요</button>
+  </div>
+  <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">&#x1F916;</span>AI 스타일리스트 자동 응답 중</div></div>
+  <div class="chat-input-bar"><input class="chat-inp" placeholder="메시지를 입력하세요..." readonly /><button class="chat-send">&rtrif;</button></div>
+  <div class="bottom-nav"><button class="bn-tab active">전체대화</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+</div>
+
+<!-- STEP 3: Conversion & LTV -->
+<div id="scr-convert" class="screen">
+  <div class="kiam-header">
+    <div class="kh-back" onclick="jumpToStep(2)">&larr;</div>
+    <div class="kh-avatar-char" style="background:linear-gradient(135deg,#D4A843,#4A154B)">&#x1F680;</div>
+    <div class="kh-center">
+      <div class="kh-title">원챗 스타일동행 · 성과 리포트</div>
+      <div class="kh-sub">전환 &middot; 리타겟팅 &middot; LTV 자동화</div>
+      <div class="kh-badges"><span class="kh-badge manager"><span class="bdot"></span>리포트</span><span class="kh-badge seller"><span class="bdot"></span>셀러</span><span class="kh-badge state"><span class="bdot"></span>성과</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div>
+    </div>
+    <span class="kh-info">&image;</span>
+  </div>
+  <div class="kiam-msgs" id="msgs-step3">
+    <div class="date-div">2026-05-15 · 도입 30일 후 리포트</div>
+    <div class="row-ai"><div class="ai-av">&#x1F680;</div><div><div class="ai-bubble">대표님, 원챗 스타일동행 도입 <b>30일</b> 성과 리포트입니다 &#x1F4CB;<br><br>숫자로 먼저 보여드릴게요.</div><div class="ai-time">09:00</div></div></div>
+    <div class="dark-card" style="margin:0;background:rgba(45,27,78,0.95);border:1px solid rgba(212,168,67,0.3)">
+      <div class="dark-card-title" style="color:var(--gold);text-align:center;font-size:15px">&#x1F3AF; 원챗 도입 전·후 비교 (월 기준)</div>
+      <table class="compare-table"><thead><tr><th>지표</th><th>도입 전</th><th>도입 후</th><th>변화</th></tr></thead><tbody>
+        <tr><td>광고비</td><td>280만원</td><td class="highlight">280만원</td><td>동일</td></tr>
+        <tr><td>구매 전환율</td><td style="color:#E74C3C">1.8%</td><td class="highlight">5.4%</td><td class="highlight">+200%</td></tr>
+        <tr><td>월 구매 건수</td><td>63건</td><td class="highlight">189건</td><td class="highlight">+200%</td></tr>
+        <tr><td>월 매출</td><td>490만원</td><td class="highlight">1,470만원</td><td class="highlight">+980만원</td></tr>
+        <tr><td>장바구니 이탈 복구</td><td style="color:#E74C3C">0%</td><td class="highlight">24%</td><td class="highlight">신규</td></tr>
+        <tr><td>고객 재구매율</td><td>11%</td><td class="highlight">28%</td><td class="highlight">+155%</td></tr>
+        <tr><td>CS 응대 시간</td><td>120h</td><td class="highlight">24h</td><td class="highlight">-80%</td></tr>
+      </tbody></table>
+    </div>
+    <div class="i-pill-win">&#x1F389; 동일 광고비로 월 매출 <b>+980만원</b> 증가. 연간 환산 시 <b>+1억 1,760만원</b> 추가 수익.</div>
+    <div class="row-ai"><div class="ai-av">&#x1F4AC;</div><div><div class="ai-bubble">이게 어떻게 가능한지, 3가지 핵심만 설명드릴게요.</div><div class="ai-time">09:01</div></div></div>
+    <div class="promise-card"><div class="pc-icon">&#x1F3AF;</div><div><div class="pc-title">1. 진단 → 확신 → 구매</div><div class="pc-desc">고객이 '이 옷 나한테 맞을까?' 망설일 때 AI가 체형·취향을 분석해 <b>'사야 할 이유'</b>를 데이터로 제시합니다. 지난주 40~60대 고객 만족도 1위 같은 근거 추천으로 전환율이 3배 상승합니다.</div></div></div>
+    <div class="promise-card"><div class="pc-icon">&#x1F514;</div><div><div class="pc-title">2. 이탈 고객 자동 리타겟팅</div><div class="pc-desc">장바구니 담았다가 나간 고객에게 3일 후 <b>카카오 알림톡</b> 자동 발송. "아까 보신 원피스, 지금 구매 시 5% 할인" — 사람이 일일이 할 수 없는 후속 관리를 AI가 24시간 수행합니다.</div></div></div>
+    <div class="promise-card"><div class="pc-icon">&#x1F48E;</div><div><div class="pc-title">3. 구매 고객 재구매 유도 (LTV)</div><div class="pc-desc">원피스 구매 고객에게 <b>어울리는 가방·액세서리</b> 코디 정보를 자동 발송. 구매 7일 후 AI가 "OO님, 구매하신 원피스에 찰떡인 아이템을 찾았어요" 제안 → 재구매율 28%.</div></div></div>
+    <div class="profile-transition">────────────</div>
+    <div class="row-ai"><div class="ai-av">&#x1F4CA;</div><div><div class="ai-bubble">대표님, 사람이 일일이 할 수 없는 후속 관리를 원챗이 24시간 수행합니다.<br><br>이것이 바로 <b>운영 효율화와 매출 극대화가 동시에 일어나는 원리</b>입니다.</div><div class="ai-time">09:03</div></div></div>
+    <div class="i-pill">&#x1F4A1; <b>핵심 요약:</b> 광고비 동일 → AI가 고객을 붙잡고 전환 → 이탈 고객 자동 회수 → 구매 고객 LTV 극대화. CS 업무 80% 감소 + 전환율 3배 = <b>연 1억+ 추가 수익</b>.</div>
+    <div class="roi-box">
+      <div style="font-size:14px;color:rgba(255,255,255,0.5);margin-bottom:8px">&#x1F4A1; 4060 여성의류 셀러 5~10개사 기준</div>
+      <div class="roi-val-big">ROI 350%</div>
+      <div class="roi-sub">연간 추가 수익 <b>1억 1,760만원</b><br>AI 영업직원 1명 = 직원 3명 몫의 생산성</div>
+    </div>
+    <div class="roi-grid">
+      <div class="roi-item"><div class="num">3.0x</div><div class="lbl">구매 전환율</div></div>
+      <div class="roi-item"><div class="num">-80%</div><div class="lbl">CS 응대 시간</div></div>
+      <div class="roi-item"><div class="num">+155%</div><div class="lbl">재구매율</div></div>
+      <div class="roi-item"><div class="num">24%</div><div class="lbl">이탈 복구율</div></div>
+    </div>
+    <div class="briefing-summary">
+      <b>매드스위치원 × 원챗 스타일동행</b>은 단순한 상담 도구가 아닌,<br>
+      4060 여성의류 셀러를 위한 <b>베테랑 AI 영업직원</b>입니다.<br><br>
+      &#x2022; 광고로 들어온 고객을 대화로 붙잡고<br>
+      &#x2022; 데이터로 '사야 할 이유'를 만들고<br>
+      &#x2022; 떠난 고객도 다시 데려옵니다.
+    </div>
+    <button class="choice-btn" onclick="jumpToStep(1)" style="align-self:center;margin:10px 0 30px;font-size:16px;padding:12px 30px;background:var(--gold);color:var(--deepviolet);border:none">&#x1F504; 처음부터 다시 보기</button>
+  </div>
+  <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">&#x1F916;</span>AI 리포트 자동 생성 완료</div></div>
+  <div class="chat-input-bar"><input class="chat-inp" placeholder="대표님, 궁금하신 점을 물어보세요..." /><button class="chat-send">&rtrif;</button></div>
+  <div class="bottom-nav"><button class="bn-tab active">리포트</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+</div>
+</div><!-- /app-shell -->
+
+<script>
+const nowTime=()=>{const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')}
+const visEl=el=>setTimeout(()=>el.classList.add('vis'),40)
+function scrollBottom(id){const el=document.getElementById(id);if(!el)return;setTimeout(()=>{el.scrollTop=el.scrollHeight+9999},80)}
+function revealChatMsgs(container){if(!container)return;const all=container.querySelectorAll('.row-ai,.row-user,.choice-group,.widget-card,.booking-card,.promise-card,.profile-transition,.manager-profile,.i-pill,.i-pill-warn,.i-pill-win,.dark-card,.roi-box,.roi-grid,.briefing-summary');all.forEach(function(el){el.classList.remove('vis');});var delay=60;all.forEach(function(el,i){setTimeout(function(){el.classList.add('vis');container.scrollTop=container.scrollHeight+9999;},delay);delay+=80;});}
+
+let currentStep=1
+const totalSteps=3
+const screenMap={1:'scr-disc',2:'scr-engage',3:'scr-convert'}
+
+function setFunnel(n){
+  for(let i=1;i<=totalSteps;i++){
+    const el=document.getElementById('fs'+i);
+    if(!el)continue;
+    el.classList.remove('active','done');
+    if(i<n)el.classList.add('done');
+    else if(i===n)el.classList.add('active')
+  }
+}
+
+function goScreen(id){
+  return new Promise(res=>{
+    const ov=document.getElementById('trans-overlay');ov.classList.add('on');
+    setTimeout(()=>{
+      document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));
+      const s=document.getElementById(id);s.classList.add('active');ov.classList.remove('on');
+      const m=s.querySelector('.kiam-msgs');if(m)revealChatMsgs(m);
+      if(id==='scr-engage'){
+        const qg=document.getElementById('q2-start');
+        if(qg)setTimeout(()=>qg.classList.add('vis'),400);
+      }
+      res()
+    },280)
+  })
+}
+
+async function jumpToStep(step){
+  currentStep=step;
+  setFunnel(step);
+  await goScreen(screenMap[step]);
+}
+
+function nextStep(){if(currentStep<totalSteps)jumpToStep(currentStep+1)}
+function prevStep(){if(currentStep>1)jumpToStep(currentStep-1)}
+
+// ── Step 2: Interactive AI Stylist Chatbot ──
+// 4060 여성의류 셀러 타겟 — 체험 중심 4지선다 → 2지선다 → 진단 결과
+
+let engageStep=0
+
+function engageQ1(el){
+  const container=document.getElementById('msgs-step2');
+  const choiceGroup=document.getElementById('q2-start');
+  const text=el.textContent.trim();
+  // disable all choices
+  choiceGroup.querySelectorAll('.choice-btn').forEach(b=>{b.disabled=true;b.classList.add('sel')});
+  // add user response
+  const ur=document.createElement('div');ur.className='row-user vis';
+  ur.innerHTML='<div><div class="user-bubble">'+text+'</div><div class="user-time">'+nowTime()+'</div></div><div class="user-av">👤</div>';
+  container.appendChild(ur);
+  engageStep++;
+
+  // Instant AI follow-up: 선호 스타일 질문
+  const aiRow=document.createElement('div');aiRow.className='row-ai vis';
+  aiRow.innerHTML='<div class="ai-av">✨</div><div><div class="ai-bubble">좋은 선택이에요!<br><br>평소 어떤 <b>스타일</b>을 선호하시나요?</div><div class="ai-time">'+nowTime()+'</div></div>';
+  container.appendChild(aiRow);
+  const cg=document.createElement('div');cg.className='choice-group vis';
+  cg.innerHTML='<button class="choice-btn">🌸 우아한/페미닌</button><button class="choice-btn">🖤 시크/모던</button><button class="choice-btn">🌿 내추럴/베이직</button><button class="choice-btn">💎 고급/럭셔리</button>';
+  container.appendChild(cg);
+  cg.querySelectorAll('.choice-btn').forEach(b=>{b.onclick=()=>engageQ2(cg,b.textContent.trim())});
+  scrollBottom('msgs-step2');
+}
+
+function engageQ2(group,text){
+  group.querySelectorAll('.choice-btn').forEach(b=>{b.disabled=true;b.classList.add('sel')});
+  const container=document.getElementById('msgs-step2');
+  const ur=document.createElement('div');ur.className='row-user vis';
+  ur.innerHTML='<div><div class="user-bubble">'+text+'</div><div class="user-time">'+nowTime()+'</div></div><div class="user-av">👤</div>';
+  container.appendChild(ur);
+  engageStep++;
+
+  // Instant AI follow-up: TPO/상황 질문
+  const aiRow=document.createElement('div');aiRow.className='row-ai vis';
+  aiRow.innerHTML='<div class="ai-av">✨</div><div><div class="ai-bubble">딱 맞는 스타일을 찾기 위해 하나만 더 여쭤볼게요!<br><br>주로 <b>어떤 상황</b>에서 입으실 옷을 찾고 계세요?</div><div class="ai-time">'+nowTime()+'</div></div>';
+  container.appendChild(aiRow);
+  const cg=document.createElement('div');cg.className='choice-group vis';
+  cg.innerHTML='<button class="choice-btn">💼 출근/업무</button><button class="choice-btn">☕ 일상/모임</button><button class="choice-btn">🎉 행사/하객</button><button class="choice-btn">✈️ 여행/나들이</button>';
+  container.appendChild(cg);
+  cg.querySelectorAll('.choice-btn').forEach(b=>{b.onclick=()=>engageQF(cg,b.textContent.trim())});
+  scrollBottom('msgs-step2');
+}
+
+function engageQF(group,text){
+  group.querySelectorAll('.choice-btn').forEach(b=>{b.disabled=true;b.classList.add('sel')});
+  const container=document.getElementById('msgs-step2');
+  const ur=document.createElement('div');ur.className='row-user vis';
+  ur.innerHTML='<div><div class="user-bubble">'+text+'</div><div class="user-time">'+nowTime()+'</div></div><div class="user-av">👤</div>';
+  container.appendChild(ur);
+
+  // Final AI diagnosis result
+  const aiRow=document.createElement('div');aiRow.className='row-ai vis';
+  aiRow.innerHTML='<div class="ai-av">✨</div><div><div class="ai-bubble">진단이 완료되었습니다! 🎉<br><br>고객님은 <b>4060 여성의류 타겟</b>에 최적화된 스타일로 분석되었습니다.<br><br>📊 지난주 비슷한 체형·취향의 고객 <b>273명</b>이 만족한 코디를 준비했습니다.<br><br>체형 커버에 자신 있는 <b>3가지 코디</b>를 추천드릴게요!<br><br>👉 아래 추천 상품을 확인하고, 맘에 드는 상품은 바로 장바구니에 담아보세요.</div><div class="ai-time">'+nowTime()+'</div></div>';
+  container.appendChild(aiRow);
+
+  // Mock product recommendation cards (core 4060 value prop)
+  const pc1=document.createElement('div');pc1.className='promise-card vis';
+  pc1.innerHTML='<div class="pc-icon">👗</div><div><div class="pc-title">[추천 1] A라인 플레어 원피스</div><div class="pc-desc">뱃살·하체 완벽 커버 + 허리 라인 강조. 4060 고객 착용 만족도 <b>96%</b> · 가격 89,000원</div></div>';
+  container.appendChild(pc1);
+
+  const pc2=document.createElement('div');pc2.className='promise-card vis';
+  pc2.innerHTML='<div class="pc-icon">🧥</div><div><div class="pc-title">[추천 2] 벨티드 트렌치 코트</div><div class="pc-desc">팔뚝살 커버 + 세로 라인 시각 효과. 리뷰 <b>427건</b> · 평점 4.8 · 가격 129,000원</div></div>';
+  container.appendChild(pc2);
+
+  const pc3=document.createElement('div');pc3.className='promise-card vis';
+  pc3.innerHTML='<div class="pc-icon">👜</div><div><div class="pc-title">[추천 3] 토트백 + 스카프 세트</div><div class="pc-desc">화사한 포인트 연출. 고객님과 비슷한 체형 구매자 <b>82%</b> 재구매 · 가격 59,000원</div></div>';
+  container.appendChild(pc3);
+
+  // Operator briefing pill
+  const pill=document.createElement('div');pill.className='i-pill vis';
+  pill.innerHTML='💡 <b>대표님</b>: AI가 고객의 체형·스타일·TPO 3축 데이터로 "사야 할 이유"를 만듭니다. 1:1 맞춤 추천으로 전환율 <b>3배</b>. 이제 실제 성과를 확인해보세요 👇';
+  container.appendChild(pill);
+
+  // CTA to Step 3
+  const cta=document.createElement('div');cta.className='choice-group vis';
+  cta.innerHTML='<button class="choice-btn" onclick="jumpToStep(3)" style="background:var(--gold);color:var(--deepviolet);font-weight:700">📊 원챗 도입 성과 리포트 보기 →</button>';
+  container.appendChild(cta);
+
+  scrollBottom('msgs-step2');
+}
+
+// Keyboard navigation
+document.addEventListener('keydown',function(e){
+  if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();nextStep()}
+  else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();prevStep()}
+})
+
+// Initial funnel setup
+setFunnel(1)
+</script>
+</body>
+</html>

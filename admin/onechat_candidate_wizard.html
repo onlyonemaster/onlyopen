@@ -1,0 +1,220 @@
+<!--
+  원챗(OneChat) Admin Auto-Orchestrator v2.0
+  ────────────────────────────────────────────────────────────────
+  후보자 원클릭 등록 → AI 자동 프롬프트 생성 + 학습 데이터 주입.
+  Candidate Master Form: 이 한 장의 폼만 작성하면 AI가 모든 것을 처리합니다.
+-->
+
+<div class="ocw-root" id="ocw-root">
+  <!-- ── 헤더 ─────────────────────────────────────────────────── -->
+  <div class="ocw-header">
+    <h1 class="ocw-title">
+      <span class="ocw-title-icon">🤖</span>
+      AI Auto-Orchestrator
+      <span class="ocw-badge">v2.0</span>
+    </h1>
+    <p class="ocw-subtitle">
+      후보자 기본 정보만 입력하면 AI 에이전트가 자동으로
+      <strong>4-Layer 프롬프트 생성</strong>, <strong>웹 리서치 및 데이터 수집</strong>,
+      <strong>RAG 학습 데이터 주입</strong>을 순차적으로 수행합니다.
+    </p>
+  </div>
+
+  <!-- ── 워크플로우 진행 바 ──────────────────────────────────── -->
+  <div class="ocw-progress" id="ocw-progress">
+    <div class="ocw-step active" data-step="1">
+      <div class="ocw-step-num">1</div>
+      <div class="ocw-step-label">후보 등록</div>
+    </div>
+    <div class="ocw-connector" id="ocw-conn-1"></div>
+    <div class="ocw-step" data-step="2">
+      <div class="ocw-step-num">2</div>
+      <div class="ocw-step-label">AI 리서치</div>
+    </div>
+    <div class="ocw-connector" id="ocw-conn-2"></div>
+    <div class="ocw-step" data-step="3">
+      <div class="ocw-step-num">3</div>
+      <div class="ocw-step-label">프롬프트 생성</div>
+    </div>
+    <div class="ocw-connector" id="ocw-conn-3"></div>
+    <div class="ocw-step" data-step="4">
+      <div class="ocw-step-num">4</div>
+      <div class="ocw-step-label">데이터 주입</div>
+    </div>
+    <div class="ocw-connector" id="ocw-conn-4"></div>
+    <div class="ocw-step" data-step="5">
+      <div class="ocw-step-num">5</div>
+      <div class="ocw-step-label">검증 완료</div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       Step 1: 후보 등록 마스터 폼
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="ocw-card" id="ocw-form-card">
+    <div class="ocw-card-header">
+      <h2>📋 후보자 등록 — Candidate Master Form</h2>
+      <span class="ocw-card-tip">* 표시는 필수 입력 항목입니다</span>
+    </div>
+
+    <div class="ocw-form-grid">
+      <!-- 기본 정보 -->
+      <div class="ocw-section">
+        <h3 class="ocw-section-title">🏛️ 기본 정보</h3>
+        <div class="ocw-row">
+          <div class="ocw-field">
+            <label>이름 *</label>
+            <input type="text" id="ocw-name" placeholder="예: 홍길동" class="ocw-input">
+          </div>
+          <div class="ocw-field">
+            <label>소속 정당</label>
+            <input type="text" id="ocw-party" placeholder="예: ○○당" class="ocw-input">
+          </div>
+        </div>
+        <div class="ocw-row">
+          <div class="ocw-field">
+            <label>선거 유형 *</label>
+            <select id="ocw-elec-type" class="ocw-select">
+              <option value="">선택하세요</option>
+              <option value="mayor">시장 선거</option>
+              <option value="governor">도지사 선거</option>
+              <option value="president">대통령 선거</option>
+              <option value="assembly">국회의원 선거</option>
+              <option value="local">지방의원 선거</option>
+            </select>
+          </div>
+          <div class="ocw-field">
+            <label>선거구</label>
+            <input type="text" id="ocw-district" placeholder="예: ○○시 / ○○구" class="ocw-input">
+          </div>
+        </div>
+        <div class="ocw-row">
+          <div class="ocw-field ocw-full">
+            <label>슬로건 / 캐치프레이즈</label>
+            <input type="text" id="ocw-slogan" placeholder="예: 변화를 만드는 힘, 시민과 함께하는 ○○○" class="ocw-input">
+          </div>
+        </div>
+      </div>
+
+      <!-- 경력·이력 -->
+      <div class="ocw-section">
+        <h3 class="ocw-section-title">👤 경력 · 이력</h3>
+        <div class="ocw-field">
+          <label>학력</label>
+          <input type="text" id="ocw-edu" placeholder="예: ○○대학교 ○○학과 졸업" class="ocw-input">
+        </div>
+        <div class="ocw-field">
+          <label>주요 경력 (쉼표로 구분)</label>
+          <textarea id="ocw-career" class="ocw-textarea" rows="3"
+            placeholder="예: 제○대 국회의원, ○○시장, ○○위원회 위원장"></textarea>
+        </div>
+      </div>
+
+      <!-- 온라인 채널 -->
+      <div class="ocw-section">
+        <h3 class="ocw-section-title">🌐 온라인 채널</h3>
+        <div class="ocw-row">
+          <div class="ocw-field">
+            <label>공식 웹사이트</label>
+            <input type="url" id="ocw-website" placeholder="https://candidate.kr" class="ocw-input">
+          </div>
+          <div class="ocw-field">
+            <label>유튜브 채널</label>
+            <input type="url" id="ocw-youtube" placeholder="https://youtube.com/@candidate" class="ocw-input">
+          </div>
+        </div>
+        <div class="ocw-sns-row">
+          <div class="ocw-field ocw-sns-field">
+            <label>📷 인스타그램</label>
+            <input type="text" id="ocw-sns-ig" placeholder="@계정명" class="ocw-input ocw-sm">
+          </div>
+          <div class="ocw-field ocw-sns-field">
+            <label>📘 페이스북</label>
+            <input type="text" id="ocw-sns-fb" placeholder="페이지명 또는 URL" class="ocw-input ocw-sm">
+          </div>
+          <div class="ocw-field ocw-sns-field">
+            <label>𝕏 X (트위터)</label>
+            <input type="text" id="ocw-sns-x" placeholder="@계정명" class="ocw-input ocw-sm">
+          </div>
+          <div class="ocw-field ocw-sns-field">
+            <label>📝 네이버 블로그</label>
+            <input type="text" id="ocw-sns-blog" placeholder="blog.naver.com/아이디" class="ocw-input ocw-sm">
+          </div>
+        </div>
+      </div>
+
+      <!-- 추가 옵션 -->
+      <div class="ocw-section">
+        <h3 class="ocw-section-title">⚙️ AI 생성 옵션</h3>
+        <div class="ocw-check-grid">
+          <label class="ocw-checkbox">
+            <input type="checkbox" id="ocw-opt-prompt" checked> 4-Layer 프롬프트 자동 생성
+          </label>
+          <label class="ocw-checkbox">
+            <input type="checkbox" id="ocw-opt-research" checked> 웹 리서치 자동 수행
+          </label>
+          <label class="ocw-checkbox">
+            <input type="checkbox" id="ocw-opt-rag" checked> RAG 학습 데이터 자동 주입
+          </label>
+          <label class="ocw-checkbox">
+            <input type="checkbox" id="ocw-opt-bridge"> Context Bridge 자동 활성화
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="ocw-actions">
+      <button class="ocw-btn ocw-btn-secondary" onclick="window.OCW && OCW.clearForm()">
+        🗑️ 초기화
+      </button>
+      <button class="ocw-btn ocw-btn-primary" id="ocw-launch-btn" onclick="window.OCW && OCW.launchOrchestrator()">
+        🚀 AI 오케스트레이터 실행
+      </button>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       Steps 2-5: 라이브 로그 / 결과 패널
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="ocw-card ocw-hidden" id="ocw-log-card">
+    <div class="ocw-card-header">
+      <h2>📡 AI 에이전트 실행 로그</h2>
+      <span class="ocw-card-tip" id="ocw-log-status">대기 중</span>
+    </div>
+
+    <div class="ocw-log-container" id="ocw-log-container">
+      <div class="ocw-log-empty" id="ocw-log-empty">
+        <span class="ocw-log-empty-icon">🤖</span>
+        <p>'AI 오케스트레이터 실행' 버튼을 클릭하면<br>실시간 진행 상황이 여기에 표시됩니다.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 결과 패널: 생성된 프롬프트 미리보기 -->
+  <div class="ocw-card ocw-hidden" id="ocw-result-card">
+    <div class="ocw-card-header">
+      <h2>✨ 생성 결과</h2>
+      <span class="ocw-card-tip" id="ocw-result-status"></span>
+    </div>
+
+    <div class="ocw-result-tabs">
+      <button class="ocw-result-tab active" data-result="prompt">📝 생성된 프롬프트</button>
+      <button class="ocw-result-tab" data-result="research">🔍 리서치 결과</button>
+      <button class="ocw-result-tab" data-result="stats">📊 RAG 학습 통계</button>
+    </div>
+
+    <div class="ocw-result-panel active" id="ocw-result-prompt">
+      <pre class="ocw-prompt-preview" id="ocw-prompt-output"></pre>
+      <button class="ocw-btn ocw-btn-secondary ocw-sm" onclick="window.OCW && OCW.copyPrompt()">📋 복사</button>
+    </div>
+    <div class="ocw-result-panel" id="ocw-result-research">
+      <div id="ocw-research-output"></div>
+    </div>
+    <div class="ocw-result-panel" id="ocw-result-stats">
+      <div class="ocw-stats-grid" id="ocw-stats-output"></div>
+    </div>
+  </div>
+
+  <!-- ── 토스트 ───────────────────────────────────────────────── -->
+  <div class="ocw-toast-container" id="ocw-toast-container"></div>
+</div>

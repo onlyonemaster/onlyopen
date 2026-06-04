@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공유콜백 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">공유콜백</div>
+      <a href="/manual/sharecallback/" class="sb-link active">🔗 공유콜백 소개</a>
+      <a href="/manual/sharecallback/setup.html" class="sb-link">공유콜백 설정하기</a>
+      <a href="/manual/sharecallback/manage.html" class="sb-link">공유콜백 관리</a>
+      <a href="/manual/sharecallback/share.html" class="sb-link">콜백 공유하기</a>
+      <a href="/manual/sharecallback/settings.html" class="sb-link">공유콜백 상세 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/callback/" class="sb-link">IAM 콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › 공유콜백</nav>
+    <h1 class="page-title">🔗 공유콜백 — 내 콜백을 다른 사람과 공유하기</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">공유콜백이란?</a></li>
+        <li><a href="#flow">공유콜백 전체 흐름</a></li>
+        <li><a href="#entry">어디서 시작하나요?</a></li>
+        <li><a href="#quickstart">빠른 시작</a></li>
+      </ul>
+    </div>
+    <section id="what">
+      <h2>공유콜백이란?</h2>
+      <p><strong>공유콜백</strong>은 내가 만든 콜백 메시지를 <strong>다른 회원과 공유</strong>하여 함께 사용할 수 있게 해주는 기능입니다.</p>
+      <p style="margin-top:12px;">예를 들어 팀장이 만든 "고객 응대용 콜백 메시지"를 팀원 모두가 공유받아 똑같은 메시지로 부재중 전화에 응대할 수 있습니다. 또는 영업팀 전체가 통일된 콜백 메시지를 사용할 때도 유용합니다.</p>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📌 핵심 포인트</strong>: 공유콜백은 <strong>콜백등록관리</strong> 메뉴에서 시작됩니다. 이 메뉴는 <code>kiam.kr/m</code> 페이지의 <strong>내정보(우측 하단 사람 아이콘) 드롭다운</strong> → <strong>[콜백등록관리]</strong>에서 접근할 수 있습니다.
+      </div>
+    </section>
+    <section id="flow">
+      <h2>공유콜백 전체 흐름</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>콜백 메시지 등록</strong> — 먼저 공유할 콜백 메시지를 만듭니다. → <a href="/manual/callback/create.html">IAM 콜백 메시지 만들기 →</a></div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>콜백등록관리 진입</strong> — 내정보 드롭다운 → [콜백등록관리] 클릭 → 앱(AppScript) 연동 화면으로 이동</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>공유 대상 설정</strong> — 콜백등록관리에서 공유할 콜백 메시지를 선택하고, 공유할 회원을 지정합니다.</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>공유 완료</strong> — 공유받은 회원의 콜백 메시지함에 해당 메시지가 추가되어 사용 가능해집니다.</div></li>
+      </ol>
+    </section>
+    <section id="entry">
+      <h2>어디서 시작하나요?</h2>
+      <p>공유콜백 기능은 <strong>내정보 드롭다운 메뉴</strong>에서 시작합니다:</p>
+      <table class="m-table">
+        <thead><tr><th>메뉴 위치</th><th>접근 방법</th><th>연결 기능</th></tr></thead>
+        <tbody>
+          <tr><td><strong>내정보 드롭다운</strong> (우측 하단)</td><td><code>kiam.kr/m</code> → 하단 우측 [내정보 아이콘] 클릭</td><td>마이페이지 팝업 (mypage-modalwindow)</td></tr>
+          <tr><td><strong>통합계정관리</strong></td><td>내정보 → [통합계정관리]</td><td><code>goOnlyOneApp()</code> → 앱(AppScript) 연동</td></tr>
+          <tr><td><strong>마이페이지</strong></td><td>내정보 → [마이페이지]</td><td><code>/iam/mypage.php</code> → 회원 정보 관리</td></tr>
+          <tr><td><strong>결제정보</strong></td><td>내정보 → [결제정보]</td><td><code>/?cur_win=payment</code> → 결제 내역</td></tr>
+          <tr><td><strong>콜백등록관리</strong></td><td>내정보 → [콜백등록관리] ★</td><td><code>goCallbackList()</code> → 앱 내 콜백 관리 화면</td></tr>
+          <tr><td><strong>공지/푸쉬 알림</strong></td><td>내정보 → [공지/푸쉬 알림]</td><td><code>/?cur_win=unread_push</code> → 알림 내역</td></tr>
+          <tr><td><strong>AI로 자동 카드 만들기</strong></td><td>내정보 → [AI로 자동 카드 만들기]</td><td><code>create_auto_card()</code> → AI IAM 생성</td></tr>
+          <tr><td><strong>AI명함프로필관리</strong></td><td>내정보 → [AI명함프로필관리]</td><td><code>/m/ai_card_profile_list.php</code> → AI 프로필 관리</td></tr>
+          <tr><td><strong>굿마켓</strong></td><td>내정보 → [굿마켓]</td><td><code>gwc_tab()</code> → 굿마켓 상품</td></tr>
+          <tr><td><strong>콜이야</strong></td><td>내정보 → [콜이야]</td><td><code>callya_tab()</code> → 콜이야 콘텐츠</td></tr>
+          <tr><td><strong>위드유</strong></td><td>내정보 → [위드유]</td><td><code>openShop()</code> → 위드유 샵</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="quickstart">
+      <h2>빠른 시작</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>내정보 열기</strong>: <code>kiam.kr/m</code> → 하단 우측 [내정보 아이콘] 클릭 → <strong>마이페이지 팝업</strong> 열림</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>콜백등록관리 진입</strong>: 팝업에서 <strong>[콜백등록관리]</strong> 클릭 → <code>goCallbackList()</code> 실행</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>앱 연동 확인</strong>: Android 앱(온리원문자)에서 콜백등록관리 화면이 열립니다. PC에서는 앱 설치 안내가 표시됩니다.</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>공유 설정</strong>: 앱 내 콜백등록관리 화면에서 공유할 메시지와 대상을 선택하여 공유합니다.</div></li>
+      </ol>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>💡 팁</strong>: 콜백등록관리는 <strong>Android 앱 전용 기능</strong>입니다. PC에서는 [내정보] 드롭다운의 다른 메뉴(마이페이지, 결제정보 등)는 웹에서 바로 이용 가능하며, 콜백등록관리만 앱이 필요합니다.
+      </div>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/callback/settings.html" class="btn-prev">← IAM 콜백 설정 상세</a>
+      <a href="/manual/sharecallback/setup.html" class="btn-next">공유콜백 설정하기 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">공유콜백이란?</a></li>
+      <li><a href="#flow">전체 흐름</a></li>
+      <li><a href="#entry">시작 위치</a></li>
+      <li><a href="#quickstart">빠른 시작</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

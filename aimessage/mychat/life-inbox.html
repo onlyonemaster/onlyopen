@@ -1,0 +1,353 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>라이프 인박스 · MyChat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+<style>
+  .filter-bar{
+    display:flex; gap:6px; overflow-x:auto; padding-bottom:6px; margin-bottom:10px;
+    -webkit-overflow-scrolling: touch;
+  }
+  .filter-bar::-webkit-scrollbar{display:none}
+  .filter-chip{
+    flex-shrink:0; background:var(--bg-elev); border:1px solid var(--line);
+    color:var(--text-dim); padding:6px 12px; border-radius:999px;
+    font-size:12px; cursor:pointer; white-space:nowrap;
+  }
+  .filter-chip.on{background:var(--accent); color:#fff; border-color:transparent}
+  .filter-chip .ct{
+    background:rgba(255,255,255,0.18); color:#fff; padding:1px 6px;
+    border-radius:999px; margin-left:4px; font-size:10px;
+  }
+  .inbox-card{
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius: var(--r-md); padding: 12px; margin-bottom:8px;
+    cursor:pointer; transition: border-color .15s;
+  }
+  .inbox-card:hover{border-color:var(--accent)}
+  .inbox-card.unread{border-left:3px solid var(--accent)}
+  .inbox-card .head{display:flex; align-items:center; gap:8px; margin-bottom:6px}
+  .inbox-card .head .ic{
+    width:32px;height:32px;border-radius:8px;
+    background:var(--bg-elev); display:flex;align-items:center;justify-content:center;
+    font-size:16px; flex-shrink:0;
+  }
+  .inbox-card .head .ti{font-weight:600;font-size:14px;flex:1;min-width:0;
+    overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .inbox-card .head .ts{font-size:11px;color:var(--text-mute);flex-shrink:0}
+  .inbox-card .body-line{color:var(--text-dim);font-size:13px;line-height:1.5;
+    overflow:hidden;text-overflow:ellipsis;display:-webkit-box;
+    -webkit-line-clamp:2;-webkit-box-orient:vertical}
+  .inbox-card .foot{display:flex;gap:6px;margin-top:8px;align-items:center;flex-wrap:wrap}
+  .pin{ color:var(--warn) }
+  .stats{
+    display:grid; grid-template-columns: repeat(4,1fr); gap:8px; margin-bottom:14px;
+  }
+  .stat{
+    background:var(--bg-card); border:1px solid var(--line);
+    border-radius: var(--r-md); padding:10px; text-align:center;
+  }
+  .stat .n{font-size:18px; font-weight:700}
+  .stat .l{font-size:10px; color:var(--text-mute); margin-top:2px}
+  .compose{
+    position:fixed; right:18px; bottom:18px;
+    width:54px;height:54px;border-radius:50%;
+    background:linear-gradient(135deg,var(--accent),var(--accent-soft));
+    color:#fff; border:none; font-size:24px; cursor:pointer;
+    box-shadow: 0 6px 20px var(--accent-glow);
+    z-index: 100;
+  }
+</style>
+</head>
+<body>
+<div id="top"></div>
+
+<div class="mc-wrap">
+
+  <!-- stats -->
+  <div class="stats" id="stats"></div>
+
+  <!-- search -->
+  <div class="mc-field" style="margin-bottom:10px">
+    <input type="text" id="q" class="mc-input" placeholder="🔎 인박스 내 검색…">
+  </div>
+
+  <!-- filter chips -->
+  <div class="filter-bar" id="filter-bar"></div>
+
+  <!-- list -->
+  <div id="list"></div>
+
+  <div id="empty" class="mc-empty" style="display:none">
+    <div class="ico">📭</div>
+    <div class="ti">인박스가 비어 있어요</div>
+    <div class="de">폰 자동 동기화를 켜거나 학습 페이지에서 데이터를 추가해 보세요.</div>
+  </div>
+</div>
+
+<button class="compose" id="btn-compose" title="메모 빠르게 추가">＋</button>
+
+<script src="/aimessage/mychat/assets/mychat.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  document.getElementById('top').innerHTML = mc.renderTopbar({
+    title: '📥 라이프 인박스',
+    sub: '내 인생의 모든 신호 한 곳에서',
+    actions: '<button class="mc-iconbtn" id="btn-mark-all" title="모두 읽음">✓</button>'
+  });
+
+  // seed demo data on first visit
+  mc.seedInboxIfEmpty();
+
+  var SRC_META = {
+    phone:  {ic:'📞', name:'통화'},
+    sms:    {ic:'💬', name:'문자'},
+    kakao:  {ic:'🗨️', name:'카톡'},
+    email:  {ic:'✉️', name:'이메일'},
+    meet:   {ic:'🎤', name:'회의'},
+    photo:  {ic:'🖼️', name:'사진'},
+    video:  {ic:'🎬', name:'영상'},
+    health: {ic:'❤️', name:'헬스'},
+    cal:    {ic:'📅', name:'캘린더'},
+    web:    {ic:'🌐', name:'웹'},
+    manual: {ic:'✍️', name:'메모'}
+  };
+
+  var KIND_BADGE = {
+    call:'통화', chat:'대화', email:'메일', recording:'녹음',
+    metric:'지표', note:'메모', event:'일정'
+  };
+
+  // ---------- filter state ----------
+  var state = { source:'all', unread:false, pinned:false, q:'' };
+
+  // ---------- renderers ----------
+  function renderStats(){
+    var all = mc.inboxList();
+    var unread = all.filter(function(it){ return !it.read; }).length;
+    var pinned = all.filter(function(it){ return it.pinned; }).length;
+    var today = 0;
+    var todayStart = new Date(); todayStart.setHours(0,0,0,0);
+    all.forEach(function(it){ if (it.ts >= todayStart.getTime()) today++; });
+    var html = ''
+      + statBox(all.length, '전체')
+      + statBox(unread,     '안 읽음')
+      + statBox(today,      '오늘')
+      + statBox(pinned,     '⭐ 고정');
+    document.getElementById('stats').innerHTML = html;
+  }
+  function statBox(n,l){
+    return '<div class="stat"><div class="n">'+n+'</div><div class="l">'+l+'</div></div>';
+  }
+
+  function renderFilters(){
+    var all = mc.inboxList();
+    var bySrc = {};
+    all.forEach(function(it){ bySrc[it.source] = (bySrc[it.source]||0)+1; });
+
+    var chips = [];
+    chips.push(chip('all', '전체', all.length, state.source==='all'));
+    Object.keys(SRC_META).forEach(function(k){
+      var ct = bySrc[k]||0;
+      if (ct>0) chips.push(chip(k, SRC_META[k].ic+' '+SRC_META[k].name, ct, state.source===k));
+    });
+    var bar = document.getElementById('filter-bar');
+    bar.innerHTML = chips.join('') +
+      '<span class="filter-chip'+(state.unread?' on':'')+'" data-flag="unread">안 읽음</span>' +
+      '<span class="filter-chip'+(state.pinned?' on':'')+'" data-flag="pinned">⭐ 고정</span>';
+    if (!bar.dataset.bound){
+      bar.addEventListener('click', function(e){
+        var c = e.target.closest('.filter-chip');
+        if (!c) return;
+        if (c.dataset.flag === 'unread'){ state.unread = !state.unread; }
+        else if (c.dataset.flag === 'pinned'){ state.pinned = !state.pinned; }
+        else { state.source = c.dataset.src; }
+        renderAll();
+      });
+      bar.dataset.bound='1';
+    }
+  }
+  function chip(src, label, ct, on){
+    return '<span class="filter-chip'+(on?' on':'')+'" data-src="'+src+'">'
+      + mc.esc(label) + '<span class="ct">'+ct+'</span></span>';
+  }
+
+  function renderList(){
+    var all = mc.inboxList();
+    var q = (state.q||'').trim().toLowerCase();
+    var filtered = all.filter(function(it){
+      if (state.source !== 'all' && it.source !== state.source) return false;
+      if (state.unread && it.read) return false;
+      if (state.pinned && !it.pinned) return false;
+      if (q){
+        var hay = (it.title+' '+it.summary+' '+(it.meta?JSON.stringify(it.meta):'')).toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    });
+
+    var list = document.getElementById('list');
+    var empty = document.getElementById('empty');
+    if (!filtered.length){
+      list.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+
+    list.innerHTML = filtered.map(function(it){
+      var m = SRC_META[it.source] || {ic:'•', name:it.source};
+      var kindTxt = KIND_BADGE[it.kind] || it.kind || '';
+      return ''
+        + '<div class="inbox-card'+(it.read?'':' unread')+'" data-id="'+mc.esc(it.id)+'">'
+        +   '<div class="head">'
+        +     '<div class="ic">'+m.ic+'</div>'
+        +     '<div class="ti">'+mc.esc(it.title||'(제목 없음)')+'</div>'
+        +     '<div class="ts">'+mc.fmtTime(it.ts)+'</div>'
+        +   '</div>'
+        +   '<div class="body-line">'+mc.esc(it.summary||'')+'</div>'
+        +   '<div class="foot">'
+        +     '<span class="mc-chip">'+m.ic+' '+mc.esc(m.name)+'</span>'
+        +     (kindTxt ? '<span class="mc-chip">'+mc.esc(kindTxt)+'</span>' : '')
+        +     (it.pinned ? '<span class="mc-chip warn">⭐ 고정</span>' : '')
+        +     '<span style="flex:1"></span>'
+        +     '<button class="mc-btn sm ghost" data-act="pin">'+(it.pinned?'★':'☆')+'</button>'
+        +     '<button class="mc-btn sm ghost" data-act="decide" title="이걸로 의사결정 카드 만들기">🎯</button>'
+        +     '<button class="mc-btn sm ghost" data-act="del">🗑</button>'
+        +   '</div>'
+        + '</div>';
+    }).join('');
+
+    if (!list.dataset.bound){
+      list.addEventListener('click', function(e){
+        var card = e.target.closest('.inbox-card');
+        if (!card) return;
+        var id = card.dataset.id;
+        var btn = e.target.closest('[data-act]');
+        if (btn){
+          e.stopPropagation();
+          var act = btn.dataset.act;
+          if (act==='pin'){
+            var it = (mc.inboxList()||[]).filter(function(x){ return x.id===id; })[0];
+            mc.inboxUpdate(id, { pinned: !(it && it.pinned) });
+            renderAll();
+          } else if (act==='del'){
+            if (confirm('삭제할까요?')){
+              mc.inboxRemove(id);
+              mc.toast('삭제됨','ok',1200);
+              renderAll();
+            }
+          } else if (act==='decide'){
+            var it2 = (mc.inboxList()||[]).filter(function(x){ return x.id===id; })[0];
+            if (it2){
+              location.href = '/aimessage/mychat/decision-assistant.html?seed_inbox='+encodeURIComponent(id);
+            }
+          }
+          return;
+        }
+        // click card body → open detail modal + mark as read
+        mc.inboxUpdate(id, { read: true });
+        openDetail(id);
+        renderAll();
+      });
+      list.dataset.bound='1';
+    }
+  }
+
+  function openDetail(id){
+    var it = (mc.inboxList()||[]).filter(function(x){ return x.id===id; })[0];
+    if (!it) return;
+    var m = SRC_META[it.source] || {ic:'•', name:it.source};
+    var metaHtml = '';
+    if (it.meta && Object.keys(it.meta).length){
+      metaHtml = '<div style="background:var(--bg);border-radius:10px;padding:10px;margin-top:10px;font-size:12px;color:var(--text-dim)">'
+        + Object.keys(it.meta).map(function(k){
+            return '<div><b style="color:var(--text)">'+mc.esc(k)+'</b>: '+mc.esc(String(it.meta[k]))+'</div>';
+          }).join('')
+        + '</div>';
+    }
+    mc.openModal(''
+      + '<h3>'+m.ic+' '+mc.esc(it.title||'(제목 없음)')+'</h3>'
+      + '<div style="color:var(--text-mute);font-size:12px;margin-bottom:10px">'
+      +   mc.esc(m.name)+' · '+mc.fmtTime(it.ts)
+      + '</div>'
+      + '<div style="font-size:14px;line-height:1.7">'+mc.esc(it.summary||'(요약 없음)')+'</div>'
+      + metaHtml
+      + '<div class="actions">'
+      +   '<button class="mc-btn ghost" onclick="mc.closeModal()">닫기</button>'
+      +   '<button class="mc-btn primary" onclick="location.href=\'/aimessage/mychat/decision-assistant.html?seed_inbox='+encodeURIComponent(id)+'\'">🎯 의사결정 카드로</button>'
+      + '</div>');
+  }
+
+  function renderAll(){ renderStats(); renderFilters(); renderList(); }
+
+  // ---------- search ----------
+  var qInput = document.getElementById('q');
+  var qTimer = null;
+  qInput.addEventListener('input', function(){
+    clearTimeout(qTimer);
+    qTimer = setTimeout(function(){ state.q = qInput.value; renderList(); }, 150);
+  });
+
+  // ---------- mark all read ----------
+  document.getElementById('btn-mark-all').addEventListener('click', function(){
+    var list = mc.inboxList();
+    list.forEach(function(it){ it.read = true; });
+    mc.lsSet('mychat_inbox_v1', list);
+    mc.toast('모두 읽음 처리','ok',1200);
+    renderAll();
+  });
+
+  // ---------- compose (quick memo) ----------
+  document.getElementById('btn-compose').addEventListener('click', function(){
+    mc.openModal(''
+      + '<h3>✍️ 빠른 메모</h3>'
+      + '<div class="mc-field"><label>제목</label><input id="qm-ti" class="mc-input" placeholder="짧게…"></div>'
+      + '<div class="mc-field"><label>내용</label><textarea id="qm-bd" class="mc-textarea" placeholder="아바타가 기억할 내용"></textarea></div>'
+      + '<div class="actions">'
+      +   '<button class="mc-btn ghost" onclick="mc.closeModal()">취소</button>'
+      +   '<button class="mc-btn primary" id="qm-save">저장</button>'
+      + '</div>'
+    , { onOpen: function(box){
+        box.querySelector('#qm-save').addEventListener('click', function(){
+          var ti = box.querySelector('#qm-ti').value.trim();
+          var bd = box.querySelector('#qm-bd').value.trim();
+          if (!ti && !bd){ mc.toast('내용을 적어주세요','warn'); return; }
+          mc.inboxAdd({
+            source:'manual', kind:'note',
+            title: ti || bd.slice(0,24),
+            summary: bd
+          });
+          mc.closeModal();
+          mc.toast('📥 인박스에 저장','ok');
+          renderAll();
+        });
+      }});
+  });
+
+  // ---------- pull from server (best-effort) ----------
+  mc.api('/aimessage/mychat/api/inbox.php?action=list&limit=200').then(function(r){
+    if (r && r.ok && Array.isArray(r.items) && r.items.length){
+      // Merge server items into local (dedupe by id)
+      var local = mc.inboxList();
+      var byId = {};
+      local.forEach(function(it){ byId[it.id] = true; });
+      r.items.forEach(function(it){
+        if (!byId[it.id]) local.unshift(it);
+      });
+      mc.lsSet('mychat_inbox_v1', local);
+      renderAll();
+    }
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>

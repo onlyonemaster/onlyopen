@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연락처·검색·정렬·체크박스 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link active">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>연락처·검색·정렬</span></div>
+<h1>🔍 연락처·검색·정렬·체크박스 완전 분석</h1>
+<p class="page-desc">종이명함 리스트에서 검색, 정렬, 체크박스 선택, 연락처 관리가 어떻게 동작하는지 분석합니다.</p>
+
+<h2 id="search">1. 검색 — paper_submit()</h2>
+<p>사용자가 검색창(#paper_search_str)에 검색어를 입력하고 엔터를 누르거나 검색 버튼을 클릭하면 실행됩니다.</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 검색창: #paper_search_str
+// onkeyup="enterkey('paper_submit')" — 엔터키 감지
+// button onclick="paper_submit()" — 버튼 클릭
+
+function paper_submit() {
+    var search_str = $("#paper_search_str").val();
+    var range = $("#paper_range").val();  // 현재 정렬 모드
+    getIamPaper('[사용자ID]', '[관리자ID]', range, '0', 1);
+    // card_owner, card_master, search_range, phone_count, page
+}
+</pre>
+
+<h3>enterkey() — 엔터키 통합 감지기</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function enterkey(v1) {
+    if (window.event.keyCode == 13) {  // Enter 키(13) 감지
+        if (v1 == 'contact_submit') {
+            contact_submit();
+        } else if (v1 == 'paper_submit') {
+            paper_submit();
+        } else {
+            friends_submit('');  // 프렌즈 검색
+        }
+    }
+}
+</pre>
+
+<h2 id="sort">2. 정렬 — paper_range()</h2>
+<p>사용자가 정렬 드롭다운에서 선택하면 실행됩니다. 세 가지 정렬 모드가 있습니다:</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// 정렬 드롭다운 메뉴:
+// <li><a onclick="paper_range('3', '등록일순');">등록일순</a></li>
+// <li><a onclick="paper_range('1', '이름순');">이름순</a></li>
+// <li><a onclick="paper_range('5', '회사명순');">회사명순</a></li>
+
+function paper_range(range, label) {
+    // 1. 숨은 input에 정렬 값 저장
+    $("#paper_range").val(range);
+
+    // 2. 라벨 업데이트
+    $("#paper_sort_label").text(label);
+
+    // 3. AJAX로 재로딩
+    getIamPaper('[사용자ID]', '[관리자ID]', range, '0', 1);
+}
+
+// 정렬 값 매핑:
+// 3 → 등록일순 (register_date DESC)
+// 1 → 이름순 (name ASC)
+// 5 → 회사명순 (org_name ASC)
+</pre>
+
+<h2 id="checkbox">3. 체크박스 시스템</h2>
+
+<h3>개별 선택 시 개수 업데이트 — paper_chk_count()</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+function paper_chk_count() {
+    $("#paper_chk_count").text(
+        $("input[name=paper_chk]:checked").length + "개 선택됨"
+    );
+}
+// 각 체크박스는 onclick="paper_chk_count()" 연결
+</pre>
+
+<h3>전체 선택/해제 — groupCheckClick_paper()</h3>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+// <input type="checkbox" name="cbG03" id="cbG03"
+//        onclick="groupCheckClick_paper(this);">
+// <label for="cbG03">전체(0)</label>
+
+function groupCheckClick_paper(obj) {
+    var cbs = document.getElementsByName("paper_chk");
+    for (var i = 0; i < cbs.length; i++) {
+        if (cbs[i].value && !cbs[i].disabled)
+            cbs[i].checked = obj.checked;  // 마스터 체크박스 따라감
+    }
+    paper_chk_count();  // 개수 업데이트
+}
+</pre>
+
+<h2 id="contact">4. 연락처 관리 함수</h2>
+<table style="width:100%;border-collapse:collapse;margin:16px 0;">
+<tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">함수</th><th style="padding:8px 12px;border:1px solid var(--border);">기능</th><th style="padding:8px 12px;border:1px solid var(--border);">엔드포인트</th></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><code>getIamContact(card_owner, card_master, search_range, phone_count, page, paper_yn)</code></td><td style="padding:8px 12px;border:1px solid var(--border);">연락처 목록 로드</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>[내부API]/[연락처조회]</code></td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><code>contact_submit_paper()</code></td><td style="padding:8px 12px;border:1px solid var(--border);">연락처 검색 실행</td><td style="padding:8px 12px;border:1px solid var(--border);">getIamContact() 호출</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><code>contact_chk_count()</code></td><td style="padding:8px 12px;border:1px solid var(--border);">선택 연락처 개수 표시</td><td style="padding:8px 12px;border:1px solid var(--border);">-</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><code>contact_call()</code></td><td style="padding:8px 12px;border:1px solid var(--border);">선택한 1명에게 전화 (tel: 링크)</td><td style="padding:8px 12px;border:1px solid var(--border);">-</td></tr>
+<tr><td style="padding:8px 12px;border:1px solid var(--border);"><code>contact_del()</code></td><td style="padding:8px 12px;border:1px solid var(--border);">선택 연락처 일괄 삭제</td><td style="padding:8px 12px;border:1px solid var(--border);"><code>[내부API]/[연락처처리]</code></td></tr>
+</table>
+
+<h2 id="data-flow">초등학생을 위한 설명</h2>
+<ul class="step-list">
+<li class="step-item"><div class="step-num">🔍</div><div class="step-body"><div class="step-title">검색하기</div><div class="step-desc">명함이 100개쯤 쌓이면 원하는 명함을 찾기 어려워져요. 그래서 검색창에 이름이나 회사 이름을 입력하면, 컴퓨터가 그 글자가 들어간 명함만 골라서 보여줘요. 마치 도서관에서 책 제목으로 책을 찾는 것과 똑같아요!</div></div></li>
+<li class="step-item"><div class="step-num">📊</div><div class="step-body"><div class="step-title">정렬하기</div><div class="step-desc">명함들을 어떤 순서로 볼지 정하는 거예요. '등록일순'은 새로 등록한 순서대로, '이름순'은 가나다 순서대로, '회사명순'은 회사 이름 순서대로 보여줘요. 마치 책장에 책을 꽂는 방식과 같아요!</div></div></li>
+<li class="step-item"><div class="step-num">☑️</div><div class="step-body"><div class="step-title">체크박스</div><div class="step-desc">여러 개의 명함을 한 번에 선택할 수 있는 네모 칸이에요. 맨 위의 '전체' 체크박스를 누르면 모든 명함이 한 번에 선택돼요. 이렇게 선택한 명함들은 한꺼번에 삭제할 수 있어서 편리해요.</div></div></li>
+<li class="step-item"><div class="step-num">📞</div><div class="step-body"><div class="step-title">전화걸기</div><div class="step-desc">체크박스로 명함 한 개만 선택한 후 '전화걸기' 버튼을 누르면 바로 전화가 걸려요! <code>tel:01012345678</code>이라는 특별한 링크를 사용해서, 스마트폰의 전화 앱이 자동으로 열리는 원리예요.</div></div></li>
+</ul>
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

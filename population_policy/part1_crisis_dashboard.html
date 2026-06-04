@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Part 1: 한국 인구위기 현황 대시보드 | 이재명 정부 인구정책 종합분석</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a;
+  --text: #e1e4ed; --sub: #8b8fa3; --accent: #4f8fff;
+  --red: #ff4757; --green: #2ed573; --orange: #ffa502;
+  --purple: #a55eea; --teal: #1dd1a1;
+  --shadow: 0 4px 24px rgba(0,0,0,.4);
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI','Noto Sans KR',sans-serif; line-height:1.6; }
+.container { max-width:1400px; margin:0 auto; padding:24px; }
+header { text-align:center; padding:48px 24px 32px; border-bottom:1px solid var(--border); margin-bottom:32px; }
+header h1 { font-size:2.4rem; font-weight:800; background:linear-gradient(135deg,var(--accent),var(--teal)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; margin-bottom:8px; }
+header .subtitle { color:var(--sub); font-size:1.1rem; }
+.nav-bar { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-bottom:32px; }
+.nav-bar a { padding:10px 20px; border-radius:8px; text-decoration:none; color:var(--sub); background:var(--card); border:1px solid var(--border); font-size:.9rem; transition:all .2s; }
+.nav-bar a:hover, .nav-bar a.active { color:var(--accent); border-color:var(--accent); }
+.nav-bar a.active { background:rgba(79,143,255,.1); }
+
+/* KPI Cards */
+.kpi-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(200px,1fr)); gap:16px; margin-bottom:32px; }
+.kpi-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; text-align:center; position:relative; overflow:hidden; }
+.kpi-card::before { content:''; position:absolute; top:0; left:0; right:0; height:3px; }
+.kpi-card.red::before { background:var(--red); }
+.kpi-card.green::before { background:var(--green); }
+.kpi-card.orange::before { background:var(--orange); }
+.kpi-card.purple::before { background:var(--purple); }
+.kpi-card.teal::before { background:var(--teal); }
+.kpi-card .label { font-size:.85rem; color:var(--sub); margin-bottom:8px; text-transform:uppercase; letter-spacing:.5px; }
+.kpi-card .value { font-size:2.2rem; font-weight:800; margin-bottom:4px; }
+.kpi-card .trend { font-size:.8rem; }
+.kpi-card .trend.up { color:var(--green); }
+.kpi-card .trend.down { color:var(--red); }
+
+/* Chart Grid */
+.chart-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(500px,1fr)); gap:24px; margin-bottom:32px; }
+.chart-card { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:24px; }
+.chart-card h3 { font-size:1.1rem; margin-bottom:16px; color:var(--accent); }
+.chart-card .chart-wrap { position:relative; height:350px; }
+.chart-card.full { grid-column:1/-1; }
+
+/* Timeline */
+.timeline { position:relative; padding:20px 0; }
+.timeline::before { content:''; position:absolute; left:20px; top:0; bottom:0; width:2px; background:var(--border); }
+.tl-item { position:relative; padding-left:48px; margin-bottom:24px; }
+.tl-item::before { content:''; position:absolute; left:11px; top:4px; width:20px; height:20px; border-radius:50%; background:var(--accent); border:3px solid var(--bg); }
+.tl-item .year { font-weight:700; color:var(--accent); font-size:.9rem; }
+.tl-item .desc { color:var(--sub); font-size:.85rem; }
+
+/* Flag Row */
+.flag-row { display:flex; gap:12px; flex-wrap:wrap; margin-bottom:20px; }
+.flag { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:8px 16px; display:flex; align-items:center; gap:8px; font-size:.85rem; }
+.flag .dot { width:10px; height:10px; border-radius:50%; }
+.flag .dot.critical { background:var(--red); }
+.flag .dot.warning { background:var(--orange); }
+.flag .dot.info { background:var(--accent); }
+
+/* Insights */
+.insight-box { background:linear-gradient(135deg,rgba(255,71,87,.1),rgba(255,165,2,.05)); border:1px solid rgba(255,71,87,.3); border-radius:12px; padding:24px; margin-bottom:24px; }
+.insight-box h4 { color:var(--red); margin-bottom:8px; }
+.insight-box ul { color:var(--sub); padding-left:20px; }
+.insight-box li { margin-bottom:4px; }
+
+/* Responsive */
+@media(max-width:768px) {
+  .chart-grid { grid-template-columns:1fr; }
+  header h1 { font-size:1.6rem; }
+  .kpi-card .value { font-size:1.6rem; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>📊 Part 1: 한국 인구위기 현황 진단 대시보드</h1>
+  <p class="subtitle">1960~2026년 출산율 추이 · OECD 비교 · 인구소멸 위험지수 · 재정 부담 전망</p>
+  <p style="color:var(--sub);font-size:.8rem;margin-top:8px;">이재명 정부 인구정책 종합분석 보고서 | 데이터 기준: 2026년 5월</p>
+</header>
+
+<!-- 네비게이션 -->
+<nav class="nav-bar">
+  <a href="#" class="active">Part 1: 위기 대시보드</a>
+  <a href="part2_policy_failure.html">Part 2: 기존정책 실패분석</a>
+  <a href="part3_leejae_achievement.html">Part 3: 이재명 정부 성과</a>
+  <a href="part4_problems_alternatives.html">Part 4: 문제점·대안</a>
+  <a href="part5_ai_innovation.html">Part 5: AI 혁신정책</a>
+  <a href="part6_onechat_system.html">Part 6: 원쳇 시스템(제안)</a>
+</nav>
+
+<!-- 핵심 지표 KPI -->
+<div class="kpi-grid">
+  <div class="kpi-card red">
+    <div class="label">2023년 합계출산율</div>
+    <div class="value">0.72</div>
+    <div class="trend down">▼ 0.06 (역대 최저)</div>
+  </div>
+  <div class="kpi-card green">
+    <div class="label">2025년 합계출산율</div>
+    <div class="value">0.80</div>
+    <div class="trend up">▲ 0.05 (9년 만의 반등 지속)</div>
+  </div>
+  <div class="kpi-card orange">
+    <div class="label">2025년 출생아 수</div>
+    <div class="value">254,500</div>
+    <div class="trend up">▲ 16,100명 (6.8%↑)</div>
+  </div>
+  <div class="kpi-card purple">
+    <div class="label">20년간 투입 예산</div>
+    <div class="value">~700조</div>
+    <div class="trend down" style="color:var(--orange);">GDP 대비 OECD 최상위</div>
+  </div>
+  <div class="kpi-card teal">
+    <div class="label">2026년 초 출산율</div>
+    <div class="value">0.99</div>
+    <div class="trend up">▲ 1.0 돌파 근접</div>
+  </div>
+  <div class="kpi-card red">
+    <div class="label">OECD 꼴찌 기간</div>
+    <div class="value">12년+</div>
+    <div class="trend down">2013~현재 최하위</div>
+  </div>
+</div>
+
+<!-- 위험 플래그 -->
+<div class="flag-row">
+  <div class="flag"><span class="dot critical"></span> 인구감소: 2020년 사망자>출생자 (데드크로스) 진입</div>
+  <div class="flag"><span class="dot critical"></span> 2067년 노인인구 46.5% 전망</div>
+  <div class="flag"><span class="dot warning"></span> 2025년 자연감소 108,900명</div>
+  <div class="flag"><span class="dot warning"></span> 소멸위험지역: 전국 228개 시군구 중 118개(51.8%)</div>
+  <div class="flag"><span class="dot info"></span> 2025년 출생아, 2021년 이후 최고</div>
+  <div class="flag"><span class="dot info"></span> 혼인건수 2023년 19.4만→2025년 22만+ 반등</div>
+</div>
+
+<!-- 차트 영역 -->
+<div class="chart-grid">
+
+  <!-- 차트1: 출산율 추이 1960-2026 -->
+  <div class="chart-card full">
+    <h3>📈 대한민국 합계출산율(TFR) 추이: 1960~2026</h3>
+    <div class="chart-wrap"><canvas id="chartTfr"></canvas></div>
+    <p style="color:var(--sub);font-size:.8rem;margin-top:8px;">출처: 통계청 인구동향조사, KOSIS / 2026년은 1분기 추정치</p>
+  </div>
+
+  <!-- 차트2: OECD 국가별 출산율 비교 (바 차트) -->
+  <div class="chart-card">
+    <h3>🌍 OECD 주요국 출산율 비교 (2024년 기준)</h3>
+    <div class="chart-wrap"><canvas id="chartOecd"></canvas></div>
+  </div>
+
+  <!-- 차트3: 출생아 수·사망자 수 추이 -->
+  <div class="chart-card">
+    <h3>⚖️ 출생아 수 vs 사망자 수 (2010~2025)</h3>
+    <div class="chart-wrap"><canvas id="chartBirthDeath"></canvas></div>
+  </div>
+
+  <!-- 차트4: 혼인건수 추이 -->
+  <div class="chart-card">
+    <h3>💍 혼인건수 추이 (2000~2025)</h3>
+    <div class="chart-wrap"><canvas id="chartMarriage"></canvas></div>
+  </div>
+
+  <!-- 차트5: 인구 피라미드 변화 -->
+  <div class="chart-card">
+    <h3>🏛️ 인구구조 변화: 2000년 vs 2025년 vs 2050년(추계)</h3>
+    <div class="chart-wrap"><canvas id="chartPyramid"></canvas></div>
+  </div>
+
+  <!-- 차트6: 연도별 출산율 변화율 -->
+  <div class="chart-card">
+    <h3>📉 연도별 출산율 증감폭 (2010~2025)</h3>
+    <div class="chart-wrap"><canvas id="chartDelta"></canvas></div>
+  </div>
+
+  <!-- 차트7: 저출산 예산 vs 출산율 -->
+  <div class="chart-card full">
+    <h3>💰 저출산 대응 예산 vs 합계출산율: 투입 대비 효과</h3>
+    <div class="chart-wrap"><canvas id="chartBudget"></canvas></div>
+    <p style="color:var(--sub);font-size:.8rem;margin-top:8px;">출처: 저출산고령사회위원회, 기획재정부 / 예산은 저출산·고령사회基本계획 기준</p>
+  </div>
+
+</div>
+
+<!-- 통찰 -->
+<div class="insight-box">
+  <h4>🔴 핵심 진단: 대한민국 인구위기의 구조적 특성</h4>
+  <ul>
+    <li><strong>속도:</strong> 합계출산율이 1960년 6.0에서 2023년 0.72까지 88% 하락 — OECD 국가 중 가장 급격한 하락</li>
+    <li><strong>지속성:</strong> 2002년 이후 23년 연속 초저출산(1.3 미만), 2018년 이후 0명대 진입</li>
+    <li><strong>투자 역설:</strong> 2006~2025년 약 700조 원 투입에도 출산율은 지속 하락 → 2024년 첫 반등</li>
+    <li><strong>구조적 함정:</strong> 만혼·비혼 증가 + 주거비·교육비·육아부담의 3중 압박 + 경쟁사회 구조</li>
+    <li><strong>반등 신호:</strong> 2024년(0.75), 2025년(0.80) 연속 반등 — 임호근 비서관 임명(2026.2) 이후 가속화 조짐</li>
+    <li><strong>원쳇 시스템 잠재력:</strong> 도입 시 개인 맞춤형 정책 전달·AI 동행 메시지로 정책 체감도 제고 — 전환점 역할 기대</li>
+  </ul>
+</div>
+
+<!-- 연대표 -->
+<div class="chart-card">
+  <h3>📅 한국 인구정책 주요 변곡점</h3>
+  <div class="timeline">
+    <div class="tl-item"><div class="year">1961</div><div class="desc">가족계획사업 시작 — "3·3·35" 슬로건 (3자녀, 3세 터울, 35세 이전 출산)</div></div>
+    <div class="tl-item"><div class="year">1983</div><div class="desc">합계출산율 2.08 — 인구대체수준(2.1) 하회 시작</div></div>
+    <div class="tl-item"><div class="year">1996</div><div class="desc">가족계획사업 폐지, 인구증가억제정책 공식 종료</div></div>
+    <div class="tl-item"><div class="year">2002</div><div class="desc">합계출산율 1.17 — 초저출산사회 진입 (OECD 기준 1.3 미만)</div></div>
+    <div class="tl-item"><div class="year">2005</div><div class="desc">저출산고령사회기본법 제정 — 제1차 기본계획 수립</div></div>
+    <div class="tl-item"><div class="year">2018</div><div class="desc">합계출산율 0.98 — 0명대 진입 (세계 유일)</div></div>
+    <div class="tl-item"><div class="year">2020</div><div class="desc">데드크로스 — 사망자 수 > 출생아 수, 인구 자연감소 시작</div></div>
+    <div class="tl-item"><div class="year">2023</div><div class="desc">합계출산율 0.72 — 사상 최저점</div></div>
+    <div class="tl-item"><div class="year">2024</div><div class="desc">합계출산율 0.75 — 9년 만의 반등</div></div>
+    <div class="tl-item"><div class="year">2025</div><div class="desc">합계출산율 0.80 — 반등 지속, 출생아 254,500명</div></div>
+    <div class="tl-item"><div class="year">2026.2</div><div class="desc">임호근 인구정책비서관 임명 — 이재명 정부 첫 인구정책 전담</div></div>
+    <div class="tl-item"><div class="year">2026.3</div><div class="desc">2026년 초 합계출산율 0.99 — 1.0 회복 목전</div></div>
+  </div>
+</div>
+
+</div><!-- .container -->
+
+<script>
+// ========== 공통 색상 ==========
+const colors = { blue:'#4f8fff', teal:'#1dd1a1', red:'#ff4757', orange:'#ffa502', purple:'#a55eea', pink:'#ff6b81', yellow:'#ffd32a' };
+const gridColor = 'rgba(138,143,163,0.15)';
+const textColor = '#8b8fa3';
+
+Chart.defaults.color = textColor;
+Chart.defaults.borderColor = gridColor;
+Chart.defaults.font.family = "'Segoe UI','Noto Sans KR',sans-serif";
+
+// ========== 1. 출산율 추이 1960-2026 ==========
+(function(){
+  const years = ['1960','1965','1970','1975','1980','1985','1990','1995','2000','2002','2005','2010','2013','2015','2017','2018','2019','2020','2021','2022','2023','2024','2025','2026e'];
+  const tfr   = [ 6.00,  4.80,  4.53,  3.43,  2.82,  1.67,  1.57,  1.65,  1.47,  1.17,  1.08,  1.23,  1.19,  1.24,  1.05,  0.98,  0.92,  0.84,  0.81,  0.78,  0.72,  0.75,  0.80,  0.99];
+  const ctx = document.getElementById('chartTfr').getContext('2d');
+  new Chart(ctx, {
+    type:'line', data:{ labels:years, datasets:[
+      { label:'합계출산율', data:tfr, borderColor:colors.blue, backgroundColor:'rgba(79,143,255,0.1)', fill:true, tension:.3, pointRadius:3, pointHoverRadius:6, pointBackgroundColor:colors.blue },
+      { label:'인구대체수준 (2.1)', data:Array(24).fill(2.1), borderColor:colors.red, borderDash:[8,4], pointRadius:0, fill:false },
+      { label:'초저출산 기준 (1.3)', data:Array(24).fill(1.3), borderColor:colors.orange, borderDash:[4,4], pointRadius:0, fill:false }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ tooltip:{mode:'index'}, legend:{position:'bottom',labels:{usePointStyle:true}} }, scales:{ y:{min:0,max:6.5, title:{display:true,text:'합계출산율 (명)'}} } }
+  });
+})();
+
+// ========== 2. OECD 비교 ==========
+(function(){
+  const labels = ['한국','스페인','이탈리아','일본','독일','헝가리','스웨덴','프랑스','미국','이스라엘'];
+  const data   = [ 0.75,  1.16,   1.20,    1.20,  1.35,  1.40,   1.52,   1.68,  1.62,  2.89];
+  const bg = data.map(v=>v<1?colors.red:v<1.3?colors.orange:v<1.6?colors.teal:v<2?colors.blue:colors.green);
+  const ctx = document.getElementById('chartOecd').getContext('2d');
+  new Chart(ctx, {
+    type:'bar', data:{ labels, datasets:[{ label:'2024년 합계출산율', data, backgroundColor:bg, borderRadius:6 }] },
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{ legend:{display:false} }, scales:{ x:{title:{display:true,text:'합계출산율'}, beginAtZero:true, max:3.2 } } }
+  });
+})();
+
+// ========== 3. 출생·사망 ==========
+(function(){
+  const yrs = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+  const birth = [470, 471, 484, 437, 435, 438, 406, 358, 327, 303, 272, 261, 249, 230, 238, 255];
+  const death = [255, 257, 267, 266, 268, 276, 281, 286, 299, 295, 305, 318, 373, 354, 360, 364];
+  const ctx = document.getElementById('chartBirthDeath').getContext('2d');
+  new Chart(ctx, {
+    type:'line', data:{ labels:yrs, datasets:[
+      { label:'출생아 수 (천명)', data:birth, borderColor:colors.teal, backgroundColor:'rgba(29,209,161,0.1)', fill:true, tension:.3, pointRadius:3 },
+      { label:'사망자 수 (천명)', data:death, borderColor:colors.red, backgroundColor:'rgba(255,71,87,0.1)', fill:true, tension:.3, pointRadius:3 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ tooltip:{mode:'index'}, legend:{position:'bottom',labels:{usePointStyle:true}} }, scales:{ y:{title:{display:true,text:'천명'}} } }
+  });
+})();
+
+// ========== 4. 혼인건수 ==========
+(function(){
+  const yrs = ['2000','2005','2010','2015','2017','2019','2020','2021','2022','2023','2024','2025'];
+  const mar = [ 334,  316,  326,  303,  265,  239,  214,  193,  192,  194,  208,  222];
+  const ctx = document.getElementById('chartMarriage').getContext('2d');
+  new Chart(ctx, {
+    type:'bar', data:{ labels:yrs, datasets:[{ label:'혼인건수 (천건)', data:mar, backgroundColor:colors.purple, borderRadius:6 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{title:{display:true,text:'천건'}} } }
+  });
+})();
+
+// ========== 5. 인구 피라미드 (Male-Left / Female-Right) ==========
+(function(){
+  const groups = ['0-9세','10-19','20-29','30-39','40-49','50-59','60-69','70-79','80+'];
+  // 2000년
+  const m2000 = [-4.2,-3.9,-4.3,-4.4,-3.6,-2.2,-1.3,-0.5,-0.2];
+  const f2000 = [ 3.9, 3.6, 4.1, 4.2, 3.5, 2.3, 1.6, 0.8, 0.4];
+  // 2025년
+  const m2025 = [-2.2,-2.3,-3.1,-3.6,-4.0,-4.2,-3.5,-1.8,-0.7];
+  const f2025 = [ 2.1, 2.1, 3.0, 3.4, 3.8, 4.1, 3.6, 2.1, 1.1];
+  // 2050년 추계
+  const m2050 = [-1.3,-1.5,-1.8,-2.2,-2.5,-3.0,-3.8,-3.2,-2.0];
+  const f2050 = [ 1.2, 1.4, 1.7, 2.1, 2.4, 2.9, 3.9, 3.5, 2.8];
+
+  const ctx = document.getElementById('chartPyramid').getContext('2d');
+  new Chart(ctx, {
+    type:'bar', data:{ labels:groups, datasets:[
+      { label:'2000 남성', data:m2000, backgroundColor:'rgba(79,143,255,0.6)', borderColor:colors.blue, borderWidth:1 },
+      { label:'2000 여성', data:f2000, backgroundColor:'rgba(79,143,255,0.3)', borderColor:colors.blue, borderWidth:1 },
+      { label:'2025 남성', data:m2025, backgroundColor:'rgba(29,209,161,0.6)', borderColor:colors.teal, borderWidth:1 },
+      { label:'2025 여성', data:f2025, backgroundColor:'rgba(29,209,161,0.3)', borderColor:colors.teal, borderWidth:1 },
+      { label:'2050 남성', data:m2050, backgroundColor:'rgba(255,71,87,0.5)', borderColor:colors.red, borderWidth:1 },
+      { label:'2050 여성', data:f2050, backgroundColor:'rgba(255,71,87,0.2)', borderColor:colors.red, borderWidth:1 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, indexAxis:'y', plugins:{ legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:12}} }, scales:{ x:{stacked:false,title:{display:true,text:'인구 (백만명)'}} } }
+  });
+})();
+
+// ========== 6. 출산율 증감폭 ==========
+(function(){
+  const yrs = ['2010','2011','2012','2013','2014','2015','2016','2017','2018','2019','2020','2021','2022','2023','2024','2025'];
+  const delta = [ 0.08,  0.01,  0.07, -0.04,  0.02,  0.02, -0.07, -0.07, -0.07, -0.06, -0.08, -0.03, -0.03, -0.06,  0.03,  0.05];
+  const bg = delta.map(v=>v>=0?colors.teal:colors.red);
+  const ctx = document.getElementById('chartDelta').getContext('2d');
+  new Chart(ctx, {
+    type:'bar', data:{ labels:yrs, datasets:[{ label:'전년대비 증감', data:delta, backgroundColor:bg, borderRadius:6 }] },
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ legend:{display:false} }, scales:{ y:{title:{display:true,text:'증감폭'}} } }
+  });
+})();
+
+// ========== 7. 예산 vs 출산율 (듀얼 축) ==========
+(function(){
+  const labels = ['1차(06-10)','2차(11-15)','3차(16-20)','4차(21-25)'];
+  const budget = [40.3, 109.5, 196.5, 383.8]; // 조 원
+  const tfr    = [1.17, 1.24, 0.92, 0.72]; // 기간 말 기준
+  const ctx = document.getElementById('chartBudget').getContext('2d');
+  new Chart(ctx, {
+    type:'bar', data:{ labels, datasets:[
+      { label:'예산 (조 원)', data:budget, backgroundColor:colors.orange, borderRadius:6, yAxisID:'y', order:2 },
+      { label:'합계출산율 (우측)', data:tfr, type:'line', borderColor:colors.red, backgroundColor:'rgba(255,71,87,0.1)', fill:true, tension:.3, pointRadius:6, pointBackgroundColor:colors.red, yAxisID:'y1', order:1 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false, plugins:{ tooltip:{mode:'index'}, legend:{position:'bottom',labels:{usePointStyle:true}} }, scales:{ y:{position:'left',title:{display:true,text:'예산 (조 원)'}, beginAtZero:true}, y1:{position:'right',title:{display:true,text:'합계출산율'}, min:0, max:1.5, grid:{drawOnChartArea:false}} } }
+  });
+})();
+</script>
+
+</body>
+</html>

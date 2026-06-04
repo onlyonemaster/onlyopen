@@ -1,0 +1,1040 @@
+<!DOCTYPE html>
+<!--
+================================================================
+  [MYCHAT-SUB-v1] 마이챗 구독 결제 페이지
+  ----------------------------------------------------------------
+  · 경로: /aimessage/mychat/subscribe.html
+  · 플랜: 스타터 / 스탠다드 / BYOK(자체API)
+  · 결제: 토스페이먼츠 (loadTossSDK 프록시 방식)
+  · 월/연간 전환 토글, 연간 20% 할인
+  · BYOK: API 제공사 선택 + 키 입력 후 결제
+  생성: 2026-06-01 / 조은 × 아리
+================================================================
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="0">
+<title>마이챗 · 구독 플랜</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   기본 리셋 & 루트 변수
+============================================================ */
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:       #0f172a;
+  --bg2:      #1e293b;
+  --bg3:      #2d3748;
+  --border:   #334155;
+  --border2:  #475569;
+  --purple:   #7e22ce;
+  --purple2:  #9333ea;
+  --purple3:  #a855f7;
+  --purple-l: rgba(126,34,206,.18);
+  --gold:     #b45309;
+  --gold2:    #d97706;
+  --gold3:    #fbbf24;
+  --gold-l:   rgba(180,83,9,.18);
+  --text:     #f1f5f9;
+  --text2:    #cbd5e1;
+  --text3:    #94a3b8;
+  --green:    #10b981;
+  --red:      #ef4444;
+  --radius:   16px;
+  --shadow:   0 4px 24px rgba(0,0,0,.35);
+  --font:'Noto Sans KR','Apple SD Gothic Neo',-apple-system,sans-serif;
+}
+html,body{
+  min-height:100vh;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font);
+  -webkit-font-smoothing:antialiased;
+  overflow-x:hidden;
+}
+
+/* ============================================================
+   레이아웃
+============================================================ */
+.page{
+  max-width:480px;
+  margin:0 auto;
+  padding:0 0 60px;
+}
+
+/* ============================================================
+   상단 헤더
+============================================================ */
+.top-bar{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:14px 16px 10px;
+  padding-top:calc(env(safe-area-inset-top,0px) + 14px);
+  background:var(--bg);
+  position:sticky;
+  top:0;
+  z-index:50;
+  border-bottom:1px solid var(--border);
+}
+.back-btn{
+  display:flex;align-items:center;gap:6px;
+  color:var(--text3);
+  text-decoration:none;
+  font-size:13px;
+  font-weight:500;
+  padding:6px 10px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:transparent;
+  cursor:pointer;
+  transition:all .2s;
+  white-space:nowrap;
+}
+.back-btn:hover{color:var(--text2);border-color:var(--border2);background:var(--bg2)}
+.back-btn i{font-size:11px}
+.top-title{
+  flex:1;
+  font-size:15px;
+  font-weight:700;
+  color:var(--text);
+  text-align:center;
+}
+.top-spacer{width:70px}
+
+/* ============================================================
+   히어로 영역
+============================================================ */
+.hero{
+  text-align:center;
+  padding:28px 16px 20px;
+}
+.hero-badge{
+  display:inline-flex;align-items:center;gap:6px;
+  background:var(--purple-l);
+  color:var(--purple3);
+  border:1px solid rgba(168,85,247,.3);
+  padding:5px 14px;
+  border-radius:100px;
+  font-size:11px;
+  font-weight:700;
+  margin-bottom:14px;
+  letter-spacing:.3px;
+}
+.hero h1{
+  font-size:22px;
+  font-weight:800;
+  color:var(--text);
+  margin-bottom:8px;
+  letter-spacing:-.4px;
+  line-height:1.3;
+}
+.hero h1 .hl{
+  background:linear-gradient(90deg,var(--purple3),var(--gold3));
+  -webkit-background-clip:text;
+  -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.hero p{
+  font-size:13px;
+  color:var(--text3);
+  line-height:1.6;
+}
+
+/* ============================================================
+   현재 구독 중 배너 (구독 중일 때)
+============================================================ */
+.current-plan-banner{
+  display:none;
+  margin:0 16px 16px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-left:3px solid var(--gold2);
+  border-radius:12px;
+  padding:14px 16px;
+}
+.current-plan-banner.show{display:block}
+.current-plan-banner .label{font-size:11px;color:var(--text3);margin-bottom:4px;}
+.current-plan-banner .name{font-size:14px;font-weight:700;color:var(--gold3);}
+.current-plan-banner .desc{font-size:11px;color:var(--text3);margin-top:4px;}
+
+/* ============================================================
+   월/연간 토글
+============================================================ */
+.billing-wrap{
+  display:flex;align-items:center;justify-content:center;
+  gap:12px;
+  padding:10px 16px 4px;
+}
+.billing-label{
+  font-size:13px;
+  font-weight:500;
+  color:var(--text3);
+  cursor:pointer;
+  transition:color .2s;
+  user-select:none;
+}
+.billing-label.active{color:var(--text);font-weight:700;}
+.toggle-sw{
+  position:relative;
+  width:48px;height:26px;
+  background:var(--bg3);
+  border-radius:13px;
+  cursor:pointer;
+  border:1px solid var(--border);
+  transition:background .25s;
+  flex-shrink:0;
+}
+.toggle-sw.on{
+  background:linear-gradient(90deg,var(--purple),var(--purple2));
+  border-color:transparent;
+}
+.toggle-sw::after{
+  content:'';
+  position:absolute;
+  top:3px;left:3px;
+  width:18px;height:18px;
+  background:var(--text3);
+  border-radius:50%;
+  transition:transform .25s,background .25s;
+}
+.toggle-sw.on::after{
+  transform:translateX(22px);
+  background:#fff;
+}
+.save-badge{
+  font-size:10px;
+  background:rgba(16,185,129,.18);
+  color:var(--green);
+  padding:2px 8px;
+  border-radius:10px;
+  font-weight:700;
+  border:1px solid rgba(16,185,129,.25);
+}
+
+/* ============================================================
+   플랜 카드 리스트
+============================================================ */
+.plans{
+  padding:14px 12px 0;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+/* ── 플랜 카드 ── */
+.plan-card{
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:var(--radius);
+  padding:18px 16px 16px;
+  cursor:pointer;
+  transition:border-color .2s,box-shadow .2s,transform .15s;
+  position:relative;
+  overflow:hidden;
+}
+.plan-card::before{
+  content:'';
+  position:absolute;
+  top:0;left:0;right:0;
+  height:2px;
+  background:transparent;
+  transition:background .2s;
+}
+.plan-card:hover{
+  border-color:var(--border2);
+  box-shadow:0 4px 20px rgba(0,0,0,.3);
+  transform:translateY(-1px);
+}
+.plan-card.popular{
+  border-color:var(--purple);
+  box-shadow:0 0 0 1px var(--purple),var(--shadow);
+}
+.plan-card.popular::before{
+  background:linear-gradient(90deg,var(--purple),var(--purple2));
+}
+.plan-card.byok{
+  border-color:var(--gold);
+  box-shadow:0 0 0 1px var(--gold),0 4px 16px rgba(180,83,9,.2);
+}
+.plan-card.byok::before{
+  background:linear-gradient(90deg,var(--gold),var(--gold2));
+}
+.plan-card.current-active{
+  border-color:var(--green);
+  box-shadow:0 0 0 1px var(--green);
+}
+
+/* 배지 */
+.plan-badge{
+  display:inline-block;
+  font-size:10px;font-weight:700;
+  padding:3px 10px;border-radius:100px;
+  margin-bottom:10px;
+  letter-spacing:.3px;
+}
+.plan-badge.hot{background:var(--purple-l);color:var(--purple3);border:1px solid rgba(168,85,247,.3);}
+.plan-badge.byok-badge{background:var(--gold-l);color:var(--gold3);border:1px solid rgba(180,83,9,.3);}
+.plan-badge.now{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.25);}
+
+/* 헤더 */
+.plan-head{
+  display:flex;align-items:flex-start;justify-content:space-between;
+  margin-bottom:4px;
+}
+.plan-name{
+  font-size:17px;
+  font-weight:800;
+  color:var(--text);
+}
+.plan-current-tag{
+  font-size:10px;
+  background:rgba(16,185,129,.15);
+  color:var(--green);
+  border:1px solid rgba(16,185,129,.25);
+  padding:3px 8px;
+  border-radius:100px;
+  font-weight:700;
+  display:none;
+}
+.plan-current-tag.show{display:block}
+
+/* 가격 */
+.plan-price-wrap{margin:10px 0 14px;}
+.plan-price{
+  font-size:28px;
+  font-weight:800;
+  color:var(--text);
+  display:flex;align-items:baseline;gap:4px;
+  flex-wrap:wrap;
+}
+.plan-price .won{font-size:18px;font-weight:700;color:var(--text2);}
+.plan-price .per{font-size:12px;font-weight:500;color:var(--text3);}
+.plan-price-annual{
+  font-size:11px;
+  color:var(--text3);
+  margin-top:3px;
+  display:none;
+}
+.plan-price-annual.show{display:block}
+.plan-price-annual .annual-amt{color:var(--gold3);font-weight:600;}
+.plan-orig{
+  font-size:11px;
+  color:var(--text3);
+  text-decoration:line-through;
+  display:none;
+}
+.plan-orig.show{display:inline-block;margin-top:2px;}
+
+/* 스펙 리스트 */
+.plan-specs{
+  list-style:none;
+  margin:0 0 16px;
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:5px 8px;
+}
+.plan-specs li{
+  font-size:12px;
+  color:var(--text2);
+  display:flex;align-items:center;gap:6px;
+  line-height:1.4;
+}
+.plan-specs li i{
+  color:var(--green);
+  font-size:10px;
+  width:12px;text-align:center;flex-shrink:0;
+}
+.plan-specs li.full{grid-column:1/3;}
+.plan-specs li i.gold{color:var(--gold3);}
+
+/* 플랜 설명 */
+.plan-desc{
+  font-size:11px;
+  color:var(--text3);
+  margin-bottom:14px;
+  line-height:1.5;
+}
+
+/* ── BYOK API 키 입력 영역 ── */
+.byok-input-wrap{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  margin-bottom:14px;
+  display:none;
+}
+.byok-input-wrap.show{display:block}
+.byok-input-wrap .field-label{
+  font-size:11px;
+  color:var(--text3);
+  font-weight:600;
+  margin-bottom:6px;
+  display:flex;align-items:center;gap:5px;
+}
+.byok-input-wrap .field-label i{font-size:10px;}
+.byok-provider-row{
+  display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap;
+}
+.byok-provider-btn{
+  flex:1;min-width:80px;
+  padding:7px 6px;
+  border-radius:8px;
+  border:1px solid var(--border);
+  background:transparent;
+  color:var(--text3);
+  font-size:11px;
+  font-weight:600;
+  cursor:pointer;
+  transition:all .2s;
+  text-align:center;
+  font-family:var(--font);
+}
+.byok-provider-btn:hover{border-color:var(--border2);color:var(--text2);}
+.byok-provider-btn.selected{
+  border-color:var(--gold);
+  color:var(--gold3);
+  background:var(--gold-l);
+}
+.byok-key-input{
+  width:100%;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:9px 12px;
+  font-size:12px;
+  color:var(--text);
+  font-family:var(--font);
+  outline:none;
+  transition:border-color .2s;
+}
+.byok-key-input:focus{border-color:var(--gold);}
+.byok-key-input::placeholder{color:var(--text3);}
+.byok-hint{
+  font-size:10px;
+  color:var(--text3);
+  margin-top:5px;
+  line-height:1.4;
+}
+.byok-hint a{color:var(--gold3);text-decoration:none;}
+
+/* 결제 버튼 */
+.plan-btn{
+  display:flex;align-items:center;justify-content:center;gap:7px;
+  width:100%;
+  padding:13px;
+  border-radius:12px;
+  font-size:14px;font-weight:700;
+  border:none;cursor:pointer;
+  transition:all .2s;
+  font-family:var(--font);
+  letter-spacing:-.2px;
+}
+.plan-btn.purple-btn{
+  background:linear-gradient(135deg,var(--purple),var(--purple2));
+  color:#fff;
+  box-shadow:0 4px 14px rgba(126,34,206,.4);
+}
+.plan-btn.purple-btn:hover{opacity:.9;transform:translateY(-1px);}
+.plan-btn.gold-btn{
+  background:linear-gradient(135deg,var(--gold),var(--gold2));
+  color:#fff;
+  box-shadow:0 4px 14px rgba(180,83,9,.4);
+}
+.plan-btn.gold-btn:hover{opacity:.9;transform:translateY(-1px);}
+.plan-btn.current-btn{
+  background:var(--bg3);
+  color:var(--green);
+  border:1px solid rgba(16,185,129,.3);
+  cursor:default;
+}
+.plan-btn:active{transform:scale(.98);}
+.plan-btn i{font-size:13px;}
+
+/* ============================================================
+   하단 안내
+============================================================ */
+.footer-note{
+  margin:24px 16px 0;
+  padding:16px;
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+.footer-note h3{
+  font-size:12px;
+  font-weight:700;
+  color:var(--text2);
+  margin-bottom:10px;
+  display:flex;align-items:center;gap:6px;
+}
+.footer-note ul{
+  list-style:none;
+}
+.footer-note ul li{
+  font-size:11px;
+  color:var(--text3);
+  padding:3px 0;
+  display:flex;align-items:flex-start;gap:6px;
+  line-height:1.5;
+}
+.footer-note ul li::before{
+  content:'·';
+  color:var(--text3);
+  flex-shrink:0;
+  margin-top:1px;
+}
+
+/* ============================================================
+   로딩 오버레이
+============================================================ */
+.loading-overlay{
+  position:fixed;inset:0;
+  background:rgba(15,23,42,.85);
+  backdrop-filter:blur(4px);
+  z-index:999;
+  display:none;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+  gap:16px;
+}
+.loading-overlay.show{display:flex}
+.loading-spinner{
+  width:44px;height:44px;
+  border:3px solid var(--border);
+  border-top-color:var(--purple3);
+  border-radius:50%;
+  animation:spin .7s linear infinite;
+}
+@keyframes spin{to{transform:rotate(360deg)}}
+.loading-text{font-size:13px;color:var(--text3);}
+
+/* ============================================================
+   토스트 메시지
+============================================================ */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--bg2);
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:12px 20px;
+  font-size:13px;
+  color:var(--text);
+  font-weight:500;
+  z-index:1000;
+  white-space:nowrap;
+  box-shadow:var(--shadow);
+  transition:transform .3s ease;
+  pointer-events:none;
+}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.error{border-color:rgba(239,68,68,.4);color:#fca5a5;}
+
+/* ============================================================
+   반응형 (480 초과 시 카드 간격 살짝 조정)
+============================================================ */
+@media(min-width:481px){
+  .page{border-left:1px solid var(--border);border-right:1px solid var(--border);min-height:100vh;}
+  .plan-specs{grid-template-columns:1fr 1fr 1fr;}
+  .plan-specs li.full{grid-column:1/4;}
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+  <!-- 상단 헤더 -->
+  <div class="top-bar">
+    <a class="back-btn" href="/aimessage/mychat/">
+      <i class="fa fa-chevron-left"></i> 마이챗으로
+    </a>
+    <div class="top-title">구독 플랜</div>
+    <div class="top-spacer"></div>
+  </div>
+
+  <!-- 히어로 -->
+  <div class="hero">
+    <div class="hero-badge">
+      <i class="fa fa-crown"></i> 마이챗 프리미엄
+    </div>
+    <h1>나만의 AI 아바타와<br><span class="hl">더 깊은 대화</span>를 시작하세요</h1>
+    <p>학습된 나의 데이터로 대화하는<br>완전히 다른 AI 경험</p>
+  </div>
+
+  <!-- 현재 구독 배너 (JS로 표시) -->
+  <div class="current-plan-banner" id="currentPlanBanner">
+    <div class="label">현재 구독 중</div>
+    <div class="name" id="currentPlanName">-</div>
+    <div class="desc" id="currentPlanDesc">더 나은 플랜으로 업그레이드할 수 있습니다.</div>
+  </div>
+
+  <!-- 월/연간 토글 -->
+  <div class="billing-wrap">
+    <span class="billing-label active" id="lblMonth" onclick="setBilling('monthly')">월간</span>
+    <div class="toggle-sw" id="billingToggle" onclick="toggleBilling()"></div>
+    <span class="billing-label" id="lblYear" onclick="setBilling('yearly')">연간</span>
+    <span class="save-badge">20% 절약</span>
+  </div>
+
+  <!-- 플랜 카드 -->
+  <div class="plans">
+
+    <!-- ── 스타터 ── -->
+    <div class="plan-card" id="card-starter" onclick="selectPlan('starter')">
+      <div class="plan-badge hot">입문자 추천</div>
+      <div class="plan-head">
+        <div class="plan-name">스타터</div>
+        <span class="plan-current-tag" id="tag-starter">현재 플랜</span>
+      </div>
+      <div class="plan-price-wrap">
+        <div class="plan-price">
+          <span id="price-starter">9,900</span>
+          <span class="won">원</span>
+          <span class="per">/월</span>
+        </div>
+        <div class="plan-orig" id="orig-starter">월 12,375원</div>
+        <div class="plan-price-annual" id="annual-starter">
+          연간 결제 시 <span class="annual-amt" id="annual-amt-starter">95,040원</span>/년
+        </div>
+      </div>
+      <ul class="plan-specs">
+        <li><i class="fa fa-check-circle"></i> AI 대화 300회/월</li>
+        <li><i class="fa fa-check-circle"></i> 음성 대화 50회</li>
+        <li><i class="fa fa-check-circle"></i> 화상 통화 10회</li>
+        <li><i class="fa fa-check-circle"></i> 학습 데이터 200건</li>
+        <li class="full"><i class="fa fa-check-circle"></i> 기본 아바타 2종 선택</li>
+        <li class="full"><i class="fa fa-check-circle"></i> 이메일 지원</li>
+      </ul>
+      <button class="plan-btn purple-btn" id="btn-starter">
+        <i class="fa fa-bolt"></i> 스타터 시작하기
+      </button>
+    </div>
+
+    <!-- ── 스탠다드 ── -->
+    <div class="plan-card popular" id="card-standard" onclick="selectPlan('standard')">
+      <div class="plan-badge hot"><i class="fa fa-star" style="font-size:9px;margin-right:3px;"></i>가장 인기</div>
+      <div class="plan-head">
+        <div class="plan-name">스탠다드</div>
+        <span class="plan-current-tag" id="tag-standard">현재 플랜</span>
+      </div>
+      <div class="plan-price-wrap">
+        <div class="plan-price">
+          <span id="price-standard">24,900</span>
+          <span class="won">원</span>
+          <span class="per">/월</span>
+        </div>
+        <div class="plan-orig" id="orig-standard">월 31,125원</div>
+        <div class="plan-price-annual" id="annual-standard">
+          연간 결제 시 <span class="annual-amt" id="annual-amt-standard">239,040원</span>/년
+        </div>
+      </div>
+      <ul class="plan-specs">
+        <li><i class="fa fa-check-circle"></i> AI 대화 1,000회/월</li>
+        <li><i class="fa fa-check-circle"></i> 음성 대화 300회</li>
+        <li><i class="fa fa-check-circle"></i> 화상 통화 50회</li>
+        <li><i class="fa fa-check-circle"></i> 학습 데이터 1,000건</li>
+        <li class="full"><i class="fa fa-check-circle"></i> 프리미엄 아바타 전체 이용</li>
+        <li class="full"><i class="fa fa-check-circle"></i> 우선 고객 지원</li>
+        <li class="full"><i class="fa fa-check-circle"></i> 고급 분석 대시보드</li>
+      </ul>
+      <button class="plan-btn purple-btn" id="btn-standard">
+        <i class="fa fa-rocket"></i> 스탠다드 시작하기
+      </button>
+    </div>
+
+    <!-- ── BYOK ── -->
+    <div class="plan-card byok" id="card-byok" onclick="handleByokCardClick(event)">
+      <div class="plan-badge byok-badge"><i class="fa fa-key" style="font-size:9px;margin-right:3px;"></i>자체 API 키</div>
+      <div class="plan-head">
+        <div class="plan-name">BYOK <span style="font-size:13px;font-weight:500;color:var(--text3);">Bring Your Own Key</span></div>
+        <span class="plan-current-tag" id="tag-byok">현재 플랜</span>
+      </div>
+      <div class="plan-price-wrap">
+        <div class="plan-price">
+          <span>4,900</span>
+          <span class="won">원</span>
+          <span class="per">/월</span>
+        </div>
+        <div style="font-size:11px;color:var(--text3);margin-top:3px;">
+          API 사용료는 직접 부담 · 플랫폼 이용료만 결제
+        </div>
+      </div>
+      <p class="plan-desc">
+        본인의 API 키(OpenAI·DeepSeek·Claude)를 연결하면<br>
+        <strong style="color:var(--gold3);">모든 기능을 무제한</strong>으로 이용할 수 있습니다.
+      </p>
+      <ul class="plan-specs" style="margin-bottom:14px;">
+        <li><i class="fa fa-infinity gold"></i> AI 대화 무제한</li>
+        <li><i class="fa fa-infinity gold"></i> 음성 대화 무제한</li>
+        <li><i class="fa fa-infinity gold"></i> 화상 통화 무제한</li>
+        <li><i class="fa fa-infinity gold"></i> 학습 데이터 무제한</li>
+        <li class="full"><i class="fa fa-check-circle"></i> 모든 프리미엄 아바타</li>
+        <li class="full"><i class="fa fa-check-circle"></i> 최우선 고객 지원</li>
+      </ul>
+
+      <!-- API 키 입력 영역 -->
+      <div class="byok-input-wrap" id="byokInputWrap">
+        <div class="field-label"><i class="fa fa-robot"></i> API 제공사 선택</div>
+        <div class="byok-provider-row">
+          <button class="byok-provider-btn" id="prov-openai" onclick="selectProvider('openai',event)">OpenAI</button>
+          <button class="byok-provider-btn" id="prov-deepseek" onclick="selectProvider('deepseek',event)">DeepSeek</button>
+          <button class="byok-provider-btn" id="prov-claude" onclick="selectProvider('claude',event)">Claude</button>
+        </div>
+        <div class="field-label"><i class="fa fa-key"></i> API 키 입력</div>
+        <input type="password" class="byok-key-input" id="byokApiKey"
+               placeholder="sk-... 또는 sk-ant-... 형식으로 입력"
+               autocomplete="off" autocorrect="off" spellcheck="false">
+        <div class="byok-hint" id="byokHint">
+          API 키는 결제 완료 후 암호화 저장됩니다.
+        </div>
+      </div>
+
+      <button class="plan-btn gold-btn" id="btn-byok" onclick="onByokBtnClick(event)">
+        <i class="fa fa-key"></i> BYOK 시작하기
+      </button>
+    </div>
+
+  </div><!-- /plans -->
+
+  <!-- 하단 안내 -->
+  <div class="footer-note">
+    <h3><i class="fa fa-shield-halved" style="color:var(--purple3);"></i> 결제 · 환불 안내</h3>
+    <ul>
+      <li>토스페이먼츠를 통해 안전하게 결제됩니다.</li>
+      <li>연간 플랜은 최초 결제 시 연간 금액이 한 번에 청구됩니다.</li>
+      <li>구독은 다음 갱신일 전까지 언제든 해지 가능합니다.</li>
+      <li>구독 시작 후 7일 이내 미사용 시 전액 환불됩니다.</li>
+      <li>BYOK 플랜의 API 사용 비용은 각 제공사에 직접 지불됩니다.</li>
+    </ul>
+  </div>
+
+</div><!-- /page -->
+
+<!-- 로딩 오버레이 -->
+<div class="loading-overlay" id="loadingOverlay">
+  <div class="loading-spinner"></div>
+  <div class="loading-text" id="loadingText">결제창을 불러오는 중...</div>
+</div>
+
+<!-- 토스트 -->
+<div class="toast" id="toastEl"></div>
+
+<script>
+/* ============================================================
+   상태
+============================================================ */
+var state = {
+  billing: 'monthly',   // 'monthly' | 'yearly'
+  byokExpanded: false,  // BYOK 입력 영역 표시 여부
+  byokProvider: null,   // 'openai' | 'deepseek' | 'claude'
+  currentPlan: null     // 현재 구독 플랜 ID (없으면 null)
+};
+
+/* ============================================================
+   플랜 데이터
+============================================================ */
+var PLANS = {
+  starter: {
+    id: 'starter',
+    name: '스타터',
+    priceM: 9900,
+    priceY: 7920,   // 9900 * 0.8 (20% 할인)
+    annualY: 95040  // 7920 * 12
+  },
+  standard: {
+    id: 'standard',
+    name: '스탠다드',
+    priceM: 24900,
+    priceY: 19920,   // 24900 * 0.8
+    annualY: 239040  // 19920 * 12
+  },
+  byok: {
+    id: 'byok',
+    name: 'BYOK(자체API)',
+    priceM: 4900,
+    priceY: 4900,   // BYOK는 할인 없음 (월납 고정)
+    annualY: null
+  }
+};
+
+/* ============================================================
+   초기화: 현재 구독 확인
+============================================================ */
+(function init() {
+  // 실제로는 서버 세션/API로 받아오지만, 여기서는 URL 파라미터로 시뮬레이션
+  var params = new URLSearchParams(location.search);
+  var cur = params.get('current');
+  if (cur && PLANS[cur]) {
+    state.currentPlan = cur;
+    showCurrentPlan(cur);
+  }
+  updatePriceDisplay();
+})();
+
+function showCurrentPlan(planId) {
+  var plan = PLANS[planId];
+  if (!plan) return;
+  document.getElementById('currentPlanBanner').classList.add('show');
+  document.getElementById('currentPlanName').textContent = plan.name + ' 플랜 구독 중';
+  document.getElementById('currentPlanDesc').textContent = '더 나은 플랜으로 업그레이드하거나, 현재 플랜을 유지할 수 있습니다.';
+
+  // 카드에 현재 표시
+  var tag = document.getElementById('tag-' + planId);
+  var card = document.getElementById('card-' + planId);
+  var btn  = document.getElementById('btn-' + planId);
+  if (tag)  tag.classList.add('show');
+  if (card) { card.classList.add('current-active'); card.onclick = null; }
+  if (btn) {
+    btn.className = 'plan-btn current-btn';
+    btn.innerHTML = '<i class="fa fa-check-circle"></i> 현재 이용 중';
+  }
+}
+
+/* ============================================================
+   월/연 토글
+============================================================ */
+function toggleBilling() {
+  setBilling(state.billing === 'monthly' ? 'yearly' : 'monthly');
+}
+function setBilling(type) {
+  state.billing = type;
+  var sw = document.getElementById('billingToggle');
+  var lm = document.getElementById('lblMonth');
+  var ly = document.getElementById('lblYear');
+  if (type === 'yearly') {
+    sw.classList.add('on');
+    lm.classList.remove('active');
+    ly.classList.add('active');
+  } else {
+    sw.classList.remove('on');
+    ly.classList.remove('active');
+    lm.classList.add('active');
+  }
+  updatePriceDisplay();
+}
+
+function updatePriceDisplay() {
+  var isYear = (state.billing === 'yearly');
+  ['starter', 'standard'].forEach(function(id) {
+    var plan = PLANS[id];
+    var priceEl   = document.getElementById('price-' + id);
+    var origEl    = document.getElementById('orig-' + id);
+    var annualEl  = document.getElementById('annual-' + id);
+    var annualAmt = document.getElementById('annual-amt-' + id);
+
+    if (!priceEl) return;
+    if (isYear) {
+      priceEl.textContent  = plan.priceY.toLocaleString();
+      origEl.classList.add('show');
+      annualEl.classList.add('show');
+      if (annualAmt) annualAmt.textContent = plan.annualY.toLocaleString() + '원';
+    } else {
+      priceEl.textContent  = plan.priceM.toLocaleString();
+      origEl.classList.remove('show');
+      annualEl.classList.remove('show');
+    }
+  });
+}
+
+/* ============================================================
+   BYOK 카드 클릭 처리 (입력 영역이 열리면 카드 클릭은 무시)
+============================================================ */
+function handleByokCardClick(e) {
+  // 입력 영역 내부 클릭이면 무시
+  if (e.target.closest('#byokInputWrap')) return;
+  // 버튼 클릭이면 무시 (onByokBtnClick 처리)
+  if (e.target.closest('#btn-byok')) return;
+  // BYOK 현재 플랜이면 무시
+  if (state.currentPlan === 'byok') return;
+
+  if (!state.byokExpanded) {
+    state.byokExpanded = true;
+    document.getElementById('byokInputWrap').classList.add('show');
+    setTimeout(function(){
+      document.getElementById('byokApiKey').focus();
+    }, 200);
+  }
+}
+
+function selectProvider(prov, e) {
+  e.stopPropagation();
+  state.byokProvider = prov;
+  ['openai','deepseek','claude'].forEach(function(p){
+    document.getElementById('prov-' + p).classList.remove('selected');
+  });
+  document.getElementById('prov-' + prov).classList.add('selected');
+
+  var hints = {
+    openai:   'OpenAI API 키는 <a href="https://platform.openai.com/api-keys" target="_blank">platform.openai.com</a> 에서 발급받을 수 있습니다.',
+    deepseek: 'DeepSeek API 키는 <a href="https://platform.deepseek.com" target="_blank">platform.deepseek.com</a> 에서 발급받을 수 있습니다.',
+    claude:   'Claude API 키는 <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> 에서 발급받을 수 있습니다.'
+  };
+  document.getElementById('byokHint').innerHTML = hints[prov];
+
+  var placeholders = {
+    openai:   'sk-... 형식',
+    deepseek: 'sk-... 형식',
+    claude:   'sk-ant-api03-... 형식'
+  };
+  document.getElementById('byokApiKey').placeholder = placeholders[prov];
+}
+
+function onByokBtnClick(e) {
+  e.stopPropagation();
+  if (state.currentPlan === 'byok') return;
+
+  if (!state.byokExpanded) {
+    // 처음 클릭 → 입력 영역 열기
+    state.byokExpanded = true;
+    document.getElementById('byokInputWrap').classList.add('show');
+    setTimeout(function(){
+      document.getElementById('byokApiKey').focus();
+    }, 200);
+    return;
+  }
+
+  // 유효성 검사
+  if (!state.byokProvider) {
+    showToast('API 제공사를 선택해주세요.', true);
+    return;
+  }
+  var apiKey = document.getElementById('byokApiKey').value.trim();
+  if (!apiKey || apiKey.length < 10) {
+    showToast('API 키를 입력해주세요.', true);
+    document.getElementById('byokApiKey').focus();
+    return;
+  }
+
+  selectPlan('byok');
+}
+
+/* ============================================================
+   플랜 선택 → 결제
+============================================================ */
+function selectPlan(planId) {
+  if (state.currentPlan === planId) return;
+
+  var plan = PLANS[planId];
+  if (!plan) { showToast('플랜 정보를 불러올 수 없습니다.', true); return; }
+
+  var isYear  = (state.billing === 'yearly');
+  var amount  = (planId === 'byok') ? plan.priceM : (isYear ? plan.annualY : plan.priceM);
+  var billing = (planId === 'byok') ? 'monthly' : state.billing;
+  var name    = '마이챗 ' + plan.name + ' ' + (billing === 'yearly' ? '연간' : '월간') + ' 구독';
+
+  // orderId: MC-YYYYMMDD-XXXXXXXX
+  var now     = new Date();
+  var ymd     = now.getFullYear()
+    + pad2(now.getMonth()+1)
+    + pad2(now.getDate());
+  var rnd     = Math.random().toString(36).substr(2,8).toUpperCase();
+  var orderId = 'MC-' + ymd + '-' + rnd;
+
+  var base    = location.protocol + '//' + location.hostname;
+  var extra   = '?planId=' + encodeURIComponent(planId)
+    + '&billing=' + encodeURIComponent(billing)
+    + '&amount=' + amount;
+
+  // BYOK: API 키 정보 추가
+  if (planId === 'byok') {
+    var apiKey = document.getElementById('byokApiKey').value.trim();
+    extra += '&apiProvider=' + encodeURIComponent(state.byokProvider || '')
+           + '&apiKey=' + encodeURIComponent(apiKey);
+  }
+
+  showLoading('결제창을 불러오는 중...');
+
+  loadTossSDK()
+    .then(function() {
+      var toss = TossPayments('live_ck_4yKeq5bgrpwbOGgyAJPBVGX0lzW6');
+      var payParams = {
+        amount:      amount,
+        orderId:     orderId,
+        orderName:   name,
+        customerName:'',
+        successUrl:  base + '/aimessage/mychat/api/pay_success.php' + extra,
+        failUrl:     base + '/aimessage/mychat/api/pay_fail.php' + extra
+      };
+      return toss.requestPayment('카드', payParams);
+    })
+    .catch(function(err) {
+      hideLoading();
+      if (err && err.code !== 'USER_CANCEL') {
+        showToast(err.message || '결제 오류가 발생했습니다.', true);
+      }
+    });
+}
+
+/* ============================================================
+   loadTossSDK — 프록시 방식 (CLAUDE.md 표준 패턴)
+============================================================ */
+function loadTossSDK() {
+  return new Promise(function(resolve, reject) {
+    if (window.TossPayments) { resolve(); return; }
+
+    // 1단계: CDN 태그 DOM 추가 (SDK 도메인 검증 통과용)
+    var cdnTag = document.createElement('script');
+    cdnTag.src = 'https://js.tosspayments.com/v1/payment';
+    document.head.appendChild(cdnTag);
+
+    // 2단계: 서버 프록시로 실제 SDK 로드
+    var proxy = document.createElement('script');
+    proxy.src = '/aimessage/mychat/api/toss_sdk_proxy.php?t=' + Date.now();
+    proxy.onload = function() {
+      setTimeout(function() {
+        if (window.TossPayments) resolve();
+        else reject(new Error('SDK 초기화 실패. 새로고침 후 다시 시도해주세요.'));
+      }, 150);
+    };
+    proxy.onerror = function() {
+      // 프록시 실패 시 CDN으로 폴백
+      cdnTag.onload = function() {
+        setTimeout(function() {
+          if (window.TossPayments) resolve();
+          else reject(new Error('결제 모듈 로딩 실패. 잠시 후 다시 시도해주세요.'));
+        }, 150);
+      };
+      cdnTag.onerror = function() {
+        reject(new Error('결제 모듈을 불러올 수 없습니다. 네트워크를 확인해주세요.'));
+      };
+    };
+    document.head.appendChild(proxy);
+  });
+}
+
+/* ============================================================
+   유틸
+============================================================ */
+function pad2(n){ return n < 10 ? '0'+n : ''+n; }
+
+function showLoading(msg) {
+  document.getElementById('loadingText').textContent = msg || '처리 중...';
+  document.getElementById('loadingOverlay').classList.add('show');
+}
+function hideLoading() {
+  document.getElementById('loadingOverlay').classList.remove('show');
+}
+
+var toastTimer = null;
+function showToast(msg, isError) {
+  var el = document.getElementById('toastEl');
+  el.textContent = msg;
+  el.className = 'toast' + (isError ? ' error' : '');
+  void el.offsetWidth;  // reflow
+  el.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(function(){ el.classList.remove('show'); }, 3000);
+}
+</script>
+</body>
+</html>

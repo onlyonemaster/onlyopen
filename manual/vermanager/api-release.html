@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>릴리즈 API — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.api-method { display:inline-block; padding:3px 10px; border-radius:4px; font-size:12px; font-weight:700; margin-right:6px; }
+.method-get { background:#d1fae5; color:#065f46; }
+.method-post { background:#fef3c7; color:#92400e; }
+.method-delete { background:#fee2e2; color:#991b1b; }
+.endpoint-box { background:var(--bg2); border:1px solid var(--border); border-radius:8px; padding:16px; margin:16px 0; font-family:monospace; font-size:13px; }
+.param-table { width:100%; border-collapse:collapse; margin:12px 0; }
+.param-table th,.param-table td { padding:8px 12px; border:1px solid var(--border); font-size:13px; }
+.param-table th { background:var(--bg2); text-align:left; }
+.resp-box { background:#1e293b; color:#e2e8f0; border-radius:8px; padding:16px; margin:12px 0; font-size:13px; line-height:1.7; overflow-x:auto; }
+.step-list { counter-reset:step; list-style:none; padding:0; }
+.step-list li { counter-increment:step; padding:12px 12px 12px 48px; position:relative; border-left:3px solid var(--brand); margin-bottom:8px; background:var(--bg2); border-radius:0 8px 8px 0; }
+.step-list li::before { content:counter(step); position:absolute; left:10px; top:12px; width:26px; height:26px; background:var(--brand); color:#fff; border-radius:50%; display:flex; align-items:center; justify-content:center; font-weight:700; font-size:13px; }
+</style>
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link active">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>릴리즈 API</span></div>
+<h1>🚀 릴리즈 API (api/release.php)</h1>
+<p class="page-desc">가장 핵심적인 API입니다. SemVer 버전 범핑, package.json 갱신, 버전 히스토리 기록, 소스 개선 연결, CHANGELOG 추가까지 6단계 원자적 트랜잭션을 수행합니다.</p>
+
+<div class="endpoint-box"><span class="api-method method-post">POST</span> <code>/vermanager/api/release</code></div>
+
+<h2 id="request-body">요청 Body (JSON)</h2>
+<table class="param-table">
+  <tr><th>필드</th><th>타입</th><th>필수</th><th>설명</th></tr>
+  <tr><td><code>site</code></td><td>string</td><td><b>필수</b></td><td>릴리즈 대상 사이트 ID. site-registry.json에 등록된 활성 사이트여야 함</td></tr>
+  <tr><td><code>type</code></td><td>string</td><td><b>필수</b></td><td><code>patch</code> | <code>minor</code> | <code>major</code></td></tr>
+  <tr><td><code>note</code></td><td>string</td><td>선택</td><td>릴리즈 노트. 버전 히스토리와 CHANGELOG에 기록됨</td></tr>
+  <tr><td><code>linked_improvements</code></td><td>string[]</td><td>선택</td><td>연결할 소스 개선 ID 배열 (예: <code>["imp_4","imp_5"]</code>)</td></tr>
+</table>
+
+<div class="resp-box"><pre>// 요청 예시
+POST /vermanager/api/release
+Content-Type: application/json
+
+{
+  <code>"site"</code>: "kiam-prod",
+  <code>"type"</code>: "patch",
+  <code>"note"</code>: "햄버거 메뉴 아이콘 추가, 채팅 속도 개선",
+  <code>"linked_improvements"</code>: ["imp_4", "imp_5"]
+}</pre></div>
+
+<h2 id="response">응답</h2>
+<div class="resp-box"><pre>{
+  <code>"ok"</code>: true,
+  <code>"site_id"</code>: "kiam-prod",
+  <code>"site_name"</code>: "kiam.kr (운영)",
+  <code>"environment"</code>: "production",
+  <code>"message"</code>: "✅ PATCH 버전 릴리즈 완료: Onlyone OneChat v1.0.1",
+  <code>"type"</code>: "patch",
+  <code>"from_version"</code>: { "major":1, "minor":0, "patch":0, "raw":"1.0.0" },
+  <code>"new_version"</code>: { "major":1, "minor":0, "patch":1, "raw":"1.0.1" },
+  <code>"history_entry"</code>: {
+    "id": "rel_69f557e96c558",
+    "from": "1.0.0",
+    "to": "1.0.1",
+    "type": "patch",
+    "date": "2026-05-02T10:48:25+09:00",
+    "note": "햄버거 메뉴 아이콘 추가, 채팅 속도 개선",
+    "linked_improvements": ["imp_4", "imp_5"],
+    "total_improvements": 2
+  },
+  <code>"linked_count"</code>: 2,
+  <code>"display_string"</code>: "Onlyone OneChat v1.0.1"
+}</pre></div>
+
+<h2 id="error">오류 응답</h2>
+<div class="resp-box"><pre>// 메서드 오류
+{ <code>"ok"</code>: false, <code>"error"</code>: "POST 요청만 허용됩니다." }
+
+// 사이트 미지정
+{ <code>"ok"</code>: false, <code>"error"</code>: "site 파라미터가 필요합니다." }
+
+// 존재하지 않는 사이트
+{ <code>"ok"</code>: false, <code>"error"</code>: "사이트 'xxx'를 찾을 수 없습니다." }
+
+// 잘못된 릴리즈 타입
+{ <code>"ok"</code>: false, <code>"error"</code>: "릴리즈 타입은 patch, minor, major 중 하나여야 합니다." }</pre></div>
+
+<h2 id="server-logic">서버 처리 6단계 로직 (완전 추적)</h2>
+<ol class="step-list">
+  <li>
+    <strong>메서드 검증</strong>
+    <p>POST만 허용. GET 등 다른 메서드는 405 + JSON 에러 반환. <code>php://input</code>에서 JSON Body 디코딩.</p>
+  </li>
+  <li>
+    <strong>사이트 검증</strong>
+    <p><code>$_POST['site']</code> 또는 JSON body의 <code>site</code> 필드로 사이트 ID 확인 → <code>get_site($site_id)</code>로 등록부 조회 → 없으면 400 에러.</p>
+  </li>
+  <li>
+    <strong>버전 범핑 (SemVer)</strong>
+    <p><code>site_get_current_version($site_id)</code> → <code>data/sites/{id}/package.json</code> 읽기. <code>bump_version($current, $type)</code> 호출: MAJOR(하위 초기화: minor=0, patch=0), MINOR(patch=0), PATCH(+1).</p>
+  </li>
+  <li>
+    <strong>package.json 갱신</strong>
+    <p><code>site_write_json($site_id, 'package.json', $new_package)</code> → 파일 덮어쓰기. version, lastRelease(현재시각), lastReleaseBy('아리아') 업데이트.</p>
+  </li>
+  <li>
+    <strong>소스 개선 연결</strong>
+    <p><code>linked_improvements</code> 배열 순회: <code>improvements.json</code>에서 해당 ID 항목 찾아 <code>released_in</code> 필드에 새 버전 기록. 각 개선 항목의 제목을 CHANGELOG 노트에 수집.</p>
+  </li>
+  <li>
+    <strong>히스토리 & CHANGELOG 기록</strong>
+    <p><code>version_history.json</code>에 새 항목 추가 (id=uniqid, from→to, type, date, note, linked_improvements). <code>changelog.json</code>에 버전별 변경사항 추가.</p>
+  </li>
+</ol>
+<div class="notice"><strong>💡 핵심 포인트:</strong> 하나의 POST 요청으로 3개의 JSON 파일(package.json, version_history.json, changelog.json)이 동시에 갱신됩니다. linked_improvements가 있으면 improvements.json도 4번째로 갱신됩니다. 모든 작업은 PHP 파일 I/O 기반이므로 MySQL 트랜잭션 없이도 원자적으로 처리됩니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

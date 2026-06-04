@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공유콜백 관리 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">공유콜백</div>
+      <a href="/manual/sharecallback/" class="sb-link">🔗 공유콜백 소개</a>
+      <a href="/manual/sharecallback/setup.html" class="sb-link">공유콜백 설정하기</a>
+      <a href="/manual/sharecallback/manage.html" class="sb-link active">공유콜백 관리</a>
+      <a href="/manual/sharecallback/share.html" class="sb-link">콜백 공유하기</a>
+      <a href="/manual/sharecallback/settings.html" class="sb-link">공유콜백 상세 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/callback/" class="sb-link">IAM 콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sharecallback/">공유콜백</a> › 공유콜백 관리</nav>
+    <h1 class="page-title">📋 공유콜백 관리</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#dashboard">공유콜백 대시보드</a></li>
+        <li><a href="#list">공유된 메시지 확인</a></li>
+        <li><a href="#status">공유 상태 관리</a></li>
+        <li><a href="#revoke">공유 해제하기</a></li>
+        <li><a href="#received">공유받은 메시지 관리</a></li>
+        <li><a href="#lifecycle">공유 라이프사이클</a></li>
+      </ul>
+    </div>
+    <section id="dashboard">
+      <h2>공유콜백 대시보드</h2>
+      <p>공유콜백 관리 화면에서는 다음과 같은 정보를 한눈에 확인할 수 있습니다:</p>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">📤</div>
+          <div class="fc-title">내가 공유한 메시지</div>
+          <div class="fc-desc">다른 회원에게 공유한 콜백 메시지 목록과 공유 상태를 확인합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📥</div>
+          <div class="fc-title">공유받은 메시지</div>
+          <div class="fc-desc">다른 회원이 나에게 공유한 콜백 메시지 목록을 확인합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">👥</div>
+          <div class="fc-title">공유 대상 관리</div>
+          <div class="fc-desc">공유 대상 회원을 추가하거나 제거할 수 있습니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🔔</div>
+          <div class="fc-title">공유 알림</div>
+          <div class="fc-desc">새로운 공유 요청이나 공유 해제 알림을 확인합니다.</div>
+        </div>
+      </div>
+    </section>
+    <section id="list">
+      <h2>공유된 메시지 확인하기</h2>
+      <p>콜백등록관리(앱)에서 내가 공유한 콜백 메시지를 확인하는 방법:</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>콜백등록관리 접속</strong>: 내정보 드롭다운 → [콜백등록관리] 클릭</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>공유 목록 탭 선택</strong>: 앱 내에서 "공유한 메시지" 또는 "공유 내역" 탭 선택</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>상세 확인</strong>: 각 공유 항목별로 공유 대상, 공유 일시, 상태를 확인</div></li>
+      </ol>
+      <h3 style="margin-top:20px;">공유 내역 테이블 구조 (추정)</h3>
+      <table class="m-table">
+        <thead><tr><th>컬럼</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>메시지 타이틀</strong></td><td>공유한 콜백 메시지의 제목</td></tr>
+          <tr><td><strong>공유 대상</strong></td><td>공유받은 회원의 아이디/이름</td></tr>
+          <tr><td><strong>공유 일시</strong></td><td>공유가 이루어진 날짜와 시간</td></tr>
+          <tr><td><strong>상태</strong></td><td>활성(사용 중) / 비활성(해제됨) / 대기 중</td></tr>
+          <tr><td><strong>관리</strong></td><td>공유 해제, 재공유 등의 액션 버튼</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="status">
+      <h2>공유 상태 관리</h2>
+      <p>공유콜백의 상태는 다음과 같이 구분됩니다:</p>
+      <table class="m-table">
+        <thead><tr><th>상태</th><th>의미</th><th>공유자 액션</th><th>수신자 액션</th></tr></thead>
+        <tbody>
+          <tr><td><strong>활성 (Active)</strong></td><td>공유된 메시지가 수신자의 콜백 메시지함에 정상 등록되어 사용 가능한 상태</td><td>해제 가능</td><td>기본 메시지로 설정 가능</td></tr>
+          <tr><td><strong>비활성 (Inactive)</strong></td><td>공유자가 공유를 해제했거나 수신자가 거부한 상태</td><td>재공유 가능</td><td>더 이상 사용 불가</td></tr>
+          <tr><td><strong>대기 중 (Pending)</strong></td><td>공유 요청은 보냈으나 수신자가 아직 승인하지 않은 상태</td><td>요청 취소 가능</td><td>승인/거부 선택 가능</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;">공유 상태 변경은 앱(AppScript) 내 콜백등록관리에서만 가능하며, 웹에서는 조회만 가능할 수 있습니다.</p>
+    </section>
+    <section id="revoke">
+      <h2>공유 해제하기</h2>
+      <p>더 이상 공유가 필요하지 않은 경우, 다음과 같이 공유를 해제할 수 있습니다:</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>공유 목록에서 해당 메시지 선택</strong></div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>[공유 해제] 또는 [해지] 버튼 클릭</strong></div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>해제 확인</strong>: "정말 공유를 해제하시겠습니까?" 확인 메시지에 응답</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>완료</strong>: 공유받은 회원의 콜백 메시지함에서 해당 메시지가 제거됨</div></li>
+      </ol>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>📌 참고</strong>: 공유 해제 시 이미 해당 메시지를 기본값으로 사용 중이던 수신자는 다른 메시지로 전환해야 합니다. 해제된 메시지는 더 이상 부재중 전화에 자동 발송되지 않습니다.
+      </div>
+    </section>
+    <section id="received">
+      <h2>공유받은 메시지 관리</h2>
+      <p>다른 회원이 나에게 공유한 콜백 메시지는 내 콜백 메시지 리스트에 자동 추가됩니다:</p>
+      <ul>
+        <li><strong>메시지 출처 표시</strong>: 공유받은 메시지는 "공유자: [아이디]" 형태로 출처가 표시될 수 있습니다.</li>
+        <li><strong>기본값 설정</strong>: 공유받은 메시지를 내 기본(default) 콜백 메시지로 설정할 수 있습니다.</li>
+        <li><strong>수정 제한</strong>: 공유받은 메시지는 원본 작성자만 수정 가능하며, 수신자는 내용을 변경할 수 없습니다.</li>
+        <li><strong>복사하여 사용</strong>: 공유받은 메시지를 복사하여 나만의 버전으로 새로 등록할 수 있습니다.</li>
+      </ul>
+    </section>
+    <section id="lifecycle">
+      <h2>공유 라이프사이클</h2>
+      <p>공유콜백 메시지의 전체 생명주기는 다음과 같습니다:</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>생성</strong>: 콜백 메시지를 새로 등록 → <a href="/manual/callback/create.html">메시지 만들기 →</a></div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>공유 요청</strong>: 콜백등록관리에서 대상 회원에게 공유 요청 전송</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>승인/거부</strong>: 수신자가 공유 요청을 승인 또는 거부</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>사용</strong>: 승인된 메시지가 수신자의 콜백 메시지함에 등록되어 사용됨</div></li>
+        <li><div class="step-num">5</div><div class="step-body"><strong>해제/만료</strong>: 공유자가 해제하거나 수신자가 사용 중단 → 메시지함에서 제거</div></li>
+      </ol>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/sharecallback/setup.html" class="btn-prev">← 공유콜백 설정하기</a>
+      <a href="/manual/sharecallback/share.html" class="btn-next">콜백 공유하기 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#dashboard">대시보드</a></li>
+      <li><a href="#list">공유 메시지 확인</a></li>
+      <li><a href="#status">공유 상태 관리</a></li>
+      <li><a href="#revoke">공유 해제하기</a></li>
+      <li><a href="#received">공유받은 메시지</a></li>
+      <li><a href="#lifecycle">라이프사이클</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

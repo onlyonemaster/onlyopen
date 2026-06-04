@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+/* 홈 전용 */
+.hero {
+  background: linear-gradient(135deg,#1e3a5f 0%,#2563eb 60%,#7c3aed 100%);
+  padding: 64px 40px; text-align:center; color:white;
+}
+.hero h1 { font-size:38px; font-weight:800; margin-bottom:12px; letter-spacing:-1px; }
+.hero p  { font-size:17px; opacity:.85; max-width:480px; margin:0 auto 28px; }
+.hero-search {
+  max-width:440px; margin:0 auto; position:relative;
+}
+.hero-search input {
+  width:100%; padding:13px 18px 13px 44px;
+  border-radius:10px; border:1px solid rgba(255,255,255,.3);
+  background:rgba(255,255,255,.15); color:white;
+  font-size:15px; outline:none; backdrop-filter:blur(8px);
+}
+.hero-search input::placeholder { color:rgba(255,255,255,.6); }
+.hero-search .si { position:absolute; left:15px; top:50%; transform:translateY(-50%); font-size:17px; opacity:.7; }
+
+main { max-width:1060px; margin:0 auto; padding:48px 40px 80px; }
+.sec-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:14px; }
+
+.card-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:48px; }
+.doc-card {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:14px; padding:22px; text-decoration:none; display:block; transition:.2s;
+}
+.doc-card:hover { border-color:var(--brand); transform:translateY(-2px); box-shadow:0 6px 20px rgba(37,99,235,.1); }
+.doc-card .ci { font-size:28px; margin-bottom:10px; display:block; }
+.doc-card .ct { font-size:15px; font-weight:700; color:var(--text); margin-bottom:5px; }
+.doc-card .cd { font-size:13px; color:var(--text2); line-height:1.6; }
+.doc-card .cb { display:inline-block; margin-top:10px; background:var(--brand-light); color:var(--brand); border-radius:4px; padding:2px 8px; font-size:11px; font-weight:600; }
+
+.two-col { display:grid; grid-template-columns:2fr 1fr; gap:32px; }
+.pop-list { list-style:none; }
+.pop-list li { border-bottom:1px solid var(--border); }
+.pop-list li:last-child { border-bottom:none; }
+.pop-list a { display:flex; align-items:center; justify-content:space-between; padding:13px 4px; text-decoration:none; color:var(--text); font-size:14px; transition:.15s; }
+.pop-list a:hover { color:var(--brand); padding-left:8px; }
+.pop-list .tag { font-size:11px; background:var(--bg3); color:var(--text2); border-radius:4px; padding:2px 8px; flex-shrink:0; }
+
+.quickstart { background:var(--bg2); border:1px solid var(--border); border-radius:14px; padding:20px; }
+.qs-step {
+  display:flex; align-items:center; gap:10px;
+  padding:11px 13px; background:var(--bg); border:1px solid var(--border);
+  border-radius:10px; text-decoration:none; color:var(--text);
+  font-size:13px; margin-bottom:8px; transition:.2s;
+}
+.qs-step:hover { border-color:var(--brand); }
+.qs-step:last-child { margin-bottom:0; }
+.qs-num { width:24px; height:24px; background:var(--brand); color:white; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:700; flex-shrink:0; }
+
+@media(max-width:900px) { .card-grid{grid-template-columns:1fr 1fr;} .two-col{grid-template-columns:1fr;} }
+@media(max-width:600px) { .hero{padding:40px 20px;} .hero h1{font-size:26px;} main{padding:32px 20px 60px;} .card-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<!-- 히어로 -->
+<div class="hero" style="margin-top:60px;">
+  <h1>📚 kiam.kr 매뉴얼</h1>
+  <p>모든 기능을 쉽게 배울 수 있도록<br>단계별로 안내합니다</p>
+  <div class="hero-search">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="궁금한 기능을 검색해 보세요..." class="m-search-input">
+  </div>
+</div>
+
+<!-- 메인 -->
+<main>
+  <div class="sec-label">📂 전체 매뉴얼</div>
+  <div class="card-grid">
+    <a href="/manual/onechat/" class="doc-card">
+      <span class="ci">💬</span>
+      <div class="ct">원챗 (OneChat)</div>
+      <div class="cd">AI 아바타 챗봇으로 고객과 자동 대화. 챗봇 링크 발급부터 대화 관리까지</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/aimessage/" class="doc-card">
+      <span class="ci">✉️</span>
+      <div class="ct">AI 메시지</div>
+      <div class="cd">AI가 고객 데이터를 분석해 개인화된 문자를 자동 생성하고 발송</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/avatar/" class="doc-card">
+      <span class="ci">🤖</span>
+      <div class="ct">AI 아바타 학습</div>
+      <div class="cd">일기, 텍스트, 음성, 파일로 나만의 AI 아바타를 학습시키는 방법</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/namecard/" class="doc-card">
+      <span class="ci">📇</span>
+      <div class="ct">명함 관리</div>
+      <div class="cd">디지털 명함 등록, 연락처 관리, 챗봇 링크 공유까지</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/papercard/" class="doc-card">
+      <span class="ci">🃏</span>
+      <div class="ct">명함 프로필</div>
+      <div class="cd">종이명함 로직 완전 분석 — 페이지 구조, AJAX 통신, AI 퍼널, 결제 시스템 등 16개 상세 페이지</div>
+      <span class="cb">소스 분석</span>
+    </a>
+    <a href="/manual/dashboard/" class="doc-card">
+      <span class="ci">📊</span>
+      <div class="ct">대시보드 & 분석</div>
+      <div class="cd">대화 통계, 클릭률, 응답 패턴 등 데이터 기반 분석 활용법</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/account/" class="doc-card">
+      <span class="ci">⚙️</span>
+      <div class="ct">계정 & 설정</div>
+      <div class="cd">회원가입, 로그인, 프로필 설정, 요금제 관리</div>
+      <span class="cb">기본 설정</span>
+    </a>
+    <a href="/manual/voicegen/" class="doc-card">
+      <span class="ci">🔊</span>
+      <div class="ct">VoiceGen AI</div>
+      <div class="cd">AI 음성 합성 API, 음성 클로닝, 요금제 및 사용량 관리 (8페이지)</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/vag/" class="doc-card">
+      <span class="ci">&#127916;</span>
+      <div class="ct">VAG 영상팩토리</div>
+      <div class="cd">AI가 스크립트&#183;이미지&#183;음성&#183;영상을 자동 생성. 8가지 AI 엔진 선택, TTS&#183;환경음&#183;자막 포함 (8페이지)</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/diver/" class="doc-card">
+      <span class="ci">🗂️</span>
+      <div class="ct">DB 수집 (온리원디버)</div>
+      <div class="cd">온라인 공개 데이터 수집 솔루션. 휴대폰·이메일·지역번호·지도 수집, 검색 가이드, 업데이터 상세 (7페이지)</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/callback/" class="doc-card">
+      <span class="ci">📞</span>
+      <div class="ct">IAM 콜백</div>
+      <div class="cd">부재중 전화 자동 문자 발송 시스템. 콜백 메시지 등록, 리스트 관리, 셀프폰/푸시 발송, AI 연동 (5페이지)</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+    <a href="/manual/sharecallback/" class="doc-card">
+      <span class="ci">🔗</span>
+      <div class="ct">공유콜백</div>
+      <div class="cd">콜백 메시지를 다른 회원과 공유. 내정보 드롭다운 → 콜백등록관리 → SNS/문자/카톡 공유 (5페이지)</div>
+      <span class="cb">사용 가이드</span>
+    </a>
+  </div>
+
+  <div class="two-col">
+    <div>
+      <div class="sec-label">🔥 자주 찾는 문서</div>
+      <ul class="pop-list">
+        <li><a href="/manual/onechat/start.html">원챗 처음 시작하기 <span class="tag">원챗</span></a></li>
+        <li><a href="/manual/onechat/profile.html">내 프로필 & 챗봇 링크 설정 <span class="tag">원챗</span></a></li>
+        <li><a href="/manual/onechat/chat.html">AI 아바타 ON/OFF 전환하기 <span class="tag">원챗</span></a></li>
+        <li><a href="/manual/onechat/share.html">챗봇 링크 공유하기 <span class="tag">원챗</span></a></li>
+        <li><a href="/manual/onechat/avatar.html">AI 아바타 학습시키기 <span class="tag">원챗</span></a></li>
+        <li><a href="/manual/namecard/add.html">명함 등록하는 방법 <span class="tag">명함</span></a></li>
+        <li><a href="/manual/account/signup.html">회원가입 & 로그인 <span class="tag">계정</span></a></li>
+        <li><a href="/manual/voicegen/start.html">VoiceGen AI 시작하기 <span class="tag">음성AI</span></a></li>
+        <li><a href="/manual/voicegen/api.html">API 키 발급 & 연동 <span class="tag">음성AI</span></a></li>
+        <li><a href="/manual/voicegen/clone.html">음성 클로닝 사용법 <span class="tag">음성AI</span></a></li>
+        <li><a href="/manual/diver/">DB 수집(온리원디버) 사용 가이드 <span class="tag">디버</span></a></li>
+        <li><a href="/manual/callback/">IAM 콜백 사용 가이드 <span class="tag">콜백</span></a></li>
+        <li><a href="/manual/sharecallback/">공유콜백 설정하기 <span class="tag">공유콜백</span></a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="sec-label">🚀 처음이신가요?</div>
+      <div class="quickstart">
+        <div style="font-size:14px;font-weight:600;color:var(--text);margin-bottom:12px;">3단계로 시작하세요</div>
+        <a href="/manual/account/signup.html" class="qs-step">
+          <span class="qs-num">1</span> 회원가입 & 로그인
+        </a>
+        <a href="/manual/onechat/profile.html" class="qs-step">
+          <span class="qs-num">2</span> 내 프로필 & 챗봇 링크 설정
+        </a>
+        <a href="/manual/onechat/start.html" class="qs-step">
+          <span class="qs-num">3</span> 원챗으로 첫 대화 시작
+        </a>
+      </div>
+    </div>
+  </div>
+</main>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

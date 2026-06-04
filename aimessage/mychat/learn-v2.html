@@ -1,0 +1,1417 @@
+<!DOCTYPE html>
+<!--
+================================================================
+  [MYCHAT-LEARN-v2] 마이챗 통합 학습 페이지
+  ----------------------------------------------------------------
+  · /aimessage/mychat/learn-v2.html
+  · 핵심 통합:
+    1. 5가지 입력방식 (일기/텍스트/음성/파일/웹수집) ← onechat의 우수한 UI 재사용
+    2. 14가지 인생 채널 (마이챗 고유) — 채널 + 입력방식 매트릭스
+    3. 채널별 인라인 공개범위(scope) 토글
+    4. 📱 폰 데이터 자동채움 버튼 (textarea를 폰 데이터로 채우기)
+    5. 저장소 모드 자동 인식 (서버/온디바이스/하이브리드)
+  · 백엔드: 기존 /api/data.php + 신규 /api/learn_ingest.php
+  생성: 2026-06-04 / 조은 × 아리(GenSpark)
+================================================================
+-->
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#7e22ce">
+<title>아바타 학습 · 마이챗</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f172a;--bg2:#1e293b;--bg3:#0b1220;--border:#334155;
+  --pur:#7e22ce;--pur2:#9333ea;--gold:#b45309;--gold2:#d97706;
+  --text:#f1f5f9;--dim:#94a3b8;--dim2:#64748b;
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b;--blue:#3b82f6;
+}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;
+     min-height:100vh;padding-bottom:80px;line-height:1.55}
+
+/* 헤더 */
+.hd{display:flex;align-items:center;gap:12px;padding:14px 16px;
+    background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:20}
+.hd-back{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px}
+.hd-title{font-size:16px;font-weight:700;flex:1}
+.hd-sub{font-size:11px;color:var(--dim2);margin-top:1px}
+.hd-stats{font-size:11px;color:var(--dim);background:var(--bg);border:1px solid var(--border);
+          padding:4px 10px;border-radius:12px;display:flex;align-items:center;gap:6px}
+.hd-stats b{color:#fcd34d}
+.hd-storage{font-size:10px;font-weight:700;padding:3px 8px;border-radius:8px;
+            background:rgba(126,34,206,.15);color:#c4b5fd;cursor:pointer;border:1px solid rgba(147,51,234,.3)}
+
+/* ── 채널 그리드 ─────────────────────────────────────── */
+.section-title{padding:14px 16px 6px;font-size:12px;color:var(--dim);font-weight:700;
+               letter-spacing:.5px;text-transform:uppercase;display:flex;align-items:center;gap:8px}
+.section-title .hint{font-size:10px;font-weight:500;color:var(--dim2);text-transform:none;letter-spacing:0;margin-left:auto}
+
+.ch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;padding:0 16px 14px}
+@media(min-width:600px){ .ch-grid{grid-template-columns:repeat(3,1fr)} }
+@media(min-width:900px){ .ch-grid{grid-template-columns:repeat(4,1fr)} }
+.ch-card{background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+         padding:14px 12px;cursor:pointer;transition:all .15s;text-align:center;position:relative}
+.ch-card:active{transform:scale(.97)}
+.ch-card.active{border-color:var(--pur2);background:rgba(147,51,234,.08);box-shadow:0 0 0 2px rgba(147,51,234,.2)}
+.ch-icon{font-size:28px;margin-bottom:6px}
+.ch-name{font-size:13px;font-weight:700}
+.ch-desc{font-size:10px;color:var(--dim);margin-top:3px;min-height:24px}
+.ch-cnt{font-size:10px;color:var(--pur2);margin-top:4px;font-weight:600}
+
+/* scope 미니 토글 */
+.ch-scope{position:absolute;top:6px;right:6px;display:flex;gap:1px;
+          background:rgba(15,23,42,.85);border:1px solid var(--border);border-radius:8px;padding:2px}
+.ch-scope-btn{background:transparent;border:none;color:var(--dim2);
+              font-size:11px;line-height:1;padding:3px 5px;border-radius:5px;cursor:pointer}
+.ch-scope-btn:hover{color:var(--text)}
+.ch-scope-btn.on{background:var(--pur);color:#fff}
+.ch-scope-btn.on[data-scope="public"]{background:var(--green)}
+.ch-scope-btn.on[data-scope="both"]{background:var(--gold2)}
+
+/* storage 배지 (채널별 저장 위치) */
+.ch-store{position:absolute;top:6px;left:6px;font-size:9px;font-weight:700;
+          padding:2px 6px;border-radius:6px;background:rgba(15,23,42,.85);
+          border:1px solid var(--border);color:var(--dim)}
+
+/* ── 학습 워크스페이스 (채널 선택 후 슬라이드인) ────── */
+.workspace{display:none;background:var(--bg);border-top:2px solid var(--pur);
+           padding-top:6px;margin-top:8px}
+.workspace.open{display:block;animation:slideUp .25s ease}
+@keyframes slideUp{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+.ws-head{display:flex;align-items:center;gap:10px;padding:10px 16px 8px}
+.ws-back{background:transparent;border:1px solid var(--border);color:var(--dim);
+         padding:6px 10px;border-radius:8px;font-size:12px;cursor:pointer;font-family:inherit}
+.ws-back:hover{color:var(--text);border-color:var(--pur2)}
+.ws-icon{font-size:24px}
+.ws-title{font-size:15px;font-weight:700;flex:1}
+.ws-cnt{font-size:11px;color:var(--dim2)}
+
+/* 입력 방식 탭 (onechat 스타일 차용) */
+.method-tabs{display:flex;gap:4px;padding:6px 16px;overflow-x:auto;-webkit-overflow-scrolling:touch}
+.method-tabs::-webkit-scrollbar{display:none}
+.mtab{flex-shrink:0;padding:8px 14px;background:var(--bg2);border:1px solid var(--border);
+      border-radius:20px;color:var(--dim);font-size:12px;font-weight:600;cursor:pointer;
+      font-family:inherit;display:flex;align-items:center;gap:5px;white-space:nowrap}
+.mtab.active{background:var(--pur);border-color:var(--pur);color:#fff}
+.mtab:disabled{opacity:.4;cursor:not-allowed}
+
+/* 입력 패널 */
+.panel{padding:14px 16px;display:none}
+.panel.active{display:block}
+
+.intro{display:flex;align-items:flex-start;gap:10px;padding:12px;background:var(--bg2);
+       border:1px solid var(--border);border-radius:12px;margin-bottom:12px}
+.intro-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;
+            justify-content:center;font-size:18px;flex-shrink:0}
+.intro-body{flex:1}
+.intro-title{font-size:13px;font-weight:700;margin-bottom:3px}
+.intro-desc{font-size:11.5px;color:var(--dim);line-height:1.55}
+
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--dim);font-weight:600;margin-bottom:5px}
+.field input,.field textarea,.field select{
+  width:100%;background:var(--bg2);border:1px solid var(--border);border-radius:10px;
+  padding:11px 13px;color:var(--text);font-size:13px;font-family:inherit;outline:none;
+  line-height:1.6;resize:vertical}
+.field input:focus,.field textarea:focus{border-color:var(--pur2)}
+.field textarea{min-height:140px}
+
+/* 텍스트영역 위 액션 바 */
+.ta-actions{display:flex;gap:6px;margin-bottom:6px;flex-wrap:wrap}
+.ta-btn{padding:6px 10px;background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+        color:var(--text);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit;
+        display:flex;align-items:center;gap:5px}
+.ta-btn:hover{border-color:var(--pur2)}
+.ta-btn.primary{background:rgba(126,34,206,.15);border-color:rgba(147,51,234,.4);color:#ddd6fe}
+
+.cat-row{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.cat-btn{padding:6px 12px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;
+         color:var(--dim);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.cat-btn.active{background:var(--pur);border-color:var(--pur);color:#fff}
+
+.action-row{display:flex;justify-content:space-between;align-items:center;margin-top:6px}
+.char-cnt{font-size:11px;color:var(--dim2)}
+
+/* scope (현재 입력) */
+.scope-inline{display:flex;align-items:center;gap:8px;font-size:11px;color:var(--dim);
+              margin-top:8px;padding:8px 10px;background:var(--bg2);border:1px solid var(--border);
+              border-radius:8px}
+.scope-inline-label{flex-shrink:0;font-weight:600}
+.scope-inline-btns{display:flex;gap:4px;margin-left:auto}
+.scope-inline-btn{padding:3px 9px;background:transparent;border:1px solid var(--border);
+                  color:var(--dim);font-size:11px;border-radius:12px;cursor:pointer;font-family:inherit}
+.scope-inline-btn.on[data-scope="private"]{background:var(--pur);border-color:var(--pur);color:#fff}
+.scope-inline-btn.on[data-scope="public"]{background:var(--green);border-color:var(--green);color:#fff}
+.scope-inline-btn.on[data-scope="both"]{background:var(--gold2);border-color:var(--gold2);color:#fff}
+
+.btn-submit{width:100%;padding:13px;border-radius:12px;
+            background:linear-gradient(135deg,var(--pur),var(--gold));
+            border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;
+            display:flex;align-items:center;justify-content:center;gap:6px;font-family:inherit}
+.btn-submit:disabled{opacity:.5;cursor:not-allowed}
+.btn-submit:active{opacity:.85}
+
+/* ── 음성 녹음 UI ──────────────────────────────────── */
+.recorder{background:var(--bg2);border:1px solid var(--border);border-radius:14px;padding:18px;text-align:center}
+.rec-visual{height:80px;display:flex;align-items:center;justify-content:center;margin-bottom:10px}
+.rec-waves{display:flex;align-items:center;gap:3px;height:50px}
+.rec-waves span{width:3px;background:var(--pur2);border-radius:2px;height:8px;animation:wave 1s ease infinite}
+.rec-waves span:nth-child(2){animation-delay:.1s}
+.rec-waves span:nth-child(3){animation-delay:.2s}
+.rec-waves span:nth-child(4){animation-delay:.3s}
+.rec-waves span:nth-child(5){animation-delay:.4s}
+.rec-waves span:nth-child(6){animation-delay:.5s}
+.rec-waves span:nth-child(7){animation-delay:.6s}
+@keyframes wave{0%,100%{height:8px}50%{height:42px}}
+.rec-timer{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;color:#fcd34d}
+.rec-btn{width:72px;height:72px;border-radius:50%;border:none;
+         background:linear-gradient(135deg,var(--pur),var(--gold));
+         color:#fff;font-size:26px;cursor:pointer;margin:8px auto;
+         display:flex;align-items:center;justify-content:center}
+.rec-btn.recording{background:var(--red);animation:pulse-rec 1.2s ease infinite}
+@keyframes pulse-rec{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 14px rgba(239,68,68,0)}}
+.rec-hint{font-size:11px;color:var(--dim2);margin-top:6px}
+.rec-transcribe{margin-top:12px;padding:12px;background:var(--bg);border-radius:10px;
+                font-size:12px;color:var(--dim);text-align:left;display:none}
+.rec-transcribe.show{display:block}
+.rec-transcribe b{color:#fcd34d;display:block;margin-bottom:5px;font-size:11px}
+
+/* ── 파일 드롭존 ──────────────────────────────────── */
+.dropzone{border:2px dashed var(--border);border-radius:14px;padding:30px 20px;text-align:center;
+          background:var(--bg2);cursor:pointer;transition:all .15s}
+.dropzone:hover,.dropzone.dragover{border-color:var(--pur2);background:rgba(147,51,234,.05)}
+.dz-icon{font-size:38px;color:var(--dim);margin-bottom:10px}
+.dz-title{font-size:13px;color:var(--text);font-weight:600;margin-bottom:4px}
+.dz-sub{font-size:11px;color:var(--dim2)}
+.dz-hint{font-size:10px;color:var(--dim2);margin-top:8px}
+
+.file-list{margin-top:12px}
+.file-item{display:flex;align-items:center;gap:10px;padding:10px 12px;background:var(--bg2);
+           border:1px solid var(--border);border-radius:10px;margin-bottom:6px}
+.file-icon{font-size:18px;color:var(--gold2);flex-shrink:0}
+.file-info{flex:1;min-width:0}
+.file-name{font-size:12.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.file-meta{font-size:10.5px;color:var(--dim2);margin-top:2px}
+.file-progress{flex-shrink:0;font-size:11px;color:var(--pur2);font-weight:700}
+.file-progress.ok{color:var(--green)}
+.file-progress.err{color:var(--red)}
+
+/* ── 웹수집 ────────────────────────────────────────── */
+.web-stats{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:12px}
+.ws-card{background:var(--bg2);border:1px solid var(--border);border-radius:12px;
+         padding:12px 10px;text-align:center}
+.ws-card-icon{font-size:20px;margin-bottom:4px}
+.ws-card-num{font-size:18px;font-weight:800;color:#fcd34d}
+.ws-card-lbl{font-size:10px;color:var(--dim2);margin-top:2px}
+
+.web-add{display:flex;gap:8px;margin-bottom:12px}
+.web-add input{flex:1;background:var(--bg2);border:1px solid var(--border);border-radius:8px;
+               padding:10px 12px;color:var(--text);font-size:12.5px;outline:none}
+.web-add button{padding:10px 14px;background:var(--pur);border:none;border-radius:8px;
+                color:#fff;font-size:12px;font-weight:600;cursor:pointer}
+
+/* ── 학습 기록 ────────────────────────────────────── */
+.history{margin-top:14px}
+.history-title{font-size:12px;color:var(--dim);font-weight:700;margin-bottom:8px}
+.hist-item{display:flex;align-items:flex-start;gap:8px;padding:10px;background:var(--bg2);
+           border:1px solid var(--border);border-radius:10px;margin-bottom:6px}
+.hist-icon{font-size:14px;color:var(--pur2);flex-shrink:0;width:22px;text-align:center}
+.hist-body{flex:1;min-width:0}
+.hist-text{font-size:12px;color:var(--text);line-height:1.5;
+           display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.hist-meta{font-size:10px;color:var(--dim2);margin-top:3px;display:flex;gap:8px;align-items:center}
+.hist-scope{font-size:9px;font-weight:700;padding:1px 6px;border-radius:5px}
+.hist-scope.private{background:rgba(147,51,234,.15);color:#c4b5fd}
+.hist-scope.public{background:rgba(34,197,94,.15);color:var(--green)}
+.hist-scope.both{background:rgba(217,119,6,.15);color:#fcd34d}
+.hist-del{background:none;border:none;color:var(--dim2);cursor:pointer;padding:4px;font-size:13px}
+.hist-del:hover{color:var(--red)}
+
+/* ── 폰 데이터 자동채움 모달 ─────────────────────── */
+.phone-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:100;
+             align-items:flex-end;justify-content:center}
+.phone-modal.open{display:flex}
+.phone-box{background:var(--bg2);width:100%;max-width:560px;border-radius:18px 18px 0 0;
+           padding:18px 16px;max-height:80vh;overflow-y:auto;animation:slideUp .25s ease}
+.phone-box-head{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.phone-box-title{font-size:15px;font-weight:700;flex:1}
+.phone-box-close{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px}
+
+.phone-src-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.psrc{padding:11px;background:var(--bg);border:1px solid var(--border);border-radius:10px;
+      display:flex;align-items:center;gap:8px;cursor:pointer;font-size:12px;color:var(--text);
+      font-family:inherit;text-align:left}
+.psrc.selected{border-color:var(--pur2);background:rgba(147,51,234,.1)}
+.psrc-icon{font-size:18px}
+.psrc-info{flex:1;min-width:0}
+.psrc-name{font-weight:600;font-size:12px}
+.psrc-cnt{font-size:10px;color:var(--dim2)}
+
+.phone-mode{display:flex;gap:6px;margin-bottom:10px}
+.pm-btn{flex:1;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:8px;
+        color:var(--dim);font-size:11.5px;font-weight:600;cursor:pointer;font-family:inherit}
+.pm-btn.active{background:var(--pur);border-color:var(--pur);color:#fff}
+
+.phone-range{display:flex;gap:6px;margin-bottom:12px;flex-wrap:wrap}
+.pr-chip{padding:5px 10px;background:var(--bg);border:1px solid var(--border);border-radius:14px;
+         color:var(--dim);font-size:11px;cursor:pointer;font-family:inherit}
+.pr-chip.active{background:var(--gold2);border-color:var(--gold2);color:#fff}
+
+.phone-fetch{width:100%;padding:12px;border-radius:10px;background:linear-gradient(135deg,var(--pur),var(--gold));
+             border:none;color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
+
+/* 토스트 */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+       background:var(--bg2);border:1px solid var(--pur);color:#c4b5fd;
+       padding:12px 22px;border-radius:24px;font-size:13px;z-index:9999;
+       opacity:0;transition:opacity .25s;pointer-events:none;white-space:nowrap;
+       box-shadow:0 8px 24px rgba(0,0,0,.4)}
+.toast.show{opacity:1}
+
+/* 빈 상태 */
+.empty{text-align:center;padding:30px 20px;color:var(--dim2);font-size:12px}
+.empty-icon{font-size:32px;margin-bottom:8px}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <button class="hd-back" onclick="onBack()" aria-label="뒤로"><i class="fas fa-arrow-left"></i></button>
+  <div style="flex:1;min-width:0">
+    <div class="hd-title" id="hdTitle">아바타 학습</div>
+    <div class="hd-sub">14개 인생 채널 × 5가지 입력 방식</div>
+  </div>
+  <div class="hd-stats" title="총 학습 데이터">
+    <i class="fas fa-database"></i> <b id="totalCnt">0</b> 건
+  </div>
+  <a class="hd-storage" id="storageBadge" href="/aimessage/mychat/storage-settings.html" title="저장소 설정">
+    ☁️ 서버
+  </a>
+</div>
+
+<!-- ════════ 채널 그리드 ════════ -->
+<div id="chSection">
+  <div class="section-title">
+    📡 데이터 채널 선택
+    <span class="hint">우측 상단 🔒/🌐/⚖️ = 그 채널의 기본 공개범위</span>
+  </div>
+  <div class="ch-grid" id="chGrid"></div>
+</div>
+
+<!-- ════════ 학습 워크스페이스 ════════ -->
+<div class="workspace" id="ws">
+  <div class="ws-head">
+    <button class="ws-back" onclick="closeWs()"><i class="fas fa-arrow-left"></i> 채널</button>
+    <div class="ws-icon" id="wsIcon">👤</div>
+    <div class="ws-title" id="wsTitle">기본 정보</div>
+    <div class="ws-cnt" id="wsCnt">0건</div>
+  </div>
+
+  <!-- 입력 방식 탭 -->
+  <div class="method-tabs" id="methodTabs">
+    <button class="mtab active" data-m="diary" onclick="switchMethod(this)"><i class="fas fa-book-open"></i> 일기/자유</button>
+    <button class="mtab" data-m="text"  onclick="switchMethod(this)"><i class="fas fa-file-alt"></i> 텍스트</button>
+    <button class="mtab" data-m="voice" onclick="switchMethod(this)"><i class="fas fa-microphone"></i> 음성</button>
+    <button class="mtab" data-m="file"  onclick="switchMethod(this)"><i class="fas fa-file-pdf"></i> 파일</button>
+    <button class="mtab" data-m="web"   onclick="switchMethod(this)"><i class="fas fa-globe"></i> 웹 자동수집</button>
+  </div>
+
+  <!-- ── ① 일기/자유 ─────────────────────────────── -->
+  <div class="panel active" id="p-diary">
+    <div class="intro">
+      <div class="intro-icon" style="background:rgba(139,92,246,.15);color:#a78bfa"><i class="fas fa-book-open"></i></div>
+      <div class="intro-body">
+        <div class="intro-title">친구에게 말하듯이 — 일기/자유</div>
+        <div class="intro-desc">오늘 있었던 일, 생각, 감정을 자유롭게 기록하세요.
+          아바타가 당신의 말투·가치관을 학습합니다.</div>
+      </div>
+    </div>
+
+    <div class="ta-actions">
+      <button class="ta-btn primary" onclick="openPhoneFill('diary')"><i class="fas fa-mobile-alt"></i> 📱 폰에서 가져오기</button>
+      <button class="ta-btn" onclick="insertTemplate('diary')"><i class="fas fa-magic"></i> 템플릿</button>
+      <button class="ta-btn" onclick="insertNow()"><i class="fas fa-calendar"></i> 오늘 날짜</button>
+    </div>
+
+    <div class="field">
+      <textarea id="diaryText" placeholder="오늘 어떤 일이 있었나요? 생각, 감정, 경험을 자유롭게 적어주세요.&#10;&#10;예) 오늘 중요한 미팅이 있었는데, 나는 항상 상대방의 입장을 먼저 이해하려고 노력해..."></textarea>
+    </div>
+
+    <div class="scope-inline" data-host="diary">
+      <span class="scope-inline-label">이 데이터의 공개범위</span>
+      <div class="scope-inline-btns">
+        <button class="scope-inline-btn on" data-scope="private" onclick="setInlineScope('diary',this)">🔒 나만</button>
+        <button class="scope-inline-btn" data-scope="public" onclick="setInlineScope('diary',this)">🌐 외부도</button>
+        <button class="scope-inline-btn" data-scope="both" onclick="setInlineScope('diary',this)">⚖️ 둘다</button>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <span class="char-cnt" id="diaryChar">0자</span>
+      <span style="font-size:11px;color:var(--dim2)" id="diaryStorageHint">☁️ 서버 저장</span>
+    </div>
+    <button class="btn-submit" style="margin-top:8px" onclick="submitDiary()">
+      <i class="fas fa-upload"></i> 학습시키기
+    </button>
+
+    <div class="history">
+      <div class="history-title">📔 최근 학습 기록</div>
+      <div id="diaryHist"><div class="empty"><div class="empty-icon">📔</div>아직 기록이 없습니다</div></div>
+    </div>
+  </div>
+
+  <!-- ── ② 텍스트 (구조화) ───────────────────────────── -->
+  <div class="panel" id="p-text">
+    <div class="intro">
+      <div class="intro-icon" style="background:rgba(59,130,246,.15);color:#60a5fa"><i class="fas fa-file-alt"></i></div>
+      <div class="intro-body">
+        <div class="intro-title">자기소개 · 프로필 · 경력</div>
+        <div class="intro-desc">나를 설명하는 텍스트를 입력하거나 붙여넣기 하세요.
+          자기소개서, 이력서, 인터뷰 내용도 좋습니다.</div>
+      </div>
+    </div>
+
+    <div class="cat-row">
+      <button class="cat-btn active" data-c="intro"  onclick="setCat(this)">자기소개</button>
+      <button class="cat-btn" data-c="career" onclick="setCat(this)">경력/이력</button>
+      <button class="cat-btn" data-c="value"  onclick="setCat(this)">가치관/철학</button>
+      <button class="cat-btn" data-c="etc"    onclick="setCat(this)">기타</button>
+    </div>
+
+    <div class="ta-actions">
+      <button class="ta-btn primary" onclick="openPhoneFill('text')"><i class="fas fa-mobile-alt"></i> 📱 폰에서 가져오기</button>
+      <button class="ta-btn" onclick="pasteClipboard('textText')"><i class="fas fa-paste"></i> 붙여넣기</button>
+    </div>
+
+    <div class="field">
+      <input type="text" id="textTitle" placeholder="제목 (선택) — 예: 2025년 경력 요약">
+    </div>
+    <div class="field">
+      <textarea id="textText" placeholder="나에 대한 정보를 입력해주세요.&#10;&#10;예) 저는 20년 경력의 ... 가치를 ..."></textarea>
+    </div>
+
+    <div class="scope-inline" data-host="text">
+      <span class="scope-inline-label">이 데이터의 공개범위</span>
+      <div class="scope-inline-btns">
+        <button class="scope-inline-btn on" data-scope="private" onclick="setInlineScope('text',this)">🔒 나만</button>
+        <button class="scope-inline-btn" data-scope="public" onclick="setInlineScope('text',this)">🌐 외부도</button>
+        <button class="scope-inline-btn" data-scope="both" onclick="setInlineScope('text',this)">⚖️ 둘다</button>
+      </div>
+    </div>
+
+    <div class="action-row">
+      <span class="char-cnt" id="textChar">0자</span>
+    </div>
+    <button class="btn-submit" style="margin-top:8px" onclick="submitText()">
+      <i class="fas fa-upload"></i> 학습시키기
+    </button>
+
+    <div class="history">
+      <div class="history-title">📝 최근 학습 기록</div>
+      <div id="textHist"><div class="empty"><div class="empty-icon">📝</div>아직 기록이 없습니다</div></div>
+    </div>
+  </div>
+
+  <!-- ── ③ 음성 ───────────────────────────────────────── -->
+  <div class="panel" id="p-voice">
+    <div class="intro">
+      <div class="intro-icon" style="background:rgba(239,68,68,.12);color:#fca5a5"><i class="fas fa-microphone"></i></div>
+      <div class="intro-body">
+        <div class="intro-title">음성 녹음 → 자동 텍스트 변환</div>
+        <div class="intro-desc">말하듯이 자연스럽게 녹음하세요. 말투·표현·어조까지 학습합니다.
+          (최대 10분)</div>
+      </div>
+    </div>
+
+    <div class="recorder">
+      <div class="rec-visual">
+        <div id="recIdle" style="color:var(--dim);font-size:13px">버튼을 눌러 녹음 시작</div>
+        <div id="recActive" style="display:none">
+          <div class="rec-waves" id="recWaves">
+            <span></span><span></span><span></span><span></span><span></span><span></span><span></span>
+          </div>
+          <div class="rec-timer" id="recTimer">00:00</div>
+        </div>
+        <div id="recDone" style="display:none">
+          <i class="fas fa-check-circle" style="color:var(--green);font-size:36px"></i>
+          <div style="margin-top:6px;font-size:13px" id="recDoneText">녹음 완료</div>
+        </div>
+      </div>
+      <button class="rec-btn" id="recBtn" onclick="toggleRec()" aria-label="녹음">
+        <i class="fas fa-microphone" id="recIcon"></i>
+      </button>
+      <div class="rec-hint">권한 허용 후 녹음됩니다. 음성은 변환 후 자동 폐기됩니다.</div>
+
+      <div class="rec-transcribe" id="recTranscribe">
+        <b>STT 결과 (편집 가능):</b>
+        <textarea id="recText" style="width:100%;background:transparent;border:1px solid var(--border);border-radius:8px;padding:8px;color:var(--text);font-size:12.5px;min-height:80px;font-family:inherit;resize:vertical"></textarea>
+      </div>
+    </div>
+
+    <div class="scope-inline" data-host="voice" style="margin-top:12px">
+      <span class="scope-inline-label">이 데이터의 공개범위</span>
+      <div class="scope-inline-btns">
+        <button class="scope-inline-btn on" data-scope="private" onclick="setInlineScope('voice',this)">🔒 나만</button>
+        <button class="scope-inline-btn" data-scope="public" onclick="setInlineScope('voice',this)">🌐 외부도</button>
+        <button class="scope-inline-btn" data-scope="both" onclick="setInlineScope('voice',this)">⚖️ 둘다</button>
+      </div>
+    </div>
+
+    <button class="btn-submit" id="voiceSubmit" style="margin-top:10px;display:none" onclick="submitVoice()">
+      <i class="fas fa-upload"></i> 학습시키기
+    </button>
+
+    <div class="history">
+      <div class="history-title">🎙️ 최근 음성 학습</div>
+      <div id="voiceHist"><div class="empty"><div class="empty-icon">🎙️</div>아직 음성이 없습니다</div></div>
+    </div>
+  </div>
+
+  <!-- ── ④ 파일 ───────────────────────────────────────── -->
+  <div class="panel" id="p-file">
+    <div class="intro">
+      <div class="intro-icon" style="background:rgba(245,158,11,.12);color:#fcd34d"><i class="fas fa-file-pdf"></i></div>
+      <div class="intro-body">
+        <div class="intro-title">PDF · 문서 · 이미지 업로드</div>
+        <div class="intro-desc">책, 강연 자료, 기고문, 인터뷰, OCR 가능한 이미지 등.
+          서버에서 자동으로 텍스트 추출 후 벡터 인덱싱됩니다.</div>
+      </div>
+    </div>
+
+    <div class="dropzone" id="dz">
+      <div class="dz-icon"><i class="fas fa-cloud-upload-alt"></i></div>
+      <div class="dz-title">파일을 여기로 드래그하거나 클릭</div>
+      <div class="dz-sub">PDF · TXT · DOC · DOCX · PNG · JPG</div>
+      <div class="dz-hint">최대 20MB · 한 번에 여러 개 가능</div>
+      <input type="file" id="fileInput" accept=".pdf,.txt,.doc,.docx,.png,.jpg,.jpeg" multiple style="display:none">
+    </div>
+
+    <div class="scope-inline" data-host="file" style="margin-top:12px">
+      <span class="scope-inline-label">파일 데이터의 공개범위</span>
+      <div class="scope-inline-btns">
+        <button class="scope-inline-btn on" data-scope="private" onclick="setInlineScope('file',this)">🔒 나만</button>
+        <button class="scope-inline-btn" data-scope="public" onclick="setInlineScope('file',this)">🌐 외부도</button>
+        <button class="scope-inline-btn" data-scope="both" onclick="setInlineScope('file',this)">⚖️ 둘다</button>
+      </div>
+    </div>
+
+    <div class="file-list" id="fileList"></div>
+
+    <div class="history">
+      <div class="history-title">📁 업로드된 파일</div>
+      <div id="fileHist"><div class="empty"><div class="empty-icon">📁</div>아직 파일이 없습니다</div></div>
+    </div>
+  </div>
+
+  <!-- ── ⑤ 웹 자동수집 ──────────────────────────────── -->
+  <div class="panel" id="p-web">
+    <div class="intro">
+      <div class="intro-icon" style="background:rgba(99,102,241,.15);color:#a5b4fc"><i class="fas fa-globe"></i></div>
+      <div class="intro-body">
+        <div class="intro-title">웹 콘텐츠 자동수집</div>
+        <div class="intro-desc">뉴스·블로그·웹문서·유튜브에서 당신과 관련된 콘텐츠를
+          자동으로 수집·요약합니다.</div>
+      </div>
+    </div>
+
+    <div class="web-stats">
+      <div class="ws-card">
+        <div class="ws-card-icon"><i class="fas fa-newspaper"></i></div>
+        <div class="ws-card-num" id="wsNum-news">0</div>
+        <div class="ws-card-lbl">뉴스</div>
+      </div>
+      <div class="ws-card">
+        <div class="ws-card-icon"><i class="fab fa-youtube"></i></div>
+        <div class="ws-card-num" id="wsNum-youtube">0</div>
+        <div class="ws-card-lbl">유튜브</div>
+      </div>
+      <div class="ws-card">
+        <div class="ws-card-icon"><i class="fas fa-blog"></i></div>
+        <div class="ws-card-num" id="wsNum-blog">0</div>
+        <div class="ws-card-lbl">블로그</div>
+      </div>
+      <div class="ws-card">
+        <div class="ws-card-icon"><i class="fas fa-globe"></i></div>
+        <div class="ws-card-num" id="wsNum-web">0</div>
+        <div class="ws-card-lbl">웹문서</div>
+      </div>
+    </div>
+
+    <div class="web-add">
+      <input type="text" id="webUrl" placeholder="https:// 또는 키워드 (예: 내 이름·블로그명)">
+      <button onclick="addWebSource()"><i class="fas fa-plus"></i> 추가</button>
+    </div>
+
+    <div class="intro" style="margin-top:6px">
+      <div class="intro-icon" style="background:rgba(34,197,94,.12);color:#86efac"><i class="fas fa-info-circle"></i></div>
+      <div class="intro-body">
+        <div class="intro-desc">자동수집 일정: 매일 새벽 4시. 마지막 수집: <span id="lastCrawl">-</span></div>
+      </div>
+    </div>
+
+    <div class="history">
+      <div class="history-title">🌐 최근 수집된 콘텐츠</div>
+      <div id="webHist"><div class="empty"><div class="empty-icon">🌐</div>아직 수집된 콘텐츠가 없습니다</div></div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ════════ 폰 데이터 자동채움 모달 ════════ -->
+<div class="phone-modal" id="phoneModal">
+  <div class="phone-box">
+    <div class="phone-box-head">
+      <div style="font-size:22px">📱</div>
+      <div class="phone-box-title">폰 데이터에서 자동 채우기</div>
+      <button class="phone-box-close" onclick="closePhoneFill()"><i class="fas fa-times"></i></button>
+    </div>
+
+    <div style="font-size:11px;color:var(--dim);margin-bottom:10px;line-height:1.55">
+      어떤 데이터를 가져와서 위의 텍스트에 채워넣을지 선택하세요.
+    </div>
+
+    <!-- 소스 선택 -->
+    <div class="phone-src-grid" id="phoneSrcGrid">
+      <button class="psrc" data-src="call">
+        <div class="psrc-icon">📞</div>
+        <div class="psrc-info"><div class="psrc-name">통화 기록</div><div class="psrc-cnt" id="pcnt-call">0건</div></div>
+      </button>
+      <button class="psrc" data-src="sms">
+        <div class="psrc-icon">💬</div>
+        <div class="psrc-info"><div class="psrc-name">문자 요약</div><div class="psrc-cnt" id="pcnt-sms">0건</div></div>
+      </button>
+      <button class="psrc" data-src="kakao">
+        <div class="psrc-icon">💛</div>
+        <div class="psrc-info"><div class="psrc-name">카톡 요약</div><div class="psrc-cnt" id="pcnt-kakao">0건</div></div>
+      </button>
+      <button class="psrc" data-src="email">
+        <div class="psrc-icon">✉️</div>
+        <div class="psrc-info"><div class="psrc-name">이메일 요약</div><div class="psrc-cnt" id="pcnt-email">0건</div></div>
+      </button>
+      <button class="psrc" data-src="meeting">
+        <div class="psrc-icon">🎤</div>
+        <div class="psrc-info"><div class="psrc-name">회의 녹음 (STT)</div><div class="psrc-cnt" id="pcnt-meeting">0건</div></div>
+      </button>
+      <button class="psrc" data-src="photo">
+        <div class="psrc-icon">📷</div>
+        <div class="psrc-info"><div class="psrc-name">사진 OCR/캡션</div><div class="psrc-cnt" id="pcnt-photo">0건</div></div>
+      </button>
+      <button class="psrc" data-src="health">
+        <div class="psrc-icon">🏃</div>
+        <div class="psrc-info"><div class="psrc-name">건강 데이터</div><div class="psrc-cnt" id="pcnt-health">0건</div></div>
+      </button>
+      <button class="psrc" data-src="cal">
+        <div class="psrc-icon">📅</div>
+        <div class="psrc-info"><div class="psrc-name">캘린더 일정</div><div class="psrc-cnt" id="pcnt-cal">0건</div></div>
+      </button>
+    </div>
+
+    <!-- 기간 -->
+    <div style="font-size:11px;color:var(--dim);margin-bottom:5px;font-weight:600">📅 기간</div>
+    <div class="phone-range" id="phoneRange">
+      <button class="pr-chip active" data-r="today">오늘</button>
+      <button class="pr-chip" data-r="7d">7일</button>
+      <button class="pr-chip" data-r="30d">30일</button>
+      <button class="pr-chip" data-r="all">전체</button>
+    </div>
+
+    <!-- 모드 -->
+    <div style="font-size:11px;color:var(--dim);margin-bottom:5px;font-weight:600">📝 채우기 방식</div>
+    <div class="phone-mode" id="phoneMode">
+      <button class="pm-btn active" data-mode="append">텍스트 뒤에 추가</button>
+      <button class="pm-btn" data-mode="replace">새로 채우기</button>
+      <button class="pm-btn" data-mode="summary">요약만 (AI)</button>
+    </div>
+
+    <button class="phone-fetch" onclick="fetchPhoneData()">
+      <i class="fas fa-download"></i> 선택한 데이터 가져오기
+    </button>
+
+    <div style="font-size:10.5px;color:var(--dim2);margin-top:10px;line-height:1.6;text-align:center">
+      💡 아이엠 앱(iamapp)에서 마이챗 연동을 활성화해야 실데이터가 흐릅니다.<br>
+      <a href="/aimessage/mychat/phone-sync-settings.html" style="color:var(--pur2)">자동수집 정책 설정 →</a>
+    </div>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+'use strict';
+
+// ════════════════════════════════════════════════════════
+//  [LEARN-v2] 데이터 모델
+// ════════════════════════════════════════════════════════
+
+// 14개 인생 채널 (마이챗 고유)
+var CHANNELS = [
+  {v:'basic',       label:'기본 정보',   icon:'👤', desc:'이름·직업·가치관·인생관'},
+  {v:'childhood',   label:'어린 시절',   icon:'🧸', desc:'성장 스토리·기억·경험'},
+  {v:'diary',       label:'일기·메모',   icon:'📔', desc:'감정·생각·하루 기록'},
+  {v:'health',      label:'건강 기록',   icon:'🏃', desc:'걸음수·심박·수면·운동'},
+  {v:'phone',       label:'통화·문자',   icon:'📱', desc:'중요 통화·연락처 메모'},
+  {v:'file',        label:'파일 자료',   icon:'📁', desc:'문서·PDF·계약서·자격증'},
+  {v:'voice',       label:'음성 기록',   icon:'🎙️', desc:'녹음 → 텍스트 자동 변환'},
+  {v:'image',       label:'이미지',      icon:'🖼️', desc:'사진 분석·OCR·캡션'},
+  {v:'web',         label:'웹/뉴스',     icon:'🌐', desc:'자동수집된 웹 콘텐츠'},
+  {v:'meeting',     label:'회의·미팅',   icon:'🎤', desc:'회의록·녹취·요약'},
+  {v:'email',       label:'이메일',      icon:'✉️', desc:'주요 이메일·약속·결정'},
+  {v:'fingerprint', label:'지문',        icon:'☝️', desc:'성격·기질 분석 데이터'},
+  {v:'palmistry',   label:'손금/관상',   icon:'🖐️', desc:'운세·기질·인상 분석'},
+  {v:'saju',        label:'사주·점성',   icon:'🔮', desc:'생년월일 기반 운세'},
+  {v:'etc',         label:'기타',        icon:'📝', desc:'분류하기 어려운 자료'},
+];
+
+// 채널 × 입력방식 매트릭스 (어떤 채널이 어떤 입력방식 지원하는지)
+// true = 활성, false = 비활성(탭 disabled)
+var METHOD_MATRIX = {
+  basic:       { diary:true,  text:true,  voice:true,  file:true,  web:true  },
+  childhood:   { diary:true,  text:true,  voice:true,  file:true,  web:false },
+  diary:       { diary:true,  text:true,  voice:true,  file:false, web:false },
+  health:      { diary:true,  text:true,  voice:false, file:true,  web:false },
+  phone:       { diary:true,  text:true,  voice:false, file:false, web:false },
+  file:        { diary:false, text:true,  voice:false, file:true,  web:false },
+  voice:       { diary:false, text:true,  voice:true,  file:false, web:false },
+  image:       { diary:false, text:true,  voice:false, file:true,  web:false },
+  web:         { diary:false, text:true,  voice:false, file:false, web:true  },
+  meeting:     { diary:true,  text:true,  voice:true,  file:true,  web:false },
+  email:       { diary:true,  text:true,  voice:false, file:true,  web:false },
+  fingerprint: { diary:false, text:true,  voice:false, file:true,  web:false },
+  palmistry:   { diary:false, text:true,  voice:false, file:true,  web:false },
+  saju:        { diary:false, text:true,  voice:false, file:false, web:false },
+  etc:         { diary:true,  text:true,  voice:true,  file:true,  web:true  },
+};
+
+// 상태
+var _curCh = null;        // 현재 선택된 채널 객체
+var _curMethod = 'diary'; // 현재 선택된 입력방식
+var _channelScopes = {};  // 채널별 기본 scope
+var _inlineScope   = {};  // 현재 입력 폼별 scope (host -> scope)
+var _counts = {};         // 채널별 데이터 개수
+var _phoneCounts = {};    // 폰 데이터 카운트 (call/sms/kakao/...)
+var _phoneSelected = new Set(); // 폰 모달에서 선택된 소스
+var _phoneRange = 'today';
+var _phoneMode  = 'append';
+var _phoneTargetHost = 'diary'; // 폰 데이터를 채울 textarea host
+var _storageMode = 'server';
+
+var SCOPES_LOCAL_KEY = 'mychatChannelScopes_v1';
+var STORAGE_KEY = 'mychatStorageMode';
+
+// ════════════════════════════════════════════════════════
+//  유틸
+// ════════════════════════════════════════════════════════
+function esc(s){
+  return String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+function toast(msg, type){
+  var t = document.getElementById('toast');
+  t.textContent = msg;
+  t.style.borderColor = type==='err' ? 'var(--red)' : (type==='ok' ? 'var(--green)' : 'var(--pur)');
+  t.style.color       = type==='err' ? '#fca5a5'   : (type==='ok' ? '#86efac'      : '#c4b5fd');
+  t.classList.add('show');
+  clearTimeout(window._tt);
+  window._tt = setTimeout(function(){ t.classList.remove('show'); }, 2400);
+}
+function fmtTime(){
+  var d = new Date();
+  return d.toISOString().substr(0,16).replace('T',' ');
+}
+
+// ════════════════════════════════════════════════════════
+//  채널 그리드 렌더
+// ════════════════════════════════════════════════════════
+function loadChannelScopesLocal(){
+  try { _channelScopes = JSON.parse(localStorage.getItem(SCOPES_LOCAL_KEY) || '{}'); }
+  catch(e){ _channelScopes = {}; }
+}
+function saveChannelScopesLocal(){
+  try { localStorage.setItem(SCOPES_LOCAL_KEY, JSON.stringify(_channelScopes)); } catch(e){}
+}
+
+function renderChannels(){
+  var grid = document.getElementById('chGrid');
+  grid.innerHTML = CHANNELS.map(function(ch){
+    var cnt = _counts[ch.v] || 0;
+    var sc  = _channelScopes[ch.v] || 'private';
+    var store = (_storageMode==='hybrid') ? '☁️/📱' : (_storageMode==='device' ? '📱' : '☁️');
+    return ''
+      + '<div class="ch-card" data-ch="'+ch.v+'">'
+      +   '<div class="ch-store">'+store+'</div>'
+      +   '<div class="ch-scope">'
+      +     '<button class="ch-scope-btn '+(sc==='private'?'on':'')+'" data-ch="'+ch.v+'" data-scope="private" title="나만">🔒</button>'
+      +     '<button class="ch-scope-btn '+(sc==='public'?'on':'')+'"  data-ch="'+ch.v+'" data-scope="public"  title="외부도">🌐</button>'
+      +     '<button class="ch-scope-btn '+(sc==='both'?'on':'')+'"    data-ch="'+ch.v+'" data-scope="both"    title="둘 다">⚖️</button>'
+      +   '</div>'
+      +   '<div class="ch-icon">'+ch.icon+'</div>'
+      +   '<div class="ch-name">'+esc(ch.label)+'</div>'
+      +   '<div class="ch-desc">'+esc(ch.desc)+'</div>'
+      +   '<div class="ch-cnt">'+(cnt ? cnt+'건 저장됨' : '추가하기')+'</div>'
+      + '</div>';
+  }).join('');
+
+  if (!grid.dataset.bound) {
+    grid.addEventListener('click', function(e){
+      var sb = e.target.closest('.ch-scope-btn');
+      if (sb) {
+        e.stopPropagation();
+        setChannelScope(sb.dataset.ch, sb.dataset.scope);
+        return;
+      }
+      var card = e.target.closest('.ch-card');
+      if (card && card.dataset.ch) openChannel(card.dataset.ch);
+    });
+    grid.dataset.bound = '1';
+  }
+}
+
+function setChannelScope(chV, scope){
+  _channelScopes[chV] = scope;
+  saveChannelScopesLocal();
+  document.querySelectorAll('.ch-scope-btn[data-ch="'+chV+'"]').forEach(function(b){
+    b.classList.toggle('on', b.dataset.scope === scope);
+  });
+  // 서버 저장 (실패 무관)
+  fetch('/aimessage/mychat/api/data.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'set_channel_scope', channel:chV, scope:scope})
+  }).catch(function(){});
+}
+
+// ════════════════════════════════════════════════════════
+//  채널 열기 / 워크스페이스
+// ════════════════════════════════════════════════════════
+function openChannel(v){
+  _curCh = CHANNELS.find(function(c){ return c.v===v; });
+  if (!_curCh) return;
+  document.getElementById('chSection').style.display = 'none';
+  document.getElementById('ws').classList.add('open');
+  document.getElementById('wsIcon').textContent = _curCh.icon;
+  document.getElementById('wsTitle').textContent = _curCh.label;
+  document.getElementById('wsCnt').textContent = (_counts[v]||0) + '건';
+  document.getElementById('hdTitle').textContent = _curCh.label + ' · 학습';
+
+  // 채널별 활성 메서드만 표시
+  var matrix = METHOD_MATRIX[v] || {diary:true,text:true,voice:true,file:true,web:true};
+  document.querySelectorAll('.mtab').forEach(function(b){
+    var m = b.dataset.m;
+    if (matrix[m]) { b.disabled = false; b.style.display = ''; }
+    else            { b.disabled = true;  b.style.display = 'none'; }
+  });
+  // 첫 번째 활성 메서드로 자동 전환
+  var firstActive = ['diary','text','voice','file','web'].find(function(m){ return matrix[m]; });
+  if (firstActive) {
+    var btn = document.querySelector('.mtab[data-m="'+firstActive+'"]');
+    if (btn) switchMethod(btn);
+  }
+
+  // 인라인 scope 기본값 = 채널 기본값
+  var defScope = _channelScopes[v] || 'private';
+  ['diary','text','voice','file'].forEach(function(host){
+    _inlineScope[host] = defScope;
+    document.querySelectorAll('.scope-inline-btn[onclick*="\''+host+'\'"]').forEach(function(b){
+      b.classList.toggle('on', b.dataset.scope === defScope);
+    });
+  });
+
+  // 데이터 로드
+  loadChannelData(v);
+
+  // 채팅창 스크롤 위로
+  window.scrollTo({top:0,behavior:'smooth'});
+}
+
+function closeWs(){
+  document.getElementById('ws').classList.remove('open');
+  document.getElementById('chSection').style.display = '';
+  document.getElementById('hdTitle').textContent = '아바타 학습';
+  _curCh = null;
+  loadCounts();
+}
+
+function onBack(){
+  if (_curCh) closeWs();
+  else        history.back();
+}
+
+function switchMethod(btn){
+  if (btn.disabled) return;
+  _curMethod = btn.dataset.m;
+  document.querySelectorAll('.mtab').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+  document.querySelectorAll('.panel').forEach(function(p){ p.classList.remove('active'); });
+  var panel = document.getElementById('p-' + _curMethod);
+  if (panel) panel.classList.add('active');
+}
+
+// ════════════════════════════════════════════════════════
+//  인라인 scope 토글 (입력 폼별)
+// ════════════════════════════════════════════════════════
+function setInlineScope(host, btn){
+  _inlineScope[host] = btn.dataset.scope;
+  // 같은 host 의 형제 버튼 토글
+  var parent = btn.parentNode;
+  parent.querySelectorAll('.scope-inline-btn').forEach(function(b){
+    b.classList.toggle('on', b.dataset.scope === btn.dataset.scope);
+  });
+}
+
+// ════════════════════════════════════════════════════════
+//  데이터 카운트 / 히스토리
+// ════════════════════════════════════════════════════════
+function loadCounts(){
+  fetch('/aimessage/mychat/api/data.php?action=counts', {credentials:'include'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (!d || !d.ok) return;
+      _counts = d.counts || {};
+      document.getElementById('totalCnt').textContent = d.total || 0;
+      renderChannels();
+    })
+    .catch(function(){});
+}
+
+function loadChannelData(v){
+  // 채널 진입 후 method별 히스토리 로드
+  fetch('/aimessage/mychat/api/data.php?category=' + encodeURIComponent(v), {credentials:'include'})
+    .then(function(r){ return r.ok ? r.json() : {items:[]}; })
+    .then(function(d){
+      var items = (d && d.items) || [];
+      document.getElementById('wsCnt').textContent = items.length + '건';
+      // 단순화: 모든 method history에 같은 데이터 표시 (방법별 필터링은 차후)
+      var html = items.length === 0
+        ? '<div class="empty"><div class="empty-icon">'+(_curCh ? _curCh.icon : '📋')+'</div>아직 데이터가 없습니다</div>'
+        : items.slice(0, 8).map(renderHist).join('');
+      ['diaryHist','textHist','voiceHist','fileHist','webHist'].forEach(function(hid){
+        var h = document.getElementById(hid);
+        if (h) h.innerHTML = html;
+      });
+    })
+    .catch(function(){});
+}
+
+function renderHist(it){
+  var sc = it.scope || 'private';
+  var preview = String(it.payload_preview || '').replace(/\s+/g,' ').substr(0,120);
+  var icon = ({diary:'fa-book-open',text:'fa-file-alt',voice:'fa-microphone',file:'fa-file-pdf',web:'fa-globe'})[it.input_method||'text'] || 'fa-file-alt';
+  return ''
+    + '<div class="hist-item">'
+    +   '<div class="hist-icon"><i class="fas '+icon+'"></i></div>'
+    +   '<div class="hist-body">'
+    +     '<div class="hist-text">'+(it.title ? '<b>'+esc(it.title)+'</b><br>' : '')+esc(preview)+'</div>'
+    +     '<div class="hist-meta">'
+    +       '<span>'+(it.created_at ? String(it.created_at).substr(0,16) : '')+'</span>'
+    +       '<span class="hist-scope '+sc+'">'+({private:'🔒 나만',public:'🌐 외부',both:'⚖️ 둘다'}[sc]||sc)+'</span>'
+    +     '</div>'
+    +   '</div>'
+    +   '<button class="hist-del" onclick="delItem('+(parseInt(it.id,10)||0)+',this)" title="삭제"><i class="fas fa-trash"></i></button>'
+    + '</div>';
+}
+
+function delItem(id, btn){
+  if (!id) return;
+  if (!confirm('이 학습 데이터를 삭제할까요?')) return;
+  fetch('/aimessage/mychat/api/data.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'delete', id:id})
+  }).then(function(r){ return r.json(); }).then(function(d){
+    if (d && d.ok) {
+      btn.closest('.hist-item').remove();
+      toast('🗑️ 삭제됨','ok');
+      loadCounts();
+    } else {
+      toast('❌ 삭제 실패','err');
+    }
+  }).catch(function(){ toast('❌ 네트워크 오류','err'); });
+}
+
+// ════════════════════════════════════════════════════════
+//  입력 제출 — 5가지 방식
+// ════════════════════════════════════════════════════════
+function _postLearn(payload){
+  // 통합 ingest 엔드포인트 (없으면 /api/data.php 로 폴백)
+  payload.action = payload.action || 'add';
+  payload.category = (_curCh && _curCh.v) || 'etc';
+  payload.scope = _inlineScope[payload.input_method] || _channelScopes[payload.category] || 'private';
+  payload.storage_mode = _storageMode;
+
+  // 온디바이스 모드: 서버 미전송, IndexedDB / localStorage에 저장
+  if (_storageMode === 'device') {
+    return _saveOnDevice(payload);
+  }
+  return fetch('/aimessage/mychat/api/data.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(function(r){ return r.json(); });
+}
+
+function _saveOnDevice(payload){
+  // 간단 폴백: localStorage (향후 IndexedDB 교체 권장)
+  return new Promise(function(resolve){
+    try {
+      var key = 'mychatOndevicePool_v1';
+      var pool = JSON.parse(localStorage.getItem(key) || '[]');
+      payload.id = Date.now();
+      payload.created_at = new Date().toISOString();
+      pool.push(payload);
+      localStorage.setItem(key, JSON.stringify(pool.slice(-2000)));
+      resolve({ok:true, ondevice:true, id:payload.id});
+    } catch(e){ resolve({ok:false, error:'device storage 실패: '+e.message}); }
+  });
+}
+
+function submitDiary(){
+  var text = document.getElementById('diaryText').value.trim();
+  if (!text) return toast('내용을 입력해주세요','err');
+  _postLearn({input_method:'diary', payload:text, title:'일기 '+fmtTime().substr(5)})
+    .then(function(d){
+      if (d.ok) {
+        toast(d.ondevice ? '📱 이 기기에 저장됨' : '✅ 학습 업로드 완료', 'ok');
+        document.getElementById('diaryText').value = '';
+        document.getElementById('diaryChar').textContent = '0자';
+        loadChannelData(_curCh.v);
+      } else toast('❌ '+(d.error||'실패'),'err');
+    });
+}
+
+function submitText(){
+  var text  = document.getElementById('textText').value.trim();
+  var title = document.getElementById('textTitle').value.trim();
+  var cat = (document.querySelector('#p-text .cat-btn.active')||{}).dataset || {};
+  if (!text) return toast('내용을 입력해주세요','err');
+  _postLearn({input_method:'text', payload:text, title:title, subcategory:cat.c||'intro'})
+    .then(function(d){
+      if (d.ok) {
+        toast(d.ondevice ? '📱 이 기기에 저장됨' : '✅ 학습 업로드 완료', 'ok');
+        document.getElementById('textText').value = '';
+        document.getElementById('textTitle').value = '';
+        document.getElementById('textChar').textContent = '0자';
+        loadChannelData(_curCh.v);
+      } else toast('❌ '+(d.error||'실패'),'err');
+    });
+}
+
+// ════════════════════════════════════════════════════════
+//  음성 녹음 → STT
+// ════════════════════════════════════════════════════════
+var _mediaRec = null, _recChunks = [], _recTimer = null, _recSec = 0, _recBlob = null;
+
+function toggleRec(){
+  if (_mediaRec && _mediaRec.state === 'recording') {
+    _mediaRec.stop();
+    return;
+  }
+  if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+    return toast('🎙️ 이 브라우저는 녹음을 지원하지 않습니다','err');
+  }
+  navigator.mediaDevices.getUserMedia({audio:true}).then(function(stream){
+    _recChunks = [];
+    _mediaRec = new MediaRecorder(stream);
+    _mediaRec.ondataavailable = function(e){ if (e.data && e.data.size>0) _recChunks.push(e.data); };
+    _mediaRec.onstop = function(){
+      stream.getTracks().forEach(function(t){ t.stop(); });
+      _recBlob = new Blob(_recChunks, {type:'audio/webm'});
+      clearInterval(_recTimer);
+      document.getElementById('recBtn').classList.remove('recording');
+      document.getElementById('recIcon').className = 'fas fa-microphone';
+      document.getElementById('recActive').style.display = 'none';
+      document.getElementById('recIdle').style.display = 'none';
+      document.getElementById('recDone').style.display = 'block';
+      document.getElementById('recDoneText').textContent = formatSec(_recSec) + ' 녹음 완료 · 변환중...';
+      // 서버로 보내 STT 처리
+      transcribeAudio(_recBlob);
+    };
+    _mediaRec.start();
+    _recSec = 0;
+    document.getElementById('recBtn').classList.add('recording');
+    document.getElementById('recIcon').className = 'fas fa-stop';
+    document.getElementById('recIdle').style.display = 'none';
+    document.getElementById('recDone').style.display = 'none';
+    document.getElementById('recActive').style.display = 'block';
+    document.getElementById('recTimer').textContent = '00:00';
+    _recTimer = setInterval(function(){
+      _recSec++;
+      document.getElementById('recTimer').textContent = formatSec(_recSec);
+      if (_recSec >= 600) _mediaRec.stop(); // 10분 한도
+    }, 1000);
+  }).catch(function(){
+    toast('🎙️ 마이크 권한이 필요합니다','err');
+  });
+}
+
+function formatSec(s){
+  var m = Math.floor(s/60), x = s % 60;
+  return (m<10?'0':'')+m+':'+(x<10?'0':'')+x;
+}
+
+function transcribeAudio(blob){
+  var fd = new FormData();
+  fd.append('audio', blob, 'recording.webm');
+  fd.append('action', 'transcribe');
+  fd.append('category', (_curCh && _curCh.v) || 'voice');
+  fetch('/aimessage/mychat/api/learn_ingest.php', {
+    method:'POST', credentials:'include', body:fd
+  }).then(function(r){ return r.ok ? r.json() : {ok:false, error:'server '+r.status}; })
+    .then(function(d){
+      var box = document.getElementById('recTranscribe');
+      if (d.ok && d.text) {
+        document.getElementById('recText').value = d.text;
+        box.classList.add('show');
+        document.getElementById('recDoneText').textContent = formatSec(_recSec)+' 녹음 · 변환 완료';
+        document.getElementById('voiceSubmit').style.display = 'flex';
+      } else {
+        // STT 미구현시 폴백: 사용자에게 직접 텍스트 입력 요청
+        document.getElementById('recText').value = '';
+        document.getElementById('recText').placeholder = '⚠️ 자동 STT가 아직 활성화되지 않았습니다. 녹음한 내용을 여기에 직접 적어주세요.';
+        box.classList.add('show');
+        document.getElementById('recDoneText').textContent = formatSec(_recSec)+' 녹음 완료 (수동 입력 필요)';
+        document.getElementById('voiceSubmit').style.display = 'flex';
+      }
+    })
+    .catch(function(){
+      document.getElementById('recText').placeholder = '⚠️ STT 서버 미응답 — 수동으로 적어주세요.';
+      document.getElementById('recTranscribe').classList.add('show');
+      document.getElementById('voiceSubmit').style.display = 'flex';
+    });
+}
+
+function submitVoice(){
+  var text = document.getElementById('recText').value.trim();
+  if (!text) return toast('변환된 텍스트가 비어 있습니다','err');
+  _postLearn({input_method:'voice', payload:text, title:'음성 '+fmtTime().substr(5), duration_sec:_recSec})
+    .then(function(d){
+      if (d.ok) {
+        toast(d.ondevice ? '📱 이 기기에 저장됨' : '✅ 음성 학습 완료','ok');
+        // 리셋
+        document.getElementById('recText').value = '';
+        document.getElementById('recTranscribe').classList.remove('show');
+        document.getElementById('recDone').style.display = 'none';
+        document.getElementById('recIdle').style.display = 'block';
+        document.getElementById('voiceSubmit').style.display = 'none';
+        _recSec = 0;
+        loadChannelData(_curCh.v);
+      } else toast('❌ '+(d.error||'실패'),'err');
+    });
+}
+
+// ════════════════════════════════════════════════════════
+//  파일 업로드
+// ════════════════════════════════════════════════════════
+var _fileInput = null;
+function initFileDz(){
+  _fileInput = document.getElementById('fileInput');
+  var dz = document.getElementById('dz');
+  dz.addEventListener('click', function(){ _fileInput.click(); });
+  dz.addEventListener('dragover', function(e){ e.preventDefault(); dz.classList.add('dragover'); });
+  dz.addEventListener('dragleave', function(){ dz.classList.remove('dragover'); });
+  dz.addEventListener('drop', function(e){
+    e.preventDefault(); dz.classList.remove('dragover');
+    handleFiles(e.dataTransfer.files);
+  });
+  _fileInput.addEventListener('change', function(){ handleFiles(_fileInput.files); });
+}
+
+function handleFiles(files){
+  var arr = Array.from(files || []);
+  arr.forEach(function(f){ uploadOne(f); });
+}
+
+function uploadOne(file){
+  if (file.size > 20*1024*1024) return toast('20MB를 초과합니다: '+file.name,'err');
+  var list = document.getElementById('fileList');
+  var item = document.createElement('div');
+  item.className = 'file-item';
+  item.innerHTML = ''
+    + '<div class="file-icon"><i class="fas fa-file"></i></div>'
+    + '<div class="file-info">'
+    +   '<div class="file-name">'+esc(file.name)+'</div>'
+    +   '<div class="file-meta">'+(Math.round(file.size/1024))+' KB</div>'
+    + '</div>'
+    + '<div class="file-progress">⏳ 업로드중...</div>';
+  list.appendChild(item);
+
+  var fd = new FormData();
+  fd.append('file', file);
+  fd.append('action', 'upload_file');
+  fd.append('category', (_curCh && _curCh.v) || 'file');
+  fd.append('scope', _inlineScope.file || _channelScopes[(_curCh && _curCh.v)||'file'] || 'private');
+  fd.append('storage_mode', _storageMode);
+
+  fetch('/aimessage/mychat/api/learn_ingest.php', {
+    method:'POST', credentials:'include', body:fd
+  }).then(function(r){ return r.ok ? r.json() : {ok:false, error:'server '+r.status}; })
+    .then(function(d){
+      var prog = item.querySelector('.file-progress');
+      if (d.ok) {
+        prog.className = 'file-progress ok';
+        prog.textContent = '✓ 처리완료';
+        toast('✅ '+file.name+' — '+(d.chars||0)+'자 추출','ok');
+        loadChannelData(_curCh.v);
+      } else {
+        prog.className = 'file-progress err';
+        prog.textContent = '✗ 실패';
+        toast('❌ '+(d.error||'업로드 실패'),'err');
+      }
+    })
+    .catch(function(){
+      var prog = item.querySelector('.file-progress');
+      prog.className = 'file-progress err';
+      prog.textContent = '✗ 서버 오류';
+    });
+}
+
+// ════════════════════════════════════════════════════════
+//  웹 자동수집
+// ════════════════════════════════════════════════════════
+function loadWebStats(){
+  fetch('/aimessage/mychat/api/learn_ingest.php?action=web_stats', {credentials:'include'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (!d || !d.ok) return;
+      ['news','youtube','blog','web'].forEach(function(k){
+        var el = document.getElementById('wsNum-'+k);
+        if (el) el.textContent = (d.stats && d.stats[k]) || 0;
+      });
+      if (d.last_crawl) document.getElementById('lastCrawl').textContent = d.last_crawl;
+    }).catch(function(){});
+}
+
+function addWebSource(){
+  var v = document.getElementById('webUrl').value.trim();
+  if (!v) return toast('URL 또는 키워드를 입력하세요','err');
+  fetch('/aimessage/mychat/api/learn_ingest.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'add_web_source', value:v, category:(_curCh && _curCh.v)||'web'})
+  }).then(function(r){ return r.ok ? r.json() : {ok:false}; })
+    .then(function(d){
+      if (d.ok) {
+        toast('✅ 수집 대상 등록','ok');
+        document.getElementById('webUrl').value = '';
+        loadWebStats();
+      } else {
+        toast('⏳ 웹 수집 API는 곧 활성화됩니다','');
+      }
+    }).catch(function(){ toast('⏳ 웹 수집 API는 곧 활성화됩니다',''); });
+}
+
+// ════════════════════════════════════════════════════════
+//  📱 폰 데이터 자동채움
+// ════════════════════════════════════════════════════════
+function openPhoneFill(targetHost){
+  _phoneTargetHost = targetHost;
+  document.getElementById('phoneModal').classList.add('open');
+  loadPhoneCounts();
+}
+function closePhoneFill(){
+  document.getElementById('phoneModal').classList.remove('open');
+  _phoneSelected.clear();
+  document.querySelectorAll('#phoneSrcGrid .psrc').forEach(function(b){ b.classList.remove('selected'); });
+}
+
+document.getElementById('phoneSrcGrid').addEventListener('click', function(e){
+  var b = e.target.closest('.psrc');
+  if (!b) return;
+  var s = b.dataset.src;
+  if (_phoneSelected.has(s)) { _phoneSelected.delete(s); b.classList.remove('selected'); }
+  else                       { _phoneSelected.add(s);    b.classList.add('selected'); }
+});
+
+document.getElementById('phoneRange').addEventListener('click', function(e){
+  var b = e.target.closest('.pr-chip');
+  if (!b) return;
+  document.querySelectorAll('#phoneRange .pr-chip').forEach(function(x){ x.classList.remove('active'); });
+  b.classList.add('active');
+  _phoneRange = b.dataset.r;
+});
+
+document.getElementById('phoneMode').addEventListener('click', function(e){
+  var b = e.target.closest('.pm-btn');
+  if (!b) return;
+  document.querySelectorAll('#phoneMode .pm-btn').forEach(function(x){ x.classList.remove('active'); });
+  b.classList.add('active');
+  _phoneMode = b.dataset.mode;
+});
+
+function loadPhoneCounts(){
+  fetch('/aimessage/mychat/api/learn_ingest.php?action=phone_counts&range='+_phoneRange, {credentials:'include'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (!d || !d.ok) return;
+      _phoneCounts = d.counts || {};
+      ['call','sms','kakao','email','meeting','photo','health','cal'].forEach(function(k){
+        var el = document.getElementById('pcnt-'+k);
+        if (el) el.textContent = (_phoneCounts[k]||0) + '건';
+      });
+    }).catch(function(){});
+}
+
+function fetchPhoneData(){
+  if (_phoneSelected.size === 0) return toast('데이터 종류를 1개 이상 선택해주세요','err');
+  var srcs = Array.from(_phoneSelected);
+  toast('📱 폰 데이터 불러오는 중...');
+  fetch('/aimessage/mychat/api/learn_ingest.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({
+      action:'phone_pull',
+      sources:srcs,
+      range:_phoneRange,
+      mode:_phoneMode,
+      category:(_curCh && _curCh.v) || 'phone'
+    })
+  }).then(function(r){ return r.ok ? r.json() : {ok:false, error:'server '+r.status}; })
+    .then(function(d){
+      if (d.ok && d.text != null) {
+        applyPhoneTextToTarget(d.text);
+        toast('✅ '+(d.count||0)+'건 가져옴','ok');
+        closePhoneFill();
+      } else {
+        // 미연동 시 데모 텍스트
+        var demo = generatePhoneDemo(srcs);
+        applyPhoneTextToTarget(demo);
+        toast('💡 데모 데이터 (실데이터 연결시 자동 교체)','');
+        closePhoneFill();
+      }
+    })
+    .catch(function(){
+      var demo = generatePhoneDemo(srcs);
+      applyPhoneTextToTarget(demo);
+      toast('💡 데모 데이터 (앱 연결 전)','');
+      closePhoneFill();
+    });
+}
+
+function generatePhoneDemo(srcs){
+  var today = new Date().toISOString().substr(0,10);
+  var lines = ['[자동 가져옴 · '+today+' · '+_phoneRange+']',''];
+  if (srcs.includes('call'))    lines.push('📞 통화 요약: 아내(15분, "저녁 약속 변경"), 박이사(8분, "Q2 매출 보고")');
+  if (srcs.includes('sms'))     lines.push('💬 문자 요약: 5건 — 가족 3, 업무 2 (이번주 가장 자주 연락: 아내)');
+  if (srcs.includes('kakao'))   lines.push('💛 카톡 요약: 단톡방 3개, 1:1 채팅 12개, 주요 결정: 다음주 회식 수요일');
+  if (srcs.includes('email'))   lines.push('✉️ 이메일 요약: 받은 메일 24, 답장 필요 3 (마감 임박: AAA 견적서)');
+  if (srcs.includes('meeting')) lines.push('🎤 회의 요약 (오늘 오후 3시 임원회의): Q3 예산 12% 증가, 신규 채용 5명 승인');
+  if (srcs.includes('photo'))   lines.push('📷 사진: 14장 (가족 8, 음식 3, 풍경 3) — 캡션 자동생성');
+  if (srcs.includes('health'))  lines.push('🏃 건강: 걸음 8,234 · 수면 6h 42m · 평균 심박 72 · 스트레스 보통');
+  if (srcs.includes('cal'))     lines.push('📅 일정: 오늘 4건, 내일 6건 — 가장 중요: 내일 10시 이사회');
+  lines.push('','💡 자동요약은 GPT-4o-mini 사용 (당신의 API 키로 호출됨)');
+  return lines.join('\n');
+}
+
+function applyPhoneTextToTarget(text){
+  var hostMap = { diary:'diaryText', text:'textText' };
+  var taId = hostMap[_phoneTargetHost] || 'diaryText';
+  var ta = document.getElementById(taId);
+  if (!ta) return;
+  if (_phoneMode === 'replace') {
+    ta.value = text;
+  } else if (_phoneMode === 'append') {
+    ta.value = (ta.value ? ta.value + '\n\n' : '') + text;
+  } else if (_phoneMode === 'summary') {
+    // 향후 AI 요약 호출 — 일단은 동일하게 채워둠
+    ta.value = (ta.value ? ta.value + '\n\n[요약 모드] ' : '[요약 모드] ') + text;
+  }
+  ta.dispatchEvent(new Event('input',{bubbles:true}));
+  ta.focus();
+}
+
+// ════════════════════════════════════════════════════════
+//  보조 함수: 템플릿/카테고리/붙여넣기
+// ════════════════════════════════════════════════════════
+function insertTemplate(host){
+  var tpl = {
+    diary: '[오늘의 일기 · '+new Date().toISOString().substr(0,10)+']\n\n오늘 가장 의미있던 일은\n오늘 배운 것은\n내일을 위한 한 가지는\n\n나의 감정 점수 (1~10): \n'
+  }[host] || '';
+  var taId = ({diary:'diaryText',text:'textText'})[host];
+  var ta = document.getElementById(taId);
+  if (ta) { ta.value = (ta.value ? ta.value + '\n\n' : '') + tpl; ta.dispatchEvent(new Event('input',{bubbles:true})); }
+}
+
+function insertNow(){
+  var ta = document.getElementById('diaryText');
+  ta.value = (ta.value ? ta.value+' ' : '') + '[' + fmtTime() + '] ';
+  ta.dispatchEvent(new Event('input',{bubbles:true}));
+  ta.focus();
+}
+
+function pasteClipboard(taId){
+  if (!navigator.clipboard || !navigator.clipboard.readText) return toast('이 브라우저는 클립보드 읽기를 지원하지 않습니다','err');
+  navigator.clipboard.readText().then(function(text){
+    var ta = document.getElementById(taId);
+    if (ta) { ta.value = (ta.value ? ta.value + '\n' : '') + text; ta.dispatchEvent(new Event('input',{bubbles:true})); toast('📋 붙여넣기 완료','ok'); }
+  }).catch(function(){ toast('클립보드 권한이 필요합니다','err'); });
+}
+
+function setCat(btn){
+  document.querySelectorAll('#p-text .cat-btn').forEach(function(b){ b.classList.remove('active'); });
+  btn.classList.add('active');
+}
+
+// 글자수 카운트
+['diaryText','textText'].forEach(function(id){
+  var ta = document.getElementById(id);
+  if (!ta) return;
+  ta.addEventListener('input', function(){
+    var cntId = id === 'diaryText' ? 'diaryChar' : 'textChar';
+    var c = document.getElementById(cntId);
+    if (c) c.textContent = ta.value.length + '자';
+  });
+});
+
+// ════════════════════════════════════════════════════════
+//  저장소 모드 초기화
+// ════════════════════════════════════════════════════════
+function initStorageMode(){
+  // 1) 로컬 캐시 우선
+  try {
+    var local = localStorage.getItem(STORAGE_KEY);
+    if (local) { _storageMode = local; applyStorageBadge(); }
+  } catch(e){}
+  // 2) 서버 동기화
+  fetch('/aimessage/mychat/api/settings_byok.php?action=get_settings', {credentials:'include'})
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (d && d.ok && d.storage_mode) {
+        _storageMode = d.storage_mode;
+        try { localStorage.setItem(STORAGE_KEY, _storageMode); } catch(e){}
+        applyStorageBadge();
+        renderChannels();
+      }
+    }).catch(function(){});
+}
+function applyStorageBadge(){
+  var badge = document.getElementById('storageBadge');
+  var hint  = document.getElementById('diaryStorageHint');
+  var label = { server:'☁️ 서버', device:'📱 이 기기', hybrid:'⚖️ 하이브리드' }[_storageMode] || '☁️ 서버';
+  if (badge) badge.textContent = label;
+  if (hint)  hint.textContent  = ({server:'☁️ 서버 저장', device:'📱 이 기기에만 저장', hybrid:'⚖️ 채널별 선택'})[_storageMode];
+}
+
+// ════════════════════════════════════════════════════════
+//  초기화
+// ════════════════════════════════════════════════════════
+function init(){
+  loadChannelScopesLocal();
+  initStorageMode();
+  renderChannels();
+  loadCounts();
+  initFileDz();
+
+  // URL 파라미터로 채널 바로 열기
+  var ch = new URLSearchParams(location.search).get('ch');
+  if (ch) setTimeout(function(){ openChannel(ch); }, 250);
+}
+
+init();
+</script>
+</body>
+</html>

@@ -1,0 +1,387 @@
+<!--
+  원챗(OneChat) Avatar Training v2.0 — 빅테크 RAG 기반 8채널 학습 UI
+  ────────────────────────────────────────────────────────────────
+  기존 4채널 → 8채널로 확장:
+    유지:  1)일기·대화  2)텍스트  3)음성  4)파일
+    추가:  5)URL 크롤링  6)YouTube  7)SNS 연동  8)Q&A 벌크
+
+  onechat_avatar_v2.html — standalone template (index.html panel 내 렌더링)
+-->
+
+<div class="avatv2-root">
+  <!-- ── 헤더 ────────────────────────────────────────────────── -->
+  <div class="avatv2-header">
+    <h2 class="avatv2-title">
+      <span class="avatv2-icon">🧠</span> 아바타 학습시키기
+      <span class="avatv2-badge" id="avatv2-chunk-count">0 chunks</span>
+    </h2>
+    <p class="avatv2-subtitle">
+      후보자의 연설문, 정책자료, SNS, 뉴스, 유튜브 등 모든 데이터를
+      <strong>RAG(Retrieval-Augmented Generation)</strong> 기반으로 학습시켜
+      AI 아바타가 근거 있는 답변을 하도록 합니다.
+    </p>
+  </div>
+
+  <!-- ── 채널 탭바 ───────────────────────────────────────────── -->
+  <div class="avatv2-tabs" id="avatv2-tabs">
+    <button class="avatv2-tab active" data-tab="diary">
+      <span class="avatv2-tab-icon">📔</span> 일기·대화
+    </button>
+    <button class="avatv2-tab" data-tab="text">
+      <span class="avatv2-tab-icon">📝</span> 텍스트
+    </button>
+    <button class="avatv2-tab" data-tab="voice">
+      <span class="avatv2-tab-icon">🎙️</span> 음성
+    </button>
+    <button class="avatv2-tab" data-tab="file">
+      <span class="avatv2-tab-icon">📁</span> 파일
+    </button>
+    <button class="avatv2-tab" data-tab="url">
+      <span class="avatv2-tab-icon">🌐</span> URL
+    </button>
+    <button class="avatv2-tab" data-tab="youtube">
+      <span class="avatv2-tab-icon">📺</span> YouTube
+    </button>
+    <button class="avatv2-tab" data-tab="sns">
+      <span class="avatv2-tab-icon">💬</span> SNS
+    </button>
+    <button class="avatv2-tab" data-tab="qa">
+      <span class="avatv2-tab-icon">📋</span> Q&A 벌크
+    </button>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 1: 일기·대화
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel active" id="panel-diary">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>📔 캠프 일일 브리핑 / 대화 기록</h3>
+        <p>매일의 캠프 활동, 주요 미팅, 유권자 대화 내용을 기록합니다. 템플릿을 선택하면 더 빠르게 작성할 수 있습니다.</p>
+      </div>
+
+      <div class="avatv2-template-bar">
+        <span class="avatv2-label">템플릿:</span>
+        <button class="avatv2-tpl-btn" data-tpl="camp-briefing">📋 캠프 브리핑</button>
+        <button class="avatv2-tpl-btn" data-tpl="meeting-note">📝 미팅 노트</button>
+        <button class="avatv2-tpl-btn" data-tpl="voter-talk">🗣️ 유권자 대화</button>
+      </div>
+
+      <div class="avatv2-field">
+        <label>제목</label>
+        <input type="text" id="diary-title" placeholder="예: 2026년 5월 8일 — ○○동 주민 간담회" class="avatv2-input">
+      </div>
+      <div class="avatv2-field">
+        <label>내용</label>
+        <textarea id="diary-content" class="avatv2-textarea" rows="10"
+          placeholder="오늘의 주요 활동, 만난 유권자, 나눈 대화, 결정 사항 등을 자유롭게 기록하세요.&#10;&#10;팁: 구체적인 장소·시간·참석자를 포함하면 더 정확한 검색이 가능합니다."></textarea>
+      </div>
+      <div class="avatv2-field">
+        <label>카테고리 태그</label>
+        <select id="diary-category" class="avatv2-select">
+          <option value="유권자소통">💬 유권자 소통</option>
+          <option value="발언·연설">🗣️ 발언·연설</option>
+          <option value="정책·공약">🏛️ 정책·공약</option>
+          <option value="지역현안">📍 지역 현안</option>
+        </select>
+      </div>
+      <button class="avatv2-submit" onclick="window.OCAvatarV2 && OCAvatarV2.ingestDiary()">
+        ⚡ RAG 학습 시작
+      </button>
+      <div class="avatv2-status" id="diary-status"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 2: 텍스트
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel" id="panel-text">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>📝 대용량 텍스트 직접 입력</h3>
+        <p>연설문, 인터뷰 녹취록, 정책 제안서 등을 직접 텍스트로 입력합니다. 최대 10만자까지 지원하며 마크다운 문법을 사용할 수 있습니다.</p>
+      </div>
+      <div class="avatv2-field">
+        <label>소스 정보 (출처)</label>
+        <input type="text" id="text-source" placeholder="예: 2025.11 시민토론회 발언" class="avatv2-input">
+      </div>
+      <div class="avatv2-field">
+        <label>카테고리</label>
+        <select id="text-category" class="avatv2-select">
+          <option value="발언·연설">🗣️ 발언·연설</option>
+          <option value="정책·공약">🏛️ 정책·공약</option>
+          <option value="인물·이력">👤 인물·이력</option>
+          <option value="언론·평가">📰 언론·평가</option>
+          <option value="지역현안">📍 지역 현안</option>
+          <option value="유권자소통">💬 유권자 소통</option>
+          <option value="법률·선거">⚖️ 법률·선거</option>
+        </select>
+      </div>
+      <div class="avatv2-field">
+        <label>텍스트 내용 <span class="avatv2-hint">(마크다운 지원, 최대 100,000자)</span></label>
+        <textarea id="text-content" class="avatv2-textarea avatv2-mono" rows="14"
+          placeholder="# 제목&#10;&#10;본문을 여기에 입력하세요...&#10;&#10;## 소제목&#10;- 항목 1&#10;- 항목 2"></textarea>
+      </div>
+      <div class="avatv2-field">
+        <label>벌크 모드</label>
+        <label class="avatv2-checkbox">
+          <input type="checkbox" id="text-bulk"> 구분자(---)로 여러 문서 분리하여 일괄 처리
+        </label>
+      </div>
+      <button class="avatv2-submit" onclick="window.OCAvatarV2 && OCAvatarV2.ingestText()">
+        ⚡ RAG 학습 시작
+      </button>
+      <div class="avatv2-status" id="text-status"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 3: 음성
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel" id="panel-voice">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>🎙️ 음성 녹음 → STT 자동 변환</h3>
+        <p>연설·인터뷰·토론회 음성을 녹음하거나 업로드하면 Whisper STT 엔진이 자동으로 텍스트로 변환하여 RAG 학습합니다.</p>
+      </div>
+      <div class="avatv2-voice-area">
+        <button class="avatv2-record-btn" id="voice-record-btn">
+          <span class="avatv2-record-icon">⏺️</span>
+          <span>녹음 시작</span>
+        </button>
+        <span class="avatv2-separator">또는</span>
+        <label class="avatv2-upload-label">
+          <input type="file" id="voice-file" accept="audio/*" style="display:none">
+          <span class="avatv2-upload-btn">📂 오디오 파일 업로드</span>
+        </label>
+      </div>
+      <div class="avatv2-field">
+        <label>소스 정보</label>
+        <input type="text" id="voice-source" placeholder="예: 2026년 5월 출마 기자회견" class="avatv2-input">
+      </div>
+      <div class="avatv2-field">
+        <label>카테고리</label>
+        <select id="voice-category" class="avatv2-select">
+          <option value="발언·연설">🗣️ 발언·연설</option>
+          <option value="정책·공약">🏛️ 정책·공약</option>
+          <option value="유권자소통">💬 유권자 소통</option>
+        </select>
+      </div>
+      <div class="avatv2-status" id="voice-status"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 4: 파일
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel" id="panel-file">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>📁 파일 업로드 (PDF·DOCX·PPTX·XLSX·TXT·ZIP)</h3>
+        <p>정책백서, 보도자료, 보고서 등 각종 문서 파일을 업로드합니다. 최대 500MB/파일, ZIP 일괄 업로드를 지원합니다.</p>
+      </div>
+      <div class="avatv2-dropzone" id="file-dropzone">
+        <span class="avatv2-dropicon">📂</span>
+        <p>파일을 여기에 드래그하거나 클릭하여 업로드</p>
+        <p class="avatv2-dropformats">지원: PDF, DOCX, PPTX, XLSX, TXT, CSV, ZIP</p>
+        <input type="file" id="file-input" multiple accept=".pdf,.docx,.pptx,.xlsx,.txt,.csv,.zip" style="display:none">
+      </div>
+      <div class="avatv2-field">
+        <label>카테고리</label>
+        <select id="file-category" class="avatv2-select">
+          <option value="정책·공약">🏛️ 정책·공약</option>
+          <option value="인물·이력">👤 인물·이력</option>
+          <option value="발언·연설">🗣️ 발언·연설</option>
+          <option value="언론·평가">📰 언론·평가</option>
+          <option value="지역현안">📍 지역 현안</option>
+          <option value="유권자소통">💬 유권자 소통</option>
+          <option value="법률·선거">⚖️ 법률·선거</option>
+        </select>
+      </div>
+      <div class="avatv2-file-list" id="file-list"></div>
+      <div class="avatv2-status" id="file-status"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 5: URL 크롤링 (신규)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel" id="panel-url">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>🌐 URL 크롤링 — 뉴스·블로그·웹사이트</h3>
+        <p>후보자 관련 뉴스 기사, 블로그 포스트, 공식 웹사이트 URL을 입력하면 자동으로 텍스트를 추출하여 RAG 학습합니다.</p>
+      </div>
+      <div class="avatv2-field">
+        <label>URL 입력</label>
+        <div class="avatv2-url-row">
+          <input type="url" id="url-input" placeholder="https://..." class="avatv2-input">
+          <button class="avatv2-add-btn" onclick="window.OCAvatarV2 && OCAvatarV2.addUrl()">+ 추가</button>
+        </div>
+      </div>
+      <div class="avatv2-url-list" id="url-list"></div>
+      <div class="avatv2-field">
+        <label>URL 벌크 입력</label>
+        <textarea id="url-bulk" class="avatv2-textarea" rows="4"
+          placeholder="여러 URL을 줄바꿈으로 구분하여 입력하세요:&#10;https://news.example.com/article1&#10;https://blog.example.com/post2&#10;https://candidate.kr/policy"></textarea>
+      </div>
+      <div class="avatv2-field">
+        <label>카테고리</label>
+        <select id="url-category" class="avatv2-select">
+          <option value="언론·평가">📰 언론·평가</option>
+          <option value="정책·공약">🏛️ 정책·공약</option>
+          <option value="발언·연설">🗣️ 발언·연설</option>
+          <option value="지역현안">📍 지역 현안</option>
+        </select>
+      </div>
+      <button class="avatv2-submit" onclick="window.OCAvatarV2 && OCAvatarV2.ingestUrls()">
+        ⚡ URL 일괄 RAG 학습
+      </button>
+      <div class="avatv2-status" id="url-status"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 6: YouTube (신규)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel" id="panel-youtube">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>📺 YouTube 동영상 — 자막 추출 → 학습</h3>
+        <p>후보자의 공식 채널 영상, 토론회, 인터뷰 영상 URL을 입력하면 자동으로 자막을 추출하여 RAG 학습합니다.</p>
+      </div>
+      <div class="avatv2-field">
+        <label>YouTube URL</label>
+        <input type="url" id="youtube-url" placeholder="https://www.youtube.com/watch?v=... 또는 https://youtu.be/..." class="avatv2-input">
+      </div>
+      <div class="avatv2-field">
+        <label>카테고리</label>
+        <select id="youtube-category" class="avatv2-select">
+          <option value="발언·연설">🗣️ 발언·연설</option>
+          <option value="정책·공약">🏛️ 정책·공약</option>
+          <option value="인물·이력">👤 인물·이력</option>
+          <option value="언론·평가">📰 언론·평가</option>
+        </select>
+      </div>
+      <button class="avatv2-submit" onclick="window.OCAvatarV2 && OCAvatarV2.ingestYoutube()">
+        ⚡ YouTube 자막 학습 시작
+      </button>
+      <div class="avatv2-status" id="youtube-status"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 7: SNS 연동 (신규)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel" id="panel-sns">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>💬 SNS 계정 연동 — 자동 포스트 수집</h3>
+        <p>후보자의 공식 SNS 계정을 연동하여 게시물을 자동으로 수집·학습합니다. 지원: 인스타그램, 페이스북, X(트위터), 네이버 블로그</p>
+      </div>
+      <div class="avatv2-sns-grid">
+        <div class="avatv2-sns-card">
+          <div class="avatv2-sns-icon-bg" style="background:linear-gradient(135deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888)">📷</div>
+          <strong>Instagram</strong>
+          <input type="text" id="sns-instagram" placeholder="@계정명" class="avatv2-input avatv2-sm">
+          <button class="avatv2-sns-connect" data-platform="instagram">연동하기</button>
+          <span class="avatv2-sns-status" id="sns-status-instagram"></span>
+        </div>
+        <div class="avatv2-sns-card">
+          <div class="avatv2-sns-icon-bg" style="background:#1877f2">📘</div>
+          <strong>Facebook</strong>
+          <input type="text" id="sns-facebook" placeholder="페이지 URL 또는 ID" class="avatv2-input avatv2-sm">
+          <button class="avatv2-sns-connect" data-platform="facebook">연동하기</button>
+          <span class="avatv2-sns-status" id="sns-status-facebook"></span>
+        </div>
+        <div class="avatv2-sns-card">
+          <div class="avatv2-sns-icon-bg" style="background:#000">𝕏</div>
+          <strong>X (Twitter)</strong>
+          <input type="text" id="sns-twitter" placeholder="@계정명" class="avatv2-input avatv2-sm">
+          <button class="avatv2-sns-connect" data-platform="twitter">연동하기</button>
+          <span class="avatv2-sns-status" id="sns-status-twitter"></span>
+        </div>
+        <div class="avatv2-sns-card">
+          <div class="avatv2-sns-icon-bg" style="background:#03c75a">N</div>
+          <strong>네이버 블로그</strong>
+          <input type="text" id="sns-blog" placeholder="blog.naver.com/아이디" class="avatv2-input avatv2-sm">
+          <button class="avatv2-sns-connect" data-platform="blog">연동하기</button>
+          <span class="avatv2-sns-status" id="sns-status-blog"></span>
+        </div>
+      </div>
+      <div class="avatv2-status" id="sns-status"></div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════════════════
+       채널 8: Q&A 벌크 (신규)
+       ═══════════════════════════════════════════════════════════ -->
+  <div class="avatv2-panel" id="panel-qa">
+    <div class="avatv2-panel-inner">
+      <div class="avatv2-panel-header">
+        <h3>📋 Q&A 벌크 — 예상질문-답변 CSV/Excel 업로드</h3>
+        <p>캠프에서 미리 준비한 예상질문-답변 쌍을 CSV 또는 Excel 파일로 일괄 업로드합니다. 각 Q&A가 자동으로 RAG 검색 가능한 청크로 변환됩니다.</p>
+      </div>
+      <div class="avatv2-dropzone" id="qa-dropzone">
+        <span class="avatv2-dropicon">📋</span>
+        <p>CSV 또는 Excel 파일을 여기에 드래그하세요</p>
+        <p class="avatv2-dropformats">컬럼 형식: question, answer, category, source</p>
+        <input type="file" id="qa-file" accept=".csv,.xlsx,.xls" style="display:none">
+      </div>
+      <div class="avatv2-field">
+        <label>또는 직접 입력</label>
+      </div>
+      <div id="qa-manual-list">
+        <div class="avatv2-qa-row">
+          <input type="text" placeholder="질문" class="avatv2-input avatv2-qa-q">
+          <input type="text" placeholder="답변" class="avatv2-input avatv2-qa-a">
+          <button class="avatv2-qa-remove" onclick="this.parentElement.remove()">✕</button>
+        </div>
+      </div>
+      <button class="avatv2-add-btn" onclick="window.OCAvatarV2 && OCAvatarV2.addQaRow()" style="margin:8px 0 16px">+ 행 추가</button>
+      <div class="avatv2-field">
+        <label>카테고리</label>
+        <select id="qa-category" class="avatv2-select">
+          <option value="정책·공약">🏛️ 정책·공약</option>
+          <option value="인물·이력">👤 인물·이력</option>
+          <option value="유권자소통">💬 유권자 소통</option>
+          <option value="법률·선거">⚖️ 법률·선거</option>
+        </select>
+      </div>
+      <button class="avatv2-submit" onclick="window.OCAvatarV2 && OCAvatarV2.ingestQA()">
+        ⚡ Q&A 벌크 학습 시작
+      </button>
+      <div class="avatv2-status" id="qa-status"></div>
+    </div>
+  </div>
+
+  <!-- ── 대시보드 하단: RAG 통계 + Context Bridge ─────────────── -->
+  <div class="avatv2-dashboard">
+    <div class="avatv2-stats-grid">
+      <div class="avatv2-stat-card">
+        <div class="avatv2-stat-value" id="stat-chunks">-</div>
+        <div class="avatv2-stat-label">총 청크</div>
+      </div>
+      <div class="avatv2-stat-card">
+        <div class="avatv2-stat-value" id="stat-categories">-</div>
+        <div class="avatv2-stat-label">카테고리</div>
+      </div>
+      <div class="avatv2-stat-card">
+        <div class="avatv2-stat-value" id="stat-feedback">-</div>
+        <div class="avatv2-stat-label">피드백</div>
+      </div>
+      <div class="avatv2-stat-card">
+        <div class="avatv2-stat-value" id="stat-rating">-</div>
+        <div class="avatv2-stat-label">평균 평점</div>
+      </div>
+    </div>
+    <div class="avatv2-actions">
+      <button class="avatv2-action-btn avatv2-secondary" onclick="window.OCAvatarV2 && OCAvatarV2.refreshStats()">
+        🔄 통계 새로고침
+      </button>
+      <button class="avatv2-action-btn avatv2-primary" onclick="window.OCAvatarV2 && OCAvatarV2.syncBridge()">
+        🔗 Context Bridge 동기화
+      </button>
+    </div>
+  </div>
+</div>

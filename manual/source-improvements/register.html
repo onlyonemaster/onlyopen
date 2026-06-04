@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>새 개선 항목 등록 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">📋 소개 및 개요</a></div>
+    <div class="sb-section"><div class="sb-section-title">기본 사용법</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">📊 대시보드 화면 구성</a><a href="/manual/source-improvements/list.html" class="sb-link">🔍 개선 항목 조회·필터링</a><a href="/manual/source-improvements/register.html" class="sb-link active">✏️ 새 개선 항목 등록</a><a href="/manual/source-improvements/detail.html" class="sb-link">👁️ 상세보기 및 수정</a></div>
+    <div class="sb-section"><div class="sb-section-title">심화</div><a href="/manual/source-improvements/lifecycle.html" class="sb-link">🔄 상태 라이프사이클</a><a href="/manual/source-improvements/notice.html" class="sb-link">📢 공지사항 연동</a><a href="/manual/source-improvements/auto-register.html" class="sb-link">🤖 AI 자동 등록</a></div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">등록 폼 개요</a>
+    <a href="#form-sections" class="toc-link">폼 섹션 구성 (5단계)</a>
+    <a href="#required" class="toc-link">필수·선택 필드</a>
+    <a href="#ajax-flow" class="toc-link">AJAX 저장 플로우</a>
+    <a href="#validation" class="toc-link">클라이언트 유효성 검증</a>
+    <a href="#save-api" class="toc-link">서버 저장 API</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">✏️ 새 개선 항목 등록하기</h1>
+    <p class="lead"><code>admin_source_improvements_form.php</code> 페이지에서 새 개선 항목을 등록합니다. 총 <strong>23개 컬럼</strong> 중 17개 입력 필드가 폼에 노출됩니다.</p>
+
+    <div class="info-box"><strong>페이지 모드:</strong> <code>id</code> 파라미터 유무로 결정 — 없으면 <code>create</code> (신규등록), 있으면 <code>edit</code> (수정)</div>
+
+    <h2 id="form-sections">폼 섹션 구성 (5단계)</h2>
+    <div class="section-grid">
+      <div class="section-card"><span class="sec-label">📌 1. 기본 정보</span><ul><li>작업 날짜 (date, 필수)</li><li>프로젝트 (select, 필수)</li><li>카테고리 (select, 필수)</li><li>상태 (select, 필수)</li><li>제목 (text, 필수, 200자)</li><li>상세 설명 (textarea)</li></ul></div>
+      <div class="section-card"><span class="sec-label">🔧 2. 기술 상세</span><ul><li>수정 파일 수 (number)</li><li>추가 라인 수 (number)</li><li>삭제 라인 수 (number)</li></ul></div>
+      <div class="section-card"><span class="sec-label">🌍 3. 배포 환경</span><ul><li>DEV / TEST / PROD 체크박스 (복수 선택, 쉼표 구분)</li></ul></div>
+      <div class="section-card"><span class="sec-label">📦 4. 배포 정보</span><ul><li>배포 일시 (datetime-local)</li><li>배포자 (text)</li></ul></div>
+      <div class="section-card"><span class="sec-label">⚡ 5. 영향도</span><ul><li>영향도 (select, 필수: 낮음/중간/높음/긴급)</li><li>테스트 결과 (select: PASS/FAIL/SKIP)</li><li>추가 메모 (textarea)</li></ul></div>
+    </div>
+
+    <h2 id="required">필수 항목 vs 선택 항목</h2>
+    <table class="m-table">
+      <thead><tr><th>필드</th><th>구분</th><th>타입</th></tr></thead>
+      <tbody>
+        <tr><td><code>date</code></td><td><span class="badge-required">필수</span></td><td>date</td></tr>
+        <tr><td><code>project</code></td><td><span class="badge-required">필수</span></td><td>select (5개)</td></tr>
+        <tr><td><code>category</code></td><td><span class="badge-required">필수</span></td><td>select (6개)</td></tr>
+        <tr><td><code>status</code></td><td><span class="badge-required">필수</span></td><td>select (5개)</td></tr>
+        <tr><td><code>title</code></td><td><span class="badge-required">필수</span></td><td>text (200자)</td></tr>
+        <tr><td><code>impact_level</code></td><td><span class="badge-required">필수</span></td><td>select (4개)</td></tr>
+        <tr><td><code>description</code></td><td>선택</td><td>textarea</td></tr>
+        <tr><td><code>files_changed</code></td><td>선택</td><td>number</td></tr>
+        <tr><td><code>lines_added</code></td><td>선택</td><td>number</td></tr>
+        <tr><td><code>lines_deleted</code></td><td>선택</td><td>number</td></tr>
+        <tr><td><code>environments</code></td><td>선택</td><td>checkbox group → CSV</td></tr>
+        <tr><td><code>deployed_date</code></td><td>선택</td><td>datetime-local</td></tr>
+        <tr><td><code>deployed_by</code></td><td>선택</td><td>text</td></tr>
+        <tr><td><code>test_result</code></td><td>선택</td><td>select (3개)</td></tr>
+        <tr><td><code>notes</code></td><td>선택</td><td>textarea</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="ajax-flow">AJAX 저장 플로우</h2>
+    <pre class="code-block"><code>submit event → e.preventDefault() → 유효성 검증(6개 필수 체크)
+  → FormData 수집 → fetch POST → loading spinner 표시
+  → /admin/ajax/source_improvements_save.php 호출
+  → JSON 응답 {success: true/false, message: "..."}
+  → 성공: alert(message) → admin_source_improvements.php 리다이렉트
+  → 실패: alert('오류: ' + data.message)</code></pre>
+
+    <h2 id="validation">클라이언트 유효성 검증 로직</h2>
+    <pre class="code-block"><code>const date = document.getElementById('date').value;
+const project = document.getElementById('project').value;
+const category = document.getElementById('category').value;
+const status = document.getElementById('status').value;
+const title = document.getElementById('title').value;
+const impactLevel = document.getElementById('impact_level').value;
+
+if (!date)        { alert('작업 날짜를 선택하세요.'); return; }
+if (!project)     { alert('프로젝트를 선택하세요.'); return; }
+if (!category)    { alert('카테고리를 선택하세요.'); return; }
+if (!status)      { alert('상태를 선택하세요.'); return; }
+if (!title)       { alert('제목을 입력하세요.'); return; }
+if (!impactLevel) { alert('영향도를 선택하세요.'); return; }</code></pre>
+
+    <h2 id="save-api">서버 저장 API 상세</h2>
+    <p>저장 엔드포인트: <code>/admin/ajax/source_improvements_save.php</code></p>
+    <p>수신 데이터: <code>FormData</code> (multipart/form-data)</p>
+    <p>응답 형식: JSON <code>{success: bool, message: string}</code></p>
+    <p>성공 시: <code>window.location.href = 'admin_source_improvements.php'</code> 로 리다이렉트</p>
+
+    <div class="tip-box"><strong>💡 팁:</strong> 등록 즉시 목록 페이지로 돌아가므로, 방금 등록한 항목이 최상단에 표시됩니다. 날짜가 오늘이면 「오늘 개선」 KPI 카드에 집계됩니다.</div>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/list.html" class="next-link">← 이전: 개선 항목 조회·필터링</a>
+      <a href="/manual/source-improvements/detail.html" class="next-link">다음: 상세보기 및 수정 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead { font-size:17px; color:var(--text2); margin-bottom:24px; line-height:1.8; }
+.info-box { background:var(--blue-bg); border-left:4px solid var(--brand); padding:16px 20px; border-radius:8px; margin-bottom:20px; font-size:14px; }
+.code-block { background:var(--bg3); padding:20px; border-radius:8px; font-size:12px; line-height:1.6; overflow-x:auto; margin-bottom:20px; white-space:pre; font-family:monospace; }
+.m-table { width:100%; border-collapse:collapse; font-size:13px; margin-bottom:28px; }
+.m-table th { background:var(--bg3); padding:10px 12px; text-align:left; font-weight:600; border-bottom:2px solid var(--border); }
+.m-table td { padding:9px 12px; border-bottom:1px solid var(--border); }
+.badge-required { background:#fee2e2; color:#dc2626; padding:2px 8px; border-radius:3px; font-size:11px; font-weight:700; }
+.section-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; margin-bottom:28px; }
+.section-card { background:var(--bg2); border:1px solid var(--border); border-radius:10px; padding:18px; }
+.sec-label { display:block; font-weight:700; font-size:14px; margin-bottom:10px; color:var(--brand); }
+.section-card ul { list-style:none; padding:0; }
+.section-card li { font-size:12px; color:var(--text2); padding:4px 0; border-bottom:1px solid var(--border); }
+.section-card li:last-child { border-bottom:none; }
+.tip-box { background:var(--green-bg); border-left:4px solid var(--green); padding:14px 18px; border-radius:8px; margin-bottom:28px; font-size:14px; }
+.prev-next { display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:20px; border-top:1px solid var(--border); }
+.next-link { color:var(--brand); text-decoration:none; font-weight:600; font-size:14px; }
+.next-link:hover { text-decoration:underline; }
+@media(max-width:768px){ .section-grid{grid-template-columns:1fr;} }
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

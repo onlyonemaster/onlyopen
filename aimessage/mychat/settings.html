@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#7e22ce">
+<title>설정 · 마이챗</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f172a;--bg2:#1e293b;--border:#334155;
+  --pur:#7e22ce;--pur2:#9333ea;--gold:#b45309;--gold2:#d97706;
+  --text:#f1f5f9;--dim:#94a3b8;--dim2:#64748b;
+  --red:#ef4444;--green:#22c55e;
+}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;
+     min-height:100vh;padding-bottom:40px}
+
+/* 헤더 */
+.hd{display:flex;align-items:center;gap:12px;padding:16px;
+    background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.hd-back{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px}
+.hd-title{font-size:16px;font-weight:700;flex:1}
+.hd-save{background:linear-gradient(135deg,var(--pur),var(--gold));border:none;
+         color:#fff;font-size:13px;font-weight:700;padding:7px 18px;border-radius:20px;cursor:pointer}
+
+/* 섹션 */
+.sec{margin:16px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.sec-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sec-title{font-size:14px;font-weight:700}
+.sec-body{padding:16px}
+
+/* 입력 */
+.field{margin-bottom:14px}
+.field:last-child{margin-bottom:0}
+.field label{display:block;font-size:12px;color:var(--dim);font-weight:600;margin-bottom:6px}
+.field input,.field select,.field textarea{
+  width:100%;background:#0f172a;border:1px solid var(--border);border-radius:8px;
+  padding:10px 14px;color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:var(--pur2)}
+.field-hint{font-size:11px;color:var(--dim2);margin-top:5px}
+
+/* 토글 (저장방식) */
+.storage-cards{display:flex;flex-direction:column;gap:8px}
+.storage-card{border:2px solid var(--border);border-radius:10px;padding:12px 14px;cursor:pointer;transition:all .2s}
+.storage-card.active{border-color:var(--pur2);background:rgba(147,51,234,.08)}
+.storage-card-top{display:flex;align-items:center;gap:10px}
+.storage-card-icon{font-size:20px;width:36px;text-align:center}
+.storage-card-info{flex:1}
+.storage-card-name{font-size:13px;font-weight:700}
+.storage-card-desc{font-size:11px;color:var(--dim);margin-top:2px}
+.storage-card-badge{font-size:10px;padding:2px 7px;border-radius:8px;font-weight:700}
+.badge-rec{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-warn{background:rgba(239,68,68,.15);color:var(--red)}
+
+/* API키 영역 */
+.api-prov-tabs{display:flex;gap:6px;margin-bottom:10px;flex-wrap:wrap}
+.api-tab{padding:5px 12px;border-radius:16px;border:1px solid var(--border);
+         font-size:12px;font-weight:600;cursor:pointer;color:var(--dim);background:transparent}
+.api-tab.active{background:var(--pur);border-color:var(--pur);color:#fff}
+.api-key-wrap{position:relative}
+.api-key-wrap input{padding-right:44px}
+.api-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+         background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px}
+
+/* 핀 */
+.pin-dots{display:flex;gap:10px;justify-content:center;margin:10px 0}
+.pin-dot{width:14px;height:14px;border-radius:50%;border:2px solid var(--border);background:transparent}
+.pin-dot.filled{background:var(--pur2);border-color:var(--pur2)}
+.pin-num-pad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;max-width:240px;margin:0 auto}
+.pin-btn{height:52px;border-radius:10px;background:var(--bg);border:1px solid var(--border);
+         color:var(--text);font-size:18px;font-weight:700;cursor:pointer}
+.pin-btn:active{background:var(--pur);border-color:var(--pur)}
+
+/* 구독 뱃지 */
+.sub-badge{display:inline-flex;align-items:center;gap:6px;background:rgba(147,51,234,.15);
+           border:1px solid var(--pur);border-radius:20px;padding:5px 12px;font-size:12px;font-weight:700;color:#c4b5fd}
+
+/* 버튼 */
+.btn-danger{width:100%;padding:11px;border-radius:10px;background:transparent;
+            border:1px solid var(--red);color:var(--red);font-size:13px;font-weight:700;cursor:pointer;margin-top:8px}
+.btn-danger:hover{background:rgba(239,68,68,.1)}
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+       background:#1e293b;border:1px solid var(--pur);color:#c4b5fd;
+       padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;
+       opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<div class="hd">
+  <button class="hd-back" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+  <div class="hd-title">설정</div>
+  <button class="hd-save" onclick="saveAll()">저장</button>
+</div>
+
+<!-- 1. 아바타 기본 정보 -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:linear-gradient(135deg,#7e22ce,#b45309)"><i class="fas fa-brain" style="color:#fff"></i></div>
+    <div class="sec-title">아바타 정보</div>
+  </div>
+  <div class="sec-body">
+    <div class="field">
+      <label>아바타 이름</label>
+      <input type="text" id="avatarName" placeholder="예: 나의 아바타" maxlength="30">
+    </div>
+    <div class="field">
+      <label>말투·성격 메모 <span style="color:var(--dim2);font-weight:400">(AI가 학습합니다)</span></label>
+      <textarea id="personaPrompt" rows="3" placeholder="예: 따뜻하고 솔직하게, 너무 형식적이지 않게, 가끔 유머도 섞어서"></textarea>
+      <div class="field-hint">입력한 내용을 기반으로 아바타가 나의 말투를 학습합니다</div>
+    </div>
+  </div>
+</div>
+
+<!-- 2. 2차 보안 PIN -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:rgba(239,68,68,.15)"><i class="fas fa-lock" style="color:var(--red)"></i></div>
+    <div class="sec-title">2차 보안 PIN</div>
+  </div>
+  <div class="sec-body">
+    <div class="field-hint" style="margin-bottom:12px">마이챗 진입 시 추가 비밀번호로 내 데이터를 보호합니다</div>
+    <div class="pin-dots" id="pinDots">
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+      <div class="pin-dot"></div><div class="pin-dot"></div>
+    </div>
+    <div class="pin-num-pad">
+      <button class="pin-btn" onclick="pinInput('1')">1</button>
+      <button class="pin-btn" onclick="pinInput('2')">2</button>
+      <button class="pin-btn" onclick="pinInput('3')">3</button>
+      <button class="pin-btn" onclick="pinInput('4')">4</button>
+      <button class="pin-btn" onclick="pinInput('5')">5</button>
+      <button class="pin-btn" onclick="pinInput('6')">6</button>
+      <button class="pin-btn" onclick="pinInput('7')">7</button>
+      <button class="pin-btn" onclick="pinInput('8')">8</button>
+      <button class="pin-btn" onclick="pinInput('9')">9</button>
+      <button class="pin-btn" onclick="pinInput('')" style="font-size:13px;color:var(--dim)">취소</button>
+      <button class="pin-btn" onclick="pinInput('0')">0</button>
+      <button class="pin-btn" onclick="pinDel()"><i class="fas fa-delete-left"></i></button>
+    </div>
+    <div class="field-hint" style="margin-top:10px;text-align:center">4자리 입력 후 자동 저장됩니다</div>
+  </div>
+</div>
+
+<!-- 3. 데이터 저장 방식 -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:rgba(34,197,94,.15)"><i class="fas fa-database" style="color:var(--green)"></i></div>
+    <div class="sec-title">데이터 저장 방식</div>
+  </div>
+  <div class="sec-body">
+    <div class="storage-cards">
+      <div class="storage-card" id="sc-server" onclick="selectStorage('server')">
+        <div class="storage-card-top">
+          <div class="storage-card-icon">🔐</div>
+          <div class="storage-card-info">
+            <div class="storage-card-name">서버 암호화 보관 <span class="storage-card-badge badge-rec">추천</span></div>
+            <div class="storage-card-desc">E2E 암호화 — 회사도 열람 불가 · 폰 분실 시 복구 가능</div>
+          </div>
+          <i class="fas fa-check-circle" style="color:var(--pur2);display:none" id="ci-server"></i>
+        </div>
+      </div>
+      <div class="storage-card" id="sc-device" onclick="selectStorage('device')">
+        <div class="storage-card-top">
+          <div class="storage-card-icon">📱</div>
+          <div class="storage-card-info">
+            <div class="storage-card-name">내 기기에만 보관</div>
+            <div class="storage-card-desc">최강 프라이버시 · 폰 분실 시 영구 소실 <span class="storage-card-badge badge-warn">주의</span></div>
+          </div>
+          <i class="fas fa-check-circle" style="color:var(--pur2);display:none" id="ci-device"></i>
+        </div>
+      </div>
+      <div class="storage-card" id="sc-hybrid" onclick="selectStorage('hybrid')">
+        <div class="storage-card-top">
+          <div class="storage-card-icon">💾</div>
+          <div class="storage-card-info">
+            <div class="storage-card-name">혼합 + 다운로드 지원</div>
+            <div class="storage-card-desc">기기+서버 이중저장 · ZIP 직접 다운로드 가능</div>
+          </div>
+          <i class="fas fa-check-circle" style="color:var(--pur2);display:none" id="ci-hybrid"></i>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top:12px;text-align:center">
+      <button onclick="exportData()" style="background:transparent;border:1px solid var(--border);color:var(--dim);
+              padding:8px 18px;border-radius:20px;font-size:12px;cursor:pointer">
+        <i class="fas fa-download"></i> 내 데이터 전체 다운로드 (ZIP)
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- 4. 자체 API키 (BYOK) -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:rgba(245,158,11,.15)"><i class="fas fa-key" style="color:#f59e0b"></i></div>
+    <div class="sec-title">자체 API키 (BYOK) <span style="font-size:11px;color:var(--dim);font-weight:400">— 무제한 사용</span></div>
+  </div>
+  <div class="sec-body">
+    <div class="field-hint" style="margin-bottom:12px">
+      본인 API키를 등록하면 AI 대화·음성·화상 모두 무제한으로 사용할 수 있습니다.<br>
+      키는 AES-256 암호화로 저장되며 회사도 복호화할 수 없습니다.
+    </div>
+    <div class="api-prov-tabs">
+      <button class="api-tab active" data-prov="deepseek" onclick="selectProv(this)">DeepSeek</button>
+      <button class="api-tab" data-prov="openai" onclick="selectProv(this)">OpenAI</button>
+      <button class="api-tab" data-prov="claude" onclick="selectProv(this)">Claude</button>
+      <button class="api-tab" data-prov="gemini" onclick="selectProv(this)">Gemini</button>
+    </div>
+    <div class="field">
+      <label>API키</label>
+      <div class="api-key-wrap">
+        <input type="password" id="apiKey" placeholder="sk-xxxxxxxx...">
+        <button class="api-eye" onclick="toggleApiKey()"><i class="fas fa-eye" id="eyeIcon"></i></button>
+      </div>
+      <div class="field-hint">저장 후 즉시 무제한 모드로 전환됩니다</div>
+    </div>
+    <div class="field">
+      <label>모델 선택</label>
+      <select id="apiModel">
+        <option value="deepseek-chat">deepseek-chat (기본)</option>
+        <option value="deepseek-reasoner">deepseek-reasoner</option>
+        <option value="gpt-4o">gpt-4o</option>
+        <option value="gpt-4o-mini">gpt-4o-mini</option>
+        <option value="claude-opus-4-8">claude-opus-4-8</option>
+        <option value="claude-sonnet-4-6">claude-sonnet-4-6</option>
+        <option value="gemini-2.0-flash">gemini-2.0-flash</option>
+      </select>
+    </div>
+  </div>
+</div>
+
+<!-- 5. 구독 정보 -->
+<div class="sec">
+  <div class="sec-head">
+    <div class="sec-icon" style="background:rgba(147,51,234,.15)"><i class="fas fa-credit-card" style="color:var(--pur2)"></i></div>
+    <div class="sec-title">구독 정보</div>
+  </div>
+  <div class="sec-body">
+    <div id="subInfo" style="text-align:center;padding:8px 0">
+      <div class="sub-badge"><i class="fas fa-circle-check"></i> <span id="subPlanLabel">로딩 중...</span></div>
+      <div style="font-size:11px;color:var(--dim2);margin-top:8px" id="subExpiry"></div>
+    </div>
+    <a href="/aimessage/mychat/subscribe.html" style="display:block;text-align:center;margin-top:12px;
+       font-size:12px;color:var(--pur2);text-decoration:none">
+      <i class="fas fa-arrow-up-right-from-square"></i> 플랜 변경·업그레이드
+    </a>
+    <button class="btn-danger" onclick="confirmCancel()">구독 해지</button>
+  </div>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var _pin = '';
+var _storage = 'server';
+var _apiProv = 'deepseek';
+
+// ── 설정 로드 ─────────────────────────────────────
+function loadSettings() {
+  fetch('/aimessage/mychat/api/settings.php', { credentials:'include' })
+    .then(r=>r.json()).then(d=>{
+      if (!d.ok) { if(d.error==='SUBSCRIPTION_REQUIRED') location.href='/aimessage/mychat/subscribe.html'; return; }
+      var av = d.avatar || {};
+      document.getElementById('avatarName').value    = av.avatar_name || '';
+      document.getElementById('personaPrompt').value = av.persona_prompt || '';
+      selectStorage(av.data_storage_mode || 'server');
+      // 구독 정보
+      var sub = d.subscription || {};
+      var planNames = {starter:'스타터',standard:'스탠다드',pro:'프로',byok:'BYOK(자체API)'};
+      document.getElementById('subPlanLabel').textContent = planNames[sub.plan_id] || sub.plan_id || '없음';
+      if (sub.expires_at) {
+        document.getElementById('subExpiry').textContent = '만료: ' + sub.expires_at.substr(0,10);
+      }
+    }).catch(()=>toast('설정을 불러오지 못했습니다', true));
+}
+
+// ── 저장 방식 선택 ────────────────────────────────
+function selectStorage(mode) {
+  _storage = mode;
+  ['server','device','hybrid'].forEach(m=>{
+    document.getElementById('sc-'+m).classList.toggle('active', m===mode);
+    document.getElementById('ci-'+m).style.display = m===mode ? '' : 'none';
+  });
+}
+
+// ── API 제공사 선택 ───────────────────────────────
+function selectProv(el) {
+  document.querySelectorAll('.api-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  _apiProv = el.dataset.prov;
+  // 모델 선택 필터링
+  var modelSel = document.getElementById('apiModel');
+  var map = {
+    deepseek:['deepseek-chat','deepseek-reasoner'],
+    openai:  ['gpt-4o','gpt-4o-mini'],
+    claude:  ['claude-opus-4-8','claude-sonnet-4-6'],
+    gemini:  ['gemini-2.0-flash']
+  };
+  Array.from(modelSel.options).forEach(o=>{
+    o.hidden = !(map[_apiProv]||[]).includes(o.value);
+  });
+  var first = (map[_apiProv]||[])[0];
+  if (first) modelSel.value = first;
+}
+
+// ── PIN 입력 ──────────────────────────────────────
+function pinInput(d) {
+  if (d === '') { _pin = ''; updatePinDots(); return; }
+  if (_pin.length >= 4) return;
+  _pin += d;
+  updatePinDots();
+  if (_pin.length === 4) savePin();
+}
+function pinDel() { _pin = _pin.slice(0,-1); updatePinDots(); }
+function updatePinDots() {
+  document.querySelectorAll('.pin-dot').forEach((dot,i)=>{
+    dot.classList.toggle('filled', i < _pin.length);
+  });
+}
+function savePin() {
+  fetch('/aimessage/mychat/api/settings.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'pin', pin:_pin})
+  }).then(r=>r.json()).then(d=>{
+    toast(d.ok ? '✅ PIN 저장 완료' : '❌ PIN 저장 실패');
+    _pin = ''; updatePinDots();
+  });
+}
+
+// ── API키 보기/숨기기 ─────────────────────────────
+function toggleApiKey() {
+  var inp = document.getElementById('apiKey');
+  var ico = document.getElementById('eyeIcon');
+  inp.type = inp.type === 'password' ? 'text' : 'password';
+  ico.className = inp.type === 'password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+}
+
+// ── 전체 저장 ─────────────────────────────────────
+function saveAll() {
+  var payload = {
+    action:           'save_all',
+    avatar_name:      document.getElementById('avatarName').value.trim(),
+    persona_prompt:   document.getElementById('personaPrompt').value.trim(),
+    data_storage_mode: _storage,
+    api_key:          document.getElementById('apiKey').value.trim(),
+    api_provider:     _apiProv,
+    api_model:        document.getElementById('apiModel').value,
+  };
+  fetch('/aimessage/mychat/api/settings.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(r=>r.json()).then(d=>{
+    toast(d.ok ? '✅ 설정 저장 완료' : ('❌ ' + (d.error||'저장 실패')));
+  });
+}
+
+// ── 데이터 다운로드 ───────────────────────────────
+function exportData() {
+  window.location.href = '/aimessage/mychat/api/export.php';
+}
+
+// ── 구독 해지 ─────────────────────────────────────
+function confirmCancel() {
+  if (!confirm('구독을 해지하면 만료일까지만 사용 가능합니다.\n정말 해지하시겠습니까?')) return;
+  fetch('/aimessage/mychat/api/settings.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'cancel_sub'})
+  }).then(r=>r.json()).then(d=>{
+    toast(d.ok ? '구독 해지 처리되었습니다' : '처리 실패');
+  });
+}
+
+// ── 토스트 ────────────────────────────────────────
+function toast(msg, err) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderColor = err ? 'var(--red)' : 'var(--pur)';
+  el.style.color = err ? '#fca5a5' : '#c4b5fd';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2500);
+}
+
+selectStorage('server');
+loadSettings();
+</script>
+</body>
+</html>

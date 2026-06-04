@@ -1,5 +1,116 @@
+# ───────────────────────────────────────────────
+# 기본 환경 / 시스템 산출물
+# ───────────────────────────────────────────────
 node_modules/
 *.log
 .DS_Store
 Thumbs.db
 .env
+.env.*
+*.swp
+*.swo
+*~
+
+# ───────────────────────────────────────────────
+# IDE / 에이전트 메타데이터
+# ───────────────────────────────────────────────
+.idea/
+.vscode/
+.memory/
+.dev-sync-backup/
+.cleanup_archive/
+
+# ───────────────────────────────────────────────
+# 일회성 패치/수정/검사 스크립트 (작업 산출물)
+#   - 본 저장소는 운영 코드만 추적. 일회성 .py 스크립트는 제외
+# ───────────────────────────────────────────────
+fix_*.py
+patch_*.py
+patch_*.js
+check_*.py
+check_*.js
+force_*.py
+restore_*.py
+add_*.py
+update_*.py
+build_*.py
+create_*.py
+test_*.py
+test_*.html
+test_*.js
+test_run.py
+restore_and_fix.py
+
+# ───────────────────────────────────────────────
+# 결제/구독 시스템 임시 파일 (현재 ME PR 범위 밖)
+# ───────────────────────────────────────────────
+api_checkout_v2.php
+api_confirm_v2.php
+api_payment_stats.php
+api_payments.php
+api_plan_stats.php
+api_plans.php
+api_subscription_info.php
+api_subscriptions.php
+billing_confirm.php
+footer_remote.php
+payment_remote.php
+new_admin.php
+new_payment.php
+new_payment.js
+new_payment_success.php
+new_pricing.php
+
+# ───────────────────────────────────────────────
+# info2/info3 / OSH / NDS / OCF / Founder 작업 HTML/JPG
+#   - 별도 PR 산출물, 현재 ME PR과 무관
+# ───────────────────────────────────────────────
+info2_build/candidate_photo.jpg
+info2_current.html
+info2_index.html
+info2_server_backup.html
+info2_server_live.html
+info2_with_faq.html
+info3_edit.html
+info_nds_index.html
+ocf_nds_index.html
+ocf_osh_check.html
+ocf_osh_index.html
+osh_check.html
+osh_check2.html
+osh_check3.html
+osh_check_final.html
+osh_index.html
+osh_photo.jpg
+nds_photo.jpg
+founder_index.html
+test_faq.html
+test_osh.html
+test_js_0.js
+
+# ───────────────────────────────────────────────
+# 일회성 시뮬레이션/mockup/pitch deck 디렉터리
+# ───────────────────────────────────────────────
+mockup/
+mockup_php/
+pitch_deck_mayor/
+kiam_simulation/
+simulation_onechat/
+
+# ───────────────────────────────────────────────
+# 백업/아카이브 파일
+# ───────────────────────────────────────────────
+*.bak
+*.backup
+.backup_*/
+*.orig
+*.tar.gz
+*.zip
+
+# ───────────────────────────────────────────────
+# 임시 디버깅 스크립트 (tmp_*.php, dbg_*.php, probe_*.php, sim_*.php)
+# ───────────────────────────────────────────────
+tmp_*.php
+dbg_*.php
+probe_*.php
+sim_*.php

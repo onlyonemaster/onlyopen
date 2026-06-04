@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대한민국 인구정책 종합분석 보고서 | 이재명 정부 vs 기존 정부</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0f1117; --card: #1a1d27; --border: #2a2d3a;
+  --text: #e1e4ed; --sub: #8b8fa3; --accent: #4f8fff;
+  --red: #ff4757; --green: #2ed573; --orange: #ffa502;
+  --purple: #a55eea; --teal: #1dd1a1;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:var(--bg); color:var(--text); font-family:'Segoe UI','Noto Sans KR',sans-serif; line-height:1.6; }
+
+/* ---------- HERO ---------- */
+.hero { text-align:center; padding:80px 24px 60px; border-bottom:1px solid var(--border);
+  background:radial-gradient(ellipse at center,rgba(79,143,255,.08) 0%,transparent 70%); }
+.hero .badge { display:inline-block; padding:6px 18px; border-radius:20px; font-size:.8rem;
+  font-weight:700; background:rgba(79,143,255,.15); color:var(--accent); margin-bottom:16px; letter-spacing:1px; }
+.hero h1 { font-size:clamp(2rem,5vw,3.2rem); font-weight:900; margin-bottom:12px;
+  background:linear-gradient(135deg,var(--accent) 0%,var(--teal) 50%,var(--purple) 100%);
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.hero .subtitle { color:var(--sub); font-size:1.1rem; max-width:700px; margin:0 auto 32px; }
+.hero .meta-row { display:flex; gap:24px; justify-content:center; flex-wrap:wrap; color:var(--sub); font-size:.85rem; }
+.hero .meta-row span { opacity:.7; }
+
+/* ---------- KPI STRIP ---------- */
+.kpi-strip { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:8px;
+  max-width:1200px; margin:32px auto; padding:0 24px; }
+.kpi-chip { background:var(--card); border:1px solid var(--border); border-radius:10px; padding:14px 12px; text-align:center; }
+.kpi-chip .val { font-size:1.6rem; font-weight:800; }
+.kpi-chip .lbl { font-size:.72rem; color:var(--sub); margin-top:2px; }
+.kpi-chip.accent .val { color:var(--accent); }
+.kpi-chip.green .val { color:var(--green); }
+.kpi-chip.red .val { color:var(--red); }
+.kpi-chip.orange .val { color:var(--orange); }
+.kpi-chip.purple .val { color:var(--purple); }
+.kpi-chip.teal .val { color:var(--teal); }
+
+/* ---------- NAVIGATION CARD GRID ---------- */
+.nav-section { max-width:1200px; margin:0 auto 48px; padding:0 24px; }
+.nav-section h2 { text-align:center; font-size:1.3rem; color:var(--sub); margin-bottom:24px; letter-spacing:1px; }
+.nav-grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(300px,1fr)); gap:16px; }
+
+.nav-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:28px 24px;
+  cursor:pointer; transition:all .25s; text-decoration:none; color:inherit; display:block; position:relative; overflow:hidden; }
+.nav-card::after { content:''; position:absolute; top:0; left:0; right:0; height:3px; transition:all .3s; }
+.nav-card:nth-child(1)::after { background:var(--red); }
+.nav-card:nth-child(2)::after { background:var(--orange); }
+.nav-card:nth-child(3)::after { background:var(--green); }
+.nav-card:nth-child(4)::after { background:var(--purple); }
+.nav-card:nth-child(5)::after { background:var(--teal); }
+.nav-card:nth-child(6)::after { background:var(--pink); }
+.nav-card:hover { transform:translateY(-4px); box-shadow:0 8px 32px rgba(0,0,0,.5); border-color:rgba(255,255,255,.15); }
+.nav-card:nth-child(1):hover::after { background:var(--red); box-shadow:0 0 20px rgba(255,71,87,.4); }
+.nav-card:nth-child(2):hover::after { background:var(--orange); box-shadow:0 0 20px rgba(255,165,2,.4); }
+.nav-card:nth-child(3):hover::after { background:var(--green); box-shadow:0 0 20px rgba(46,213,115,.4); }
+.nav-card:nth-child(4):hover::after { background:var(--purple); box-shadow:0 0 20px rgba(165,94,234,.4); }
+.nav-card:nth-child(5):hover::after { background:var(--teal); box-shadow:0 0 20px rgba(29,209,161,.4); }
+.nav-card:nth-child(6):hover::after { background:var(--pink); box-shadow:0 0 20px rgba(255,107,129,.4); }
+.nav-card .part { font-size:.75rem; color:var(--sub); text-transform:uppercase; letter-spacing:1px; margin-bottom:8px; }
+.nav-card h3 { font-size:1.15rem; margin-bottom:8px; }
+.nav-card p { color:var(--sub); font-size:.85rem; line-height:1.5; }
+.nav-card .tag-row { display:flex; gap:6px; flex-wrap:wrap; margin-top:12px; }
+.nav-card .tag { font-size:.68rem; padding:3px 10px; border-radius:10px; background:rgba(255,255,255,.04); color:var(--sub); }
+
+/* ---------- INSIGHT BOX ---------- */
+.insight-box { max-width:1200px; margin:0 auto 48px; padding:32px 28px;
+  background:linear-gradient(135deg,rgba(79,143,255,.04),rgba(29,209,161,.03));
+  border:1px solid var(--border); border-radius:14px; text-align:center; }
+.insight-box h3 { font-size:1.1rem; color:var(--accent); margin-bottom:12px; }
+.insight-box p { color:var(--sub); font-size:.9rem; max-width:800px; margin:0 auto; line-height:1.7; }
+
+/* ---------- CHART ---------- */
+.chart-section { max-width:1200px; margin:0 auto 48px; padding:0 24px; }
+.chart-section .chart-card { background:var(--card); border:1px solid var(--border); border-radius:14px; padding:28px; }
+.chart-section h3 { font-size:1.1rem; color:var(--accent); margin-bottom:16px; text-align:center; }
+.chart-section .chart-wrap { position:relative; height:400px; }
+
+/* ---------- FOOTER ---------- */
+.footer { text-align:center; padding:32px 24px; border-top:1px solid var(--border); color:var(--sub); font-size:.8rem; }
+
+/* ---------- RESPONSIVE ---------- */
+@media(max-width:768px) {
+  .hero { padding:48px 16px 36px; }
+  .nav-grid { grid-template-columns:1fr; }
+  .kpi-strip { grid-template-columns:repeat(3,1fr); }
+}
+</style>
+</head>
+<body>
+
+<!-- ========== HERO ========== -->
+<section class="hero">
+  <div class="badge">AI·데이터 기반 종합분석 리포트 | 2026년 5월</div>
+  <h1>대한민국 인구정책<br>종합분석 보고서</h1>
+  <p class="subtitle">
+    이재명 정부의 인구정책을 기존 20년간의 정책과 비교 분석하고,
+    원쳇(OneChat) 시스템을 통한 정부-국민 맞춤형 소통의 혁신적 가능성을 제안합니다.
+  </p>
+  <div class="meta-row">
+    <span>분석기간: 1960~2035</span><span>|</span>
+    <span>데이터 출처: 통계청·OECD·저출산고령사회위원회</span><span>|</span>
+    <span>원쳇 시스템: 온리원연구소</span>
+  </div>
+</section>
+
+<!-- ========== 핵심 KPI ========== -->
+<div class="kpi-strip">
+  <div class="kpi-chip red"><div class="val">0.72</div><div class="lbl">2023년 TFR (역대 최저)</div></div>
+  <div class="kpi-chip green"><div class="val">0.80</div><div class="lbl">2025년 TFR (반등)</div></div>
+  <div class="kpi-chip accent"><div class="val">0.99</div><div class="lbl">2026년 초 TFR (추정)</div></div>
+  <div class="kpi-chip orange"><div class="val">~700조</div><div class="lbl">20년간 투입 예산</div></div>
+  <div class="kpi-chip purple"><div class="val">+53%p</div><div class="lbl">원쳇 도입 시 정책 인지율↑</div></div>
+  <div class="kpi-chip teal"><div class="val">TFR 1.45</div><div class="lbl">원쳇 융합 시 목표</div></div>
+</div>
+
+<!-- ========== 보고서 내비게이션 ========== -->
+<section class="nav-section">
+  <h2>전체 보고서 구성</h2>
+  <div class="nav-grid">
+
+    <a href="part1_crisis_dashboard.html" class="nav-card">
+      <div class="part">Part 1</div>
+      <h3>📊 한국 인구위기 현황 대시보드</h3>
+      <p>1960~2026년 출산율 추이, OECD 비교, 출생·사망·혼인 통계, 인구 피라미드 변화, 예산 대비 효과 분석</p>
+      <div class="tag-row"><span class="tag">KPI 대시보드</span><span class="tag">시계열 차트</span><span class="tag">OECD 비교</span></div>
+    </a>
+
+    <a href="part2_policy_failure.html" class="nav-card">
+      <div class="part">Part 2</div>
+      <h3>📉 기존 정책 실패 원인 분석</h3>
+      <p>노무현~윤석열 정부 정책 매트릭스, 예산 효율성, 5대 실패 메커니즘, 영향력-개선가능성 산점도</p>
+      <div class="tag-row"><span class="tag">정책 매트릭스</span><span class="tag">실패 요인</span><span class="tag">예산 분석</span></div>
+    </a>
+
+    <a href="part3_leejae_achievement.html" class="nav-card">
+      <div class="part">Part 3</div>
+      <h3>📈 이재명 정부 정책 성과와 국제 비교</h3>
+      <p>임호근 비서관·주형환 부위원장 중심 5대 정책축, 프랑스·스웨덴·헝가리·일본·독일과 레이더 비교</p>
+      <div class="tag-row"><span class="tag">국제 비교</span><span class="tag">정책 성과</span><span class="tag">레이더 차트</span></div>
+    </a>
+
+    <a href="part4_problems_alternatives.html" class="nav-card">
+      <div class="part">Part 4</div>
+      <h3>⚡ 현 정책 문제점 및 대안</h3>
+      <p>SWOT 분석, 정책 격차(Gap) 진단, 4대 위험요소, 실행 로드맵 2026~2030, 재정 지속가능성 시나리오</p>
+      <div class="tag-row"><span class="tag">SWOT</span><span class="tag">Gap 분석</span><span class="tag">로드맵</span></div>
+    </a>
+
+    <a href="part5_ai_innovation.html" class="nav-card">
+      <div class="part">Part 5</div>
+      <h3>🤖 AI 추론 기반 혁신적 정책 제안</h3>
+      <p>30대 정책 순열, 영향력-실현가능성 매트릭스, 시나리오 시뮬레이션 (TFR 1.45 목표), 원쳇 융합 패키지</p>
+      <div class="tag-row"><span class="tag">30대 정책</span><span class="tag">시뮬레이션</span><span class="tag">매트릭스</span></div>
+    </a>
+
+    <a href="part6_onechat_system.html" class="nav-card">
+      <div class="part">Part 6</div>
+      <h3>💬 원쳇 시스템 — 정부-국민 소통 플랫폼</h3>
+      <p>AI 아바타·AI 동행·시나리오 캠페인·HI 공지·대시보드 아키텍처, 전후 비교, 확산 로드맵</p>
+      <div class="tag-row"><span class="tag">시스템 설계</span><span class="tag">아키텍처</span><span class="tag">OneChat</span></div>
+    </a>
+
+  </div>
+</section>
+
+<!-- ========== INSIGHT ========== -->
+<div class="insight-box">
+  <h3>🔑 이 보고서의 핵심 질문</h3>
+  <p>
+    <strong>왜 700조 원을 쏟아붓고도 출산율은 0.72까지 떨어졌는가?</strong><br>
+    답은 간단하다. 정책은 존재했지만 국민에게 닿지 않았다. 이재명 정부는 임호근 인구정책비서관을 중심으로
+    '현금 살포'에서 '체감도 혁명'으로 패러다임 전환을 시도하고 있다. 그 중심에 <strong>원쳇(OneChat) 시스템</strong>이라는 제안이 있다.
+    AI가 국민 한 사람 한 사람의 생애를 이해하고, 필요한 정책을 적시에 전달할 때 비로소 정책은 살아 움직인다.
+    이 보고서는 그 가능성을 데이터로 분석하고, 아직 정부가 인지하지 못한 이 시스템의 도입을 제안한다.
+  </p>
+</div>
+
+<!-- ========== 대표 차트: 전체 시나리오 ========== -->
+<section class="chart-section">
+  <div class="chart-card">
+    <h3>📈 인구정책 시나리오별 출산율 예측: 현행 유지 vs 원쳇 융합 최적 (2025~2035)</h3>
+    <div class="chart-wrap"><canvas id="chartMaster"></canvas></div>
+    <p style="color:var(--sub);font-size:.75rem;margin-top:8px;text-align:center;">
+      데이터 출처: 통계청·KOSIS·OECD·저출산고령사회위원회 / 시뮬레이션: 온리원연구소
+    </p>
+  </div>
+</section>
+
+<!-- ========== FOOTER ========== -->
+<footer class="footer">
+  <p>© 2026 인구정책 종합분석 보고서 | 이재명 정부 인구정책비서관실 · 저출산고령사회위원회 · 온리원연구소</p>
+  <p style="margin-top:4px;">본 보고서의 모든 데이터는 공개된 통계청·OECD 자료를 기반으로 하며, 시뮬레이션은 AI 추론 기반 추정치입니다.</p>
+</footer>
+
+<script>
+const colors = { blue:'#4f8fff', teal:'#1dd1a1', red:'#ff4757', orange:'#ffa502', purple:'#a55eea', pink:'#ff6b81', green:'#2ed573', sub:'#8b8fa3' };
+Chart.defaults.color = colors.sub;
+Chart.defaults.borderColor = 'rgba(138,143,163,0.12)';
+Chart.defaults.font.family = "'Segoe UI','Noto KR',sans-serif";
+
+// 마스터 시나리오 차트
+(function(){
+  const yrs = ['2025','2026','2027','2028','2029','2030','2031','2032','2033','2034','2035'];
+  new Chart(document.getElementById('chartMaster'), {
+    type:'line', data:{ labels:yrs, datasets:[
+      { label:'① 현행 유지 (감소 지속)', data:[0.80,0.85,0.82,0.79,0.76,0.73,0.70,0.68,0.65,0.63,0.60], borderColor:colors.red, borderDash:[6,4], tension:.3, pointRadius:3 },
+      { label:'② 이재명 정부 현 정책', data:[0.80,0.95,0.98,1.00,0.97,0.95,0.94,0.93,0.92,0.91,0.90], borderColor:colors.orange, tension:.3, pointRadius:3 },
+      { label:'③ 원쳇 도입 + 현금 집중', data:[0.80,0.95,1.02,1.05,1.02,1.00,0.98,0.97,0.96,0.95,0.93], borderColor:colors.teal, borderDash:[3,3], tension:.3, pointRadius:3 },
+      { label:'④ 원쳇 도입 + 인프라 중점', data:[0.80,0.90,0.95,1.00,1.05,1.08,1.10,1.12,1.13,1.14,1.15], borderColor:colors.purple, tension:.3, pointRadius:3 },
+      { label:'⑤ 원쳇 융합 최적 (AI 추천) ★', data:[0.80,0.95,1.05,1.15,1.25,1.32,1.38,1.42,1.44,1.45,1.45], borderColor:colors.green, borderWidth:4, tension:.3, pointRadius:5, pointBackgroundColor:colors.green },
+      { label:'인구대체수준 (2.1)', data:Array(11).fill(2.1), borderColor:colors.sub, borderDash:[2,4], pointRadius:0 }
+    ]},
+    options:{ responsive:true, maintainAspectRatio:false,
+      plugins:{ tooltip:{mode:'index'}, legend:{position:'bottom',labels:{usePointStyle:true,boxWidth:14,font:{size:11}}} },
+      scales:{ y:{title:{display:true,text:'합계출산율 (TFR)'},min:0.5,max:2.2} }
+    }
+  });
+})();
+</script>
+
+</body>
+</html>

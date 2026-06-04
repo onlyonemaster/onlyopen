@@ -1,0 +1,219 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>디지털 유산 · MyChat</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+<style>
+  .scope-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+  .scope-grid .it{
+    background:var(--bg-elev); border:1px solid var(--line); border-radius: var(--r-md);
+    padding: 10px; display:flex; align-items:center; gap:8px;
+  }
+  .scope-grid .it.on{ border-color:var(--accent) }
+  .scope-grid .it input{margin:0}
+</style>
+</head>
+<body>
+<div id="top"></div>
+
+<div class="mc-wrap">
+
+  <div class="mc-hero">
+    <h1>🪪 디지털 유산 모드</h1>
+    <p>
+      혹시 내가 더 이상 응답하지 못하게 됐을 때, <b>지정한 1명</b>에게
+      아바타의 일부 데이터를 전달합니다. <b>해야 할 말</b>과 <b>꼭 남기고 싶은 것</b>을 지금 적어두세요.
+    </p>
+  </div>
+
+  <!-- master -->
+  <div class="mc-section">
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">디지털 유산 모드 활성화</div>
+        <div class="de">생존 확인이 일정 기간 실패하면 아래 정책이 자동 작동합니다.</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-master"><span class="sl"></span></label>
+    </div>
+  </div>
+
+  <!-- contact -->
+  <div class="mc-section">
+    <h2>👤 신뢰할 사람 (1명)</h2>
+    <p class="hint">이 사람에게만 데이터 일부와 마지막 메시지가 전달됩니다. 신중하게 선택해 주세요.</p>
+
+    <div class="mc-row">
+      <div class="mc-field"><label>이름</label><input id="c-name" class="mc-input" placeholder="홍길동"></div>
+      <div class="mc-field"><label>관계</label><input id="c-rel" class="mc-input" placeholder="배우자/자녀/친구"></div>
+    </div>
+    <div class="mc-row">
+      <div class="mc-field"><label>이메일</label><input id="c-email" type="email" class="mc-input" placeholder="trust@example.com"></div>
+      <div class="mc-field"><label>전화</label><input id="c-phone" type="tel" class="mc-input" placeholder="010-1234-5678"></div>
+    </div>
+  </div>
+
+  <!-- scope -->
+  <div class="mc-section">
+    <h2>📂 전달 범위</h2>
+    <p class="hint">전달할 데이터의 종류를 직접 고릅니다. 기본은 가장 보수적인 "요약본만".</p>
+    <div class="scope-grid" id="scope-grid"></div>
+  </div>
+
+  <!-- last message -->
+  <div class="mc-section">
+    <h2>💌 마지막 메시지</h2>
+    <p class="hint">받는 사람에게 직접 전할 문장. 언제든 다시 고쳐도 됩니다.</p>
+    <textarea id="last-msg" class="mc-textarea" style="min-height:140px" placeholder="예) 나는 너를 정말 많이 사랑했어. 내가 남긴 아바타로 가끔 이야기 나눠줘."></textarea>
+  </div>
+
+  <!-- liveness -->
+  <div class="mc-section">
+    <h2>🩺 생존 확인</h2>
+    <p class="hint">설정된 기간 동안 로그인/활동이 없으면 자동으로 발동합니다.</p>
+
+    <div class="mc-field">
+      <label>비활동 임계기간</label>
+      <select id="verify-days" class="mc-select">
+        <option value="30">30일</option>
+        <option value="60">60일</option>
+        <option value="90" selected>90일 (권장)</option>
+        <option value="180">180일</option>
+        <option value="365">1년</option>
+      </select>
+    </div>
+
+    <div class="mc-rowitem">
+      <div class="body">
+        <div class="ti">발동 전 이메일로 사전 확인</div>
+        <div class="de">발동 7일 전에 본인 이메일로 "괜찮으세요?" 확인 메일을 보냅니다.</div>
+      </div>
+      <label class="mc-switch"><input type="checkbox" id="sw-precheck" checked><span class="sl"></span></label>
+    </div>
+
+    <button class="mc-btn full" id="btn-im-alive">✋ 나 살아있어요 (생존 갱신)</button>
+    <div id="last-alive" class="hint" style="margin-top:8px"></div>
+  </div>
+
+  <!-- save -->
+  <div class="mc-section">
+    <div class="mc-row">
+      <button class="mc-btn primary full" id="btn-save">💾 저장</button>
+      <button class="mc-btn full" id="btn-export">📦 유산 묶음 미리보기</button>
+    </div>
+    <p class="hint">
+      ※ 실제 발송·암호화는 서버 워커가 처리합니다. 본 페이지의 입력값은 안전하게 암호화되어 저장돼요.
+    </p>
+  </div>
+
+</div>
+
+<script src="/aimessage/mychat/assets/mychat.js"></script>
+<script>
+(function(){
+  'use strict';
+
+  document.getElementById('top').innerHTML = mc.renderTopbar({
+    title: '🪪 디지털 유산 모드',
+    sub: '내가 응답하지 못할 때, 아바타가 대신'
+  });
+
+  var l = mc.legacyGet();
+
+  // ---------- scope grid ----------
+  var SCOPES = [
+    {k:'summary',  ic:'📝', name:'요약본',     de:'아바타가 만든 내 인생 요약 (가장 안전)'},
+    {k:'photos',   ic:'🖼️', name:'사진 일부',  de:'좋아요 표시 / 별표 사진만'},
+    {k:'messages', ic:'💬', name:'대화 일부',  de:'고정한 대화 / 가족 채팅방'},
+    {k:'decisions',ic:'🎯', name:'결정 기록',  de:'중요한 의사결정 카드 모음'},
+    {k:'voice',    ic:'🎤', name:'목소리 샘플',de:'아바타가 내 목소리로 말할 수 있게'},
+    {k:'all',      ic:'📦', name:'전부',       de:'⚠️ 가장 민감 — 신중히'}
+  ];
+
+  function renderScopes(){
+    document.getElementById('scope-grid').innerHTML = SCOPES.map(function(s){
+      var on = !!(l.scope && l.scope[s.k]);
+      return ''
+        + '<label class="it'+(on?' on':'')+'" data-k="'+s.k+'">'
+        +   '<input type="checkbox" '+(on?'checked':'')+'>'
+        +   '<div style="flex:1">'
+        +     '<div style="font-weight:600">'+s.ic+' '+mc.esc(s.name)+'</div>'
+        +     '<div style="font-size:11px;color:var(--text-mute)">'+mc.esc(s.de)+'</div>'
+        +   '</div>'
+        + '</label>';
+    }).join('');
+  }
+  document.getElementById('scope-grid').addEventListener('change', function(e){
+    var it = e.target.closest('[data-k]'); if (!it) return;
+    if (!l.scope) l.scope = {};
+    l.scope[it.dataset.k] = e.target.checked;
+    it.classList.toggle('on', e.target.checked);
+  });
+
+  function renderAll(){
+    document.getElementById('sw-master').checked = !!l.enabled;
+    document.getElementById('c-name').value  = (l.contact||{}).name || '';
+    document.getElementById('c-rel').value   = (l.contact||{}).relation || '';
+    document.getElementById('c-email').value = (l.contact||{}).email || '';
+    document.getElementById('c-phone').value = (l.contact||{}).phone || '';
+    document.getElementById('last-msg').value= l.message || '';
+    document.getElementById('verify-days').value = String(l.verify_days || 90);
+    document.getElementById('sw-precheck').checked = l.precheck_email !== false;
+    document.getElementById('last-alive').textContent = '마지막 생존 갱신: ' + (l.last_alive ? mc.fmtTime(l.last_alive) : '기록 없음');
+    renderScopes();
+  }
+
+  document.getElementById('sw-master').addEventListener('change', function(e){ l.enabled = e.target.checked; });
+  document.getElementById('c-name').addEventListener('input', function(e){ l.contact = l.contact||{}; l.contact.name = e.target.value; });
+  document.getElementById('c-rel').addEventListener('input', function(e){ l.contact = l.contact||{}; l.contact.relation = e.target.value; });
+  document.getElementById('c-email').addEventListener('input', function(e){ l.contact = l.contact||{}; l.contact.email = e.target.value; });
+  document.getElementById('c-phone').addEventListener('input', function(e){ l.contact = l.contact||{}; l.contact.phone = e.target.value; });
+  document.getElementById('last-msg').addEventListener('input', function(e){ l.message = e.target.value; });
+  document.getElementById('verify-days').addEventListener('change', function(e){ l.verify_days = Number(e.target.value); });
+  document.getElementById('sw-precheck').addEventListener('change', function(e){ l.precheck_email = e.target.checked; });
+
+  document.getElementById('btn-im-alive').addEventListener('click', function(){
+    l.last_alive = Date.now();
+    mc.legacySave(l);
+    mc.toast('생존 갱신됨 ❤️','ok');
+    renderAll();
+  });
+
+  document.getElementById('btn-save').addEventListener('click', function(){
+    if (l.enabled){
+      var c = l.contact || {};
+      if (!c.name || !(c.email||c.phone)){
+        if (!confirm('신뢰할 사람의 이름과 연락처(이메일 또는 전화)가 비어 있어요. 그래도 저장할까요?')) return;
+      }
+    }
+    mc.legacySave(l);
+    mc.api('/aimessage/mychat/api/legacy.php', { action:'save', legacy: l });
+    mc.toast('💾 저장 — 안전하게 보관됩니다','ok',2400);
+  });
+
+  document.getElementById('btn-export').addEventListener('click', function(){
+    var c = l.contact || {};
+    var scopes = Object.keys(l.scope||{}).filter(function(k){ return l.scope[k]; });
+    mc.openModal(''
+      + '<h3>📦 유산 묶음 미리보기</h3>'
+      + '<div style="font-size:13px;line-height:1.7">'
+      +   '<b>수신:</b> '+mc.esc(c.name||'(미설정)')+' / '+mc.esc(c.relation||'')+'<br>'
+      +   '<b>연락:</b> '+mc.esc(c.email||'')+' '+mc.esc(c.phone||'')+'<br>'
+      +   '<b>포함:</b> '+ (scopes.length ? scopes.join(', ') : '(없음)') + '<br>'
+      +   '<b>비활동 임계:</b> '+(l.verify_days||90)+'일<br>'
+      +   '<b>마지막 메시지:</b><br>'
+      +   '<div style="background:var(--bg);padding:10px;border-radius:8px;margin-top:6px;white-space:pre-wrap">'+mc.esc(l.message||'(없음)')+'</div>'
+      + '</div>'
+      + '<div class="actions">'
+      +   '<button class="mc-btn primary" onclick="mc.closeModal()">확인</button>'
+      + '</div>');
+  });
+
+  renderAll();
+})();
+</script>
+</body>
+</html>

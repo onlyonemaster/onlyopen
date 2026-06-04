@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>config.php — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link active">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>config.php</span></div>
+<h1>⚙️ config.php 완전 분석</h1>
+<p class="page-desc">271라인의 핵심 설정 파일입니다. 상수, 사이트 등록부, 데이터 I/O, SemVer, 통계, 하위호환 래퍼까지 모든 기능이 정의되어 있습니다.</p>
+
+<h2 id="constants">시스템 상수</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">define('SYSTEM_NAME', 'Onlyone 통합 버전 관리');
+define('SYSTEM_SLUG', 'vermanager');
+define('DATA_DIR', __DIR__ . '/data');
+define('SITES_DATA_DIR', DATA_DIR . '/sites');
+define('REGISTRY_FILE', DATA_DIR . '/site-registry.json');
+
+// 호환성 상수
+define('APP_NAME', 'Onlyone OneChat');
+define('APP_SLUG', 'vermanager');
+define('SRC_IMPROVEMENTS_URL', 'https://kiam.kr/admin/admin_source_improvements.php');</pre>
+
+<h2 id="functions-map">함수 맵 (16개)</h2>
+<table>
+  <tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">분류</th><th style="padding:8px 12px;border:1px solid var(--border);">함수</th><th style="padding:8px 12px;border:1px solid var(--border);">반환값</th></tr>
+  <tr><td rowspan="3" style="padding:8px 12px;border:1px solid var(--border);"><b>등록부</b></td><td style="padding:8px 12px;border:1px solid var(--border);">get_registry()</td><td style="padding:8px 12px;border:1px solid var(--border);">array ['sites'=>[...], 'last_updated'=>...]</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">save_registry($registry)</td><td style="padding:8px 12px;border:1px solid var(--border);">bool</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">site_data_dir($site_id)</td><td style="padding:8px 12px;border:1px solid var(--border);">string (예: /home/vermanager/data/sites/kiam-prod)</td></tr>
+  <tr><td rowspan="2" style="padding:8px 12px;border:1px solid var(--border);"><b>I/O</b></td><td style="padding:8px 12px;border:1px solid var(--border);">site_read_json($site_id, $file)</td><td style="padding:8px 12px;border:1px solid var(--border);">array</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">site_write_json($site_id, $file, $data)</td><td style="padding:8px 12px;border:1px solid var(--border);">bool</td></tr>
+  <tr><td rowspan="3" style="padding:8px 12px;border:1px solid var(--border);"><b>CRUD</b></td><td style="padding:8px 12px;border:1px solid var(--border);">add_site($site)</td><td style="padding:8px 12px;border:1px solid var(--border);">bool</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">update_site($site_id, $data)</td><td style="padding:8px 12px;border:1px solid var(--border);">bool</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">deactivate_site($site_id)</td><td style="padding:8px 12px;border:1px solid var(--border);">bool</td></tr>
+  <tr><td rowspan="5" style="padding:8px 12px;border:1px solid var(--border);"><b>조회</b></td><td style="padding:8px 12px;border:1px solid var(--border);">site_get_package($site_id)</td><td style="padding:8px 12px;border:1px solid var(--border);">array (name, version, description, lastRelease)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">site_get_current_version($site_id)</td><td style="padding:8px 12px;border:1px solid var(--border);">array (major, minor, patch, raw)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">site_get_history($site_id)</td><td style="padding:8px 12px;border:1px solid var(--border);">array</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">site_get_improvements($site_id)</td><td style="padding:8px 12px;border:1px solid var(--border);">array</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">site_get_changelog($site_id)</td><td style="padding:8px 12px;border:1px solid var(--border);">array</td></tr>
+  <tr><td rowspan="2" style="padding:8px 12px;border:1px solid var(--border);"><b>SemVer</b></td><td style="padding:8px 12px;border:1px solid var(--border);">parse_semver($v)</td><td style="padding:8px 12px;border:1px solid var(--border);">array (major, minor, patch)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">bump_version($current, $type)</td><td style="padding:8px 12px;border:1px solid var(--border);">array (major, minor, patch, raw)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>통계</b></td><td style="padding:8px 12px;border:1px solid var(--border);">get_system_stats()</td><td style="padding:8px 12px;border:1px solid var(--border);">array (total_sites, production_sites, development_sites, total_servers)</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>선택</b></td><td style="padding:8px 12px;border:1px solid var(--border);">get_current_site_id()</td><td style="padding:8px 12px;border:1px solid var(--border);">?string</td></tr>
+</table>
+
+<h2 id="bump-logic">bump_version 로직</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">function bump_version(array $current, string $type): array {
+    switch ($type) {
+        case 'major': $next['major']++; $next['minor'] = 0; $next['patch'] = 0; break;
+        case 'minor': $next['minor']++; $next['patch'] = 0; break;
+        case 'patch': $next['patch']++; break;
+    }
+    // 예: major → minor=0, patch=0  (하위 초기화)
+    //     minor → patch=0
+    return $next;
+}</pre>
+
+<h2 id="compat-wrappers">하위호환 래퍼 (7개)</h2>
+<p>기존에 <code>get_package()</code>, <code>get_improvements()</code> 등으로 호출하던 코드가 깨지지 않도록 <code>get_current_site_id()</code> 기준으로 자동 연결됩니다:</p>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">get_package()          → site_get_package( get_current_site_id() )
+get_current_version()  → site_get_current_version( get_current_site_id() )
+get_version_history()  → site_get_history( get_current_site_id() )
+get_improvements()     → site_get_improvements( get_current_site_id() )
+get_changelog()        → site_get_changelog( get_current_site_id() )
+write_json($file, $d)  → site_write_json( get_current_site_id(), $file, $d )
+read_json($file)       → site_read_json( get_current_site_id(), $file )</pre>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> 모든 새로운 코드는 <code>site_*</code> 함수를 직접 사용하고, 기존 코드는 하위호환 래퍼를 통해 자동으로 동작합니다. <code>get_current_site_id()</code>는 URL <code>?site=xxx</code> 파라미터 또는 첫 번째 활성 사이트를 반환합니다.</div>
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

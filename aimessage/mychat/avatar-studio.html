@@ -1,0 +1,971 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,viewport-fit=cover">
+<meta name="theme-color" content="#7e22ce">
+<title>아바타 스튜디오 · 마이챗</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+:root{
+  --bg:#0f172a;--bg2:#1e293b;--border:#334155;
+  --pur:#7e22ce;--pur2:#9333ea;--gold:#b45309;--gold2:#d97706;
+  --text:#f1f5f9;--dim:#94a3b8;--dim2:#64748b;
+  --green:#22c55e;--red:#ef4444;--yellow:#f59e0b
+}
+body{background:var(--bg);color:var(--text);font-family:'Noto Sans KR',sans-serif;min-height:100vh;padding-bottom:40px}
+
+/* 헤더 */
+.hd{display:flex;align-items:center;gap:12px;padding:16px;
+    background:var(--bg2);border-bottom:1px solid var(--border);position:sticky;top:0;z-index:10}
+.hd-back{background:none;border:none;color:var(--dim);font-size:18px;cursor:pointer;padding:4px 8px}
+.hd-title{font-size:16px;font-weight:700;flex:1}
+
+/* 탭 */
+.tabs{display:flex;border-bottom:1px solid var(--border);background:var(--bg2)}
+.tab{flex:1;padding:12px 0;text-align:center;font-size:13px;font-weight:600;
+     color:var(--dim);cursor:pointer;border-bottom:2px solid transparent;transition:all .2s}
+.tab.active{color:var(--pur2);border-color:var(--pur2)}
+
+/* 현재 아바타 카드 */
+.av-card{margin:16px;background:var(--bg2);border:1px solid var(--border);border-radius:16px;
+         padding:20px;display:flex;align-items:center;gap:16px}
+.av-face{width:72px;height:72px;border-radius:50%;overflow:hidden;flex-shrink:0;
+         background:linear-gradient(135deg,var(--pur),var(--gold));
+         display:flex;align-items:center;justify-content:center;font-size:32px;border:2px solid var(--pur2)}
+.av-face img{width:100%;height:100%;object-fit:cover}
+.av-info{flex:1}
+.av-name{font-size:16px;font-weight:700}
+.av-sub{font-size:11px;color:var(--dim2);margin-top:3px}
+.av-badges{display:flex;gap:6px;margin-top:8px;flex-wrap:wrap}
+.av-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px}
+.badge-face{background:rgba(147,51,234,.15);color:#c4b5fd}
+.badge-voice{background:rgba(34,197,94,.15);color:var(--green)}
+.badge-heygen{background:rgba(245,158,11,.15);color:var(--yellow)}
+.badge-none{background:rgba(100,116,139,.15);color:var(--dim)}
+
+/* 섹션 */
+.sec{margin:0 16px 14px;background:var(--bg2);border:1px solid var(--border);border-radius:14px;overflow:hidden}
+.sec-head{padding:14px 16px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:10px}
+.sec-icon{width:32px;height:32px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
+.sec-title{font-size:14px;font-weight:700;flex:1}
+.sec-badge{font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px}
+.pro-badge{background:linear-gradient(135deg,var(--gold),#fbbf24);color:#1c1917}
+.sec-body{padding:16px}
+
+/* 업로드 */
+.upload-zone{border:2px dashed var(--border);border-radius:12px;padding:30px;
+             text-align:center;cursor:pointer;transition:all .2s}
+.upload-zone:hover{border-color:var(--pur2);background:rgba(147,51,234,.05)}
+.upload-zone.dragover{border-color:var(--pur2);background:rgba(147,51,234,.1)}
+.upload-icon{font-size:32px;margin-bottom:10px;color:var(--dim)}
+.upload-hint{font-size:13px;color:var(--dim);margin-bottom:4px}
+.upload-sub{font-size:11px;color:var(--dim2)}
+
+/* 프리뷰 */
+.preview-wrap{position:relative;border-radius:12px;overflow:hidden;margin-bottom:10px;background:#000}
+.preview-img{width:100%;max-height:240px;object-fit:cover;display:block}
+.preview-change{position:absolute;bottom:8px;right:8px;background:rgba(0,0,0,.7);
+                border:1px solid var(--border);border-radius:8px;
+                color:#fff;font-size:11px;padding:5px 10px;cursor:pointer}
+
+/* 스타일 선택 */
+.style-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px}
+.style-card{border:2px solid var(--border);border-radius:10px;padding:12px 8px;
+            text-align:center;cursor:pointer;transition:all .2s}
+.style-card.active{border-color:var(--pur2);background:rgba(147,51,234,.08)}
+.style-card-icon{font-size:24px;margin-bottom:6px}
+.style-card-name{font-size:12px;font-weight:700}
+
+/* 목소리 */
+.voice-presets{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:12px}
+.voice-preset{border:1px solid var(--border);border-radius:10px;padding:10px 12px;
+              cursor:pointer;display:flex;align-items:center;gap:10px;transition:all .2s}
+.voice-preset.active{border-color:var(--pur2);background:rgba(147,51,234,.08)}
+.voice-preset-icon{font-size:20px;flex-shrink:0}
+.voice-preset-name{font-size:12px;font-weight:700}
+.voice-preset-desc{font-size:10px;color:var(--dim2)}
+.voice-play{background:none;border:none;color:var(--pur2);font-size:14px;cursor:pointer;padding:4px;flex-shrink:0}
+
+/* 녹음 */
+.record-zone{border:1px solid var(--border);border-radius:10px;padding:16px;text-align:center}
+.record-btn{width:64px;height:64px;border-radius:50%;border:none;
+            background:linear-gradient(135deg,var(--pur),var(--gold));
+            color:#fff;font-size:24px;cursor:pointer;margin:0 auto 12px;display:flex;
+            align-items:center;justify-content:center}
+.record-btn.recording{animation:pulse-rec 1s ease-in-out infinite;background:var(--red)}
+@keyframes pulse-rec{0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)}50%{box-shadow:0 0 0 12px rgba(239,68,68,0)}}
+.record-timer{font-size:24px;font-weight:800;font-variant-numeric:tabular-nums;margin-bottom:6px}
+.record-hint{font-size:12px;color:var(--dim2)}
+
+/* HeyGen */
+.heygen-logo{display:flex;align-items:center;gap:8px;margin-bottom:12px}
+.heygen-logo-icon{width:32px;height:32px;background:linear-gradient(135deg,#f59e0b,#ef4444);
+                  border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px}
+.heygen-logo-name{font-size:14px;font-weight:800;color:#f59e0b}
+.heygen-step{display:flex;align-items:flex-start;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)}
+.heygen-step:last-child{border-bottom:none}
+.step-num{width:24px;height:24px;border-radius:50%;background:rgba(245,158,11,.15);
+          color:var(--yellow);font-size:11px;font-weight:800;display:flex;align-items:center;
+          justify-content:center;flex-shrink:0;margin-top:1px}
+.step-body{flex:1}
+.step-title{font-size:13px;font-weight:700}
+.step-desc{font-size:11px;color:var(--dim2);margin-top:3px;line-height:1.5}
+.heygen-status{display:flex;align-items:center;gap:8px;padding:10px 12px;
+               background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.3);
+               border-radius:8px;margin-bottom:10px;font-size:12px}
+.heygen-status.connected{background:rgba(34,197,94,.08);border-color:rgba(34,197,94,.3)}
+
+/* 입력 필드 */
+.field{margin-bottom:12px}
+.field label{display:block;font-size:12px;color:var(--dim);font-weight:600;margin-bottom:5px}
+.field input,.field select{width:100%;background:var(--bg);border:1px solid var(--border);
+  border-radius:8px;padding:10px 12px;color:var(--text);font-size:13px;font-family:inherit;outline:none}
+.field input:focus{border-color:var(--pur2)}
+.field-hint{font-size:11px;color:var(--dim2);margin-top:4px}
+.api-key-wrap{position:relative}
+.api-key-wrap input{padding-right:44px}
+.api-eye{position:absolute;right:12px;top:50%;transform:translateY(-50%);
+         background:none;border:none;color:var(--dim);cursor:pointer;font-size:14px}
+
+/* 테스트 화상 */
+.video-preview{width:100%;aspect-ratio:16/9;background:#000;border-radius:12px;
+               display:flex;align-items:center;justify-content:center;margin-bottom:10px;
+               border:1px solid var(--border);overflow:hidden;position:relative}
+.video-preview video{width:100%;height:100%;object-fit:cover}
+.video-placeholder{text-align:center;color:var(--dim)}
+.video-placeholder-icon{font-size:36px;margin-bottom:8px}
+
+/* 버튼 */
+.btn-primary{width:100%;padding:13px;border-radius:12px;background:linear-gradient(135deg,var(--pur),var(--gold));
+             border:none;color:#fff;font-size:14px;font-weight:700;cursor:pointer;margin-bottom:8px}
+.btn-outline{width:100%;padding:11px;border-radius:12px;background:transparent;
+             border:1px solid var(--border);color:var(--dim);font-size:13px;font-weight:600;cursor:pointer}
+.btn-test{width:100%;padding:11px;border-radius:12px;background:rgba(245,158,11,.1);
+          border:1px solid var(--yellow);color:var(--yellow);font-size:13px;font-weight:700;cursor:pointer}
+.btn-sm{padding:6px 14px;border-radius:8px;border:1px solid var(--border);background:var(--bg);
+        color:var(--dim);font-size:12px;font-weight:600;cursor:pointer}
+
+/* 진행 상태 */
+.progress-wrap{display:none;margin-top:10px}
+.progress-bar{height:6px;background:var(--bg);border-radius:3px;overflow:hidden;margin-bottom:6px}
+.progress-fill{height:100%;background:linear-gradient(90deg,var(--pur),var(--gold));
+               border-radius:3px;width:0%;transition:width .4s}
+.progress-msg{font-size:12px;color:var(--dim2);text-align:center}
+
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+       background:#1e293b;border:1px solid var(--pur);color:#c4b5fd;
+       padding:10px 20px;border-radius:20px;font-size:13px;z-index:999;
+       opacity:0;transition:opacity .3s;pointer-events:none;white-space:nowrap}
+.toast.show{opacity:1}
+
+/* AI 생성 */
+.method-tabs{display:flex;gap:6px;margin-bottom:14px}
+.method-tab{flex:1;padding:8px 0;text-align:center;font-size:12px;font-weight:700;
+            border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--dim);
+            background:transparent;transition:all .2s}
+.method-tab.active{background:var(--pur);border-color:var(--pur);color:#fff}
+.ai-gen-form{display:none}
+.ai-gen-form.show{display:block}
+.gender-btns{display:flex;gap:6px;margin-bottom:10px}
+.gender-btn{flex:1;padding:8px 0;text-align:center;font-size:13px;font-weight:600;
+            border:1px solid var(--border);border-radius:8px;cursor:pointer;color:var(--dim);
+            background:transparent}
+.gender-btn.active{background:rgba(147,51,234,.15);border-color:var(--pur2);color:#c4b5fd}
+.age-btns{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px}
+.age-btn{padding:5px 12px;font-size:12px;font-weight:600;border:1px solid var(--border);
+         border-radius:8px;cursor:pointer;color:var(--dim);background:transparent}
+.age-btn.active{background:rgba(147,51,234,.15);border-color:var(--pur2);color:#c4b5fd}
+.ai-result-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-top:12px}
+.ai-result-img{border-radius:10px;overflow:hidden;cursor:pointer;border:2px solid transparent;
+               aspect-ratio:1;transition:all .2s}
+.ai-result-img:hover{border-color:var(--pur2)}
+.ai-result-img.selected{border-color:var(--pur2);box-shadow:0 0 0 2px rgba(147,51,234,.4)}
+.ai-result-img img{width:100%;height:100%;object-fit:cover;display:block}
+.ai-spinner{text-align:center;padding:30px;color:var(--dim)}
+</style>
+</head>
+<body>
+
+<div class="hd">
+  <button class="hd-back" onclick="history.back()"><i class="fas fa-arrow-left"></i></button>
+  <div class="hd-title">아바타 스튜디오</div>
+</div>
+
+<!-- 탭 -->
+<div class="tabs">
+  <div class="tab active" data-tab="face" onclick="switchTab(this)">😊 얼굴</div>
+  <div class="tab" data-tab="voice" onclick="switchTab(this)">🎙️ 목소리</div>
+  <div class="tab" data-tab="heygen" onclick="switchTab(this)">🎬 화상</div>
+</div>
+
+<!-- 현재 아바타 프리뷰 -->
+<div class="av-card">
+  <div class="av-face" id="avFace"><span id="avEmoji">🧠</span></div>
+  <div class="av-info">
+    <div class="av-name" id="avName">나의 아바타</div>
+    <div class="av-sub" id="avSub">아바타 설정을 시작해보세요</div>
+    <div class="av-badges" id="avBadges">
+      <span class="av-badge badge-none">얼굴 미설정</span>
+      <span class="av-badge badge-none">목소리 미설정</span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ 얼굴 탭 ═══ -->
+<div id="tab-face">
+
+
+  <!-- AI 얼굴 생성 -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-icon" style="background:linear-gradient(135deg,#7e22ce,#b45309)"><i class="fas fa-wand-magic-sparkles" style="color:#fff"></i></div>
+      <div class="sec-title">AI로 아바타 생성</div>
+    </div>
+    <div class="sec-body">
+      <!-- 방법 선택 탭 -->
+      <div class="method-tabs">
+        <button class="method-tab active" data-method="ai" onclick="switchMethod(this)">🎨 AI 생성</button>
+        <button class="method-tab" data-method="upload" onclick="switchMethod(this)">📸 사진 업로드</button>
+      </div>
+
+      <!-- AI 생성 폼 -->
+      <div id="aiGenForm" class="ai-gen-form show">
+        <div class="field">
+          <label>성별</label>
+          <div class="gender-btns">
+            <button class="gender-btn active" data-g="woman" onclick="selectGender(this)">👩 여성</button>
+            <button class="gender-btn" data-g="man" onclick="selectGender(this)">👨 남성</button>
+            <button class="gender-btn" data-g="neutral" onclick="selectGender(this)">🧑 중성</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>나이대</label>
+          <div class="age-btns">
+            <button class="age-btn active" data-a="20s" onclick="selectAge(this)">20대</button>
+            <button class="age-btn" data-a="30s" onclick="selectAge(this)">30대</button>
+            <button class="age-btn" data-a="40s" onclick="selectAge(this)">40대</button>
+            <button class="age-btn" data-a="50s" onclick="selectAge(this)">50대+</button>
+          </div>
+        </div>
+        <div class="field">
+          <label>스타일</label>
+          <div class="style-grid">
+            <div class="style-card active" data-style="photo" onclick="selectStyle(this)">
+              <div class="style-card-icon">📸</div>
+              <div class="style-card-name">사실적</div>
+            </div>
+            <div class="style-card" data-style="cartoon" onclick="selectStyle(this)">
+              <div class="style-card-icon">🎨</div>
+              <div class="style-card-name">일러스트</div>
+            </div>
+            <div class="style-card" data-style="3d" onclick="selectStyle(this)">
+              <div class="style-card-icon">🕹️</div>
+              <div class="style-card-name">3D 캐릭터</div>
+            </div>
+          </div>
+        </div>
+        <div class="field">
+          <label>추가 설명 <span style="color:var(--dim2);font-weight:400">(선택)</span></label>
+          <input type="text" id="aiPromptExtra" placeholder="예: 안경 쓴, 미소 짓는, 단발머리" maxlength="100">
+          <div class="field-hint">구체적일수록 원하는 모습에 가까워집니다</div>
+        </div>
+        <button class="btn-primary" onclick="generateAiFace()" id="aiGenBtn">
+          <i class="fas fa-sparkles"></i> AI 얼굴 4장 생성하기
+        </button>
+
+        <!-- 생성 결과 -->
+        <div id="aiGenResult" style="display:none">
+          <div style="font-size:12px;color:var(--dim);margin:12px 0 6px">마음에 드는 이미지를 선택하세요</div>
+          <div class="ai-result-grid" id="aiResultGrid"></div>
+          <button class="btn-primary" id="aiSelectBtn" onclick="confirmAiSelection()" style="display:none;margin-top:10px">
+            <i class="fas fa-check"></i> 선택한 이미지로 아바타 설정
+          </button>
+          <button class="btn-outline" onclick="generateAiFace()" style="margin-top:6px">
+            <i class="fas fa-redo"></i> 다시 생성
+          </button>
+        </div>
+      </div>
+
+      <!-- 사진 업로드 폼 (기존) -->
+      <div id="uploadForm" class="ai-gen-form">
+        <div id="uploadZone2" class="upload-zone" onclick="document.getElementById('faceInput').click()"
+             ondragover="onDragOver(event)" ondrop="onDrop(event)">
+          <div class="upload-icon"><i class="fas fa-image"></i></div>
+          <div class="upload-hint">사진을 클릭하거나 드래그하세요</div>
+          <div class="upload-sub">JPG·PNG·WEBP · 최대 10MB · 정면 얼굴 사진 권장</div>
+        </div>
+      </div>
+
+      <!-- 공통 미리보기 -->
+      <div id="previewWrap" style="display:none;margin-top:10px">
+        <div class="preview-wrap">
+          <img id="previewImg" class="preview-img" src="" alt="미리보기">
+          <button class="preview-change" onclick="resetPreview()">
+            <i class="fas fa-redo"></i> 다시 선택
+          </button>
+        </div>
+      </div>
+      <input type="file" id="faceInput" accept="image/*" style="display:none" onchange="onFileSelect(this)">
+
+      <button class="btn-primary" onclick="saveFace()" style="margin-top:12px">
+        <i class="fas fa-save"></i> 얼굴 아바타 저장
+      </button>
+      <div class="field-hint" style="text-align:center;margin-top:6px">
+        저장된 이미지는 마이챗 대화 화면 프로필로 사용됩니다
+      </div>
+    </div>
+  </div>
+
+
+
+</div>
+
+<!-- ═══ 목소리 탭 ═══ -->
+<div id="tab-voice" style="display:none">
+
+  <!-- 프리셋 목소리 -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-icon" style="background:rgba(34,197,94,.15)"><i class="fas fa-headphones" style="color:var(--green)"></i></div>
+      <div class="sec-title">목소리 프리셋 선택</div>
+    </div>
+    <div class="sec-body">
+      <div class="voice-presets" id="voicePresets">
+        <!-- JS로 렌더링 -->
+      </div>
+      <button class="btn-primary" id="saveVoicePreset" onclick="saveVoicePreset()" style="display:none">
+        <i class="fas fa-check"></i> 이 목소리로 설정
+      </button>
+    </div>
+  </div>
+
+  <!-- 내 목소리 녹음 클론 -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-icon" style="background:rgba(147,51,234,.15)"><i class="fas fa-microphone" style="color:var(--pur2)"></i></div>
+      <div class="sec-title">내 목소리 클론 만들기</div>
+    </div>
+    <div class="sec-body">
+      <div class="field-hint" style="margin-bottom:12px">
+        30초~1분 정도 읽어주세요. AI가 목소리 특성을 학습합니다.<br>
+        <strong>예시 문장:</strong> "안녕하세요, 저는 나만의 AI 아바타입니다. 오늘도 좋은 하루 되세요."
+      </div>
+      <div class="record-zone">
+        <button class="record-btn" id="recordBtn" onclick="toggleRecord()">
+          <i class="fas fa-microphone" id="recordIcon"></i>
+        </button>
+        <div class="record-timer" id="recordTimer">0:00</div>
+        <div class="record-hint" id="recordHint">버튼을 눌러 녹음 시작</div>
+        <div id="recordedWrap" style="display:none;margin-top:12px">
+          <audio id="recordedAudio" controls style="width:100%;border-radius:8px"></audio>
+          <button class="btn-primary" style="margin-top:10px" onclick="saveVoiceClone()">
+            <i class="fas fa-wand-magic-sparkles"></i> AI 목소리 클론 생성
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</div>
+
+<!-- ═══ 화상 탭 (HeyGen) ═══ -->
+<div id="tab-heygen" style="display:none">
+
+  <!-- HeyGen 연결 -->
+  <div class="sec">
+    <div class="sec-head">
+      <div class="sec-icon" style="background:rgba(245,158,11,.15)"><i class="fas fa-video" style="color:var(--yellow)"></i></div>
+      <div class="sec-title">HeyGen 화상 아바타</div>
+      <span class="sec-badge pro-badge">PRO</span>
+    </div>
+    <div class="sec-body">
+      <div class="heygen-logo">
+        <div class="heygen-logo-icon">🎬</div>
+        <div class="heygen-logo-name">HeyGen</div>
+        <span style="font-size:11px;color:var(--dim2);margin-left:4px">선택적 연동</span>
+      </div>
+
+      <!-- 연결 상태 -->
+      <div class="heygen-status" id="heygenStatus">
+        <i class="fas fa-circle" style="color:var(--yellow)"></i>
+        <span id="heygenStatusText">HeyGen API키를 등록하면 화상 아바타를 사용할 수 있습니다</span>
+      </div>
+
+      <!-- API 키 등록 -->
+      <div class="field">
+        <label>HeyGen API키 <span style="color:var(--dim2);font-weight:400">(<a href="https://app.heygen.com/settings?nav=API" target="_blank" style="color:var(--pur2)">발급받기</a>)</span></label>
+        <div class="api-key-wrap">
+          <input type="password" id="heygenKey" placeholder="NzY4O...">
+          <button class="api-eye" onclick="toggleKey()"><i class="fas fa-eye" id="heygenEyeIcon"></i></button>
+        </div>
+        <div class="field-hint">AES-256 암호화 저장 — 회사도 복호화 불가</div>
+      </div>
+      <button class="btn-test" onclick="testHeygenKey()">
+        <i class="fas fa-plug"></i> API키 연결 테스트
+      </button>
+      <div id="heygenTestResult" style="margin-top:8px;font-size:12px"></div>
+
+      <!-- 작동 단계 안내 -->
+      <div style="margin-top:16px;border-top:1px solid var(--border);padding-top:14px">
+        <div style="font-size:12px;color:var(--dim);font-weight:700;margin-bottom:10px">화상 아바타 작동 방식</div>
+        <div class="heygen-step">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">사진 업로드</div>
+            <div class="step-desc">얼굴 탭에서 업로드한 사진으로 HeyGen Instant Avatar 생성 (1회 처리, 약 2분)</div>
+          </div>
+        </div>
+        <div class="heygen-step">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">대화 → 영상 생성</div>
+            <div class="step-desc">아바타가 답변할 때 텍스트 → HeyGen API → 립싱크 영상 자동 생성 (5~15초 처리)</div>
+          </div>
+        </div>
+        <div class="heygen-step">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">마이챗에 영상 표시</div>
+            <div class="step-desc">생성된 영상이 채팅창 위에 재생 → 텍스트 답변과 동시 표시</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- HeyGen 아바타 생성 -->
+  <div class="sec" id="heygenCreateSec" style="display:none">
+    <div class="sec-head">
+      <div class="sec-icon" style="background:rgba(245,158,11,.15)"><i class="fas fa-wand-magic-sparkles" style="color:var(--yellow)"></i></div>
+      <div class="sec-title">HeyGen 아바타 생성</div>
+    </div>
+    <div class="sec-body">
+      <div class="field">
+        <label>보이스 선택</label>
+        <select id="heygenVoice">
+          <option value="">로딩 중...</option>
+        </select>
+        <div class="field-hint">HeyGen에서 제공하는 한국어 보이스 목록</div>
+      </div>
+      <button class="btn-primary" onclick="createHeygenAvatar()">
+        <i class="fas fa-robot"></i> HeyGen 아바타 생성 시작
+      </button>
+      <div class="progress-wrap" id="heygenProgress">
+        <div class="progress-bar"><div class="progress-fill" id="heygenFill"></div></div>
+        <div class="progress-msg" id="heygenMsg">처리 중...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 테스트 영상 -->
+  <div class="sec" id="heygenTestSec" style="display:none">
+    <div class="sec-head">
+      <div class="sec-icon" style="background:rgba(34,197,94,.15)"><i class="fas fa-play" style="color:var(--green)"></i></div>
+      <div class="sec-title">화상 아바타 테스트</div>
+    </div>
+    <div class="sec-body">
+      <div class="video-preview" id="videoPreview">
+        <div class="video-placeholder">
+          <div class="video-placeholder-icon">🎬</div>
+          <div style="font-size:12px;color:var(--dim)">테스트 영상이 여기에 표시됩니다</div>
+        </div>
+      </div>
+      <div class="field">
+        <label>테스트 문장</label>
+        <input type="text" id="testScript" value="안녕하세요! 저는 나의 AI 아바타입니다. 무엇이든 물어보세요.">
+      </div>
+      <button class="btn-test" onclick="generateTestVideo()">
+        <i class="fas fa-film"></i> 테스트 영상 생성
+      </button>
+      <div class="progress-wrap" id="videoProgress">
+        <div class="progress-bar"><div class="progress-fill" id="videoFill"></div></div>
+        <div class="progress-msg" id="videoMsg">영상 생성 중 (약 10~30초)...</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- 저장 -->
+  <div style="margin:0 16px" id="heygenSaveSec" style="display:none">
+    <button class="btn-primary" onclick="saveHeygenSettings()">
+      <i class="fas fa-save"></i> HeyGen 설정 저장
+    </button>
+  </div>
+
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+// ── 탭 전환 ──────────────────────────────────────
+function switchTab(el) {
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  ['face','voice','heygen'].forEach(id=>{ document.getElementById('tab-'+id).style.display='none'; });
+  document.getElementById('tab-'+el.dataset.tab).style.display='block';
+  if (el.dataset.tab==='voice' && !_voiceLoaded) loadVoicePresets();
+  if (el.dataset.tab==='heygen') checkHeygenStatus();
+}
+
+
+// ── AI 얼굴 생성 ──────────────────────────────────
+var _aiGender = 'woman';
+var _aiAge    = '20s';
+var _aiSelectedUrl = '';
+
+function switchMethod(el) {
+  document.querySelectorAll('.method-tab').forEach(t=>t.classList.remove('active'));
+  el.classList.add('active');
+  var m = el.dataset.method;
+  document.getElementById('aiGenForm').classList.toggle('show', m==='ai');
+  document.getElementById('uploadForm').classList.toggle('show', m==='upload');
+}
+
+function selectGender(el) {
+  document.querySelectorAll('.gender-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  _aiGender = el.dataset.g;
+}
+
+function selectAge(el) {
+  document.querySelectorAll('.age-btn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+  _aiAge = el.dataset.a;
+}
+
+function generateAiFace() {
+  var btn = document.getElementById('aiGenBtn');
+  btn.disabled = true;
+  btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI 생성 중 (약 20~40초)...';
+  var res = document.getElementById('aiGenResult');
+  var grid = document.getElementById('aiResultGrid');
+  res.style.display = 'block';
+  grid.innerHTML = '<div class="ai-spinner"><i class="fas fa-spinner fa-spin" style="font-size:28px"></i><div style="margin-top:10px;font-size:12px">AI가 얼굴을 그리고 있습니다...</div></div>';
+  document.getElementById('aiSelectBtn').style.display = 'none';
+
+  var extra = document.getElementById('aiPromptExtra').value.trim();
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'generate_ai_face', gender:_aiGender, age:_aiAge,
+                         style:_selectedStyle, extra:extra})
+  }).then(r=>r.json()).then(d=>{
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-sparkles"></i> AI 얼굴 4장 생성하기';
+    if (!d.ok) { grid.innerHTML = '<div style="color:var(--red);font-size:13px;text-align:center;padding:20px">'+d.error+'</div>'; return; }
+    // [P0-FIX 2026-06-04] 인라인 onclick의 따옴표 이스케이프가 빠져
+    // SyntaxError가 발생, 페이지 전체 스크립트가 죽었던 버그 수정.
+    // data-url 속성으로 URL을 안전하게 담아두고 위임 클릭으로 처리.
+    grid.innerHTML = d.images.map(function(url,i){
+      var safeUrl = String(url).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      var safeAlt = ('AI 생성 이미지 '+(i+1)).replace(/&/g,'&amp;').replace(/"/g,'&quot;');
+      return '<div class="ai-result-img" data-url="'+safeUrl+'">'
+        +'<img src="'+safeUrl+'" alt="'+safeAlt+'" loading="lazy">'
+        +'</div>';
+    }).join('');
+    // 위임 클릭 (한 번만 바인딩, 중복 방지)
+    if (!grid.dataset.bound) {
+      grid.addEventListener('click', function(e){
+        var card = e.target.closest('.ai-result-img');
+        if (!card) return;
+        selectAiImg(card, card.dataset.url);
+      });
+      grid.dataset.bound = '1';
+    }
+  }).catch(()=>{
+    btn.disabled = false;
+    btn.innerHTML = '<i class="fas fa-sparkles"></i> AI 얼굴 4장 생성하기';
+    grid.innerHTML = '<div style="color:var(--red);font-size:13px;text-align:center;padding:20px">생성 실패. 다시 시도해 주세요.</div>';
+  });
+}
+
+function selectAiImg(el, url) {
+  document.querySelectorAll('.ai-result-img').forEach(i=>i.classList.remove('selected'));
+  el.classList.add('selected');
+  _aiSelectedUrl = url;
+  document.getElementById('aiSelectBtn').style.display = 'block';
+}
+
+function confirmAiSelection() {
+  if (!_aiSelectedUrl) return;
+  // previewWrap에 표시
+  document.getElementById('previewImg').src = _aiSelectedUrl;
+  document.getElementById('previewWrap').style.display = 'block';
+  document.getElementById('aiGenResult').style.display = 'none';
+  // 아바타 카드 업데이트
+  var img = document.createElement('img');
+  img.src = _aiSelectedUrl;
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+  document.getElementById('avFace').innerHTML = '';
+  document.getElementById('avFace').appendChild(img);
+  window._selectedFile = null;
+  window._aiImageUrl = _aiSelectedUrl;
+  showToast('✅ 이미지 선택됨 — 저장 버튼을 눌러주세요');
+}
+
+function resetPreview() {
+  document.getElementById('previewWrap').style.display = 'none';
+  document.getElementById('previewImg').src = '';
+  window._selectedFile = null;
+  window._aiImageUrl = null;
+  _aiSelectedUrl = '';
+  document.getElementById('avFace').innerHTML = '<span id="avEmoji">🧠</span>';
+}
+
+// ── 초기 데이터 로드 ─────────────────────────────
+var _selectedStyle = 'photo';
+var _selectedVoicePreset = null;
+var _voiceLoaded = false;
+var _heygenKey = '';
+var _heygenAvatarId = '';
+var _recording = false;
+var _mediaRecorder = null;
+var _recordChunks = [];
+var _recordTimer = null;
+var _recordSec = 0;
+
+function loadAvatar() {
+  fetch('/aimessage/mychat/api/settings.php', {credentials:'include'})
+    .then(r=>r.json()).then(d=>{
+      if (!d.ok) return;
+      var av = d.avatar || {};
+      document.getElementById('avName').textContent = av.avatar_name || '나의 아바타';
+      if (av.face_image_url) {
+        var img = document.createElement('img');
+        img.src = av.face_image_url;
+        img.className = 'preview-img';
+        document.getElementById('avFace').innerHTML = '';
+        document.getElementById('avFace').appendChild(img);
+        document.getElementById('previewImg').src = av.face_image_url;
+        document.getElementById('uploadZone').style.display = 'none';
+        document.getElementById('previewWrap').style.display = 'block';
+      }
+      // 뱃지 업데이트
+      var badges = '';
+      badges += av.face_image_url ? '<span class="av-badge badge-face">😊 얼굴 설정됨</span>' : '<span class="av-badge badge-none">얼굴 미설정</span>';
+      badges += av.voice_clone_id||av.voice_preset_id ? '<span class="av-badge badge-voice">🎙️ 목소리 설정됨</span>' : '<span class="av-badge badge-none">목소리 미설정</span>';
+      badges += av.heygen_avatar_id ? '<span class="av-badge badge-heygen">🎬 HeyGen 연결됨</span>' : '';
+      document.getElementById('avBadges').innerHTML = badges;
+      document.getElementById('avSub').textContent = '최종 수정: ' + (av.updated_at||'').substr(0,10);
+      _heygenAvatarId = av.heygen_avatar_id || '';
+    });
+}
+
+// ── 얼굴 탭 ──────────────────────────────────────
+function onDragOver(e) { e.preventDefault(); document.getElementById('uploadZone').classList.add('dragover'); }
+function onDrop(e) {
+  e.preventDefault();
+  document.getElementById('uploadZone').classList.remove('dragover');
+  var file = e.dataTransfer.files[0];
+  if (file) processFile(file);
+}
+function onFileSelect(inp) { if (inp.files[0]) processFile(inp.files[0]); }
+
+function processFile(file) {
+  if (!file.type.startsWith('image/')) { showToast('이미지 파일만 업로드 가능합니다', true); return; }
+  if (file.size > 10*1024*1024) { showToast('파일 크기가 10MB를 초과합니다', true); return; }
+  var reader = new FileReader();
+  reader.onload = function(e) {
+    document.getElementById('previewImg').src = e.target.result;
+    document.getElementById('uploadZone').style.display = 'none';
+    document.getElementById('previewWrap').style.display = 'block';
+    // 아바타 카드 업데이트
+    var img = document.createElement('img');
+    img.src = e.target.result;
+    img.style.cssText = 'width:100%;height:100%;object-fit:cover';
+    document.getElementById('avFace').innerHTML = '';
+    document.getElementById('avFace').appendChild(img);
+  };
+  reader.readAsDataURL(file);
+  window._selectedFile = file;
+}
+
+function selectStyle(el) {
+  document.querySelectorAll('.style-card').forEach(c=>c.classList.remove('active'));
+  el.classList.add('active');
+  _selectedStyle = el.dataset.style;
+}
+
+function saveFace() {
+  var previewSrc = document.getElementById('previewImg').src;
+  if (!window._selectedFile && !window._aiImageUrl && !previewSrc) {
+    showToast('사진을 먼저 선택해 주세요', true); return;
+  }
+  var formData = new FormData();
+  if (window._selectedFile) {
+    formData.append('face_image', window._selectedFile);
+  } else if (window._aiImageUrl) {
+    formData.append('ai_image_url', window._aiImageUrl);
+  }
+  formData.append('avatar_style', _selectedStyle);
+  formData.append('action', 'save_face');
+
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include', body:formData
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) { showToast('✅ 얼굴 아바타 저장 완료'); loadAvatar(); }
+    else showToast('❌ '+(d.error||'저장 실패'), true);
+  });
+}
+
+// ── 목소리 탭 ────────────────────────────────────
+var VOICE_PRESETS = [
+  {id:'alloy',    name:'Alloy',    desc:'차분하고 중성적',   icon:'🎯'},
+  {id:'echo',     name:'Echo',     desc:'깊고 울림있는',    icon:'🌊'},
+  {id:'fable',    name:'Fable',    desc:'따뜻하고 친근한',  icon:'☀️'},
+  {id:'onyx',     name:'Onyx',     desc:'힘있고 전문적',    icon:'💎'},
+  {id:'nova',     name:'Nova',     desc:'밝고 에너지넘치는', icon:'⭐'},
+  {id:'shimmer',  name:'Shimmer',  desc:'부드럽고 섬세한',  icon:'🌸'},
+];
+
+function loadVoicePresets() {
+  _voiceLoaded = true;
+  var html = VOICE_PRESETS.map(v=>
+    '<div class="voice-preset" data-id="'+v.id+'" onclick="selectVoicePreset(this,\''+v.id+'\')">'
+    +'<div class="voice-preset-icon">'+v.icon+'</div>'
+    +'<div style="flex:1"><div class="voice-preset-name">'+v.name+'</div><div class="voice-preset-desc">'+v.desc+'</div></div>'
+    +'<button class="voice-play" onclick="playVoiceSample(event,\''+v.id+'\')" title="미리 듣기"><i class="fas fa-play-circle"></i></button>'
+    +'</div>'
+  ).join('');
+  document.getElementById('voicePresets').innerHTML = html;
+}
+
+function selectVoicePreset(el, id) {
+  document.querySelectorAll('.voice-preset').forEach(p=>p.classList.remove('active'));
+  el.classList.add('active');
+  _selectedVoicePreset = id;
+  document.getElementById('saveVoicePreset').style.display = 'block';
+}
+
+function playVoiceSample(e, id) {
+  e.stopPropagation();
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'tts_preview', voice_id:id, text:'안녕하세요, 저는 나만의 AI 아바타입니다.'})
+  }).then(r=>r.blob()).then(blob=>{
+    var url = URL.createObjectURL(blob);
+    new Audio(url).play();
+  }).catch(()=>showToast('미리 듣기 실패', true));
+}
+
+function saveVoicePreset() {
+  if (!_selectedVoicePreset) return;
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'save_voice_preset', voice_id:_selectedVoicePreset})
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) { showToast('✅ 목소리 설정 완료'); loadAvatar(); }
+    else showToast('❌ '+(d.error||'실패'), true);
+  });
+}
+
+// ── 녹음 ────────────────────────────────────────
+function toggleRecord() {
+  if (_recording) stopRecord();
+  else startRecord();
+}
+
+function startRecord() {
+  navigator.mediaDevices.getUserMedia({audio:true}).then(stream=>{
+    _mediaRecorder = new MediaRecorder(stream);
+    _recordChunks = [];
+    _mediaRecorder.ondataavailable = e=>{ if(e.data.size>0) _recordChunks.push(e.data); };
+    _mediaRecorder.onstop = ()=>{
+      var blob = new Blob(_recordChunks, {type:'audio/webm'});
+      var url  = URL.createObjectURL(blob);
+      document.getElementById('recordedAudio').src = url;
+      document.getElementById('recordedWrap').style.display = 'block';
+      window._voiceBlob = blob;
+      stream.getTracks().forEach(t=>t.stop());
+    };
+    _mediaRecorder.start();
+    _recording = true;
+    document.getElementById('recordBtn').classList.add('recording');
+    document.getElementById('recordIcon').className = 'fas fa-stop';
+    document.getElementById('recordHint').textContent = '녹음 중... 버튼을 눌러 중지';
+    _recordSec = 0;
+    _recordTimer = setInterval(()=>{
+      _recordSec++;
+      var m = Math.floor(_recordSec/60), s = _recordSec%60;
+      document.getElementById('recordTimer').textContent = m+':'+(s<10?'0':'')+s;
+      if (_recordSec >= 120) stopRecord(); // 최대 2분
+    }, 1000);
+  }).catch(()=>showToast('마이크 접근 권한이 필요합니다', true));
+}
+
+function stopRecord() {
+  if (_mediaRecorder) _mediaRecorder.stop();
+  clearInterval(_recordTimer);
+  _recording = false;
+  document.getElementById('recordBtn').classList.remove('recording');
+  document.getElementById('recordIcon').className = 'fas fa-microphone';
+  document.getElementById('recordHint').textContent = '녹음 완료 — 아래에서 확인 후 저장하세요';
+}
+
+function saveVoiceClone() {
+  if (!window._voiceBlob) { showToast('먼저 녹음을 해주세요', true); return; }
+  var formData = new FormData();
+  formData.append('voice_audio', window._voiceBlob, 'voice.webm');
+  formData.append('action', 'save_voice_clone');
+  showToast('🔄 목소리 클론 생성 중...');
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include', body:formData
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) { showToast('✅ 목소리 클론 생성 완료'); loadAvatar(); }
+    else showToast('❌ '+(d.error||'실패'), true);
+  });
+}
+
+// ── HeyGen 탭 ────────────────────────────────────
+function checkHeygenStatus() {
+  fetch('/aimessage/mychat/api/avatar_studio.php?action=heygen_status', {credentials:'include'})
+    .then(r=>r.json()).then(d=>{
+      var st = document.getElementById('heygenStatus');
+      if (d.connected) {
+        st.className = 'heygen-status connected';
+        st.innerHTML = '<i class="fas fa-circle" style="color:var(--green)"></i> HeyGen 연결됨 — 크레딧: '+(d.credits||'확인 불가');
+        document.getElementById('heygenCreateSec').style.display = 'block';
+        if (d.avatar_id) {
+          document.getElementById('heygenTestSec').style.display = 'block';
+          document.getElementById('heygenSaveSec').style.display = 'block';
+        }
+        loadHeygenVoices(d.voices||[]);
+      }
+    }).catch(()=>{});
+}
+
+function toggleKey() {
+  var inp = document.getElementById('heygenKey');
+  var ico = document.getElementById('heygenEyeIcon');
+  inp.type = inp.type==='password' ? 'text' : 'password';
+  ico.className = inp.type==='password' ? 'fas fa-eye' : 'fas fa-eye-slash';
+}
+
+function testHeygenKey() {
+  var key = document.getElementById('heygenKey').value.trim();
+  if (!key) { showToast('API키를 입력해 주세요', true); return; }
+  var res = document.getElementById('heygenTestResult');
+  res.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 연결 테스트 중...';
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'test_heygen', api_key:key})
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) {
+      res.innerHTML = '<span style="color:var(--green)"><i class="fas fa-check-circle"></i> 연결 성공 — 잔여 크레딧: '+(d.credits||'?')+'</span>';
+      document.getElementById('heygenCreateSec').style.display = 'block';
+      loadHeygenVoices(d.voices||[]);
+    } else {
+      res.innerHTML = '<span style="color:var(--red)"><i class="fas fa-times-circle"></i> 연결 실패: '+(d.error||'API키를 확인해 주세요')+'</span>';
+    }
+  });
+}
+
+function loadHeygenVoices(voices) {
+  var sel = document.getElementById('heygenVoice');
+  if (!voices.length) { sel.innerHTML = '<option>보이스 목록을 불러오지 못했습니다</option>'; return; }
+  sel.innerHTML = voices.map(v=>'<option value="'+v.voice_id+'">'+v.display_name+'</option>').join('');
+}
+
+function createHeygenAvatar() {
+  var faceUrl = document.getElementById('previewImg').src;
+  if (!faceUrl || faceUrl.startsWith('http')==false && !faceUrl.startsWith('data:')) {
+    showToast('먼저 얼굴 탭에서 사진을 업로드해 주세요', true); return;
+  }
+  var voiceId = document.getElementById('heygenVoice').value;
+  var prog = document.getElementById('heygenProgress');
+  prog.style.display = 'block';
+  setProgress('heygenFill', 20, 'HeyGen 아바타 생성 요청 중...');
+
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'create_heygen_avatar', heygen_voice_id:voiceId})
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) {
+      setProgress('heygenFill', 100, '✅ HeyGen 아바타 생성 완료');
+      _heygenAvatarId = d.avatar_id;
+      setTimeout(()=>{ prog.style.display='none'; document.getElementById('heygenTestSec').style.display='block'; document.getElementById('heygenSaveSec').style.display='block'; }, 1000);
+    } else {
+      setProgress('heygenFill', 0, '❌ '+(d.error||'생성 실패'));
+    }
+  });
+}
+
+function generateTestVideo() {
+  var script = document.getElementById('testScript').value.trim();
+  if (!script) { showToast('테스트 문장을 입력해 주세요', true); return; }
+  var prog = document.getElementById('videoProgress');
+  prog.style.display = 'block';
+  setProgress('videoFill', 10, '영상 생성 요청 중...');
+
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'generate_video', text:script, avatar_id:_heygenAvatarId})
+  }).then(r=>r.json()).then(d=>{
+    if (d.video_id) pollVideo(d.video_id, prog);
+    else { setProgress('videoFill', 0, '❌ '+(d.error||'요청 실패')); }
+  });
+}
+
+function pollVideo(videoId, prog) {
+  var poll = 0;
+  var iv = setInterval(()=>{
+    poll++;
+    setProgress('videoFill', Math.min(10+poll*5, 90), '영상 처리 중... (약 10~30초)');
+    fetch('/aimessage/mychat/api/avatar_studio.php?action=video_status&video_id='+videoId, {credentials:'include'})
+      .then(r=>r.json()).then(d=>{
+        if (d.status==='completed' && d.video_url) {
+          clearInterval(iv);
+          setProgress('videoFill', 100, '✅ 영상 생성 완료');
+          var vp = document.getElementById('videoPreview');
+          vp.innerHTML = '<video src="'+d.video_url+'" controls autoplay style="width:100%;border-radius:12px"></video>';
+          setTimeout(()=>prog.style.display='none', 1000);
+        } else if (d.status==='failed') {
+          clearInterval(iv);
+          setProgress('videoFill', 0, '❌ 영상 생성 실패');
+        }
+        if (poll > 40) { clearInterval(iv); setProgress('videoFill', 0, '타임아웃 — 다시 시도해주세요'); }
+      });
+  }, 3000);
+}
+
+function saveHeygenSettings() {
+  var key = document.getElementById('heygenKey').value.trim();
+  var voiceId = document.getElementById('heygenVoice').value;
+  fetch('/aimessage/mychat/api/avatar_studio.php', {
+    method:'POST', credentials:'include',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify({action:'save_heygen', api_key:key, heygen_voice_id:voiceId, heygen_avatar_id:_heygenAvatarId})
+  }).then(r=>r.json()).then(d=>{
+    if (d.ok) { showToast('✅ HeyGen 설정 저장 완료'); loadAvatar(); }
+    else showToast('❌ '+(d.error||'저장 실패'), true);
+  });
+}
+
+// ── 유틸 ─────────────────────────────────────────
+function setProgress(fillId, pct, msg) {
+  document.getElementById(fillId).style.width = pct+'%';
+  var msgId = fillId.replace('Fill','Msg');
+  var el = document.getElementById(msgId);
+  if (el) el.textContent = msg;
+}
+
+function showToast(msg, err) {
+  var el = document.getElementById('toast');
+  el.textContent = msg;
+  el.style.borderColor = err ? 'var(--red)' : 'var(--pur)';
+  el.style.color = err ? '#fca5a5' : '#c4b5fd';
+  el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2500);
+}
+
+loadAvatar();
+</script>
+</body>
+</html>

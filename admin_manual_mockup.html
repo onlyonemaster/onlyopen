@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>매뉴얼 관리 | 아이엠프로 관리자</title>
+  <meta content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" name="viewport">
+  <!-- Bootstrap 3.3.5 -->
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@2.3.11/dist/css/AdminLTE.min.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/admin-lte@2.3.11/dist/css/skins/_all-skins.min.css">
+  <style>
+    /* 토스트 알림 */
+    .toast { position:fixed; bottom:30px; right:30px; background:#333; color:#fff; padding:12px 24px; border-radius:6px; z-index:9999; font-size:14px; opacity:0; transition:opacity .3s; box-shadow:0 4px 12px rgba(0,0,0,.3); }
+    .toast.show { opacity:1; }
+    .toast.success { background:#16a34a; }
+    .toast.error { background:#dc2626; }
+    /* 아코디언 패널 */
+    .cat-panel { border:1px solid #d2d6de; border-radius:4px; margin-bottom:10px; background:#fff; }
+    .cat-header { padding:12px 16px; background:#f9fafc; cursor:pointer; display:flex; align-items:center; justify-content:space-between; border-bottom:1px solid transparent; transition:background .2s; }
+    .cat-header:hover { background:#f0f4f8; }
+    .cat-header.open { border-bottom-color:#d2d6de; }
+    .cat-header .cat-left { display:flex; align-items:center; gap:12px; }
+    .cat-header .cat-icon { font-size:22px; }
+    .cat-header .cat-name { font-size:15px; font-weight:700; color:#333; }
+    .cat-header .cat-tag { font-size:11px; padding:2px 8px; border-radius:3px; background:#e8f0fe; color:#2563eb; font-weight:600; }
+    .cat-header .cat-tag.admin { background:#fef3c7; color:#b45309; }
+    .cat-header .cat-right { display:flex; align-items:center; gap:16px; }
+    .cat-header .cat-count { font-size:12px; color:#888; }
+    .cat-header .cat-arrow { transition:transform .2s; color:#888; font-size:14px; }
+    .cat-header.open .cat-arrow { transform:rotate(180deg); }
+    .cat-body { display:none; padding:8px 0; }
+    .cat-body.open { display:block; }
+    .page-row { display:flex; align-items:center; justify-content:space-between; padding:9px 16px 9px 48px; border-bottom:1px solid #f0f0f0; transition:background .15s; }
+    .page-row:hover { background:#fafbfc; }
+    .page-row:last-child { border-bottom:none; }
+    .page-row .page-left { display:flex; align-items:center; gap:10px; }
+    .page-row .page-title { font-size:13px; color:#333; }
+    .page-row .page-slug { font-size:11px; color:#999; margin-left:6px; }
+    .page-row .page-actions { display:flex; gap:6px; }
+    .page-row .page-actions .btn { font-size:11px; padding:2px 8px; }
+    /* 토글 스위치 */
+    .switch-wrap { display:flex; align-items:center; gap:8px; }
+    .switch { position:relative; display:inline-block; width:44px; height:24px; }
+    .switch input { display:none; }
+    .slider { position:absolute; cursor:pointer; inset:0; background:#ccc; border-radius:24px; transition:.3s; }
+    .slider:before { position:absolute; content:""; height:18px; width:18px; left:3px; bottom:3px; background:#fff; border-radius:50%; transition:.3s; }
+    input:checked + .slider { background:#2563eb; }
+    input:checked + .slider:before { transform:translateX(20px); }
+    .switch-label { font-size:12px; color:#666; min-width:36px; }
+    /* KPI 카드 */
+    .kpi-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:15px; margin-bottom:20px; }
+    .kpi-card { background:#fff; border-radius:6px; padding:18px 20px; text-align:center; box-shadow:0 1px 3px rgba(0,0,0,.08); border-top:3px solid #2563eb; }
+    .kpi-card.kpi-green { border-top-color:#16a34a; }
+    .kpi-card.kpi-orange { border-top-color:#ea580c; }
+    .kpi-card.kpi-purple { border-top-color:#7c3aed; }
+    .kpi-card .kpi-num { font-size:28px; font-weight:800; color:#1e293b; }
+    .kpi-card .kpi-label { font-size:12px; color:#888; margin-top:4px; }
+    /* 필터 영역 */
+    .filter-bar { background:#fff; border:1px solid #d2d6de; border-radius:4px; padding:14px 16px; margin-bottom:16px; display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+    .filter-bar .form-control { width:auto; display:inline-block; }
+    .filter-bar .form-control.search { width:220px; }
+    /* 테이블 액션 */
+    .act-btn { cursor:pointer; color:#666; font-size:13px; padding:2px 6px; border-radius:3px; transition:.15s; text-decoration:none; }
+    .act-btn:hover { color:#2563eb; background:#e8f0fe; text-decoration:none; }
+    .act-btn.copy { color:#16a34a; }
+    .act-btn.copy:hover { color:#16a34a; background:#dcfce7; }
+    .act-btn.danger { color:#dc2626; }
+    .act-btn.danger:hover { color:#dc2626; background:#fef2f2; }
+  </style>
+</head>
+<body class="hold-transition skin-blue sidebar-mini">
+<div class="wrapper">
+
+<!-- ====== TOP HEADER (admin_header.inc.php) ====== -->
+<header class="main-header">
+  <a href="/admin/member_list.php" class="logo">
+    <span class="logo-mini"><b>A</b>LT</span>
+    <span class="logo-lg"><b>셀링솔루션관리자</b></span>
+  </a>
+  <nav class="navbar navbar-static-top" role="navigation">
+    <a href="#" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+      <span class="sr-only">Toggle navigation</span>
+    </a>
+    <div class="navbar-custom-menu">
+      <ul class="nav navbar-nav">
+        <li class="dropdown messages-menu">
+          <div style="margin-top:8px;margin-right:10px;">
+            <button class="btn btn-block btn-info btn-flat" onclick="alert('홈페이지')">홈페이지</button>
+          </div>
+        </li>
+        <li class="dropdown messages-menu">
+          <div style="margin-top:8px;margin-right:10px;">
+            <button class="btn btn-block btn-info btn-flat" onclick="alert('이슈대시보드')">이슈대시보드</button>
+          </div>
+        </li>
+        <!-- ★ 신규: 매뉴얼 관리 버튼 -->
+        <li class="dropdown messages-menu">
+          <div style="margin-top:8px;margin-right:10px;">
+            <button class="btn btn-block btn-success btn-flat" style="font-weight:700;">
+              매뉴얼 관리
+            </button>
+          </div>
+        </li>
+        <li class="dropdown user user-menu">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+            아리님 환영합니다.
+          </a>
+        </li>
+        <li>
+          <div style="margin-top:8px;margin-right:10px;">
+            <button class="btn btn-block btn-primary btn-flat">로그아웃</button>
+          </div>
+        </li>
+      </ul>
+    </div>
+  </nav>
+</header>
+
+<!-- ====== LEFT SIDEBAR (admin_left_menu.inc.php) ====== -->
+<aside class="main-sidebar">
+  <section class="sidebar">
+    <ul class="sidebar-menu">
+      <li class="header">메인 네비게이션</li>
+      <li><a href="#"><i class="fa fa-dashboard"></i> <span>대시보드</span></a></li>
+      <li><a href="#"><i class="fa fa-users"></i> <span>회원 관리</span></a></li>
+      <li><a href="#"><i class="fa fa-credit-card"></i> <span>결제 관리</span></a></li>
+      <li class="active"><a href="#"><i class="fa fa-book"></i> <span>매뉴얼 관리</span></a></li>
+      <li><a href="#"><i class="fa fa-wrench"></i> <span>사이트 설정</span></a></li>
+    </ul>
+  </section>
+</aside>
+
+<!-- ====== CONTENT WRAPPER ====== -->
+<div class="content-wrapper">
+  <!-- 페이지 헤더 -->
+  <section class="content-header">
+    <h1>매뉴얼 관리 <small>매뉴얼 페이지의 공개/비공개, 편집, 이력을 관리합니다</small></h1>
+    <ol class="breadcrumb">
+      <li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>
+      <li class="active">매뉴얼 관리</li>
+    </ol>
+  </section>
+
+  <!-- 메인 콘텐츠 -->
+  <section class="content">
+
+    <!-- ====== 1. 대시보드 KPI 카드 ====== -->
+    <div class="kpi-grid">
+      <div class="kpi-card">
+        <div class="kpi-num" id="kpiTotal">86</div>
+        <div class="kpi-label">📄 총 매뉴얼 페이지</div>
+      </div>
+      <div class="kpi-card kpi-green">
+        <div class="kpi-num" id="kpiPublic">78</div>
+        <div class="kpi-label">👁️ 공개 페이지</div>
+      </div>
+      <div class="kpi-card kpi-orange">
+        <div class="kpi-num" id="kpiHidden">8</div>
+        <div class="kpi-label">🙈 비공개 페이지</div>
+      </div>
+      <div class="kpi-card kpi-purple">
+        <div class="kpi-num" id="kpiUpdated">2026-05-03</div>
+        <div class="kpi-label">🕐 최종 수정일</div>
+      </div>
+    </div>
+
+    <!-- ====== 2. 검색/필터 바 ====== -->
+    <div class="filter-bar">
+      <input type="text" class="form-control input-sm search" placeholder="🔍 제목 또는 파일명 검색..." 
+             onkeyup="filterPages()" id="filterSearch">
+      <select class="form-control input-sm" onchange="filterPages()" id="filterCat">
+        <option value="all">📂 전체 카테고리</option>
+      </select>
+      <select class="form-control input-sm" onchange="filterPages()" id="filterVis">
+        <option value="all">👁️ 전체 상태</option>
+        <option value="1">공개만</option>
+        <option value="0">비공개만</option>
+      </select>
+      <div style="flex:1;text-align:right;">
+        <button class="btn btn-sm btn-success" onclick="scanAndSync()">
+          <i class="fa fa-refresh"></i> 디스크 동기화 (신규 페이지 자동 등록)
+        </button>
+        <button class="btn btn-sm btn-default" onclick="showAllHistory()">
+          <i class="fa fa-history"></i> 전체 편집 이력
+        </button>
+      </div>
+    </div>
+
+    <!-- ====== 3. 카테고리 아코디언 ====== -->
+    <div id="categoryPanels">
+      <!-- JS로 동적 렌더링 -->
+    </div>
+
+    <!-- ====== 4. 페이지 목록 테이블 (리스트 뷰) ====== -->
+    <div class="row" style="margin-top:16px;">
+      <div class="col-xs-12">
+        <div class="box">
+          <div class="box-header">
+            <h3 class="box-title">📋 전체 페이지 목록</h3>
+          </div>
+          <div class="box-body table-responsive no-padding">
+            <table class="table table-hover table-striped">
+              <thead>
+                <tr>
+                  <th style="width:50px;">ID</th>
+                  <th style="width:100px;">카테고리</th>
+                  <th>페이지명</th>
+                  <th style="width:70px;">공개</th>
+                  <th style="width:90px;">등록일</th>
+                  <th style="width:90px;">수정일</th>
+                  <th style="width:100px;">편집이력</th>
+                  <th style="width:160px;">액션</th>
+                </tr>
+              </thead>
+              <tbody id="pageTableBody">
+                <!-- JS로 동적 렌더링 -->
+              </tbody>
+            </table>
+          </div>
+          <div class="box-footer">
+            <span id="tableCount" style="font-size:13px;color:#888;">총 86건</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </section>
+</div><!-- /.content-wrapper -->
+
+<!-- Footer -->
+<footer class="main-footer">
+  <strong>Copyright &copy; 2026 <a href="https://kiam.kr">kiam.kr</a>.</strong> All rights reserved.
+</footer>
+</div><!-- /.wrapper -->
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<!-- jQuery & Bootstrap -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/admin-lte@2.3.11/dist/js/app.min.js"></script>
+
+<script>
+// ============ 매뉴얼 데이터 (실제 DB에서 가져올 구조) ============
+var menus = [
+  { id:1, slug:'onechat', name:'원챗 (OneChat)', icon:'💬', tag:'사용 가이드', ord:1, visible:true,
+    pages:[
+      { id:1, title:'시작하기', slug:'start.html', ord:1, visible:true, created:'2026-04-20', updated:'2026-05-01', history:2, lastEditor:'아리' },
+      { id:2, title:'대시보드', slug:'dashboard.html', ord:2, visible:true, created:'2026-04-20', updated:'2026-04-28', history:1, lastEditor:'아리' },
+      { id:3, title:'대화 관리', slug:'chat.html', ord:3, visible:true, created:'2026-04-20', updated:'2026-04-25', history:1, lastEditor:'아리' },
+      { id:4, title:'퍼널(발신) 탭', slug:'funnel.html', ord:4, visible:true, created:'2026-04-21', updated:'2026-04-30', history:2, lastEditor:'아리' },
+      { id:5, title:'수신(공유) 탭', slug:'received.html', ord:5, visible:true, created:'2026-04-21', updated:'2026-04-30', history:1, lastEditor:'아리' },
+      { id:6, title:'DM 채팅', slug:'dm.html', ord:6, visible:true, created:'2026-04-22', updated:'2026-04-28', history:0, lastEditor:'-' },
+      { id:7, title:'AI 아바타', slug:'avatar.html', ord:7, visible:true, created:'2026-04-22', updated:'2026-05-02', history:3, lastEditor:'아리' },
+      { id:8, title:'AI 동행', slug:'companion.html', ord:8, visible:true, created:'2026-04-23', updated:'2026-05-01', history:1, lastEditor:'아리' },
+      { id:9, title:'시나리오', slug:'scenario.html', ord:9, visible:true, created:'2026-04-23', updated:'2026-04-28', history:1, lastEditor:'아리' },
+      { id:10, title:'공유하기', slug:'share.html', ord:10, visible:true, created:'2026-04-24', updated:'2026-04-27', history:0, lastEditor:'-' },
+      { id:11, title:'프로필', slug:'profile.html', ord:11, visible:true, created:'2026-04-24', updated:'2026-05-01', history:2, lastEditor:'아리' },
+      { id:12, title:'AI 토글', slug:'ai-toggle.html', ord:12, visible:true, created:'2026-04-25', updated:'2026-04-30', history:1, lastEditor:'아리' },
+      { id:13, title:'브로드캐스트', slug:'broadcast.html', ord:13, visible:true, created:'2026-04-25', updated:'2026-04-29', history:0, lastEditor:'-' },
+      { id:14, title:'알림', slug:'notification.html', ord:14, visible:true, created:'2026-04-26', updated:'2026-04-28', history:0, lastEditor:'-' },
+      { id:15, title:'사이드바', slug:'sidebar.html', ord:15, visible:false, created:'2026-04-26', updated:'2026-04-27', history:1, lastEditor:'아리' },
+      { id:16, title:'다이어리', slug:'diary.html', ord:16, visible:false, created:'2026-05-01', updated:'2026-05-01', history:0, lastEditor:'-' }
+    ]
+  },
+  { id:2, slug:'aimessage', name:'AI 메시지', icon:'✉️', tag:'사용 가이드', ord:2, visible:true,
+    pages:[
+      { id:17, title:'시작하기', slug:'start.html', ord:1, visible:true, created:'2026-04-20', updated:'2026-04-28', history:1, lastEditor:'아리' },
+      { id:18, title:'발송하기', slug:'send.html', ord:2, visible:true, created:'2026-04-20', updated:'2026-04-25', history:0, lastEditor:'-' },
+      { id:19, title:'히스토리', slug:'history.html', ord:3, visible:true, created:'2026-04-21', updated:'2026-04-27', history:0, lastEditor:'-' }
+    ]
+  },
+  { id:3, slug:'avatar', name:'AI 아바타 학습', icon:'🤖', tag:'사용 가이드', ord:3, visible:true,
+    pages:[
+      { id:20, title:'아바타 소개', slug:'index.html', ord:1, visible:true, created:'2026-04-22', updated:'2026-04-28', history:1, lastEditor:'아리' },
+      { id:21, title:'학습하기', slug:'learn.html', ord:2, visible:true, created:'2026-04-22', updated:'2026-04-30', history:2, lastEditor:'아리' },
+      { id:22, title:'설정', slug:'settings.html', ord:3, visible:true, created:'2026-04-23', updated:'2026-04-29', history:0, lastEditor:'-' }
+    ]
+  },
+  { id:4, slug:'source-improvements', name:'소스 개선 관리', icon:'📋', tag:'관리자 도구', ord:7, visible:true,
+    pages:[
+      { id:23, title:'시스템 소개', slug:'index.html', ord:1, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:24, title:'대시보드', slug:'dashboard.html', ord:2, visible:true, created:'2026-05-03', updated:'2026-05-03', history:1, lastEditor:'아리' },
+      { id:25, title:'목록/필터', slug:'list.html', ord:3, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:26, title:'개선사항 등록', slug:'register.html', ord:4, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:27, title:'상세 보기', slug:'detail.html', ord:5, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:28, title:'라이프사이클', slug:'lifecycle.html', ord:6, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:29, title:'공지 연동', slug:'notice.html', ord:7, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:30, title:'자동 등록', slug:'auto-register.html', ord:8, visible:false, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' }
+    ]
+  },
+  { id:5, slug:'vermanager', name:'버전 관리 시스템', icon:'🔄', tag:'관리자 도구', ord:8, visible:true,
+    pages:[
+      { id:31, title:'시스템 소개', slug:'index.html', ord:1, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:32, title:'대시보드', slug:'dashboard.html', ord:2, visible:true, created:'2026-05-03', updated:'2026-05-03', history:1, lastEditor:'아리' },
+      { id:33, title:'사이트 관리', slug:'sites.html', ord:3, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:34, title:'릴리즈', slug:'release.html', ord:4, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:35, title:'이력', slug:'history.html', ord:5, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:36, title:'개선사항', slug:'improvements.html', ord:6, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:37, title:'체인지로그', slug:'changelog.html', ord:7, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:38, title:'원격 관리', slug:'remote.html', ord:8, visible:false, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:39, title:'Git 연동', slug:'git.html', ord:9, visible:true, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' },
+      { id:40, title:'설정', slug:'settings.html', ord:10, visible:false, created:'2026-05-03', updated:'2026-05-03', history:0, lastEditor:'아리' }
+    ]
+  }
+];
+
+// Build full path
+menus.forEach(function(m) {
+  m.pages.forEach(function(p) {
+    p.fullPath = '/manual/' + m.slug + '/' + p.slug;
+    p.url = 'https://kiam.kr/manual/' + m.slug + '/' + p.slug;
+    p.menuName = m.name;
+    p.menuSlug = m.slug;
+    p.menuTag = m.tag;
+  });
+});
+
+// ============ RENDER ============
+function renderAll() {
+  renderKPI();
+  renderAccordion();
+  renderTable();
+  populateFilterCat();
+}
+
+function getAllPages() {
+  var all = [];
+  menus.forEach(function(m) {
+    m.pages.forEach(function(p) { all.push(p); });
+  });
+  return all;
+}
+
+function renderKPI() {
+  var pages = getAllPages();
+  var total = pages.length;
+  var pub = pages.filter(function(p) { return p.visible; }).length;
+  var hid = total - pub;
+  var lastUp = '';
+  pages.forEach(function(p) { if (p.updated > lastUp) lastUp = p.updated; });
+  $('#kpiTotal').text(total);
+  $('#kpiPublic').text(pub);
+  $('#kpiHidden').text(hid);
+  $('#kpiUpdated').text(lastUp || '-');
+}
+
+function renderAccordion() {
+  var html = '';
+  menus.forEach(function(m) {
+    var pubCount = m.pages.filter(function(p) { return p.visible; }).length;
+    var tagClass = m.tag === '관리자 도구' ? 'admin' : '';
+    html += '<div class="cat-panel" data-menu="' + m.slug + '">';
+    html += '  <div class="cat-header" onclick="toggleAccordion(this)">';
+    html += '    <div class="cat-left">';
+    html += '      <span class="cat-icon">' + m.icon + '</span>';
+    html += '      <span class="cat-name">' + m.name + '</span>';
+    html += '      <span class="cat-tag ' + tagClass + '">' + m.tag + '</span>';
+    html += '    </div>';
+    html += '    <div class="cat-right">';
+    html += '      <span class="cat-count">' + pubCount + '/' + m.pages.length + ' 공개</span>';
+    html += '      <div class="switch-wrap">';
+    html += '        <span class="switch-label">' + (m.visible ? 'ON' : 'OFF') + '</span>';
+    html += '        <label class="switch" onclick="event.stopPropagation()">';
+    html += '          <input type="checkbox" ' + (m.visible ? 'checked' : '') + ' onchange="toggleMenu(' + m.id + ', this.checked)">';
+    html += '          <span class="slider"></span>';
+    html += '        </label>';
+    html += '      </div>';
+    html += '      <i class="fa fa-chevron-down cat-arrow"></i>';
+    html += '    </div>';
+    html += '  </div>';
+    html += '  <div class="cat-body">';
+    m.pages.forEach(function(p) {
+      html += '    <div class="page-row">';
+      html += '      <div class="page-left">';
+      html += '        <label class="switch">';
+      html += '          <input type="checkbox" ' + (p.visible ? 'checked' : '') + ' onchange="togglePage(' + p.id + ', this.checked)">';
+      html += '          <span class="slider"></span>';
+      html += '        </label>';
+      html += '        <span class="page-title">' + p.title + '</span>';
+      html += '        <span class="page-slug">' + p.slug + '</span>';
+      html += '      </div>';
+      html += '      <div class="page-actions">';
+      html += '        <a href="javascript:void(0)" class="act-btn copy" onclick="copyLink(\'' + p.url + '\')" title="링크 복사"><i class="fa fa-link"></i> 복사</a>';
+      html += '        <a href="javascript:void(0)" class="act-btn" onclick="editPage(' + p.id + ')" title="편집"><i class="fa fa-pencil"></i> 편집</a>';
+      html += '        <a href="javascript:void(0)" class="act-btn" onclick="viewHistory(' + p.id + ')" title="이력"><i class="fa fa-history"></i> 이력(' + p.history + ')</a>';
+      html += '      </div>';
+      html += '    </div>';
+    });
+    html += '  </div>';
+    html += '</div>';
+  });
+  $('#categoryPanels').html(html);
+}
+
+function renderTable(filter) {
+  var pages = getAllPages();
+  // Apply filters
+  if (filter) {
+    if (filter.search) {
+      var s = filter.search.toLowerCase();
+      pages = pages.filter(function(p) {
+        return p.title.toLowerCase().indexOf(s) >= 0 || p.slug.toLowerCase().indexOf(s) >= 0 || p.menuName.toLowerCase().indexOf(s) >= 0;
+      });
+    }
+    if (filter.cat && filter.cat !== 'all') {
+      pages = pages.filter(function(p) { return p.menuSlug === filter.cat; });
+    }
+    if (filter.vis && filter.vis !== 'all') {
+      var v = parseInt(filter.vis);
+      pages = pages.filter(function(p) { return p.visible === (v === 1); });
+    }
+  }
+  
+  var html = '';
+  pages.forEach(function(p) {
+    html += '<tr>';
+    html += '<td>' + p.id + '</td>';
+    html += '<td><span class="cat-tag' + (p.menuTag === '관리자 도구' ? ' admin' : '') + '">' + p.menuName + '</span></td>';
+    html += '<td><strong>' + p.title + '</strong><br><small style="color:#999;">' + p.fullPath + '</small></td>';
+    html += '<td><label class="switch"><input type="checkbox" ' + (p.visible ? 'checked' : '') + ' onchange="togglePage(' + p.id + ', this.checked)"><span class="slider"></span></label></td>';
+    html += '<td>' + p.created + '</td>';
+    html += '<td>' + p.updated + '</td>';
+    html += '<td>' + p.history + '건<br><small>' + p.lastEditor + '</small></td>';
+    html += '<td>';
+    html += '  <a href="javascript:void(0)" class="act-btn copy" onclick="copyLink(\'' + p.url + '\')"><i class="fa fa-link"></i> 복사</a> ';
+    html += '  <a href="javascript:void(0)" class="act-btn" onclick="editPage(' + p.id + ')"><i class="fa fa-pencil"></i> 편집</a> ';
+    html += '  <a href="javascript:void(0)" class="act-btn" onclick="viewHistory(' + p.id + ')"><i class="fa fa-history"></i> 이력</a>';
+    html += '</td>';
+    html += '</tr>';
+  });
+  $('#pageTableBody').html(html);
+  $('#tableCount').text('총 ' + pages.length + '건');
+}
+
+function populateFilterCat() {
+  var html = '<option value="all">📂 전체 카테고리</option>';
+  menus.forEach(function(m) {
+    html += '<option value="' + m.slug + '">' + m.icon + ' ' + m.name + '</option>';
+  });
+  $('#filterCat').html(html);
+}
+
+// ============ ACTIONS ============
+function toggleAccordion(header) {
+  var $h = $(header);
+  var $body = $h.next('.cat-body');
+  $h.toggleClass('open');
+  $body.toggleClass('open');
+}
+
+function toggleMenu(menuId, checked) {
+  var menu = menus.find(function(m) { return m.id === menuId; });
+  if (!menu) return;
+  menu.visible = checked;
+  menu.pages.forEach(function(p) { p.visible = checked; });
+  toast('✅ [' + menu.name + '] 전체 ' + (checked ? '공개' : '비공개') + '로 변경되었습니다', 'success');
+  renderAll();
+}
+
+function togglePage(pageId, checked) {
+  menus.forEach(function(m) {
+    var p = m.pages.find(function(pp) { return pp.id === pageId; });
+    if (p) {
+      p.visible = checked;
+      p.updated = '2026-05-03'; // today
+      p.history++;
+      if (!checked) {
+        // 하나라도 꺼지면 카테고리도 OFF
+        // (실제 구현에서는 DB 반영)
+      }
+      toast('📄 [' + p.title + '] ' + (checked ? '공개' : '비공개') + '로 변경되었습니다', 'success');
+    }
+  });
+  renderAll();
+}
+
+function copyLink(url) {
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(function() {
+      toast('📋 링크가 복사되었습니다: ' + url, 'success');
+    });
+  } else {
+    prompt('Ctrl+C로 복사하세요:', url);
+  }
+}
+
+function editPage(pageId) {
+  var page = null;
+  menus.forEach(function(m) {
+    var found = m.pages.find(function(p) { return p.id === pageId; });
+    if (found) page = found;
+  });
+  if (!page) return;
+  // 실제 구현: window.open('manual_edit.php?page_id=' + pageId, '_blank');
+  alert('📝 편집기 열기\n\n파일: ' + page.fullPath + '\nURL: ' + page.url + '\n\n[실제 구현 시 manual_edit.php?page_id=' + pageId + ' 로 이동]');
+}
+
+function viewHistory(pageId) {
+  var page = null;
+  menus.forEach(function(m) {
+    var found = m.pages.find(function(p) { return p.id === pageId; });
+    if (found) page = found;
+  });
+  if (!page) return;
+  var msg = '📜 편집 이력: ' + page.title + '\n\n';
+  msg += '총 ' + page.history + '건의 편집 이력이 있습니다.\n';
+  msg += '마지막 편집자: ' + page.lastEditor + '\n';
+  msg += '마지막 수정일: ' + page.updated + '\n\n';
+  msg += '[실제 구현 시 상세 이력 목록 표시]';
+  alert(msg);
+}
+
+function showAllHistory() {
+  var totalHistory = 0;
+  menus.forEach(function(m) {
+    m.pages.forEach(function(p) { totalHistory += p.history; });
+  });
+  alert('📊 전체 편집 이력: 총 ' + totalHistory + '건\n\n[실제 구현 시 날짜별/편집자별 필터링 가능한 전체 이력 뷰 표시]');
+}
+
+function filterPages() {
+  var filter = {
+    search: $('#filterSearch').val(),
+    cat: $('#filterCat').val(),
+    vis: $('#filterVis').val()
+  };
+  renderTable(filter);
+}
+
+// ★★★ 핵심: 디스크 동기화 - 신규 페이지 자동 등록 ★★★
+function scanAndSync() {
+  // 실제 구현: AJAX로 서버에 요청 → /manual/ 디렉토리 스캔 → 
+  // 새로 발견된 HTML 파일을 Gn_Manual_Page + Gn_Manual_Menu 에 자동 INSERT
+  // 이미 등록된 파일은 updated_at만 갱신
+  
+  // 목업 데모: 새 페이지 1개 발견 시뮬레이션
+  var demoNewPage = {
+    id: 99,
+    title: 'AI 프롬프트 가이드',
+    slug: 'prompt.html',
+    ord: 17,
+    visible: false,
+    created: '2026-05-03',
+    updated: '2026-05-03',
+    history: 0,
+    lastEditor: '-',
+    fullPath: '/manual/onechat/prompt.html',
+    url: 'https://kiam.kr/manual/onechat/prompt.html',
+    menuName: '원챗 (OneChat)',
+    menuSlug: 'onechat',
+    menuTag: '사용 가이드'
+  };
+  
+  var onechat = menus.find(function(m) { return m.slug === 'onechat'; });
+  if (onechat) {
+    // 중복 체크 (실제 구현: slug + menu_slug로 UNIQUE)
+    var exists = onechat.pages.find(function(p) { return p.slug === 'prompt.html'; });
+    if (!exists) {
+      onechat.pages.push(demoNewPage);
+      toast('🆕 신규 페이지 발견: onechat/prompt.html → 자동 등록 완료!', 'success');
+    } else {
+      toast('ℹ️ 모든 페이지가 이미 등록되어 있습니다', 'success');
+    }
+  }
+  renderAll();
+}
+
+// ============ TOAST ============
+function toast(msg, type) {
+  var $t = $('#toast');
+  $t.text(msg).attr('class', 'toast ' + (type || '')).addClass('show');
+  clearTimeout($t.data('timer'));
+  $t.data('timer', setTimeout(function() { $t.removeClass('show'); }, 2500));
+}
+
+// ============ INIT ============
+$(function() {
+  renderAll();
+  // 첫 번째 카테고리 펼치기
+  setTimeout(function() {
+    $('.cat-header').first().addClass('open').next('.cat-body').addClass('open');
+  }, 100);
+});
+</script>
+</body>
+</html>

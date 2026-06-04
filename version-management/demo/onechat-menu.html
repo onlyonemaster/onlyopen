@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="app-version" content="1.0.1">
+<meta name="app-name" content="Onlyone OneChat">
+<title>Onlyone OneChat</title>
+<style>
+:root { --bg: #1a1a2e; --bg2: #16213e; --text: #e0e0e0; --text2: #a0a0a0; --accent: #82c736; --accent2: #0f3460; --border: rgba(255,255,255,0.08); }
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family:'Apple SD Gothic Neo','Malgun Gothic',sans-serif; background:#0f0f1a; color:var(--text); overflow:hidden; }
+
+/* ── 햄버거 아이콘 ── */
+.hamburger-btn {
+  position:fixed; top:16px; left:16px; z-index:1000;
+  width:40px; height:40px; border-radius:8px; border:none;
+  background:var(--accent2); color:var(--accent); cursor:pointer;
+  font-size:20px; display:flex; align-items:center; justify-content:center;
+  transition:background 0.2s, box-shadow 0.2s;
+}
+.hamburger-btn:hover { background:#1a4060; box-shadow:0 0 12px rgba(130,199,54,0.15); }
+
+/* ── 오버레이 ── */
+.overlay {
+  position:fixed; inset:0; background:rgba(0,0,0,0.55);
+  z-index:1499; opacity:0; pointer-events:none; transition:opacity 0.3s;
+}
+.overlay.active { opacity:1; pointer-events:auto; }
+
+/* ── 사이드바 (드롭다운 메뉴) ── */
+.sidebar {
+  position:fixed; top:0; left:-300px; width:280px; height:100vh;
+  background:var(--bg); z-index:1500; transition:left 0.3s cubic-bezier(0.4,0,0.2,1);
+  display:flex; flex-direction:column; box-shadow:4px 0 24px rgba(0,0,0,0.3);
+  overflow-y:auto;
+}
+.sidebar.open { left:0; }
+
+/* 사이드바 헤더 */
+.sidebar-header {
+  padding:18px 20px; border-bottom:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.sidebar-logo { display:flex; align-items:center; gap:8px; }
+.sidebar-logo .brand { font-size:18px; font-weight:800; color:var(--accent); letter-spacing:-0.5px; }
+.sidebar-logo .sub { font-size:13px; font-weight:400; color:var(--text2); }
+.sidebar-close {
+  width:30px; height:30px; border-radius:50%; border:1px solid rgba(255,255,255,0.15);
+  background:rgba(255,255,255,0.08); color:#fff; cursor:pointer;
+  display:flex; align-items:center; justify-content:center; font-size:14px;
+}
+
+/* 네비게이션 */
+.nav-section { padding:8px 0; }
+.nav-section-title {
+  padding:8px 20px 4px; font-size:11px; font-weight:700; text-transform:uppercase;
+  color:var(--text2); letter-spacing:1px; opacity:0.6;
+}
+.nav-item {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:12px 20px; color:var(--text); text-decoration:none;
+  font-size:14px; font-weight:500; transition:background 0.15s;
+  cursor:pointer; user-select:none;
+}
+.nav-item:hover { background:rgba(255,255,255,0.04); }
+.nav-item .nav-label { display:flex; align-items:center; gap:10px; }
+.nav-item .nav-icon { width:22px; height:22px; display:flex; align-items:center; justify-content:center; opacity:0.6; font-size:14px; }
+
+/* 서브메뉴 */
+.nav-sub {
+  max-height:0; overflow:hidden; transition:max-height 0.3s ease;
+  background:var(--bg2); margin:0;
+}
+.nav-item.expanded + .nav-sub { max-height:400px; }
+.nav-sub a {
+  display:block; padding:10px 20px 10px 52px; color:var(--text2); text-decoration:none;
+  font-size:13px; transition:all 0.15s; position:relative;
+}
+.nav-sub a::before { content:''; position:absolute; left:32px; top:50%; transform:translateY(-50%); width:4px; height:4px; border-radius:50%; background:var(--accent); opacity:0.3; }
+.nav-sub a:hover { color:var(--accent); background:rgba(130,199,54,0.05); }
+.nav-sub a:hover::before { opacity:1; }
+
+/* 구분선 */
+.nav-divider { height:1px; background:var(--border); margin:8px 16px; }
+
+/* 하단 푸터 - 버전 정보 (핵심!) */
+.sidebar-footer {
+  margin-top:auto;
+  padding:14px 20px;
+  border-top:1px solid var(--border);
+  display:flex; align-items:center; justify-content:space-between;
+}
+.sidebar-footer .version-tag {
+  display:flex; align-items:center; gap:8px;
+  padding:6px 12px; background:rgba(130,199,54,0.1);
+  border:1px solid rgba(130,199,54,0.2); border-radius:20px;
+}
+.version-tag .dot { width:7px; height:7px; border-radius:50%; background:var(--accent); }
+.version-tag span { font-size:12px; font-weight:600; color:var(--accent); white-space:nowrap; }
+.sidebar-footer .footer-icon { font-size:12px; opacity:0.4; }
+
+/* 메인 콘텐츠 */
+.main-content {
+  height:100vh; display:flex; flex-direction:column; align-items:center;
+  justify-content:center; gap:16px; text-align:center; padding:40px;
+}
+.main-content h1 { font-size:32px; font-weight:800; color:#fff; letter-spacing:-1px; }
+.main-content h1 .green { color:var(--accent); }
+.main-content p { color:var(--text2); font-size:15px; max-width:500px; line-height:1.6; }
+.main-content .version-badge {
+  padding:8px 16px; background:rgba(130,199,54,0.08); border:1px solid rgba(130,199,54,0.2);
+  border-radius:8px; font-size:12px; font-weight:600; color:var(--accent);
+}
+.main-content .hint {
+  font-size:13px; color:var(--text2); opacity:0.5; margin-top:8px;
+  display:flex; align-items:center; gap:6px;
+}
+
+/* 애니메이션 */
+@keyframes pulse { 0%,100%{opacity:0.3} 50%{opacity:1} }
+.pulse { animation:pulse 2s infinite; }
+</style>
+</head>
+<body>
+
+<!-- 햄버거 버튼 -->
+<button class="hamburger-btn" onclick="toggleSidebar()" aria-label="메뉴 열기">☰</button>
+
+<!-- 오버레이 -->
+<div class="overlay" id="overlay" onclick="closeSidebar()"></div>
+
+<!-- 사이드바 드롭다운 메뉴 -->
+<aside class="sidebar" id="sidebar">
+
+  <div class="sidebar-header">
+    <div class="sidebar-logo">
+      <span class="brand">IAM<span class="sub">PRO</span></span>
+    </div>
+    <button class="sidebar-close" onclick="closeSidebar()">✕</button>
+  </div>
+
+  <!-- 네비게이션 메뉴 아이템들 -->
+  <nav class="nav-section">
+    <div class="nav-section-title">서비스</div>
+    <div class="nav-item" onclick="toggleSubmenu(this)">
+      <span class="nav-label"><span class="nav-icon">👤</span> AI 아바타 채팅</span>
+      <span style="font-size:10px;opacity:0.5;">▶</span>
+    </div>
+    <div class="nav-sub">
+      <a href="#">내 아바타 관리</a>
+      <a href="#">아바타 학습</a>
+      <a href="#">채팅 히스토리</a>
+    </div>
+
+    <div class="nav-item" onclick="toggleSubmenu(this)">
+      <span class="nav-label"><span class="nav-icon">💬</span> AI 메시지</span>
+      <span style="font-size:10px;opacity:0.5;">▶</span>
+    </div>
+    <div class="nav-sub">
+      <a href="#">메시지 작성</a>
+      <a href="#">발송 이력</a>
+      <a href="#">예약 관리</a>
+    </div>
+
+    <div class="nav-item" onclick="toggleSubmenu(this)">
+      <span class="nav-label"><span class="nav-icon">📇</span> 명함·인맥</span>
+      <span style="font-size:10px;opacity:0.5;">▶</span>
+    </div>
+    <div class="nav-sub">
+      <a href="#">디지털 명함</a>
+      <a href="#">AI 명함 등록</a>
+      <a href="#">인맥 관리</a>
+    </div>
+
+    <div class="nav-item" onclick="toggleSubmenu(this)">
+      <span class="nav-label"><span class="nav-icon">📊</span> 대시보드</span>
+      <span style="font-size:10px;opacity:0.5;">▶</span>
+    </div>
+    <div class="nav-sub">
+      <a href="#">통계 분석</a>
+      <a href="#">사용량 리포트</a>
+    </div>
+  </nav>
+
+  <div class="nav-divider"></div>
+
+  <nav class="nav-section">
+    <div class="nav-section-title">설정</div>
+    <a class="nav-item" href="#">
+      <span class="nav-label"><span class="nav-icon">⚙️</span> 계정 설정</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-label"><span class="nav-icon">📖</span> 이용 매뉴얼</span>
+    </a>
+    <a class="nav-item" href="#">
+      <span class="nav-label"><span class="nav-icon">📢</span> 공지사항</span>
+    </a>
+  </nav>
+
+  <!-- ★ 핵심: 하단 버전 정보 (Onlyone → Onlyone) -->
+  <div class="sidebar-footer">
+    <div class="version-tag">
+      <span class="dot"></span>
+      <span id="app-version">Onlyone OneChat v1.0.1</span>
+    </div>
+    <span class="footer-icon">⚡</span>
+  </div>
+
+</aside>
+
+<!-- 메인 콘텐츠 -->
+<div class="main-content">
+  <h1><span class="green">Onlyone</span> OneChat</h1>
+  <p>AI 아바타 챗봇으로 고객과 자동 대화하세요.<br>왼쪽 상단 <span style="color:var(--accent);">☰</span> 메뉴를 클릭해 보세요.</p>
+  <div class="version-badge" id="main-version">Onlyone OneChat v1.0.0</div>
+  <div class="hint pulse">
+    <span>👆</span> 햄버거 메뉴 하단의 버전을 확인하세요
+  </div>
+</div>
+
+<script>
+// ── 사이드바 토글 ──
+function toggleSidebar() {
+  document.getElementById('sidebar').classList.toggle('open');
+  document.getElementById('overlay').classList.toggle('active');
+}
+function closeSidebar() {
+  document.getElementById('sidebar').classList.remove('open');
+  document.getElementById('overlay').classList.remove('active');
+}
+
+// ── 서브메뉴 토글 ──
+function toggleSubmenu(el) {
+  el.classList.toggle('expanded');
+}
+
+// ── ★ 버전 로드 (runtime) ──
+// 빌드 시 inject-version.js가 아래 span을 치환합니다.
+// 개발 환경에서는 meta 태그에서 읽습니다.
+(function loadVersion() {
+  var metaVersion = document.querySelector('meta[name="app-version"]');
+  var metaName    = document.querySelector('meta[name="app-name"]');
+  var ver = metaVersion ? metaVersion.getAttribute('content') : '1.0.0';
+  var name = metaName ? metaName.getAttribute('content') : 'Onlyone OneChat';
+  var versionStr = name + ' v' + ver;
+
+  // 사이드바 하단 버전
+  var sidebarVer = document.getElementById('app-version');
+  if (sidebarVer) sidebarVer.textContent = versionStr;
+
+  // 메인 화면 버전
+  var mainVer = document.getElementById('main-version');
+  if (mainVer) mainVer.textContent = versionStr;
+
+  console.log('✅ Version loaded: ' + versionStr);
+})();
+
+// ── ESC 키로 사이드바 닫기 ──
+document.addEventListener('keydown', function(e) {
+  if (e.key === 'Escape') closeSidebar();
+});
+</script>
+
+</body>
+</html>

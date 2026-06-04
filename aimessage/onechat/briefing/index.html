@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>원챗(OneChat) × 청담한의원 — 고객사 브리핑</title>
+<link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-logo">💬</div>
+    <div>
+      <div class="topbar-title">원챗(OneChat) × 청담한의원</div>
+      <div class="topbar-sub">고객사 브리핑 — AI 환자 관리 시나리오</div>
+    </div>
+  </div>
+  <div class="topbar-steps">
+    <div class="topbar-step" data-step="0">① 광고</div>
+    <div class="topbar-step" data-step="1">② 진단</div>
+    <div class="topbar-step" data-step="2">③ 신뢰</div>
+    <div class="topbar-step" data-step="3">④ 예약</div>
+    <div class="topbar-step" data-step="4">⑤ 사후</div>
+    <div class="topbar-step" data-step="5">⑥ 대시</div>
+    <div class="topbar-step" data-step="6">⑦ 요약</div>
+    <div class="topbar-step" data-step="7">⑧ 노쇼</div>
+    <div class="topbar-step" data-step="8">⑨ 여정</div>
+  </div>
+</div>
+<div id="mainWrap">
+<div class="screen" id="screen0">
+    <div class="section-head">
+      <span class="badge">STEP 1</span>
+      <h2>인스타그램 광고 — 챗봇 진입 유도</h2>
+      <p class="desc">인스타그램 피드 광고로 허리 통증 자가진단 챗봇으로 유도합니다. 클릭률 37.5% (업계 평균 1.2% 대비 31배).</p>
+    </div>
+    <div class="insta-ad">
+      <div class="insta-ad-img">
+        <div class="insta-ad-img-inner">
+          <div class="emoji">🌿</div>
+          <div class="txt">"허리 통증, 참지 마세요"<br>AI가 알려주는 맞춤 건강 체크</div>
+        </div>
+      </div>
+      <div class="insta-ad-body">
+        <div class="insta-ad-handle">cheongdam_oriental <span class="verified">✓</span></div>
+        <div class="insta-ad-title">허리 통증 3분 자가진단</div>
+        <div class="insta-ad-desc">청담한의원 X 원챗 AI 진단. 지금 바로 무료로 증상을 체크해보세요.</div>
+        <a class="insta-ad-cta" href="javascript:void(0)" onclick="goTo(1)">AI 진단 시작하기 →</a>
+      </div>
+      <div class="insta-ad-icons">♥ 847개 좋아요  ·  💬 댓글 126개  ·  ↗ 공유 203회</div>
+    </div>
+    <div class="briefing-point" style="margin-top:20px;">💡 <strong>핵심 가치:</strong> 인스타 광고 → AI 챗봇 진단까지 <strong>클릭률 37.5%</strong> (업계 평균 1.2% 대비 31배). 월 8,000 노출 → 336 챗봇 진입.</div>
+  </div>
+<div class="screen" id="screen1">
+  <div class="section-head">
+    <span class="badge">STEP 2</span>
+    <h2>AI 진단 — 인터랙티브 증상 분석</h2>
+    <p class="desc">환자가 직접 신체 부위를 선택하고, AI가 단계별 문진을 통해 증상을 정밀하게 수집합니다.</p>
+  </div>
+  <div class="chat-container" style="max-width:520px;">
+    <div class="chat-header">
+      <div class="chat-header-logo">🔍</div>
+      <div class="chat-header-info"><div class="chat-header-name">청담한의원 AI 진단</div><div class="chat-header-desc">증상 분석 중</div></div>
+    </div>
+    <div class="chat-body">
+      <div class="bubble ai">어디가 가장 불편하신가요?<br>아래 신체 부위를 <strong>클릭</strong>해 주세요.</div>
+      <div class="body-model-wrap">
+        <svg width="220" height="400" viewBox="0 0 220 400" xmlns="http://www.w3.org/2000/svg">
+          <rect x="98" y="56" width="24" height="14" rx="6" class="body-region" data-region="목" data-code="N01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="82" cy="80" rx="20" ry="12" class="body-region" data-region="오른쪽 어깨" data-code="S02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="138" cy="80" rx="20" ry="12" class="body-region" data-region="왼쪽 어깨" data-code="S01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="86" y="72" width="48" height="102" rx="14" class="body-region" data-region="등/허리" data-code="L01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="56" y="82" width="16" height="82" rx="8" class="body-region" data-region="오른팔" data-code="A02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="148" y="82" width="16" height="82" rx="8" class="body-region" data-region="왼팔" data-code="A01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="64" cy="172" rx="9" ry="7" class="body-region" data-region="오른손/손목" data-code="W02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="156" cy="172" rx="9" ry="7" class="body-region" data-region="왼손/손목" data-code="W01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="86" y="174" width="48" height="30" rx="10" class="body-region" data-region="골반" data-code="P01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="84" y="204" width="22" height="112" rx="10" class="body-region" data-region="오른쪽 다리" data-code="LG02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <rect x="114" y="204" width="22" height="112" rx="10" class="body-region" data-region="왼쪽 다리" data-code="LG01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="95" cy="316" rx="11" ry="9" class="body-region" data-region="오른쪽 무릎" data-code="KN02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="125" cy="316" rx="11" ry="9" class="body-region" data-region="왼쪽 무릎" data-code="KN01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="95" cy="364" rx="13" ry="7" class="body-region" data-region="오른발" data-code="F02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+          <ellipse cx="125" cy="364" rx="13" ry="7" class="body-region" data-region="왼발" data-code="F01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5"/>
+        </svg>
+      </div>
+      <div id="selectedArea" style="display:none;text-align:center;margin:6px 0;">
+        <div id="regionBubble" class="bubble user" style="display:inline-block;max-width:90%;"></div>
+      </div>
+      <div id="diagFollowUp"></div>
+      <div class="choice-row" id="diagButtons"></div>
+    </div>
+  </div>
+  <div class="briefing-point" style="margin-top:20px;">💡 <strong>핵심 가치:</strong> 환자당 최대 <strong>12개 데이터 포인트</strong> 자동 수집 (전화 문진 대비 3배 이상). 진단 완료율 <strong>65%</strong>로 업계 최고 수준.</div>
+</div>
+
+
+  <div class="screen" id="screen2">
+    <div class="section-head">
+      <span class="badge">STEP 3</span>
+      <h2>신뢰 구축 — AI 동행 맞춤 콘텐츠</h2>
+      <p class="desc">진단 직후부터 AI 동행이 자동으로 개인 맞춤 건강 콘텐츠를 발송합니다. 예약을 강요하지 않고 자연스럽게 신뢰를 쌓습니다.</p>
+    </div>
+    <div class="chat-container" style="max-width:480px;">
+      <div class="chat-header">
+        <div class="chat-header-logo">🌿</div>
+        <div class="chat-header-info"><div class="chat-header-name">청담한의원 AI 동행</div><div class="chat-header-desc">맞춤 건강 콘텐츠</div></div>
+        <div class="chat-header-badge">Day +1</div>
+      </div>
+      <div class="chat-body">
+        <div class="bubble ai"><strong>허리 통증</strong>에 도움이 되는 정보를 모아봤어요 😊</div>
+        <div class="bubble ai">무리한 운동보다 <strong>가벼운 스트레칭</strong>이 오히려 효과적이라는 거 아셨나요?</div>
+        <div class="widget-card">
+          <div class="widget-card-img" style="background:#e3f2fd;">▶️</div>
+          <div class="widget-card-body"><div class="widget-card-title">🎥 3분 허리 스트레칭 가이드</div><div class="widget-card-desc">앉아서 따라 하는 초간단 스트레칭 · 청담한의원 원장 직강</div></div>
+          <button class="widget-card-btn">시청하기</button>
+        </div>
+        <div class="widget-card" style="margin-top:6px;">
+          <div class="widget-card-img" style="background:#fff3e0;">🍵</div>
+          <div class="widget-card-body"><div class="widget-card-title">🍵 허리 통증 완화 한방차 레시피</div><div class="widget-card-desc">계피·생강·대추 — 집에서 5분 완성</div></div>
+          <button class="widget-card-btn">레시피 보기</button>
+        </div>
+        <div class="bubble ai" style="margin-top:6px;">매일 짧은 스트레칭과 따뜻한 차 한 잔으로도 통증이 많이 완화될 수 있어요.<br><br>더 자세한 상담을 원하시면 언제든 말씀해 주세요 🙌</div>
+      </div>
+    </div>
+    <div class="briefing-point" style="margin-top:20px;">💡 <strong>고객사 핵심 가치:</strong> 진단 후 바로 예약을 강요하지 않고 <strong>맞춤 건강 정보</strong>를 먼저 제공해 신뢰를 쌓습니다. 이 과정에 직원 개입은 전혀 필요 없습니다.</div>
+  </div>
+
+
+  <div class="screen" id="screen3">
+    <div class="section-head">
+      <span class="badge">STEP 4</span>
+      <h2>치료 추천 &amp; 예약 — 데이터 기반 맞춤 제안</h2>
+      <p class="desc">AI가 수집된 증상 데이터를 바탕으로 청담한의원의 대표 치료 프로그램을 추천하고, 원클릭 예약까지 연결합니다.</p>
+    </div>
+    <div class="chat-container" style="max-width:520px;">
+      <div class="chat-header">
+        <div class="chat-header-logo">💉</div>
+        <div class="chat-header-info"><div class="chat-header-name">청담한의원 AI 상담</div><div class="chat-header-desc">맞춤 치료 추천</div></div>
+        <div class="chat-header-badge">Day +3</div>
+      </div>
+      <div class="chat-body">
+        <div class="bubble ai">지난 진단 결과를 바탕으로, <strong>허리 통증</strong>에 가장 효과적인 치료법을 안내해 드릴게요 📋</div>
+        <div class="booking-card">
+          <div class="bc-title" style="display:flex;align-items:center;gap:8px;"><span style="font-size:22px;">🤲</span> 추나요법</div>
+          <div style="font-size:12px;color:var(--text2);margin:4px 0 8px;line-height:1.6;">틀어진 척추와 관절을 바로잡는 한방 수기 치료<br><span style="color:var(--green-600);font-weight:700;">통증 완화율 80%</span> (청담한의원 자체 데이터)</div>
+          <div style="background:var(--green-50);border-radius:8px;padding:10px;font-size:11px;color:var(--green-800);margin-bottom:10px;">📌 <strong>내게 맞는 이유:</strong> 허리 통증(L01) + 장시간 좌식 생활 · 추나요법이 디스크·척추 정렬에 가장 효과적</div>
+        </div>
+        <div class="booking-card" id="bookingWidget">
+          <div class="bc-title">📅 진료 예약하기</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:8px;">2026년 5월 6일 (수) — 청담한의원</div>
+          <div class="booking-slots" id="bookingSlots"></div>
+          <button class="booking-confirm" id="bookingConfirmBtn">예약 확정하기</button>
+          <div id="bookingResult" style="display:none;text-align:center;padding:12px;background:var(--green-50);border-radius:10px;margin-top:10px;">
+            <div style="font-size:18px;margin-bottom:4px;">✅</div>
+            <div style="font-size:14px;font-weight:700;color:var(--green-700);">예약이 확정되었습니다!</div>
+            <div style="font-size:12px;color:var(--text2);margin-top:2px;">5월 6일 (수) <span id="bookedSlot"></span> · 청담한의원</div>
+          </div>
+        </div>
+        <div class="profile-transition">────────────</div>
+        <div class="manager-profile">
+          <div class="manager-avatar">👩‍⚕️</div>
+          <div><div class="manager-name">청담 매니저</div><div class="manager-role">AI 사후 관리 · 진료 안내</div></div>
+        </div>
+        <div class="bubble ai">예약 확정을 축하드립니다! 🎉<br>이제부터 <strong>청담 매니저</strong>가 진료 전까지 필요한 정보를 안내해 드릴게요.</div>
+      </div>
+    </div>
+    <div class="briefing-point" style="margin-top:20px;">💡 <strong>고객사 핵심 가치:</strong> 증상 데이터 기반 <strong>정확한 치료 추천</strong>과 원클릭 예약. 전환율 <strong>41%</strong>는 업계 평균(4.8%) 대비 약 <strong>8.5배</strong>.</div>
+  </div>
+
+
+  <div class="screen" id="screen4">
+    <div class="section-head">
+      <span class="badge">STEP 5</span>
+      <h2>AI 매니저 사후 관리 — 노쇼 방지 &amp; 진료 전 안내</h2>
+      <p class="desc">예약 후부터 진료 당일까지 AI 매니저가 자동 안내 메시지를 발송합니다. 개인 맞춤 케어로 노쇼율을 획기적으로 낮춥니다.</p>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-header-logo">📋</div>
+        <div class="chat-header-info"><div class="chat-header-name">청담 매니저</div><div class="chat-header-desc">AI 사후 관리 · 노쇼 방지</div></div>
+        <div class="chat-header-badge">진료 D-6</div>
+      </div>
+      <div class="chat-body">
+        <div class="bubble ai">안녕하세요, 청담 매니저입니다 😊<br>5월 6일 진료까지 <strong>필요한 정보</strong>를 차근차근 안내해 드릴게요!</div>
+        <div class="promise-card"><div class="pc-icon">🗺️</div><div class="pc-title">오시는 길 &amp; 주차 안내</div><div class="pc-desc">서울 강남구 청담동 123번지 청담빌딩 3층 | 지하 주차장 무료 (2시간)</div></div>
+        <div class="promise-card" style="margin-top:6px;"><div class="pc-icon">📝</div><div class="pc-title">진료 전 준비사항</div><div class="pc-desc">편안한 복장으로 방문해 주세요<br>과거 진료 기록·영상자료 지참<br>진료 30분 전 가벼운 식사만</div></div>
+        <div class="bubble ai" style="margin-top:4px;">진료 하루 전에 다시 한번 알림 드릴게요!<br>궁금하신 점은 언제든 물어봐 주세요 🙌</div>
+        <div class="profile-transition">··· D-1 ···</div>
+        <div class="bubble ai">내일 진료 예정입니다! 💡<br>🕐 <strong>5월 6일 (수) 오후 3시</strong><br>📍 청담한의원 (청담동 123번지 3층)<br><br>혹시 일정 변경이 필요하시면 지금 말씀해 주세요.</div>
+      </div>
+    </div>
+    <div class="briefing-point" style="margin-top:20px;">💡 <strong>고객사 핵심 가치:</strong> AI 매니저 자동 알림으로 <strong>노쇼율 22% → 7%</strong> 감소. 월 200건 기준 약 <strong>30건 추가 매출</strong> + 직원 업무 <strong>월 90시간 절감</strong>.</div>
+  </div>
+
+<div class="screen" id="screen5">
+    <div class="section-head">
+      <span class="badge">STEP 6</span>
+      <h2>진료 후 관리 — 회복 추적 &amp; 재방문 유도</h2>
+      <p class="desc">AI 매니저가 회복 경과 체크, 가정 관리 팁 제공, 재방문 유도까지 자동화합니다.</p>
+    </div>
+    <div class="chat-container">
+      <div class="chat-header">
+        <div class="chat-header-logo">💚</div>
+        <div class="chat-header-info"><div class="chat-header-name">청담 매니저</div><div class="chat-header-desc">진료 후 사후 관리</div></div>
+        <div class="chat-header-badge">진료 D+1</div>
+      </div>
+      <div class="chat-body">
+        <div class="bubble ai">어제 진료는 어떠셨나요?<br>추나요법 후 가벼운 통증이나 뻐근함은 정상입니다.</div>
+        <div class="promise-card"><div class="pc-icon">🧘</div><div class="pc-title">가정 회복 가이드</div><div class="pc-desc">온찜질: 아침/저녁 각 15분 | 가벼운 스트레칭: 하루 2회 | 수분 섭취: 하루 8잔 이상 | 무거운 물건 들기 금지 (3일)</div></div>
+        <div class="bubble ai">통증이 어떻게 변화했는지 알려주세요:</div>
+        <div class="choice-row"><button class="choice-btn">훨씬 좋아졌어요</button><button class="choice-btn">조금 좋아졌어요</button><button class="choice-btn">비슷해요</button><button class="choice-btn">더 아파요</button></div>
+        <div class="bubble user">처음보다 허리가 훨씬 편해졌어요!</div>
+        <div class="bubble ai">정말 다행이에요! 꾸준한 관리가 가장 중요합니다.</div>
+      </div>
+    </div>
+    <div class="briefing-point" style="margin-top:20px;">💡 <strong>핵심 가치:</strong> AI 사후 관리로 환자 만족도 +35%, 재방문율 +65%. 직원 개입 불필요.</div>
+  </div>
+<div class="screen" id="screen6">
+    <div class="section-head">
+      <span class="badge">STEP 7</span>
+      <h2>운영자 대시보드 — 실시간 KPI &amp; 데이터 분석</h2>
+      <p class="desc">원장님이 한눈에 보는 AI 환자 관리 성과. 광고 노출부터 내원까지 전환 퍼널, 신뢰 점수, 비교 분석까지.</p>
+    </div>
+    <div class="dashboard">
+      <h2>핵심 KPI (월 기준)</h2>
+      <div class="kpi-row" style="margin-top:16px;">
+        <div class="kpi-card"><div class="kpi-val green">336</div><div class="kpi-label">진단 참여</div></div>
+        <div class="kpi-card"><div class="kpi-val">218</div><div class="kpi-label">진단 완료</div></div>
+        <div class="kpi-card"><div class="kpi-val green">98</div><div class="kpi-label">고관심 환자</div></div>
+        <div class="kpi-card"><div class="kpi-val">40</div><div class="kpi-label">예약 완료</div></div>
+        <div class="kpi-card"><div class="kpi-val green">37</div><div class="kpi-label">실제 내원</div></div>
+        <div class="kpi-card"><div class="kpi-val amber">7%</div><div class="kpi-label">노쇼율</div></div>
+      </div>
+      <div class="funnel-section">
+        <h3>전환 퍼널</h3>
+        <div class="funnel-bar-container" id="funnelContainer"></div>
+      </div>
+      <h3 style="font-size:15px;font-weight:700;margin-bottom:14px;">환자 신뢰 점수</h3>
+      <div class="trust-list" id="trustList"></div>
+      <h3 style="font-size:15px;font-weight:700;margin:24px 0 14px;">도입 전·후 비교</h3>
+      <table class="compare-table">
+        <thead><tr><th>지표</th><th>도입 전</th><th>도입 후</th><th>변화</th></tr></thead>
+        <tbody>
+          <tr><td>월 신규 환자</td><td>9명</td><td class="highlight">37명</td><td class="highlight">+311%</td></tr>
+          <tr><td>예약 전환율</td><td>5%</td><td class="highlight">41%</td><td class="highlight">+720%</td></tr>
+          <tr><td>노쇼율</td><td>22%</td><td class="highlight">7%</td><td class="highlight">-68%</td></tr>
+          <tr><td>직원 상담시간</td><td>120h</td><td class="highlight">30h</td><td class="highlight">-75%</td></tr>
+          <tr><td>수집 데이터</td><td>2개</td><td class="highlight">12개</td><td class="highlight">+500%</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+<div class="screen" id="screen7">
+    <div class="section-head">
+      <span class="badge">STEP 8</span>
+      <h2>노쇼 방지 알고리즘 — AI 위험 예측 &amp; 자동 대응</h2>
+      <p class="desc">6개 평가 요소 기반 개인별 노쇼 위험도를 실시간 계산, 위험 구간별 자동 알림 차등 발송.</p>
+    </div>
+    <div class="dashboard">
+      <h2>노쇼 위험 평가 알고리즘</h2>
+      <table class="compare-table" style="margin-top:16px;">
+        <thead><tr><th>평가 요소</th><th>가중치</th><th>측정 방식</th></tr></thead>
+        <tbody>
+          <tr><td>과거 노쇼 이력</td><td class="highlight">0.30</td><td>최근 6개월 노쇼 횟수</td></tr>
+          <tr><td>예약까지 남은 기간</td><td class="highlight">0.20</td><td>D-day 간격</td></tr>
+          <tr><td>거주지 거리</td><td class="highlight">0.15</td><td>한의원까지 km</td></tr>
+          <tr><td>진단 완성도</td><td class="highlight">0.15</td><td>문진 단계 완료율</td></tr>
+          <tr><td>콘텐츠 반응도</td><td class="highlight">0.10</td><td>콘텐츠 클릭 여부</td></tr>
+          <tr><td>초진/재진 구분</td><td class="highlight">0.10</td><td>첫 방문 여부</td></tr>
+        </tbody>
+      </table>
+      <h3 style="font-size:15px;font-weight:700;margin:24px 0 14px;">위험 구간별 자동 대응</h3>
+      <table class="compare-table">
+        <thead><tr><th>위험 구간</th><th>점수</th><th>자동 알림</th><th>방지 효과</th></tr></thead>
+        <tbody>
+          <tr><td style="color:var(--green-600);font-weight:700;">안전</td><td>0~30%</td><td>D-1 리마인드 1회</td><td>노쇼율 3% 미만</td></tr>
+          <tr><td style="color:var(--amber);font-weight:700;">주의</td><td>31~60%</td><td>D-3 정보, D-1 리마인드</td><td>노쇼율 8% 미만</td></tr>
+          <tr><td style="color:var(--red);font-weight:700;">위험</td><td>61%+</td><td>D-5 정보, D-2 상담, D-1 확인</td><td>노쇼율 15% 미만</td></tr>
+        </tbody>
+      </table>
+      <h3 style="font-size:15px;font-weight:700;margin:24px 0 14px;">현재 예약 환자 노쇼 위험도</h3>
+      <div class="trust-list" id="noshowList"></div>
+    </div>
+  </div>
+<div class="screen" id="screen8">
+    <div class="briefing-card">
+      <h2>원챗(OneChat) × 청담한의원</h2>
+      <div class="subtitle">AI 환자 관리 솔루션 — 핵심 가치 요약</div>
+      <div class="briefing-grid">
+        <div class="brief-item"><div class="bi-icon">🎯</div><div class="bi-title">정밀 데이터 수집</div><div class="bi-desc">환자당 12개 증상 데이터 포인트 자동 수집 (500% 증가)</div></div>
+        <div class="brief-item"><div class="bi-icon">🤝</div><div class="bi-title">신뢰 기반 접근</div><div class="bi-desc">예약 강요 없는 맞춤 콘텐츠 제공. 전환율 41%</div></div>
+        <div class="brief-item"><div class="bi-icon">📅</div><div class="bi-title">원클릭 예약</div><div class="bi-desc">치료 추천+예약 한 화면. 전화 대비 8.5배 효율</div></div>
+        <div class="brief-item"><div class="bi-icon">🚫</div><div class="bi-title">노쇼 방지</div><div class="bi-desc">6단계 알고리즘. 22% → 7% (연 30건 추가)</div></div>
+        <div class="brief-item"><div class="bi-icon">💼</div><div class="bi-title">업무 경감</div><div class="bi-desc">월 90시간 절감. 본연의 진료에 집중</div></div>
+        <div class="brief-item"><div class="bi-icon">📊</div><div class="bi-title">데이터 자산화</div><div class="bi-desc">모든 인터랙션 데이터 축적. 품질 개선 기반</div></div>
+      </div>
+      <div class="brief-roi">
+        <div class="roi-label">예상 월간 ROI</div>
+        <div class="roi-val">300%+</div>
+        <div class="roi-desc">월 30건 추가 진료 (약 1,500만원) · 월 90시간 절감 · 신규 환자 9→37명 (+311%)</div>
+      </div>
+      <button class="brief-cta" onclick="goTo(0)">처음부터 다시 보기</button>
+    </div>
+  </div>  <div class="bottom-nav">
+    <button class="nav-btn" id="prevBtn" onclick="prevScreen()">◀ 이전</button>
+    <span id="stepIndicator">1 / 9</span>
+    <button class="nav-btn primary" id="nextBtn" onclick="nextScreen()">다음 ▶</button>
+  </div>
+</div>
+<script src="../js/app.js"></script>
+</body>
+</html>

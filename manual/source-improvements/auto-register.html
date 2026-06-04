@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 자동 등록 — 소스 개선 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">소스 개선 관리</div><a href="/manual/source-improvements/" class="sb-link">📋 소개 및 개요</a></div>
+    <div class="sb-section"><div class="sb-section-title">기본 사용법</div><a href="/manual/source-improvements/dashboard.html" class="sb-link">📊 대시보드 화면 구성</a><a href="/manual/source-improvements/list.html" class="sb-link">🔍 개선 항목 조회·필터링</a><a href="/manual/source-improvements/register.html" class="sb-link">✏️ 새 개선 항목 등록</a><a href="/manual/source-improvements/detail.html" class="sb-link">👁️ 상세보기 및 수정</a></div>
+    <div class="sb-section"><div class="sb-section-title">심화</div><a href="/manual/source-improvements/lifecycle.html" class="sb-link">🔄 상태 라이프사이클</a><a href="/manual/source-improvements/notice.html" class="sb-link">📢 공지사항 연동</a><a href="/manual/source-improvements/auto-register.html" class="sb-link active">🤖 AI 자동 등록</a></div>
+  </nav>
+
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">자동 등록 개요</a>
+    <a href="#scripts" class="toc-link">등록 스크립트 종류</a>
+    <a href="#structure" class="toc-link">스크립트 구조 분석</a>
+    <a href="#dup-check" class="toc-link">중복 체크 로직</a>
+    <a href="#vermanager-link" class="toc-link">vermanager 연동 흐름</a>
+    <a href="#usage" class="toc-link">실행 방법</a>
+  </div>
+
+  <main class="m-content">
+    <h1 id="overview">🤖 AI 자동 등록 시스템</h1>
+    <p class="lead">AI가 개발한 내용을 수동으로 입력하지 않고, PHP 스크립트로 <strong>일괄 자동 등록</strong>할 수 있습니다. 중복 체크 로직이 내장되어 있어 안전하게 반복 실행할 수 있습니다.</p>
+
+    <h2 id="scripts">등록 스크립트 종류</h2>
+    <table class="m-table">
+      <thead><tr><th>스크립트</th><th>등록 대상</th><th>항목 수</th></tr></thead>
+      <tbody>
+        <tr><td><code>auto_register_improvements.php</code></td><td>버전 관리 시스템 초기 구축 (#5) + 다중 사이트 설계 (#6)</td><td>2건</td></tr>
+        <tr><td><code>auto_register_phase3_6.php</code></td><td>Phase 3 구현 (#9) + Phase 4~6 완료 (#10) + #6 상태 업데이트</td><td>2건 + 1건 수정</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="structure">스크립트 구조 분석</h2>
+    <pre class="code-block"><code>&lt;?php
+include_once '/home/kiam/lib/db_config.php';  // DB 연결 ($self_con)
+
+$improvements = [
+    [
+        'title'       => '제목',
+        'description' => "■ 개요\n...\n■ 구현 내용\n...",
+        'project'     => '아이엠플랫폼',
+        'category'    => '기능 추가',
+        'status'      => '배포됨',
+        'impact'      => '높음',
+        'test'        => 'PASS',
+        'envs'        => 'prod,dev',
+        'deployer'    => '아리',
+        'files'       => 26,
+        'added'       => 3875,
+        'deleted'     => 235,
+    ],
+    // ... 추가 항목들
+];
+
+$today = date('Y-m-d');
+
+foreach ($improvements as $imp) {
+    // ⚠️ 중복 체크 (같은 제목이 오늘 이미 등록됐는지)
+    $check_sql = "SELECT id FROM source_improvements
+                  WHERE title = '{$title}' AND date = '{$today}'";
+    $check_res = mysqli_query($self_con, $check_sql);
+    if ($check_res && mysqli_num_rows($check_res) > 0) {
+        echo "[SKIP] 이미 등록됨: {$title}\n";
+        continue;  // 건너뛰기
+    }
+
+    // 등록 실행
+    $sql = "INSERT INTO source_improvements (...) VALUES (...)";
+    if (mysqli_query($self_con, $sql)) {
+        $new_id = mysqli_insert_id($self_con);
+        echo "[OK] #{$new_id}: {$title}\n";
+    } else {
+        echo "[FAIL] {$title}: " . mysqli_error($self_con) . "\n";
+    }
+}
+
+echo "\n=== 완료 ===\n";</code></pre>
+
+    <h2 id="dup-check">중복 체크 로직 상세</h2>
+    <p>동일한 제목으로 같은 날짜에 중복 등록되는 것을 방지합니다:</p>
+    <pre class="code-block"><code>// 제목 + 날짜 기준 중복 검사
+$check_sql = "SELECT id FROM source_improvements
+              WHERE title = '{$title}'
+                AND date = '{$today}'";
+$check_res = mysqli_query($self_con, $check_sql);
+if ($check_res && mysqli_num_rows($check_res) > 0) {
+    echo "[SKIP] 이미 등록됨: {$title}\n";
+    continue;
+}</code></pre>
+
+    <div class="tip-box"><strong>🔒 안전 장치:</strong> 스크립트를 여러 번 실행해도 이미 등록된 항목은 <code>[SKIP]</code> 처리되어 중복 INSERT가 발생하지 않습니다.</div>
+
+    <h2 id="vermanager-link">vermanager 연동 흐름</h2>
+    <pre class="code-block"><code>vermanager (버전관리)                     source_improvements (DB)
+───────────────────────────              ─────────────────────────
+Phase 1: 초기 구축 완료
+  │
+  ├─ auto_register_improvements.php ──→ #5 [배포됨]
+  │                                      통합 버전 관리 시스템 구축
+  │
+Phase 2: 설계 완료
+  │
+  ├─ auto_register_improvements.php ──→ #6 [개발중→완료]
+  │                                      다중 사이트·다중 서버 설계
+  │
+Phase 3: 구현 완료
+  │
+  ├─ auto_register_phase3_6.php ──────→ #9 [배포됨]
+  │   └─ #6 상태: 개발중 → 완료           Phase 3 전체 통합 구현
+  │
+Phase 4~6: 연동/자동화/검증 완료
+  │
+  └─ auto_register_phase3_6.php ──────→ #10 [배포됨]
+                                         원격 서버 + Git CI/CD</code></pre>
+
+    <h2 id="usage">실행 방법</h2>
+    <div class="step-list">
+      <div class="step-item"><span class="step-num">1</span><div class="step-body"><strong>스크립트 작성</strong><p>새 개선사항을 배열 형태로 PHP 파일에 정의합니다.</p></div></div>
+      <div class="step-item"><span class="step-num">2</span><div class="step-body"><strong>중복 체크 포함</strong><p>제목+날짜 중복 체크 로직을 반드시 포함합니다.</p></div></div>
+      <div class="step-item"><span class="step-num">3</span><div class="step-body"><strong>CLI 실행</strong><p><code>php /home/vermanager/auto_register_xxx.php</code></p></div></div>
+      <div class="step-item"><span class="step-num">4</span><div class="step-body"><strong>결과 확인</strong><p>[OK]와 [SKIP] 출력으로 등록/중복 여부를 확인합니다.</p></div></div>
+      <div class="step-item"><span class="step-num">5</span><div class="step-body"><strong>DB 확인</strong><p><a href="https://kiam.kr/admin/admin_source_improvements.php" target="_blank">소스개발관리 페이지</a>에서 등록 결과를 확인합니다.</p></div></div>
+    </div>
+
+    <div class="tip-box"><strong>💡 추천:</strong> 새로운 Phase나 주요 기능 개발 완료 시마다 자동 등록 스크립트를 만들어 실행하세요. AI가 개발한 내용을 사람이 일일이 입력할 필요가 없어집니다.</div>
+
+    <div class="prev-next">
+      <a href="/manual/source-improvements/notice.html" class="next-link">← 이전: 공지사항 연동</a>
+      <a href="/manual/vermanager/" class="next-link">다음: 버전 관리 시스템 →</a>
+    </div>
+  </main>
+</div>
+
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.m-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:24px;}
+.m-table th{background:var(--bg3);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);}
+.m-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.tip-box{background:var(--green-bg);border-left:4px solid var(--green);padding:14px 18px;border-radius:8px;margin-bottom:24px;font-size:14px;}
+.feature-list{margin-bottom:20px;padding-left:20px;}
+.feature-list li{margin-bottom:8px;font-size:14px;}
+.step-list{margin-bottom:28px;}
+.step-item{display:flex;gap:16px;align-items:flex-start;padding:14px 0;border-bottom:1px solid var(--border);}
+.step-item:last-child{border-bottom:none;}
+.step-num{width:28px;height:28px;background:var(--brand);color:white;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;flex-shrink:0;}
+.step-body strong{display:block;font-size:14px;margin-bottom:3px;}
+.step-body p{font-size:12px;color:var(--text2);}
+.prev-next{display:flex;justify-content:space-between;align-items:center;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+</style>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

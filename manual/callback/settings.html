@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>콜백 설정 상세 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">IAM 콜백</div>
+      <a href="/manual/callback/" class="sb-link">📞 IAM 콜백 소개</a>
+      <a href="/manual/callback/create.html" class="sb-link">콜백 메시지 만들기</a>
+      <a href="/manual/callback/list.html" class="sb-link">콜백 리스트 관리</a>
+      <a href="/manual/callback/send.html" class="sb-link">콜백 발송하기</a>
+      <a href="/manual/callback/settings.html" class="sb-link active">콜백 설정 상세</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sharecallback/" class="sb-link">공유콜백</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/callback/">IAM 콜백</a> › 콜백 설정 상세</nav>
+    <h1 class="page-title">⚙️ 콜백 설정 상세</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#overview">기능 개요</a></li>
+        <li><a href="#modals">모달 구조 전체 보기</a></li>
+        <li><a href="#tech">기술 아키텍처</a></li>
+        <li><a href="#fields">전체 필드 레퍼런스</a></li>
+        <li><a href="#api">API 엔드포인트</a></li>
+        <li><a href="#settings">고급 설정</a></li>
+      </ul>
+    </div>
+    <section id="overview">
+      <h2>기능 개요</h2>
+      <p>IAM 콜백 시스템은 4개의 모달(팝업)로 구성되어 있으며, 각 모달은 서로 연결된 하나의 워크플로우를 이룹니다:</p>
+      <table class="m-table">
+        <thead><tr><th>순서</th><th>모달 ID</th><th>제목</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td>①</td><td><code>callback_msg_modal</code></td><td>콜백 메시지 설정하기</td><td>진입점 — 포인트 확인 및 결제</td></tr>
+          <tr><td>②</td><td><code>callback_making_modal</code></td><td>콜백 메시지 등록하기</td><td>새 메시지 작성 및 등록</td></tr>
+          <tr><td>③</td><td><code>callback_list_modal</code></td><td>콜백 메시지 리스트</td><td>등록된 메시지 조회/관리</td></tr>
+          <tr><td>④</td><td><code>callback_list_edit_modal</code></td><td>콜백 메시지 (수정)</td><td>기존 메시지 수정/발송</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="modals">
+      <h2>모달 구조 전체 보기</h2>
+      <h3>① callback_msg_modal — 콜백 메시지 설정하기</h3>
+      <table class="m-table">
+        <thead><tr><th>영역</th><th>클래스</th><th>기능</th></tr></thead>
+        <tbody>
+          <tr><td>헤더</td><td><code>modal-title</code> (background: #99cc00)</td><td>"콜백 메시지 설정하기"</td></tr>
+          <tr><td>안내</td><td><code>modal-header</code></td><td>서비스 설명 + 포인트 충전 + 이용내역버튼</td></tr>
+          <tr><td>포인트</td><td><code>settlement_btn</code></td><td>포인트로 충전하기 / 보유포인트 / 포인트 쉐어하기</td></tr>
+          <tr><td>버튼</td><td><code>btn-submit</code></td><td>콜백리스트보기 / 포인트내역보기</td></tr>
+          <tr><td>주의</td><td>border-box</td><td>300포인트 차감, 디폴트 설정, 변경 가능</td></tr>
+          <tr><td>푸터</td><td><code>modal-footer</code></td><td>취소하기 / 콜백 메시지 설정하기 → <code>settlement('callmake')</code></td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:20px;">② callback_making_modal — 콜백 메시지 등록하기</h3>
+      <table class="m-table">
+        <thead><tr><th>영역</th><th>기능</th></tr></thead>
+        <tbody>
+          <tr><td>헤더</td><td>"콜백 메시지 등록하기" + AI와 대화하기 버튼</td></tr>
+          <tr><td>입력</td><td>제목(textarea), 메시지내용(textarea 152px)</td></tr>
+          <tr><td>상세</td><td>타이틀, 콘텐츠, 이미지(file), 링크주소, 단축주소 복사</td></tr>
+          <tr><td>푸터</td><td>취소하기 / 등록하기 → <code>form_save_call()</code></td></tr>
+          <tr><td>폼</td><td>action="/admin/ajax/mms_callback_save.php", enctype="multipart/form-data"</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:20px;">③ callback_list_modal — 콜백 메시지 리스트</h3>
+      <table class="m-table">
+        <thead><tr><th>영역</th><th>기능</th></tr></thead>
+        <tbody>
+          <tr><td>헤더</td><td>"콜백 메시지 리스트"</td></tr>
+          <tr><td>테이블</td><td>No, 타이틀, 메시지, 이미지, 보기/링크, 조회수, 유지/해지, 등록일, 노출여부, 수정/삭제</td></tr>
+          <tr><td>데이터</td><td>AJAX로 <code>/ajax/edit_event_callback.php</code> 에서 HTML 로드</td></tr>
+          <tr><td>푸터</td><td>발송 주기 select(a0~a3) + [등록] 버튼</td></tr>
+        </tbody>
+      </table>
+      <h3 style="margin-top:20px;">④ callback_list_edit_modal — 콜백 메시지 수정</h3>
+      <table class="m-table">
+        <thead><tr><th>영역</th><th>기능</th></tr></thead>
+        <tbody>
+          <tr><td>헤더</td><td>"콜백 메시지"</td></tr>
+          <tr><td>폼</td><td>action="/ajax/edit_event_callback.php" — 아이디, 요청메시지, 콜백 타이틀/메시지, 링크, 이미지, 단축주소, 조회수, 등록일시</td></tr>
+          <tr><td>발송</td><td>셀프폰 발송하기 / 푸시형 전송하기 → 수신자 ID 입력 → 전송하기</td></tr>
+          <tr><td>푸터</td><td>뒤로가기 / 저장 → <code>save_call_edit_ev()</code></td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="tech">
+      <h2>기술 아키텍처</h2>
+      <h3>콜백 메시지 폼 전송 (form_save_call)</h3>
+      <div class="code-block">
+        <pre><code>function form_save_call() {
+  // 1. 입력값 유효성 검증
+  if ($("#call_title").val() == "")     → alert + return
+  if ($("#call_content").val() == "")   → alert + return
+  if ($("#msgtitle_call").val() == "" || $("#msgdesc_call").val() == "") 
+    → alert + return
+
+  // 2. AJAX multipart 전송 (파일 업로드 포함)
+  var formData = new FormData($("#dForm_call")[0]);
+  $.ajax({
+    method: "post",
+    processData: false,      // FormData 자동 처리
+    contentType: false,      // multipart/form-data
+    url: "/admin/ajax/mms_callback_save.php",
+    data: formData,
+    success: function(data) {
+      // 3. 단축 URL 파싱 및 저장
+      arr = data.split("{");
+      data = "{" + arr[1];
+      res = JSON.parse(data);
+      short_url = res.shorturl;
+      $("#call_msg_surl").val(res.shorturl);
+      alert("등록되었습니다.");
+    }
+  });
+}</code></pre>
+      </div>
+      <h3 style="margin-top:20px;">settlement('callmake') 호출 흐름</h3>
+      <div class="code-block">
+        <pre><code>// settlement('callmake') 실행 시:
+// 1. callback_msg_modal 닫기
+// 2. callback_making_modal 열기
+// 3. 새로운 콜백 메시지 등록 폼 초기화</code></pre>
+      </div>
+    </section>
+    <section id="fields">
+      <h2>전체 필드 레퍼런스</h2>
+      <table class="m-table">
+        <thead><tr><th>필드명 (name)</th><th>타입</th><th>모달</th><th>용도</th></tr></thead>
+        <tbody>
+          <tr><td><code>mode</code></td><td>hidden</td><td>② 등록</td><td>"reg_msg" — 신규 등록 모드</td></tr>
+          <tr><td><code>msgtitle_call</code></td><td>textarea</td><td>② 등록</td><td>메시지 제목 (중앙 정렬, 큰 글씨)</td></tr>
+          <tr><td><code>msgdesc_call</code></td><td>textarea</td><td>② 등록</td><td>메시지 본문 내용</td></tr>
+          <tr><td><code>call_title</code></td><td>textarea</td><td>② 등록 / ④ 수정</td><td>리스트용 타이틀</td></tr>
+          <tr><td><code>call_content</code></td><td>textarea</td><td>② 등록 / ④ 수정</td><td>상세 콘텐츠</td></tr>
+          <tr><td><code>call_img</code></td><td>file</td><td>② 등록</td><td>첨부 이미지</td></tr>
+          <tr><td><code>call_event_img</code></td><td>file</td><td>④ 수정</td><td>이미지 교체</td></tr>
+          <tr><td><code>iam_link</code></td><td>text</td><td>② 등록</td><td>메시지 내 포함될 링크</td></tr>
+          <tr><td><code>call_iam_link</code></td><td>text</td><td>④ 수정</td><td>수정용 링크주소</td></tr>
+          <tr><td><code>call_msg_surl</code></td><td>hidden</td><td>② 등록</td><td>자동 생성된 단축 URL</td></tr>
+          <tr><td><code>call_short_url</code></td><td>text</td><td>④ 수정</td><td>수정용 단축주소</td></tr>
+          <tr><td><code>event_title_call</code></td><td>textarea</td><td>④ 수정</td><td>요청메시지 제목</td></tr>
+          <tr><td><code>event_desc_call</code></td><td>textarea</td><td>④ 수정</td><td>요청메시지 내용</td></tr>
+          <tr><td><code>call_event_title</code></td><td>textarea</td><td>④ 수정</td><td>콜백 타이틀</td></tr>
+          <tr><td><code>call_event_desc</code></td><td>textarea</td><td>④ 수정</td><td>콜백 메시지</td></tr>
+          <tr><td><code>call_event_idx</code></td><td>hidden</td><td>④ 수정</td><td>수정 대상 이벤트 인덱스</td></tr>
+          <tr><td><code>call_read_cnt</code></td><td>text</td><td>④ 수정</td><td>조회수</td></tr>
+          <tr><td><code>call_regdate1</code></td><td>text</td><td>④ 수정</td><td>등록일시</td></tr>
+          <tr><td><code>save</code></td><td>hidden</td><td>④ 수정</td><td>"save" — 저장 모드</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="api">
+      <h2>API 엔드포인트</h2>
+      <table class="m-table">
+        <thead><tr><th>엔드포인트</th><th>메서드</th><th>주요 파라미터</th><th>응답</th></tr></thead>
+        <tbody>
+          <tr><td><code>/admin/ajax/mms_callback_save.php</code></td><td>POST</td><td>mode=reg_msg, msgtitle_call, msgdesc_call, call_title, call_content, call_img, iam_link</td><td>JSON { shorturl: "..." }</td></tr>
+          <tr><td><code>/ajax/edit_event_callback.php</code> (리스트)</td><td>POST</td><td>get_callback_list=Y, mem_id</td><td>HTML (테이블 행)</td></tr>
+          <tr><td><code>/ajax/edit_event_callback.php</code> (수정)</td><td>POST</td><td>save=save, call_event_idx, event_title_call, event_desc_call, call_event_title, call_event_desc, ...</td><td>JSON</td></tr>
+          <tr><td><code>/ajax/edit_event_callback.php</code> (삭제)</td><td>POST</td><td>delete=Y, call_event_idx</td><td>JSON</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="settings">
+      <h2>고급 설정</h2>
+      <h3>포인트 차감 정책</h3>
+      <ul>
+        <li>콜백 메시지 신청자 1명당 <strong>300포인트</strong> 차감</li>
+        <li>캐시포인트로 결제 (씨드포인트는 내부 기능 전용)</li>
+        <li>콜백 메시지 설정 동의 회원의 메시지함에 디폴트 메시지로 등록</li>
+        <li>회원이 추후 다른 메시지로 변경 가능</li>
+      </ul>
+      <h3 style="margin-top:20px;">앱 설치 연동</h3>
+      <ul>
+        <li>앱 패키지: <code>mms5.onepagebook.com.onlyonesms</code></li>
+        <li>커스텀 스킴: <code>onlyone://onlyoneapp</code></li>
+        <li>인텐트: <code>intent://onlyone#Intent;scheme=onlyoneapp;package=mms5.onepagebook.com.onlyonesms;end</code></li>
+        <li>Google Play: <a href="https://play.google.com/store/apps/details?id=mms5.onepagebook.com.onlyonesms" target="_blank">온리원문자 다운로드</a></li>
+      </ul>
+      <h3 style="margin-top:20px;">접근 제한</h3>
+      <ul>
+        <li>Android에서만 정상 동작 (<code>navigator.userAgent</code> 검사)</li>
+        <li>PC/iPhone 접속 시 "휴대폰에서 이용해주세요" 안내</li>
+        <li>앱 미설치 시 <code>confirm()</code> → 플레이스토어 이동</li>
+      </ul>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/callback/send.html" class="btn-prev">← 콜백 발송하기</a>
+      <a href="/manual/sharecallback/" class="btn-next">공유콜백 매뉴얼 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#overview">기능 개요</a></li>
+      <li><a href="#modals">모달 구조</a></li>
+      <li><a href="#tech">기술 아키텍처</a></li>
+      <li><a href="#fields">필드 레퍼런스</a></li>
+      <li><a href="#api">API 엔드포인트</a></li>
+      <li><a href="#settings">고급 설정</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

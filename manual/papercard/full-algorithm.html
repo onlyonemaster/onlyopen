@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>전체 알고리즘 — 명함 프로필 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar"><div class="sb-section"><div class="sb-section-title">🃏 명함 프로필</div><a href="/manual/papercard/" class="sb-link">개요 & 전체 구조</a></div><div class="sb-section"><div class="sb-section-title">🚀 시작하기</div><a href="/manual/papercard/overview.html" class="sb-link">페이지 구조 & 레이아웃</a><a href="/manual/papercard/lifecycle.html" class="sb-link">페이지 생명주기</a></div><div class="sb-section"><div class="sb-section-title">📇 종이명함 관리</div><a href="/manual/papercard/crud.html" class="sb-link">등록·수정·삭제</a><a href="/manual/papercard/image-ocr.html" class="sb-link">명함 이미지 & OCR</a><a href="/manual/papercard/contact.html" class="sb-link">연락처·검색·정렬</a></div><div class="sb-section"><div class="sb-section-title">🤖 AI 명함퍼널</div><a href="/manual/papercard/ai-funnel.html" class="sb-link">발신자 설정</a><a href="/manual/papercard/ai-prompt.html" class="sb-link">프롬프트 설정</a><a href="/manual/papercard/ai-channel.html" class="sb-link">퍼널발송채널</a></div><div class="sb-section"><div class="sb-section-title">🔧 핵심 소스 분석</div><a href="/manual/papercard/source-main.html" class="sb-link">메인 초기화</a><a href="/manual/papercard/source-ajax.html" class="sb-link">AJAX 통신</a><a href="/manual/papercard/source-utils.html" class="sb-link">유틸리티 함수</a><a href="/manual/papercard/source-payment.html" class="sb-link">결제 시스템</a><a href="/manual/papercard/source-mobile.html" class="sb-link">모바일 연동</a></div><div class="sb-section"><div class="sb-section-title">📋 부록</div><a href="/manual/papercard/css-analysis.html" class="sb-link">CSS 분석</a><a href="/manual/papercard/full-algorithm.html" class="sb-link active">전체 알고리즘</a></div><div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div></nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/papercard/">명함 프로필</a><span class="sep">›</span><span>전체 알고리즘</span></div>
+<h1>🧠 전체 알고리즘 — 엔드투엔드 분석</h1>
+<p class="page-desc">명함 프로필 페이지의 시작부터 끝까지, 모든 알고리즘을 하나로 연결한 거대한 흐름도를 분석합니다.</p>
+
+<div class="toc-box">
+<div class="toc-title">📑 목차</div>
+<ul class="toc-list">
+<li><a href="#master">마스터 알고리즘 — 전체 개요</a></li>
+<li><a href="#phase1">Phase 1: 페이지 진입 & 초기화</a></li>
+<li><a href="#phase2">Phase 2: 데이터 수집 & 렌더링</a></li>
+<li><a href="#phase3">Phase 3: 사용자 인터랙션</a></li>
+<li><a href="#phase4">Phase 4: 네트워크 통신</a></li>
+<li><a href="#phase5">Phase 5: 결제 & 발송</a></li>
+<li><a href="#complexity">시간 복잡도 분석</a></li>
+<li><a href="#security">보안 알고리즘</a></li>
+</ul>
+</div>
+
+<h2 id="master">🗺️ 마스터 알고리즘 — 전체 개요</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:11px;line-height:1.7;overflow-x:auto;">
+┌──────────────────────────────────────────────────────────────────┐
+│                    paper_card 마스터 알고리즘                      │
+│                    =========================                      │
+│                                                                   │
+│  START                                                            │
+│    │                                                              │
+│    ▼                                                              │
+│  ┌──────────────────┐                                             │
+│  │ PHASE 1: 초기화   │  (T+0ms ~ T+200ms)                        │
+│  │ ─────────────────│                                             │
+│  │ 1a. HTML 파싱     │  DOM 트리 구축                             │
+│  │ 1b. CSS 로드      │  Bootstrap → iam.css → slick.css          │
+│  │ 1c. JS 로드       │  jQuery → Bootstrap → main.js             │
+│  │ 1d. 전역변수 초기화│  cur_win_name="paper_card"                │
+│  │ 1e. 함수 정의     │  29개 함수 메모리 등록                     │
+│  │ 1f. DOMContentLoaded│ $(function(){...}) 실행                 │
+│  └────────┬─────────┘                                             │
+│           │                                                       │
+│           ▼                                                       │
+│  ┌──────────────────┐                                             │
+│  │ PHASE 2: 데이터   │  (T+200ms ~ T+500ms)                      │
+│  │ ─────────────────│                                             │
+│  │ 2a. refresh_page()│  메인 진입점 호출                          │
+│  │ 2b. 병렬 AJAX 요청│  (6개 동시 실행)                           │
+│  │     ├─ getIamContact   [내부API]/[연락처조회]          │
+│  │     ├─ getIamPaper     [내부API]/[명함목록]           │
+│  │     ├─ getIamFriends   [내부API]/[친구조회]          │
+│  │     ├─ get_request_list [내부API]/[요청목록]        │
+│  │     ├─ get_recom_list  [내부API]/[추천목록]           │
+│  │     └─ displayMall     [내부API]/[상품조회]             │
+│  │ 2c. 응답 수신 & 렌더링│ HTML을 .sample_main에 삽입            │
+│  │ 2d. 이미지 리사이즈  │ resizeImg() → #card_logo 크기 조정     │
+│  └────────┬─────────┘                                             │
+│           │                                                       │
+│           ▼                                                       │
+│  ┌──────────────────┐                                             │
+│  │ PHASE 3: 인터랙션 │  (T+500ms ~ 사용 종료)                    │
+│  │ ─────────────────│                                             │
+│  │ 3a. 이벤트 등록   │  click, scroll, drag, keydown             │
+│  │ 3b. 명함 CRUD     │  create → update → delete → refresh       │
+│  │ 3c. 이미지 업로드 │  camera/gallery → OCR → 자동완성          │
+│  │ 3d. 검색 & 필터   │  연락처/친구/상품 검색                    │
+│  │ 3e. 드래그 정렬   │  Sortable.js → 순서 변경 → AJAX 저장      │
+│  │ 3f. AI 설정       │  발신자정보 → 프롬프트 → 채널 설정        │
+│  └────────┬─────────┘                                             │
+│           │                                                       │
+│           ▼                                                       │
+│  ┌──────────────────┐                                             │
+│  │ PHASE 4: 통신     │  (인터랙션마다 반복)                       │
+│  │ ─────────────────│                                             │
+│  │ 4a. 요청 준비    │  데이터 직렬화 → addslashes()              │
+│  │ 4b. busy 체크    │  true면 요청 거부 (중복 방지)              │
+│  │ 4c. loading 표시  │  #ajax_loading show                       │
+│  │ 4d. AJAX 실행    │  $.ajax({url, type, data})                 │
+│  │ 4e. 응답 처리    │  success/error → callback                  │
+│  │ 4f. loading 숨김  │  #ajax_loading hide, busy=false           │
+│  └────────┬─────────┘                                             │
+│           │                                                       │
+│           ▼                                                       │
+│  ┌──────────────────┐                                             │
+│  │ PHASE 5: 결제     │  (발송 시에만)                             │
+│  │ ─────────────────│                                             │
+│  │ 5a. settlement()  │  val="card_send"                          │
+│  │ 5b. 주문번호 생성 │  YYYYMMDDHHmmss + rand(3)                │
+│  │ 5c. 금액 계산    │  item_cnt × item_price × 0.9             │
+│  │ 5d. 결제 요청    │  POST [내부API]/[명함발송]              │
+│  │ 5e. 성공/실패    │  refresh_page() or err 이동               │
+│  └────────┬─────────┘                                             │
+│           │                                                       │
+│           ▼                                                       │
+│  ┌──────────────────┐                                             │
+│  │ PHASE 6: 정리     │                                             │
+│  │ ─────────────────│                                             │
+│  │ 6a. 쿠키 저장    │  언어, 설정 상태                            │
+│  │ 6b. 세션 유지    │  로그인 상태                                │
+│  │ 6c. 이벤트 해제  │  페이지 이탈 시                             │
+│  └──────────────────┘                                             │
+│                                                                   │
+│  END                                                              │
+└──────────────────────────────────────────────────────────────────┘
+</pre>
+
+<h2 id="phase1">🔌 Phase 1: 페이지 진입 & 초기화</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+알고리즘: 페이지 초기화 (Phase 1)
+
+Input:  URL "[서비스URL]/?cur_win=paper_card"
+Output: 초기화된 DOM + 준비된 JS 환경
+
+1. 브라우저가 URL을 파싱 → GET 파라미터 cur_win=paper_card 추출
+2. 서버에서 HTML 생성 → paper_card 전용 템플릿 선택
+3. HTML 스트리밍 시작:
+   a. &lt;head&gt; 요소 → CSS/JS 다운로드 큐에 추가
+   b. &lt;body&gt; 요소 → DOM 트리 실시간 구축
+4. CSS 파일 병렬 다운로드 (bootstrap.min.css가 가장 큼)
+5. JS 파일 순차 로딩 (jQuery 먼저, 의존성 순서대로)
+6. 인라인 &lt;script&gt; 실행:
+   a. var cur_win_name = "paper_card" (97번 줄)
+   b. 모든 함수 정의 등록 (함수 호이스팅으로 어디서든 호출 가능)
+7. DOMContentLoaded 이벤트 발생 (200ms 경과)
+8. $(function() { ... }) 실행 (593번 줄):
+   a. 언어 설정 확인 (쿠키/lang 파라미터)
+   b. 푸터 메뉴 활성화 (명함관리 아이콘 active)
+   c. refresh_page() 호출 → Phase 2 시작!
+</pre>
+
+<h2 id="phase2">📡 Phase 2: 데이터 수집 & 렌더링</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+알고리즘: 데이터 수집 & 렌더링 (Phase 2)
+
+Input:  빈 .sample_main div
+Output: 명함 목록, 연락처, 친구, 상품 등이 채워진 페이지
+
+1. refresh_page() 진입
+2. loading 표시 시작 (#ajax_loading)
+3. 6개 AJAX 요청 병렬 실행 (비동기):
+
+   Thread 1: getIamContact('[사용자ID]','[관리자ID]','','0',1,1)
+     → URL: [내부API]/[연락처조회]
+     → 쿼리: ?card_owner=[사용자ID]&card_master=[관리자ID]
+              &search_range=&phone_count=0&page=1&paper_yn=1
+     → 응답: JSON {contacts: [...], total: N}
+
+   Thread 2: getIamPaper()
+     → URL: [내부API]/[명함목록]
+     → 쿼리: ?mem_id=...&page=1&limit=20
+     → 응답: HTML 문자열 (명함 카드 리스트)
+
+   Thread 3: getIamFriends()
+     → URL: [내부API]/[친구조회]
+     → 응답: HTML 문자열 (친구 리스트)
+
+   Thread 4: get_request_list()
+     → URL: [내부API]/[요청목록]
+     → 응답: HTML 문자열 (요청 리스트)
+
+   Thread 5: get_recom_list()
+     → URL: [내부API]/[추천목록]
+     → 응답: HTML 문자열 (추천 리스트)
+
+   Thread 6: displayMall()
+     → URL: [내부API]/[상품조회]
+     → 쿼리: ?limit=10&offset=0&cur_win=paper_card
+     → 응답: HTML 문자열 (상품 리스트)
+
+4. 각 AJAX 응답 도착 시:
+   a. success 콜백 실행
+   b. 응답 HTML을 해당 DOM 영역에 삽입
+     - 연락처 → .sample_main
+     - 명함 → .sample_card 영역
+     - 상품 → .mall-group 영역
+   c. 이미지 요소 발견 시 resizeImg() 호출
+5. 모든 AJAX 완료 확인 (counter 또는 Promise.all)
+6. loading 표시 종료
+7. busy = false
+8. Phase 3 준비 완료
+</pre>
+
+<h2 id="phase3">🖱️ Phase 3: 사용자 인터랙션</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+알고리즘: 사용자 인터랙션 (Phase 3)
+
+이벤트 루프 기반, 무한 대기 상태
+
+3-1. 명함 CRUD 인터랙션:
+   CREATE: create_paper() → 폼 초기화 → save_paper() → AJAX → refresh_page()
+   READ:   getIamPaper() → AJAX → .sample_main에 렌더링
+   UPDATE: edit_card() → 모달 → save_paper() → AJAX → refresh_page()
+   DELETE: delete_paper() → confirm() → AJAX → refresh_page()
+   → 복잡도: O(1) per operation (단일 AJAX)
+
+3-2. 이미지 업로드 & OCR:
+   촬영: app_camera_paper() → callAppBridge('camera') / file input
+   OCR:  image → POST [OCR서버]/[이미지처리]
+         → 텍스트 추출 → 정규표현식 파싱
+         → 이름/전화/이메일/주소/회사 자동완성
+   → 복잡도: O(n) where n = 이미지 픽셀 수
+
+3-3. 연락처 검색 & 필터:
+   getIamContact() → search_range 파라미터 (1~4)
+   1=가까운순, 2=이름순, 3=전화번호순, 4=최신순
+   → 서버 사이드 정렬 (클라이언트 부하 없음)
+
+3-4. 드래그 정렬:
+   Sortable.create() → dragstart → drag → dragend
+   → onEnd: card_ids 배열 수집 → AJAX POST change_card_order
+   → refresh_page()
+   → 복잡도: O(n) per reorder (n = 카드 개수)
+
+3-5. AI 퍼널 설정:
+   edit_papersender() → 3탭 모달
+   탭1: 기본정보 입력 → save
+   탭2: 프롬프트 설정 → generate_prompt.php 호출
+   탭3: 채널 설정 → funnel_channel_set.php 저장
+</pre>
+
+<h2 id="phase4">🌐 Phase 4: 네트워크 통신 패턴</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+알고리즘: AJAX 통신 패턴 (Phase 4)
+
+모든 AJAX 요청의 공통 패턴:
+
+function ajaxTemplate(url, data, successCallback) {
+    // 1. 중복 체크 (Mutex Lock)
+    if (busy) return;  // ← 임계 영역 보호
+    busy = true;
+
+    // 2. UI 피드백
+    $("#ajax_loading").show();
+
+    // 3. 데이터 전처리
+    data.cur_win = cur_win_name;  // 항상 현재 창 식별자 포함
+    for (key in data) {
+        if (typeof data[key] === 'string') {
+            data[key] = addslashes(data[key]);  // 특수문자 이스케이프
+        }
+    }
+
+    // 4. AJAX 실행
+    $.ajax({
+        url: url,
+        type: data.action ? "POST" : "GET",
+        data: data,
+        dataType: "json",
+        timeout: 30000,  // 30초 타임아웃
+
+        success: function(response) {
+            successCallback(response);
+        },
+
+        error: function(xhr, status, error) {
+            console.error("AJAX Error:", status, error);
+            alert("통신 중 오류가 발생했습니다. 다시 시도해주세요.");
+        },
+
+        complete: function() {
+            // 5. 정리 (finally 블록)
+            busy = false;           // Mutex 해제
+            $("#ajax_loading").hide();
+        }
+    });
+}
+</pre>
+
+<h2 id="phase5">💳 Phase 5: 결제 & 발송</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+알고리즘: 결제 & 발송 (Phase 5)
+
+발송 버튼 클릭 → settlement("card_send", frm, auto_up)
+
+1. 금액 계산
+   total_amt = item_cnt × item_price
+   payable = [총액] × ([수수료비율] / 100)
+   // [수수료비율] = 90 → 10% 수수료 공제
+
+2. 주문번호 생성
+   orderNo = YYYY + MM + DD + HH + mm + ss + rand(000~999)
+   예: "20260501213618" + "877" = "2026050121361877"
+   → 단일 서버 기준 중복 확률: 1/1000 per second
+   → 분산 서버: UUID v4 권장 (현재 미구현)
+
+3. 데이터 수집
+   card_url = "[서비스URL]/?cur_win=paper_card"
+   message  = AI 생성 or 사용자 입력 메시지
+   send_mode = clone(0) | share(1)
+
+4. AJAX POST → [내부API]/[명함발송]
+
+5. 서버 처리:
+   a. 세션 검증 → 로그인 확인
+   b. 잔액 확인 → 포인트 ≥ payable
+   c. 결제 승인 → Allat PG (카드) 또는 수동 (계좌이체)
+   d. 포인트 차감 → DB UPDATE
+   e. 메시지 포맷팅:
+      - SMS(≤90byte): 1건
+      - LMS(>90byte): 장문 과금
+      - 카카오: 템플릿 매칭
+      - RCS: 이미지+버튼 조합
+   f. 발송 실행 → 통신사 API
+   g. 결과 저장 → card_con_send_list 테이블
+   h. 응답: {result: "success", sent_count: N}
+
+6. 클라이언트 처리:
+   success → alert("완료!") → refresh_page()
+   fail(err=1) → [내부페이지]/[결제오류]?err=1 (결제 실패)
+   fail(err=2) → [내부페이지]/[결제오류]?err=2 (네트워크 오류)
+</pre>
+
+<h2 id="complexity">⏱️ 시간 복잡도 분석</h2>
+
+<table class="data-table">
+<thead><tr><th>작업</th><th>시간 복잡도</th><th>공간 복잡도</th><th>비고</th></tr></thead>
+<tbody>
+<tr><td>페이지 초기화 (Phase 1)</td><td>O(D) D=DOM 노드 수</td><td>O(D)</td><td>~200ms</td></tr>
+<tr><td>데이터 로딩 (Phase 2)</td><td>O(1) 병렬 AJAX</td><td>O(C) C=데이터 크기</td><td>6개 동시 요청</td></tr>
+<tr><td>명함 CRUD</td><td>O(1) per op</td><td>O(1)</td><td>단일 AJAX</td></tr>
+<tr><td>이미지 OCR</td><td>O(n²) n=픽셀 수</td><td>O(n)</td><td>서버 처리</td></tr>
+<tr><td>드래그 정렬</td><td>O(k) k=카드 수</td><td>O(k)</td><td>클라이언트</td></tr>
+<tr><td>결제 & 발송</td><td>O(m) m=수신자 수</td><td>O(m)</td><td>서버 처리</td></tr>
+<tr><td>검색 & 필터</td><td>O(log N) 서버</td><td>O(1) 클라이언트</td><td>DB 인덱스</td></tr>
+</tbody>
+</table>
+
+<h2 id="security">🔒 보안 알고리즘</h2>
+
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.8;">
+1. XSS 방지:
+   - cur_win_name 변수에 [보안패치] 주석 명시
+   - addslashes()로 모든 사용자 입력 escape
+   - innerHTML 대신 textContent 우선 사용
+
+2. CSRF 방지:
+   - PHP 세션 기반 인증
+   - AJAX 요청 시 세션 쿠키 자동 포함
+   - 민감 작업(POST)에 세션 검증
+
+3. 중복 요청 방지:
+   - busy 플래그 = Mutex Lock
+   - O(1) 검사로 오버헤드 최소화
+   - complete 콜백에서 항상 해제 (finally 보장)
+
+4. SQL 인젝션 방지:
+   - 클라이언트: addslashes() 전처리
+   - 서버: Prepared Statement 사용 (추정)
+   - 입력값 정규표현식 검증 (전화번호, 이메일 등)
+
+5. 데이터 무결성:
+   - 주문번호 = 타임스탬프 + 랜덤 → 고유성 보장
+   - 모든 금액 계산에 [수수료비율] 상수 사용 → 일관성
+   - AJAX 실패 시 refresh_page() → UI와 서버 상태 동기화
+</pre>
+
+<div class="notice-box">
+<div class="notice-title">⚠️ 알고리즘 취약점 및 개선 제안</div>
+<ul>
+<li><strong>주문번호 충돌 가능성</strong>: 타임스탬프+랜덤3자리는 동시 요청이 많은 환경에서 충돌 위험. UUID v4 사용 권장.</li>
+<li><strong>busy 플래그만으로 부족</strong>: 여러 AJAX가 동시에 실행되면 busy 플래그가 모든 요청을 막음. 요청별 세마포어 도입 고려.</li>
+<li><strong>낙관적 UI 업데이트 부재</strong>: 서버 응답을 기다렸다가 UI 갱신. 낙관적 업데이트 도입 시 체감 속도 향상.</li>
+</ul>
+</div>
+
+<div class="nav-bottom"><a href="/manual/papercard/css-analysis.html" class="nav-prev">← 이전: CSS 분석</a><a href="/manual/papercard/" class="nav-next">처음으로: 개요 →</a></div>
+</main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

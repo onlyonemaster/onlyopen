@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수집 DB 활용하기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">DB 수집 (온리원디버)</div>
+      <a href="/manual/diver/" class="sb-link">🔍 DB 수집 소개</a>
+      <a href="/manual/diver/install.html" class="sb-link">💿 설치 및 시작하기</a>
+      <a href="/manual/diver/search.html" class="sb-link">🔎 검색 기술 가이드</a>
+      <a href="/manual/diver/collect.html" class="sb-link">📊 디비 수집 방법</a>
+      <a href="/manual/diver/utilize.html" class="sb-link active">📤 수집 DB 활용하기</a>
+      <a href="/manual/diver/updater.html" class="sb-link">🔄 디버 업데이터</a>
+      <a href="/manual/diver/troubleshoot.html" class="sb-link">🛠️ 문제 해결</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/diver/">DB 수집(온리원디버)</a><span class="sep">›</span>
+      <span>수집 DB 활용하기</span>
+    </div>
+    <h1>📤 수집 DB 활용하기</h1>
+    <p class="page-desc">디버로 수집한 연락처를 kiam.kr 플랫폼과 연동하여 SMS·RCS·전화·이메일·SNS로 발송하는 모든 방법을 안내합니다.</p>
+
+    <!-- 추천 워크플로우 -->
+    <h2 id="workflow">🔥 추천 워크플로우</h2>
+    <div class="flow-steps" style="display:flex;flex-wrap:wrap;gap:16px;margin:16px 0;">
+      <div style="flex:1;min-width:120px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">🗂️</div>
+        <strong>온리원디버</strong>
+        <p style="font-size:12px;color:var(--sub);">DB 수집</p>
+      </div>
+      <div style="color:var(--sub);align-self:center;font-size:20px;">→</div>
+      <div style="flex:1;min-width:120px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">🤖</div>
+        <strong>AI 메시지</strong>
+        <p style="font-size:12px;color:var(--sub);">개인화 발송</p>
+      </div>
+      <div style="color:var(--sub);align-self:center;font-size:20px;">→</div>
+      <div style="flex:1;min-width:120px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">💬</div>
+        <strong>원챗</strong>
+        <p style="font-size:12px;color:var(--sub);">자동 관리</p>
+      </div>
+      <div style="color:var(--sub);align-self:center;font-size:20px;">→</div>
+      <div style="flex:1;min-width:120px;background:var(--brand);color:#fff;padding:16px;border-radius:8px;text-align:center;">
+        <div style="font-size:24px;margin-bottom:4px;">🎯</div>
+        <strong>계약·구매</strong>
+        <p style="font-size:12px;opacity:0.85;">전환 완료!</p>
+      </div>
+    </div>
+
+    <!-- 1. 폰문자(SMS) 발송 -->
+    <h2 id="sms">📱 1) 폰문자(SMS)로 발송하기</h2>
+    <p>디버로 수집한 주소록을 온리원 폰문자 솔루션에서 대량 문자 발송할 수 있습니다.</p>
+
+    <h3>업로드 절차</h3>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">디버에서 xls 파일로 저장</div>
+          <div class="step-desc">수집 완료 후 <strong>xls</strong> 확장자(Excel 97-2003)로 저장합니다. 이 형식으로 저장하면 kiam.kr 주소록 등록 시 확장자 변환 없이 업로드 가능합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">온리원 문자사이트 접속</div>
+          <span class="step-url">https://kiam.kr</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">문자발송하기 → 주소록 불러오기</div>
+          <div class="step-desc">문자발송하기 창에서 [주소록 불러오기] 선택 후 저장된 xls 파일 업로드</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">저장된 주소록으로 문자 발송</div>
+          <div class="step-desc">불러온 주소록 선택 후 메시지 작성하여 발송</div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="notice">
+      📌 <strong>주소록 업로드 시 주의</strong>: 업로드하면 소그룹명·이름·전화번호 외의 데이터는 모두 삭제됩니다. 원본 xls 파일은 별도 보관하세요.
+    </div>
+
+    <!-- 2. RCS 문자 발송 -->
+    <h2 id="rcs">💬 2) RCS 문자로 발송하기</h2>
+    <p>디버로 수집한 휴대폰 주소록을 온리원 <strong>RCS 문자 솔루션</strong>에서 발송할 수 있습니다. RCS는 일반 SMS보다 풍부한 이미지·버튼·영상 등을 포함할 수 있는 차세대 메시지 서비스입니다.</p>
+    <div class="tip">
+      💡 RCS 발송은 일반 SMS 대비 <strong>읽음률과 반응률이 높습니다</strong>. 브랜드 홍보·이벤트 안내에 특히 효과적입니다.
+    </div>
+
+    <!-- 3. 전화(텔레마케팅) -->
+    <h2 id="telemarketing">📞 3) 전화(텔레마케팅)로 활용하기</h2>
+    <p>수집된 010 번호로 전화하여 텔레마케팅 형태로 사용할 수 있습니다.</p>
+    <div class="warn">
+      ⚠️ <strong>법적 주의사항</strong>: 전화 시 반드시 <strong>폰번호 수집 출처를 먼저 고객에게 제시</strong>해야 합니다. "어디에서 연락처를 확인했다"고 알리는 것이 합법적인 텔레마케팅의 기본입니다.
+    </div>
+
+    <!-- 4. 이메일 발송 -->
+    <h2 id="email-send">📧 4) 이메일로 발송하기</h2>
+    <table class="m-table">
+      <thead><tr><th>방법</th><th>설명</th><th>비용</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>포털 메일 직접 발송</strong></td>
+          <td>다음·네이버 등 포털 이메일로 광고 홍보 메시지 전송</td>
+          <td>무료 (다만 스팸함 진입 가능성)</td>
+        </tr>
+        <tr>
+          <td><strong>이메일 발송 업체 위탁</strong></td>
+          <td>전문 이메일 발송 업체에 위탁하여 대량 발송</td>
+          <td>건당 약 1원</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>팁</strong>: 단순 메일 발송 시 상당수가 스팸함에 들어가거나 열어보지 않습니다. 본사에서 개발한 <strong>메시지 카피 기술</strong>을 활용하면 고객이 읽도록 만들 수 있습니다. 관리자에게 문의하세요.
+    </div>
+
+    <!-- 5. SNS 채널 활용 -->
+    <h2 id="sns">🌐 5) SNS 채널로 홍보하기</h2>
+    <p>수집된 이메일 주소록을 페이스북·인스타그램에 업로드하면 해당 SNS 회원과 <strong>매칭</strong>하여 타겟 광고를 할 수 있습니다.</p>
+
+    <h3>SNS 매칭의 장점</h3>
+    <ul style="list-style:disc;padding-left:24px;line-height:2;">
+      <li>매칭 과정에서 이메일 소유자의 <strong>성별·직업·연령·거주지</strong> 등 확인 가능</li>
+      <li>폰번호 수준의 정확한 타겟팅 결과를 얻을 수 있음</li>
+      <li>SNS 플랫폼의 광고 도구로 <strong>맞춤 오디언스(Custom Audience)</strong> 생성 가능</li>
+    </ul>
+
+    <h3>페이스북·인스타그램 타겟 광고 방법</h3>
+    <ol style="padding-left:24px;line-height:2;">
+      <li>디버에서 이메일 목록을 CSV 파일로 저장</li>
+      <li>페이스북 광고 관리자 → 오디언스 → 맞춤 오디언스 만들기</li>
+      <li>고객 목록(Customer List) 업로드 → 이메일 CSV 파일 선택</li>
+      <li>매칭 완료 후 해당 오디언스 대상 광고 캠페인 실행</li>
+    </ol>
+    <div class="code-block">
+      더 자세한 방법은 유튜브에서 '페이스북 타겟고객 홍보' 검색하여 영상을 참고하세요.
+    </div>
+
+    <!-- 발송 채널 종합 비교 -->
+    <h2 id="comparison">📊 발송 채널 종합 비교</h2>
+    <table class="m-table">
+      <thead><tr><th>채널</th><th>도달률</th><th>비용</th><th>개인화</th><th>법적 제약</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>📱 폰문자 SMS</strong></td>
+          <td>매우 높음</td>
+          <td>건당 SMS 요금</td>
+          <td>가능</td>
+          <td>수신동의 필요</td>
+        </tr>
+        <tr>
+          <td><strong>💬 RCS</strong></td>
+          <td>매우 높음</td>
+          <td>건당 RCS 요금</td>
+          <td>풍부한 표현</td>
+          <td>수신동의 필요</td>
+        </tr>
+        <tr>
+          <td><strong>📞 전화</strong></td>
+          <td>100% (통화 시)</td>
+          <td>통화료</td>
+          <td>실시간</td>
+          <td>수집출처 제시 필수</td>
+        </tr>
+        <tr>
+          <td><strong>📧 이메일</strong></td>
+          <td>낮음 (스팸함)</td>
+          <td>무료~1원/건</td>
+          <td>가능</td>
+          <td>공개 목적 부합 필요</td>
+        </tr>
+        <tr>
+          <td><strong>🌐 SNS 매칭</strong></td>
+          <td>중간</td>
+          <td>SNS 광고비</td>
+          <td>매우 높음</td>
+          <td>플랫폼 정책 준수</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <!-- AI 메시지 연동 -->
+    <h2 id="aimessage">🤖 6) AI 메시지로 발송하기</h2>
+    <p>수집된 DB를 <strong>AI 메시지</strong> 기능에 업로드하면 AI가 각 수신자별 맞춤 메시지를 자동 생성하여 발송합니다.</p>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body"><div class="step-title">수집된 CSV 파일 AI 메시지에 업로드</div></div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body"><div class="step-title">AI 자동으로 개인화 메시지 생성</div></div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body"><div class="step-title">발송 → 링크 클릭 고객 자동 추적</div></div>
+      </li>
+    </ol>
+    <a href="/manual/aimessage/start.html" style="color:var(--brand);">→ AI 메시지 매뉴얼 보기</a>
+
+    <!-- 원챗 연동 -->
+    <h2 id="onechat">💬 7) 원챗 퍼널 자동 연동</h2>
+    <p>AI 메시지의 링크를 클릭한 고객을 <strong>원챗 시나리오 퍼널</strong>로 자동 등록하여 AI 챗봇이 응대합니다.</p>
+    <a href="/manual/onechat/funnel.html" style="color:var(--brand);">→ 원챗 퍼널 매뉴얼 보기</a>
+
+    <div class="page-nav">
+      <a href="/manual/diver/collect.html"><span class="nav-label">← 이전</span><span class="nav-title">📊 디비 수집 방법</span></a>
+      <a href="/manual/diver/updater.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🔄 디버 업데이터</span></a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#workflow">추천 워크플로우</a></li>
+      <li><a href="#sms">1) 폰문자(SMS) 발송</a></li>
+      <li><a href="#rcs">2) RCS 문자 발송</a></li>
+      <li><a href="#telemarketing">3) 전화 활용</a></li>
+      <li><a href="#email-send">4) 이메일 발송</a></li>
+      <li><a href="#sns">5) SNS 홍보</a></li>
+      <li><a href="#comparison">채널 비교</a></li>
+      <li><a href="#aimessage">6) AI 메시지</a></li>
+      <li><a href="#onechat">7) 원챗 연동</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

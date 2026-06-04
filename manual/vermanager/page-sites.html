@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사이트 관리 — 버전 관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<div class="m-layout">
+<nav class="m-sidebar">
+  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
+  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
+  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
+  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link active">사이트 관리</a></div>
+  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
+  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+</nav>
+<main class="m-content">
+<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>사이트 관리</span></div>
+<h1>🌐 사이트 관리 (pages/sites.php)</h1>
+<p class="page-desc">사이트 등록, 수정, 비활성화를 위한 관리자 UI입니다. Add / Edit 모달과 사이트 목록 테이블을 통해 모든 사이트를 중앙 관리합니다.</p>
+
+<h2 id="layout">페이지 구조</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;">vm-main
+├── vm-topbar: "사이트 관리" + 활성사이트/전체사이트 카운트
+│
+├── 통계 카드 (4개)
+│   ├── 전체 사이트: $stats['total_sites']
+│   ├── 운영 환경: $stats['production_sites']
+│   ├── 개발 환경: $stats['development_sites']
+│   └── 서버 대수: $stats['total_servers']
+│
+├── [ + 새 사이트 추가 ] 버튼 → addSite() → 숨겨진 form 표시
+│
+├── 사이트 목록 테이블
+│   ├── 사이트명 | 도메인 | 환경 | 현재버전 | 릴리즈 | 서버 | 상태 | 관리
+│   └── 각 행: [수정] [비활성화] 버튼
+│
+├── 숨겨진 "새 사이트 추가" 폼 (id="addSiteForm")
+│   ├── 사이트 ID*, 사이트명*, 도메인
+│   ├── 추가 도메인 (aliases, 콤마구분)
+│   ├── 환경 (production/development/staging)
+│   ├── 문서 루트, 앱 이름
+│   ├── 서버 호스트명, 서버 IP
+│   ├── 부모 사이트 (선택)
+│   ├── 설명
+│   └── [저장] [취소] 버튼
+│
+└── 숨겨진 "사이트 수정" 폼 (id="editSiteModal")
+    └── 기존 데이터 prefilled + [변경사항 저장] [취소]</pre>
+
+<h2 id="js-functions">JavaScript 함수 (완전 추적)</h2>
+<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// ── 사이트 추가 ──
+async function addSite() {
+    // 1) 폼 데이터 수집 (id, name, domain, environment, document_root, ...)
+    const formData = { id, name, domain, aliases, environment, document_root,
+                       app_name, server_hostname, server_ip, parent_site, description };
+
+    // 2) POST /vermanager/api/sites
+    const res = await fetch('/vermanager/api/sites', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    });
+    const data = await res.json();
+
+    // 3) 성공 시 페이지 리로드
+    if (data.ok) { alert(data.message); location.reload(); }
+}
+
+// ── 사이트 수정 (모달 표시) ──
+function editSite(siteId) {
+    // 1) GET /vermanager/api/sites?id=xxx → 사이트 데이터 가져오기
+    // 2) editSiteModal 폼 필드에 데이터 채우기
+    // 3) 모달 표시 (display:block)
+}
+
+// ── 변경사항 저장 ──
+async function saveSiteEdit() {
+    const formData = { id, name, domain, ... };
+    const res = await fetch('/vermanager/api/sites', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(formData)
+    });
+    const data = await res.json();
+    if (data.ok) { alert(data.message); location.reload(); }
+}
+
+// ── 사이트 비활성화 ──
+async function deactivateSite(siteId) {
+    if (!confirm(`정말 '${siteId}' 사이트를 비활성화하시겠습니까?\n데이터는 보존됩니다.`)) return;
+
+    const res = await fetch(`/vermanager/api/sites?id=${siteId}`, {
+        method: 'DELETE'   // → 소프트 삭제 (status='inactive')
+    });
+    const data = await res.json();
+    if (data.ok) { alert(data.message); location.reload(); }
+}</pre>
+
+<h2 id="form-fields">등록 폼 필드 상세</h2>
+<table>
+  <tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">#</th><th style="padding:8px 12px;border:1px solid var(--border);">필드</th><th style="padding:8px 12px;border:1px solid var(--border);">타입</th><th style="padding:8px 12px;border:1px solid var(--border);">필수</th><th style="padding:8px 12px;border:1px solid var(--border);">site-registry.json 경로</th></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">1</td><td style="padding:8px 12px;border:1px solid var(--border);">사이트 ID</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);"><b>필수</b></td><td style="padding:8px 12px;border:1px solid var(--border);">sites.{id}.key</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">2</td><td style="padding:8px 12px;border:1px solid var(--border);">사이트명</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);"><b>필수</b></td><td style="padding:8px 12px;border:1px solid var(--border);">name</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">3</td><td style="padding:8px 12px;border:1px solid var(--border);">도메인</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">선택</td><td style="padding:8px 12px;border:1px solid var(--border);">domain</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">4</td><td style="padding:8px 12px;border:1px solid var(--border);">환경</td><td style="padding:8px 12px;border:1px solid var(--border);">select</td><td style="padding:8px 12px;border:1px solid var(--border);"><b>필수</b></td><td style="padding:8px 12px;border:1px solid var(--border);">environment</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">5</td><td style="padding:8px 12px;border:1px solid var(--border);">문서 루트</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">선택</td><td style="padding:8px 12px;border:1px solid var(--border);">document_root</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">6</td><td style="padding:8px 12px;border:1px solid var(--border);">서버 호스트</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">선택</td><td style="padding:8px 12px;border:1px solid var(--border);">server_hostname</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">7</td><td style="padding:8px 12px;border:1px solid var(--border);">서버 IP</td><td style="padding:8px 12px;border:1px solid var(--border);">text</td><td style="padding:8px 12px;border:1px solid var(--border);">선택</td><td style="padding:8px 12px;border:1px solid var(--border);">server_ip</td></tr>
+  <tr><td style="padding:8px 12px;border:1px solid var(--border);">8</td><td style="padding:8px 12px;border:1px solid var(--border);">부모 사이트</td><td style="padding:8px 12px;border:1px solid var(--border);">select</td><td style="padding:8px 12px;border:1px solid var(--border);">선택</td><td style="padding:8px 12px;border:1px solid var(--border);">parent_site</td></tr>
+</table>
+
+<div class="notice"><strong>💡 핵심 포인트:</strong> 사이트 ID는 site-registry.json의 키(key)로 사용되며 등록 후 변경할 수 없습니다. 환경 선택에 따라 사이드바와 대시보드에서 다른 아이콘(🚀운영, 🧪개발, 📋스테이징)이 표시됩니다. 부모 사이트를 지정하면 대시보드의 <code>site=all</code> API에서 parent_site / child_sites 관계가 자동 탐색됩니다.</div>
+
+</main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

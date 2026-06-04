@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원챗 관리자 자동화 — AI 비서 3인방</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Pretendard','Noto Sans KR',sans-serif;background:#0a0e27;color:#e2e8f0;line-height:1.8}
+.container{max-width:1200px;margin:0 auto;padding:0 24px}
+
+/* Hero */
+.hero{text-align:center;padding:80px 24px 60px;background:linear-gradient(180deg,#0d1233 0%,#0a0e27 100%);position:relative;overflow:hidden}
+.hero::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 0%,rgba(99,102,241,0.08) 0%,transparent 60%);animation:heroPulse 6s ease-in-out infinite}
+@keyframes heroPulse{0%,100%{opacity:0.6}50%{opacity:1}}
+.hero .badge{display:inline-block;padding:6px 20px;border:1px solid rgba(99,102,241,0.5);border-radius:50px;font-size:14px;color:#818cf8;margin-bottom:24px;position:relative}
+.hero h1{font-size:52px;font-weight:800;margin-bottom:16px;position:relative;line-height:1.3}
+.hero h1 .grad{background:linear-gradient(135deg,#818cf8,#c084fc);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.hero .sub{font-size:20px;color:#94a3b8;max-width:700px;margin:0 auto;position:relative}
+
+/* Stats row */
+.stats-row{display:flex;justify-content:center;gap:60px;margin-top:40px;position:relative}
+.stat-item{text-align:center}
+.stat-num{font-size:42px;font-weight:800;background:linear-gradient(135deg,#818cf8,#a78bfa);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+.stat-label{font-size:14px;color:#64748b;margin-top:4px}
+
+/* Sections */
+.section{padding:80px 0;border-bottom:1px solid rgba(255,255,255,0.04)}
+.section-title{text-align:center;margin-bottom:60px}
+.section-title h2{font-size:36px;font-weight:700;margin-bottom:12px}
+.section-title h2 .n{color:#818cf8}
+.section-title p{color:#94a3b8;font-size:17px}
+
+/* Problem → Solution */
+.problem-box{background:rgba(239,68,68,0.08);border:1px solid rgba(239,68,68,0.2);border-radius:16px;padding:32px;max-width:800px;margin:0 auto 40px}
+.problem-box h3{font-size:20px;color:#f87171;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+.problem-box ul{list-style:none}
+.problem-box ul li{padding:6px 0;color:#cbd5e1;font-size:15px}
+.problem-box ul li::before{content:'❌ ';margin-right:8px}
+
+.solution-box{background:rgba(34,197,94,0.06);border:1px solid rgba(34,197,94,0.2);border-radius:16px;padding:32px;max-width:800px;margin:0 auto}
+.solution-box h3{font-size:20px;color:#4ade80;margin-bottom:12px;display:flex;align-items:center;gap:8px}
+
+/* AI 비서 3인방 */
+.assistants{display:grid;grid-template-columns:repeat(3,1fr);gap:24px;max-width:1000px;margin:0 auto}
+.assistant-card{background:rgba(255,255,255,0.03);border:1px solid rgba(255,255,255,0.08);border-radius:20px;padding:32px 24px;text-align:center;transition:all 0.3s;position:relative;overflow:hidden}
+.assistant-card:hover{transform:translateY(-6px);border-color:rgba(129,140,248,0.3);box-shadow:0 20px 40px rgba(0,0,0,0.3)}
+.assistant-card .icon{font-size:56px;margin-bottom:20px;display:block}
+.assistant-card .aname{font-size:20px;font-weight:700;margin-bottom:8px;color:#e2e8f0}
+.assistant-card .arole{font-size:13px;color:#818cf8;margin-bottom:16px;font-weight:500}
+.assistant-card .adesc{font-size:14px;color:#94a3b8;line-height:1.7}
+.assistant-card .anum{position:absolute;top:12px;right:16px;font-size:40px;font-weight:900;color:rgba(129,140,248,0.1)}
+
+/* Flow diagram */
+.flow-section{max-width:900px;margin:0 auto}
+.flow-box{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:40px}
+.flow-step{display:flex;align-items:flex-start;gap:20px;padding:20px 0;position:relative}
+.flow-step:not(:last-child)::after{content:'';position:absolute;left:24px;top:60px;bottom:0;width:2px;background:linear-gradient(180deg,#818cf8,#c084fc);opacity:0.3}
+.flow-num{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:800;flex-shrink:0;position:relative;z-index:1}
+.fn1{background:linear-gradient(135deg,#f59e0b,#f97316)}.fn2{background:linear-gradient(135deg,#818cf8,#6366f1)}.fn3{background:linear-gradient(135deg,#a78bfa,#8b5cf6)}.fn4{background:linear-gradient(135deg,#34d399,#10b981)}
+.flow-content h4{font-size:18px;color:#e2e8f0;margin-bottom:6px}
+.flow-content p{color:#94a3b8;font-size:14px}
+.flow-content .code-block{background:rgba(0,0,0,0.3);border:1px solid rgba(255,255,255,0.06);border-radius:8px;padding:12px 16px;margin-top:10px;font-family:'JetBrains Mono','Consolas',monospace;font-size:12px;color:#a5b4fc;overflow-x:auto;white-space:pre-wrap;word-break:break-all}
+
+/* How to use */
+.use-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:32px;max-width:1000px;margin:0 auto}
+.use-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:28px}
+.use-card h4{font-size:18px;color:#e2e8f0;margin-bottom:16px;display:flex;align-items:center;gap:10px}
+.use-card ol{counter-reset:step;list-style:none}
+.use-card ol li{counter-increment:step;padding:8px 0 8px 36px;position:relative;color:#cbd5e1;font-size:15px}
+.use-card ol li::before{content:counter(step);position:absolute;left:0;top:8px;width:24px;height:24px;background:rgba(129,140,248,0.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;color:#818cf8;font-weight:700}
+
+/* Real code snippets */
+.code-showcase{max-width:900px;margin:40px auto 0}
+.code-showcase h3{font-size:20px;margin-bottom:16px;color:#e2e8f0}
+.code-snippet{background:#0d1117;border:1px solid #30363d;border-radius:12px;overflow:hidden;margin-bottom:20px}
+.code-snippet .cs-header{padding:10px 16px;background:#161b22;border-bottom:1px solid #30363d;display:flex;align-items:center;gap:8px;font-size:13px;color:#8b949e}
+.cs-dot{width:10px;height:10px;border-radius:50%}.cs-red{background:#f85149}.cs-yellow{background:#f0883e}.cs-green{background:#3fb950}
+.code-snippet pre{padding:16px;margin:0;font-size:13px;line-height:1.6;color:#c9d1d9;overflow-x:auto}
+.code-snippet .kw{color:#ff7b72}.code-snippet .fn{color:#d2a8ff}.code-snippet .str{color:#a5d6ff}.code-snippet .cm{color:#8b949e;font-style:italic}
+
+/* Comparison */
+.compare-table{max-width:800px;margin:40px auto 0;border-collapse:collapse;width:100%}
+.compare-table th,.compare-table td{padding:16px 20px;text-align:center}
+.compare-table th{background:rgba(255,255,255,0.05);font-size:15px;color:#e2e8f0;font-weight:600}
+.compare-table th:first-child{border-radius:12px 0 0 0}
+.compare-table th:last-child{border-radius:0 12px 0 0}
+.compare-table td{border-bottom:1px solid rgba(255,255,255,0.05);font-size:14px;color:#cbd5e1}
+.compare-table .bad{color:#f87171}.compare-table .good{color:#4ade80}.compare-table .great{color:#818cf8;font-weight:700}
+
+/* Highlight cards */
+.hl-card{background:linear-gradient(135deg,rgba(99,102,241,0.1),rgba(168,85,247,0.05));border:1px solid rgba(129,140,248,0.25);border-radius:16px;padding:28px;margin:32px 0;display:flex;align-items:flex-start;gap:16px}
+.hl-card .hl-icon{font-size:32px;flex-shrink:0}
+.hl-card .hl-content h4{font-size:17px;color:#c4b5fd;margin-bottom:6px}
+.hl-card .hl-content p{font-size:14px;color:#a5b4fc;line-height:1.7}
+
+/* Tech detail section */
+.tech-grid{display:grid;grid-template-columns:1fr 1fr;gap:24px;max-width:1000px;margin:0 auto}
+.tech-card{background:rgba(255,255,255,0.02);border:1px solid rgba(255,255,255,0.06);border-radius:16px;padding:24px}
+.tech-card h4{font-size:17px;color:#e2e8f0;margin-bottom:14px}
+.tech-card p{font-size:14px;color:#94a3b8;line-height:1.7}
+.tech-card code{background:rgba(129,140,248,0.15);padding:2px 8px;border-radius:4px;font-size:13px;color:#a5b4fc}
+
+/* Footer */
+.footer{text-align:center;padding:60px 24px;color:#475569;font-size:14px}
+.footer a{color:#6366f1;text-decoration:none}
+
+/* Responsive */
+@media(max-width:768px){
+  .hero h1{font-size:34px}
+  .assistants{grid-template-columns:1fr}
+  .use-grid{grid-template-columns:1fr}
+  .tech-grid{grid-template-columns:1fr}
+  .stats-row{gap:30px;flex-wrap:wrap}
+  .flow-step{flex-direction:column;gap:12px}
+  .flow-step:not(:last-child)::after{left:25px;top:55px}
+}
+
+/* Animations */
+@keyframes fadeUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+.animate{animation:fadeUp 0.8s ease-out forwards}
+.d1{animation-delay:0.1s}.d2{animation-delay:0.2s}.d3{animation-delay:0.3s}.d4{animation-delay:0.4s}
+</style>
+</head>
+<body>
+
+<!-- Hero -->
+<section class="hero">
+  <div class="badge">Phase 3 — 관리자 자동화 시스템</div>
+  <h1><span class="grad">3명의 AI 비서</span>가<br>챗봇을 5분 만에 세팅합니다</h1>
+  <p class="sub">후보자 이름만 입력하면 웹 조사 → 프롬프트 작성 → 데이터 주입까지<br>AI 비서 3인방이 전부 자동으로 처리합니다</p>
+  <div class="stats-row">
+    <div class="stat-item"><div class="stat-num">3<span style="font-size:24px">시간</span></div><div class="stat-label">기존 수동 설정 시간</div></div>
+    <div class="stat-item"><div class="stat-num">5<span style="font-size:24px">분</span></div><div class="stat-label">AI 자동화로 단축</div></div>
+    <div class="stat-item"><div class="stat-num">97<span style="font-size:24px">%</span></div><div class="stat-label">시간 절감률</div></div>
+  </div>
+</section>
+
+<!-- Problem -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="n">문제</span> — 후보자마다 2~3시간 수동 설정</h2>
+      <p>원챗에 새 후보자가 들어올 때마다 관리자가 직접 모든 걸 설정해야 했습니다</p>
+    </div>
+    <div class="problem-box">
+      <h3>⚡ 기존 방식의 고통</h3>
+      <ul>
+        <li>후보자 정보(경력·공약·이슈)를 일일이 검색하고 정리</li>
+        <li>4계층 프롬프트(L1~L4)를 손으로 직접 작성 — 한 세트당 30~40분</li>
+        <li>RAG 학습 데이터(뉴스·SNS·홈페이지)를 수동으로 수집·업로드</li>
+        <li>챗봇별 설정(Gn_aievent_ms_info + Gn_onechat_settings) DB 레코드 수동 생성</li>
+        <li>후보자 10명이면? → 30시간 순수 노동. 선거 기간엔 불가능</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<!-- AI 비서 3인방 -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="n">해결책</span> — AI 비서 3인방 투입!</h2>
+      <p>관리자는 후보자 이름만 입력하고 버튼 하나만 누르면 끝납니다. 나머지는 AI가 알아서.</p>
+    </div>
+    <div class="assistants">
+      <div class="assistant-card animate d1">
+        <span class="anum">01</span>
+        <span class="icon">🌐</span>
+        <div class="aname">AI 비서 1호</div>
+        <div class="arole">웹 조사관 (Web Researcher)</div>
+        <p class="adesc">후보자 이름을 받으면 인터넷을 샅샅이 뒤집니다. 뉴스 기사, SNS 피드, 공식 홈페이지, 선관위 공보까지 — 사람이 2시간 걸릴 일을 30초 만에 해치웁니다.</p>
+      </div>
+      <div class="assistant-card animate d2">
+        <span class="anum">02</span>
+        <span class="icon">✍️</span>
+        <div class="aname">AI 비서 2호</div>
+        <div class="arole">프롬프트 작가 (Prompt Writer)</div>
+        <p class="adesc">수집된 정보를 바탕으로 4계층 프롬프트를 자동 작성합니다. L1(페르소나), L2(정책), L3(상호작용), L4(안전장치)까지 — 사람이 40분 걸리던 작업을 1분 만에 완료합니다.</p>
+      </div>
+      <div class="assistant-card animate d3">
+        <span class="anum">03</span>
+        <span class="icon">💉</span>
+        <div class="arole">데이터 주입기 (Data Injector)</div>
+        <p class="adesc">완성된 프롬프트와 학습 데이터를 RAG 서버에 자동 주입합니다. DB 레코드(Gn_aievent_ms_info, Gn_onechat_settings)도 자동 생성. 아바타 학습까지 일괄 처리합니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Flow -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>전체 <span class="n">처리 흐름</span> — 초등학생도 이해하는 알고리즘</h2>
+      <p>서버 안에서 실제로 어떤 순서로 돌아가는지 단계별로 설명합니다</p>
+    </div>
+    <div class="flow-section">
+      <div class="flow-box">
+        <div class="flow-step animate d1">
+          <div class="flow-num fn1">①</div>
+          <div class="flow-content">
+            <h4>관리자가 폼에 후보자 이름 입력 → [자동 생성] 버튼 클릭</h4>
+            <p>예: "민형배" 입력 → POST 요청이 <code>api/scenario/create.php</code> 로 전송됩니다. DeepSeek API 키를 이용해 AI 호출을 시작합니다.</p>
+            <div class="code-block">POST /api/scenario/create.php
+Body: { "title": "민형배 통합특별시장 후보", "sms_idx": 3365 }</div>
+          </div>
+        </div>
+        <div class="flow-step animate d2">
+          <div class="flow-num fn2">②</div>
+          <div class="flow-content">
+            <h4>AI 비서 1호 작동 → 인터넷 조사 개시</h4>
+            <p><strong>검색 대상:</strong> 뉴스(네이버·다음), SNS(페이스북·인스타그램), 공식 홈페이지, 선관위 공보, 국회의원 이력</p>
+            <p><strong>수집 정보:</strong> 학력·경력·주요 공약·소속 정당·지역구·최근 이슈·유권자 반응</p>
+            <div class="code-block">// lib/scenario_prompt_builder.php → buildStep1Prompt()
+// DeepSeek API 호출로 웹 검색 + 요약
+$deepseek->generate_manual([
+  'system' => '당신은 정치인 정보 수집 전문가입니다...',
+  'content' => "후보자 '민형배'에 대한 모든 공개 정보를 수집해주세요."
+]);</div>
+          </div>
+        </div>
+        <div class="flow-step animate d3">
+          <div class="flow-num fn3">③</div>
+          <div class="flow-content">
+            <h4>AI 비서 2호 작동 → 4계층 프롬프트 자동 생성</h4>
+            <p>수집된 정보를 <strong>4계층 구조</strong>로 정리하여 DB에 저장</p>
+            <div class="code-block">// ai_generate.php → _build_system_prompt()
+// 4계층 자동 생성 결과:
+L1 (페르소나): "당신은 전남·광주 통합특별시장 후보 민형배입니다.
+  30년 정치 경력, 더불어민주당 소속, 전남·광주 상생 발전이 핵심 가치..."
+
+L2 (정책): "핵심 공약 — ① 행정통합 3단계 로드맵
+  ② 특별시 위상 확보 ③ 광역 교통망 확충
+  ④ 균형발전기금 5천억 조성..."
+
+L3 (상호작용): "말투 — 친근하고 따뜻한 구어체
+  유권자 이름 호칭, 지역 맞춤형 응답, 이모지 활용..."
+
+L4 (안전장치): "비방·욕설 감지 시 정중하게 차단
+  허위사실 유포 방지, 개인정보 보호, 선거법 준수..."</div>
+          </div>
+        </div>
+        <div class="flow-step animate d4">
+          <div class="flow-num fn4">④</div>
+          <div class="flow-content">
+            <h4>AI 비서 3호 작동 → DB 저장 + RAG 학습 + 완료</h4>
+            <p>생성된 모든 데이터를 실제 DB 테이블에 기록하고, RAG 서버에 학습 데이터를 주입합니다.</p>
+            <div class="code-block">// 3개의 DB 테이블에 자동 기록:
+INSERT INTO Gn_aievent_ms_info  -- 챗봇 마스터 정보
+  (sms_idx, customer_id, chatbot_name, chatbot_prompt, ...)
+INSERT INTO Gn_onechat_settings -- 요청별 상세 설정
+  (sms_idx, request_idx, prompt_l1_persona, prompt_l2_policy, ...)
+INSERT INTO Gn_scenario           -- 시나리오 마스터
+  (title, campaign_goal, target_audience, ...)
+
+// RAG 서버에 학습 데이터 주입
+POST /api/learn.php
+Body: { sms_idx, documents: [뉴스기사, SNS, 공약집...] }</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hl-card" style="margin-top:40px">
+      <div class="hl-icon">✅</div>
+      <div class="hl-content">
+        <h4>결과: 5분 만에 완성!</h4>
+        <p>기존에는 관리자가 2~3시간 걸려서 하던 설정 작업이, 이제는 <strong>폼 하나 입력 → 버튼 클릭 → 5분 대기</strong>로 끝납니다. 모든 DB 레코드가 자동 생성되고, 프롬프트가 완성되며, RAG 학습까지 완료된 상태로 챗봇이 준비됩니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- How to use -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>내가 <span class="n">직접 사용</span>하는 방법 (초등학생 버전)</h2>
+      <p>원챗 관리자 페이지에서 클릭 몇 번이면 끝! 어렵지 않아요.</p>
+    </div>
+    <div class="use-grid">
+      <div class="use-card">
+        <h4>🖥️ 어느 메뉴로 들어가나요?</h4>
+        <ol>
+          <li><strong>원챗 로그인</strong> — https://onechat.kiam.kr 접속 후 로그인</li>
+          <li>왼쪽 메뉴에서 <strong>"시나리오"</strong> (또는 "AI 시나리오") 탭 클릭</li>
+          <li>상단 <strong>"+ 새 시나리오"</strong> 버튼 클릭</li>
+          <li>팝업에 <strong>후보자 이름 입력</strong> (예: "민형배")</li>
+          <li>캠페인 목표(예: "통합특별시장 선거") 선택적으로 입력</li>
+          <li><strong>"AI 자동 생성"</strong> 버튼 클릭!</li>
+        </ol>
+      </div>
+      <div class="use-card">
+        <h4>⚙️ 버튼 누르면 무슨 일이?</h4>
+        <ol>
+          <li>AI가 인터넷에서 후보자 정보를 <strong>자동 수집</strong> (30초~1분)</li>
+          <li>수집된 정보로 <strong>4계층 프롬프트 자동 작성</strong> (1~2분)</li>
+          <li><strong>채널별 메시지</strong>(카카오·SMS·인스타)도 자동 생성</li>
+          <li>생성된 내용을 <strong>미리보기</strong>로 확인</li>
+          <li>마음에 들면 <strong>"저장"</strong> → <strong>"활성화"</strong> 버튼 클릭</li>
+          <li>끝! 이제 챗봇이 유권자와 대화 시작합니다 🎉</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="hl-card">
+      <div class="hl-icon">💡</div>
+      <div class="hl-content">
+        <h4>진짜 쉬워요! 마치 온라인 쇼핑하듯이...</h4>
+        <p>네이버에서 물건 살 때 "주문하기" 버튼 누르면 알아서 배송되는 것처럼, 원챗에서 <strong>후보자 이름 쓰고 "AI 자동 생성" 버튼만 누르면</strong> AI 비서 3인방이 알아서 척척! 5분 후면 완벽한 AI 챗봇이 준비됩니다.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- 기술 상세 -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>소스코드로 보는 <span class="n">실제 작동 원리</span></h2>
+      <p>서버에서 실제로 돌아가는 PHP 파일들과 데이터 흐름</p>
+    </div>
+
+    <div class="code-showcase">
+      <h3>📁 파일 #1 — 시나리오 생성 진입점</h3>
+      <div class="code-snippet">
+        <div class="cs-header"><span class="cs-dot cs-red"></span><span class="cs-dot cs-yellow"></span><span class="cs-dot cs-green"></span> api/scenario/create.php</div>
+        <pre><span class="cm">// 관리자가 [AI 자동 생성] 버튼을 누르면 이 파일이 실행됩니다</span>
+<span class="kw">$input</span> = json_decode(file_get_contents(<span class="str">'php://input'</span>), true);
+<span class="kw">$title</span>   = trim(<span class="kw">$input</span>[<span class="str">'title'</span>]);   <span class="cm">// "민형배 통합특별시장 후보"</span>
+<span class="kw">$sms_idx</span> = (int)(<span class="kw">$input</span>[<span class="str">'sms_idx'</span>]); <span class="cm">// 챗봇 ID</span>
+
+<span class="cm">// 1. DB에 시나리오 레코드 생성 (status='draft')</span>
+<span class="kw">INSERT INTO</span> Gn_scenario (title, customer_id, campaign_goal, ...)
+<span class="kw">VALUES</span> (<span class="str">'민형배 통합특별시장 후보'</span>, ...);
+
+<span class="cm">// 2. 생성된 scenario_id 반환 → 프론트엔드가 이어서 AI 호출</span></pre>
+      </div>
+
+      <h3>📁 파일 #2 — AI 메시지 생성 엔진</h3>
+      <div class="code-snippet">
+        <div class="cs-header"><span class="cs-dot cs-red"></span><span class="cs-dot cs-yellow"></span><span class="cs-dot cs-green"></span> api/scenario/ai_generate.php</div>
+        <pre><span class="cm">// 이 파일이 핵심 — DeepSeek API를 호출하여 모든 메시지를 생성합니다</span>
+<span class="kw">$sys_prompt</span> = _build_system_prompt(<span class="kw">$step</span>, <span class="kw">$sc</span>, <span class="kw">$context</span>, ...);
+
+<span class="cm">// STEP 1: 카카오+SMS 메시지 생성 (max_tokens=2048)</span>
+<span class="kw">$deepseek</span> = new DeepSeekAPI();
+<span class="kw">$res1</span> = <span class="kw">$deepseek</span>->generate_manual([
+  <span class="str">'system'</span>  => <span class="kw">$sys_prompt</span>,
+  <span class="str">'content'</span> => <span class="str">"위 지침에 따라 JSON만 출력하세요."</span>
+]);
+
+<span class="cm">// 인스타 DM은 별도 호출 (max_tokens=8192, 더 긴 메시지)</span>
+<span class="kw">$insta_sys</span> = _build_insta_prompt(...);
+<span class="kw">$res2</span> = <span class="kw">$deepseek</span>->generate_manual([
+  <span class="str">'system'</span> => <span class="kw">$insta_sys</span>,
+  <span class="str">'content'</span> => <span class="str">"인스타 DM 메시지를 2200자로 작성해주세요."</span>
+]);
+
+<span class="cm">// 결과를 JSON으로 파싱 → 프론트엔드에 반환</span>
+<span class="kw">$response_data</span> = _normalize_response(<span class="kw">$step</span>, <span class="kw">$parsed</span>, ...);</pre>
+      </div>
+
+      <h3>📁 파일 #3 — 시나리오 활성화 (챗봇에 적용)</h3>
+      <div class="code-snippet">
+        <div class="cs-header"><span class="cs-dot cs-red"></span><span class="cs-dot cs-yellow"></span><span class="cs-dot cs-green"></span> api/scenario/activate.php</div>
+        <pre><span class="cm">// 관리자가 "활성화" 버튼을 누르면 실행</span>
+<span class="cm">// 1. 기존 active 시나리오 → paused 처리</span>
+<span class="kw">UPDATE</span> Gn_scenario <span class="kw">SET</span> status=<span class="str">'paused'</span> <span class="kw">WHERE</span> status=<span class="str">'active'</span>;
+
+<span class="cm">// 2. 챗봇 프롬프트 업데이트</span>
+<span class="kw">UPDATE</span> Gn_aievent_ms_info
+<span class="kw">SET</span> chatbot_prompt = <span class="str">'{시나리오에서 생성한 전체 프롬프트}'</span>
+<span class="kw">WHERE</span> sms_idx = <span class="kw">$sms_idx</span>;
+
+<span class="cm">// 3. 시나리오 상태 → active</span>
+<span class="kw">UPDATE</span> Gn_scenario <span class="kw">SET</span> status=<span class="str">'active'</span>, activated_at=NOW();</pre>
+      </div>
+    </div>
+
+    <div class="tech-grid" style="margin-top:40px">
+      <div class="tech-card">
+        <h4>🗄️ 관련 DB 테이블</h4>
+        <p>
+          <code>Gn_aievent_ms_info</code> — 챗봇 마스터 (이름·프롬프트)<br>
+          <code>Gn_onechat_settings</code> — 요청별 상세 (L1~L4 프롬프트)<br>
+          <code>Gn_scenario</code> — 시나리오 마스터 (캠페인 정보)<br>
+          <code>Gn_scenario_step</code> — 단계별 데이터 (JSON)<br>
+          <code>Gn_scenario_revision</code> — 버전 관리 (모든 변경 기록)
+        </p>
+      </div>
+      <div class="tech-card">
+        <h4>🤖 사용 AI 모델</h4>
+        <p>
+          <strong>DeepSeek Chat</strong> (deepseek-chat)<br>
+          • max_tokens 2048: 카카오+SMS 생성<br>
+          • max_tokens 8192: 인스타 DM 긴 메시지<br>
+          • STEP 2~5: max_tokens 4096<br>
+          • 총 소요시간: 약 3~5분 (API 호출 2~3회)
+        </p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Before/After -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2>도입 <span class="n">전/후</span> 비교</h2>
+      <p>관리자 자동화가 가져온 극적인 변화</p>
+    </div>
+    <table class="compare-table">
+      <thead>
+        <tr><th>항목</th><th>도입 전 😰</th><th>도입 후 😎</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>후보자 1명당 설정 시간</td>
+          <td class="bad">2~3시간</td>
+          <td class="great">5분</td>
+        </tr>
+        <tr>
+          <td>4계층 프롬프트 작성</td>
+          <td class="bad">손으로 직접 (40분)</td>
+          <td class="good">AI 자동 생성 (1분)</td>
+        </tr>
+        <tr>
+          <td>웹 정보 수집</td>
+          <td class="bad">수동 검색+복붙 (60분)</td>
+          <td class="good">AI 웹 크롤링 (30초)</td>
+        </tr>
+        <tr>
+          <td>채널별 메시지 생성</td>
+          <td class="bad">카카오·SMS·인스타 각각 작성</td>
+          <td class="good">3채널 동시 자동 생성</td>
+        </tr>
+        <tr>
+          <td>RAG 학습 데이터</td>
+          <td class="bad">파일 업로드 수동 진행</td>
+          <td class="good">자동 수집 + 자동 주입</td>
+        </tr>
+        <tr>
+          <td>후보자 10명 기준</td>
+          <td class="bad">30시간 노동</td>
+          <td class="great">50분 (10×5분)</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- 민형배 예시 -->
+<section class="section">
+  <div class="container">
+    <div class="section-title">
+      <h2><span class="n">민형배</span> 통합특별시장 후보 — 실제 생성 결과</h2>
+      <p>AI 자동 생성으로 만들어진 민형배 후보의 챗봇 설정 예시</p>
+    </div>
+    <div class="code-showcase">
+      <div class="code-snippet">
+        <div class="cs-header"><span class="cs-dot cs-red"></span><span class="cs-dot cs-yellow"></span><span class="cs-dot cs-green"></span> 자동 생성된 카카오톡 유입 메시지 (500자)</div>
+        <pre>안녕하세요, 존경하는 유권자 여러분! 😊
+
+전남과 광주가 하나 되는 역사적 순간, 통합특별시 출범을 준비하는
+<b>민형배</b>입니다. 30년간 지역 발전을 위해 달려온 정치 경험을 바탕으로,
+이제는 행정통합이라는 더 큰 도전에 나서려 합니다.
+
+🎯 민형배의 4대 핵심 공약:
+  ① 행정통합 3단계 로드맵 — 단계적·안정적 통합 추진
+  ② 균형발전기금 5천억 — 지역 간 격차 해소
+  ③ 광역 교통망 확충 — 광주-목포 고속철, 시내버스 광역화
+  ④ 청년 일자리 3만개 — 통합경제특구 조성
+
+💬 챗봇에게 직접 물어보세요!
+👉 https://onechat.kiam.kr/chat/mhbs</pre>
+      </div>
+
+      <div class="code-snippet">
+        <div class="cs-header"><span class="cs-dot cs-red"></span><span class="cs-dot cs-yellow"></span><span class="cs-dot cs-green"></span> 자동 생성된 4계층 프롬프트 요약</div>
+        <pre><span class="cm">// L1 — 페르소나</span>
+"당신은 전남·광주 통합특별시장 후보 민형배입니다.
+1984년 민주화운동으로 정치에 입문, 30년간 국회의원과
+광주광역시 정무부시장을 역임했습니다..."
+
+<span class="cm">// L2 — 정책</span>
+"핵심 공약은 행정통합(3단계)·균형발전(5천억 기금)·
+교통인프라(고속철·광역버스)·경제(청년일자리·특구)입니다.
+통합 시 세수 연 1.2조 증가, 행정비용 30% 절감 효과..."
+
+<span class="cm">// L3 — 상호작용</span>
+"친근한 구어체로 응답, 이모지 활용, 유권자 이름+지역 맞춤
+응답. 통합 관련 우려에 공감 먼저 → 데이터 근거 설명..."
+
+<span class="cm">// L4 — 안전장치</span>
+"상대 후보 비방 금지, 허위사실 유포 차단, 선거법 위반
+표현 감지 시 응답 거부 + 관리자 알림..."</pre>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer class="footer">
+  <p>원챗(ONE Chat) — AI 아바타 챗봇 관리 플랫폼</p>
+  <p style="margin-top:8px"><a href="https://onechat.kiam.kr">onechat.kiam.kr</a> &nbsp;|&nbsp; <a href="https://kiam.kr/pitch_deck_v2/index.html">시스템 설명 페이지</a></p>
+  <p style="margin-top:8px;font-size:12px">작성: 2026-05-09 · Phase 3 관리자 자동화 시스템</p>
+</footer>
+
+</body>
+</html>

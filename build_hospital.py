@@ -1,0 +1,430 @@
+#!/usr/bin/env python3
+"""Build redesigned hospital01_mk.html with sinwon002 navy/gold theme."""
+
+import os
+import json
+
+OUT = '/home/webapp/aimessage/onechat/hospital01_mk.html'
+
+# Minimal CSS that captures the full sinwon002 style (navy/gold theme)
+CSS = '''*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --navy:#0A1628;--navy2:#0D1F3C;--navy3:#162947;
+  --ocean:#0E6BA8;--ocean2:#1A85CC;--ocean3:#48CAE4;
+  --gold:#C9A84C;--gold2:#E2C068;--gold-light:#FDF3DC;
+  --dawn:#023E8A;--wave:#90E0EF;--white:#FFFFFF;
+  --danger:#EF4444;--med-green:#2E7D32;
+  --header-bg:#0D1F3C;--header-sub:#7A9BB5;--chat-bg:#F0F4F8;
+  --msg-ai-bg:#FFFFFF;--msg-ai-border:#D0DAEB;
+  --msg-user-bg:#E0F2FE;--msg-user-border:#90CAF9;
+  --msg-text:#1E293B;--time-color:#94A3B8;
+  --tabbar-bg:#0A1628;--tab-active:#0E6BA8;
+}
+html,body{
+  font-family:'Apple SD Gothic Neo','Malgun Gothic',-apple-system,BlinkMacSystemFont,sans-serif;
+  background:var(--navy);color:#1E293B;height:100%;overflow:hidden;
+}
+#app-shell{
+  position:fixed;inset:0;display:flex;flex-direction:column;
+  max-width:480px;margin:0 auto;background:var(--chat-bg);overflow:hidden;
+}
+#inv-banner{
+  flex-shrink:0;background:linear-gradient(90deg,#0A1628,#023E8A,#0A1628);
+  border-bottom:1px solid rgba(201,168,76,0.4);padding:6px 14px;
+  display:flex;align-items:center;gap:8px;z-index:100;
+}
+.ib-brand{font-size:13px;font-weight:800;color:var(--gold);letter-spacing:1px;}
+.ib-tag{font-size:11px;color:rgba(255,255,255,0.5);flex:1;text-align:center;}
+.ib-badge{background:var(--gold);color:var(--navy);font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;}
+#funnel-bar{
+  flex-shrink:0;background:rgba(10,22,40,0.97);
+  border-bottom:1px solid rgba(201,168,76,0.15);padding:6px 10px;
+  display:flex;align-items:center;gap:0;overflow-x:auto;scrollbar-width:none;z-index:99;
+}
+#funnel-bar::-webkit-scrollbar{display:none;}
+.fs{display:flex;align-items:center;gap:4px;flex-shrink:0;}
+.fs-dot{
+  width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;
+  font-size:11px;font-weight:800;border:1.5px solid rgba(255,255,255,0.12);
+  background:rgba(255,255,255,0.05);color:rgba(255,255,255,0.3);transition:all 0.2s;
+}
+.fs-lbl{font-size:10px;color:rgba(255,255,255,0.25);white-space:nowrap;transition:all 0.4s;}
+.fs.active .fs-dot{background:var(--gold);border-color:var(--gold2);color:var(--navy);box-shadow:0 0 10px rgba(201,168,76,0.5);}
+.fs.active .fs-lbl{color:var(--gold);font-weight:700;}
+.fs.done .fs-dot{background:rgba(201,168,76,0.2);border-color:var(--gold);color:var(--gold);}
+.fs.done .fs-lbl{color:rgba(201,168,76,0.55);}
+.fa{color:rgba(255,255,255,0.15);font-size:10px;padding:0 3px;flex-shrink:0;}
+.screen{display:none;flex-direction:column;flex:1;min-height:0;overflow-y:auto;
+  animation:fadeUp 0.35s ease both;-webkit-overflow-scrolling:touch;}
+.screen.active{display:flex;}
+.scr-dark{background:var(--navy);}
+@keyframes fadeUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:translateY(0)}}
+
+/* Instagram */
+#scr-insta{background:#fff;flex-direction:column;overflow-y:auto;}
+.insta-statusbar{flex-shrink:0;background:#fff;padding:12px 16px 4px;display:flex;align-items:center;justify-content:space-between;}
+.sb-time{font-size:14px;font-weight:700;color:#000;}
+.sb-icons{display:flex;align-items:center;gap:6px;}
+.sb-signal,.sb-wifi,.sb-battery{color:#000;}
+.insta-header{flex-shrink:0;background:#fff;padding:6px 14px 8px;display:flex;align-items:center;border-bottom:0.5px solid rgba(0,0,0,0.1);}
+.insta-wordmark{height:32px;flex:1;}
+.insta-hdr-icons{display:flex;align-items:center;gap:6px;}
+.ih-icon-btn{background:none;border:none;cursor:pointer;width:28px;height:28px;display:flex;align-items:center;justify-content:center;padding:2px;}
+.ih-icon-btn svg{width:24px;height:24px;}
+.insta-stories{flex-shrink:0;background:#fff;padding:10px 0 12px 12px;display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;border-bottom:0.5px solid rgba(0,0,0,0.08);}
+.story-item{display:flex;flex-direction:column;align-items:center;gap:5px;flex-shrink:0;}
+.story-ring{width:62px;height:62px;border-radius:50%;padding:2.5px;background:linear-gradient(45deg,#FEDA77,#F58529,#DD2A7B,#8134AF,#515BD4);display:flex;align-items:center;justify-content:center;}
+.story-av{width:55px;height:55px;border-radius:50%;border:2.5px solid #fff;display:flex;align-items:center;justify-content:center;font-size:22px;overflow:hidden;}
+.story-lbl{font-size:11px;color:#000;text-align:center;max-width:66px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.feed-post-hdr{flex-shrink:0;background:#fff;padding:10px 12px;display:flex;align-items:center;gap:10px;}
+.feed-av-wrap{width:32px;height:32px;border-radius:50%;padding:2px;background:linear-gradient(45deg,#FEDA77,#F58529,#DD2A7B,#8134AF);flex-shrink:0;}
+.feed-av{width:100%;height:100%;border-radius:50%;border:2px solid #fff;display:flex;align-items:center;justify-content:center;font-size:12px;}
+.feed-name-wrap{flex:1;}
+.feed-name{font-size:13px;font-weight:700;color:#000;line-height:1.3;}
+.feed-location{font-size:11px;color:#555;}
+.feed-follow-btn{background:none;border:none;color:#0095F6;font-size:14px;font-weight:700;cursor:pointer;}
+.feed-more-btn{background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px;}
+.ad-visual{width:100%;height:210px;position:relative;overflow:hidden;flex-shrink:0;}
+.ad-sponsored-bar{position:absolute;top:0;left:0;right:0;background:rgba(0,0,0,0.32);padding:5px 12px;display:flex;align-items:center;justify-content:space-between;backdrop-filter:blur(2px);}
+.ad-sp-text{font-size:11px;color:rgba(255,255,255,0.75);font-weight:600;}
+.ad-sp-badge{background:rgba(255,255,255,0.2);border:1px solid rgba(255,255,255,0.4);color:#fff;font-size:10px;font-weight:700;padding:2px 8px;border-radius:8px;}
+.ad-copy-wrap{position:absolute;bottom:14%;left:0;right:0;text-align:center;padding:0 20px;z-index:10;}
+.ad-copy-main{font-size:26px;font-weight:900;color:#fff;line-height:1.3;text-shadow:0 2px 16px rgba(0,0,0,0.55);letter-spacing:-0.5px;}
+.ad-copy-main em{color:#FFE082;font-style:normal;}
+.ad-copy-sub{font-size:14px;color:rgba(255,255,255,0.88);margin-top:7px;text-shadow:0 1px 8px rgba(0,0,0,0.45);font-weight:500;}
+.ad-copy-badge{display:inline-block;background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.5);color:#fff;font-size:12px;font-weight:700;padding:4px 13px;border-radius:20px;margin-top:9px;backdrop-filter:blur(4px);}
+.ad-bottom{flex-shrink:0;background:#fff;padding:10px 12px 8px;}
+.ad-action-row{display:flex;align-items:center;margin-bottom:9px;}
+.ad-icon-btn{background:none;border:none;cursor:pointer;padding:3px;display:flex;align-items:center;justify-content:center;}
+.ad-icon-btn svg{width:24px;height:24px;}
+.ad-icon-btn+.ad-icon-btn{margin-left:8px;}
+.ad-bookmark-btn{margin-left:auto;}
+.ad-likes{font-size:13px;font-weight:700;color:#000;margin-bottom:5px;}
+.ad-caption{font-size:13px;color:#000;margin-bottom:6px;line-height:1.5;}
+.ad-caption b{font-weight:700;}
+.ad-more{color:#8e8e8e;}
+.ad-comments-link{font-size:13px;color:#8e8e8e;margin-bottom:6px;}
+.ad-timestamp{font-size:11px;color:#8e8e8e;margin-bottom:10px;letter-spacing:0.2px;}
+.insta-cta{width:100%;padding:13px;background:#0095F6;border:none;border-radius:8px;color:#fff;font-size:15px;font-weight:700;cursor:pointer;transition:all 0.3s;}
+.insta-cta:hover{background:#1AA0F7;}
+.insta-bottom-nav{flex-shrink:0;background:#fff;border-top:0.5px solid rgba(0,0,0,0.15);padding:8px 0 10px;display:flex;align-items:center;justify-content:space-around;}
+.ibn-btn{background:none;border:none;cursor:pointer;display:flex;align-items:center;justify-content:center;padding:4px 10px;}
+.ibn-btn svg{width:26px;height:26px;}
+.ibn-profile{width:26px;height:26px;border-radius:50%;background:linear-gradient(135deg,#90caf9,#42a5f5);border:1.5px solid transparent;}
+
+/* KIAM Chat */
+.kiam-header{flex-shrink:0;background:var(--header-bg);padding:11px 14px 9px;display:flex;align-items:flex-start;gap:10px;}
+.kh-back{color:#fff;font-size:20px;opacity:0.7;cursor:pointer;margin-top:2px;flex-shrink:0;}
+.kh-avatar-char{width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:18px;font-weight:800;color:#fff;flex-shrink:0;}
+.kh-center{flex:1;}
+.kh-title{font-size:17px;font-weight:700;color:#fff;line-height:1.3;}
+.kh-sub{font-size:12px;color:var(--header-sub);margin-top:2px;}
+.kh-badges{display:flex;gap:5px;margin-top:5px;}
+.kh-badge{border-radius:10px;padding:2px 8px;font-size:10px;font-weight:700;border:1px solid;display:flex;align-items:center;gap:3px;}
+.kh-badge .bdot{width:5px;height:5px;border-radius:50%;}
+.kh-badge.myai{color:#22C55E;border-color:#22C55E;}
+.kh-badge.myai .bdot{background:#22C55E;}
+.kh-badge.user{color:#48CAE4;border-color:#48CAE4;}
+.kh-badge.state{color:#94A3B8;border-color:#94A3B8;}
+.kh-badge.aimode{color:#22C55E;border-color:#22C55E;}
+.kh-badge.aimode .bdot{background:#22C55E;}
+.kh-badge.manager{color:var(--gold);border-color:var(--gold);}
+.kh-badge.manager .bdot{background:var(--gold);}
+.kh-info{font-size:20px;opacity:0.5;color:#fff;flex-shrink:0;}
+.green-bar{flex-shrink:0;background:linear-gradient(90deg,#0A2B15,#143D1E);padding:8px 14px;display:flex;align-items:center;gap:9px;}
+.gb-icon{font-size:18px;}
+.gb-main{font-size:13px;font-weight:700;color:#22C55E;}
+.gb-sub{font-size:11px;color:rgba(255,255,255,0.45);}
+.kiam-tabs{flex-shrink:0;background:var(--header-bg);border-bottom:1px solid rgba(255,255,255,0.06);display:flex;padding:0 10px;gap:2px;}
+.kt{padding:8px 12px;font-size:13px;color:rgba(255,255,255,0.38);border-bottom:2px solid transparent;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.kt.active{color:var(--gold);border-bottom-color:var(--gold);font-weight:700;}
+.kiam-msgs{flex:1;overflow-y:auto;padding:16px 12px;display:flex;flex-direction:column;gap:11px;background:var(--chat-bg);scroll-behavior:smooth;}
+.date-div{text-align:center;font-size:12px;color:var(--time-color);padding:4px 0;}
+
+/* Bubbles */
+.row-ai{display:flex;align-items:flex-end;gap:7px;opacity:0;transform:translateY(10px);transition:opacity 0.38s,transform 0.38s;}
+.row-ai.vis{opacity:1;transform:translateY(0);}
+.ai-av{width:32px;height:32px;border-radius:50%;background:var(--header-bg);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.ai-bubble{max-width:74%;background:var(--msg-ai-bg);border:1px solid var(--msg-ai-border);border-radius:18px 18px 18px 4px;padding:11px 15px;font-size:16px;color:var(--msg-text);line-height:1.7;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.ai-time{font-size:10px;color:var(--time-color);margin-top:3px;padding-left:2px;}
+.row-user{display:flex;align-items:flex-end;gap:7px;flex-direction:row-reverse;opacity:0;transform:translateY(10px);transition:opacity 0.38s,transform 0.38s;}
+.row-user.vis{opacity:1;transform:translateY(0);}
+.user-av{width:32px;height:32px;border-radius:50%;background:var(--ocean);display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;}
+.user-bubble{max-width:74%;background:var(--msg-user-bg);border:1px solid var(--msg-user-border);border-radius:18px 18px 4px 18px;padding:11px 15px;font-size:16px;color:var(--msg-text);line-height:1.7;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.user-time{font-size:10px;color:var(--time-color);margin-top:3px;text-align:right;padding-right:2px;}
+.typing-row{display:flex;align-items:flex-end;gap:7px;opacity:0;transition:opacity 0.3s;}
+.typing-row.vis{opacity:1;}
+.typing-dots{background:var(--msg-ai-bg);border:1px solid var(--msg-ai-border);border-radius:18px 18px 18px 4px;padding:11px 15px;display:flex;align-items:center;gap:5px;box-shadow:0 1px 4px rgba(0,0,0,0.07);}
+.td{width:7px;height:7px;background:#94A3B8;border-radius:50%;animation:tdBounce 1.2s infinite;}
+.td:nth-child(2){animation-delay:.2s}
+.td:nth-child(3){animation-delay:.4s}
+@keyframes tdBounce{0%,60%,100%{transform:translateY(0)}30%{transform:translateY(-7px)}}
+
+/* Choices */
+.choice-group{display:flex;flex-wrap:wrap;gap:8px;padding:3px 0 3px 39px;opacity:0;transform:translateY(7px);transition:opacity 0.38s,transform 0.38s;}
+.choice-group.vis{opacity:1;transform:translateY(0);}
+.choice-btn{padding:10px 18px;border:1.5px solid rgba(201,168,76,0.5);background:rgba(201,168,76,0.08);color:#C9A84C;font-size:15px;font-weight:600;border-radius:22px;cursor:pointer;transition:all 0.22s;white-space:nowrap;}
+.choice-btn:hover{background:var(--gold);color:var(--navy);}
+.choice-btn:disabled{opacity:0.45;cursor:default;}
+.choice-btn.sel{background:var(--gold);color:var(--navy);border-color:var(--gold);}
+
+/* Widget cards */
+.widget-card{display:flex;align-items:center;gap:10px;background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:14px;padding:12px;transition:opacity 0.4s,transform 0.4s;}
+.widget-card.vis{opacity:1;transform:translateY(0);}
+.widget-card-img{width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.widget-card-body{flex:1;min-width:0;}
+.widget-card-title{font-size:13px;font-weight:700;color:#1F2937;}
+.widget-card-desc{font-size:11px;color:#6B7280;margin-top:2px;}
+.widget-card-btn{background:var(--ocean);color:#fff;border:none;border-radius:10px;padding:8px 12px;font-size:12px;font-weight:700;cursor:pointer;flex-shrink:0;transition:all 0.2s;}
+
+/* Booking */
+.booking-card{background:#fff;border:1px solid rgba(0,0,0,0.07);border-radius:14px;padding:14px;margin-bottom:10px;}
+.bc-title{font-size:14px;font-weight:700;color:#1F2937;margin-bottom:6px;}
+.booking-slots{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;}
+.booking-slot{padding:8px 14px;border:1.5px solid rgba(0,0,0,0.12);background:#fff;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;}
+.booking-slot.sel{background:var(--med-green);color:#fff;border-color:var(--med-green);}
+.booking-confirm{width:100%;padding:14px;border:none;border-radius:12px;background:linear-gradient(135deg,var(--gold),#A67C2A);color:var(--navy);font-size:15px;font-weight:800;cursor:pointer;transition:all 0.3s;box-shadow:0 3px 14px rgba(201,168,76,0.3);}
+.booking-confirm:hover{transform:translateY(-1px);}
+.profile-transition{text-align:center;font-size:11px;color:var(--time-color);padding:8px 0;}
+.manager-profile{display:flex;align-items:center;gap:10px;padding:8px 0;}
+.manager-avatar{width:36px;height:36px;border-radius:50%;background:var(--ocean);display:flex;align-items:center;justify-content:center;font-size:18px;}
+.manager-name{font-size:13px;font-weight:700;color:var(--msg-text);}
+.manager-role{font-size:11px;color:#6B7280;}
+
+/* Promise cards */
+.promise-card{display:flex;align-items:flex-start;gap:10px;background:#fff;border:1px solid rgba(0,0,0,0.06);border-radius:12px;padding:12px 14px;}
+.pc-icon{font-size:20px;flex-shrink:0;margin-top:2px;}
+.pc-title{font-size:13px;font-weight:700;color:#1F2937;margin-bottom:3px;}
+.pc-desc{font-size:12px;color:#6B7280;line-height:1.6;}
+
+/* Dark screens */
+.res-lbl{font-size:11px;font-weight:700;color:rgba(255,255,255,0.28);letter-spacing:1.5px;padding:18px 16px 0;margin-bottom:12px;}
+#scr-dash .res-lbl,#scr-noshow .res-lbl,#scr-summary .res-lbl{background:var(--navy);}
+.dark-card{background:var(--navy2);border:1px solid rgba(255,255,255,0.07);border-radius:16px;padding:20px 18px;margin:0 16px 16px;}
+.dark-card-title{font-size:13px;color:rgba(255,255,255,0.45);margin-bottom:13px;font-weight:600;}
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;}
+.kpi-card{background:rgba(255,255,255,0.04);border:1px solid rgba(255,255,255,0.08);border-radius:12px;padding:12px 8px;text-align:center;}
+.kpi-val{font-size:22px;font-weight:900;color:#fff;}
+.kpi-val.green{color:var(--gold);}
+.kpi-val.amber{color:#E2C068;}
+.kpi-label{font-size:10px;color:rgba(255,255,255,0.38);margin-top:3px;}
+
+/* Compare table */
+.compare-table{width:100%;border-collapse:collapse;font-size:12px;}
+.compare-table th{color:rgba(255,255,255,0.35);font-weight:600;padding:6px 8px;text-align:left;border-bottom:1px solid rgba(255,255,255,0.1);}
+.compare-table td{padding:8px;border-bottom:1px solid rgba(255,255,255,0.05);color:rgba(255,255,255,0.7);}
+.compare-table td.highlight{color:var(--gold);font-weight:700;}
+
+/* Funnel steps */
+.funnel-step{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.funnel-step-bar{height:22px;border-radius:4px;display:flex;align-items:center;padding-left:8px;font-size:11px;font-weight:700;color:#fff;}
+.funnel-step-pct{font-size:10px;color:rgba(255,255,255,0.35);min-width:36px;text-align:right;}
+
+/* Trust list */
+.trust-item{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.trust-name{font-size:11px;color:rgba(255,255,255,0.45);min-width:40px;}
+.trust-bar-track{flex:1;height:8px;background:rgba(255,255,255,0.08);border-radius:4px;overflow:hidden;}
+.trust-bar-fill{height:100%;border-radius:4px;background:linear-gradient(90deg,var(--ocean),var(--gold));transition:width 1s ease;}
+.trust-val{font-size:11px;color:#fff;font-weight:700;min-width:36px;text-align:right;}
+
+/* Briefing summary */
+.briefing-card{padding:0 16px 40px;}
+.briefing-card h2{font-size:22px;font-weight:900;color:var(--gold);text-align:center;margin-bottom:8px;}
+.subtitle{font-size:13px;color:rgba(255,255,255,0.4);text-align:center;margin-bottom:24px;}
+.briefing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:24px;}
+.brief-item{background:var(--navy2);border:1px solid rgba(255,255,255,0.06);border-radius:14px;padding:16px;text-align:center;}
+.bi-icon{font-size:24px;margin-bottom:8px;}
+.bi-title{font-size:13px;font-weight:800;color:#fff;margin-bottom:4px;}
+.bi-desc{font-size:11px;color:rgba(255,255,255,0.45);line-height:1.5;}
+.brief-roi{text-align:center;background:linear-gradient(135deg,rgba(201,168,76,0.15),rgba(201,168,76,0.05));border:1px solid rgba(201,168,76,0.35);border-radius:16px;padding:24px;margin-bottom:20px;}
+.roi-label{font-size:12px;color:rgba(255,255,255,0.4);margin-bottom:6px;}
+.roi-val{font-size:36px;font-weight:900;color:var(--gold);margin-bottom:8px;}
+.roi-desc{font-size:13px;color:rgba(255,255,255,0.55);line-height:1.6;}
+.brief-cta{width:100%;padding:16px;border:none;border-radius:14px;background:linear-gradient(135deg,var(--ocean),var(--dawn));color:#fff;font-size:16px;font-weight:800;cursor:pointer;transition:all 0.3s;box-shadow:0 6px 22px rgba(14,107,168,0.4);}
+.brief-cta:hover{transform:translateY(-2px);box-shadow:0 10px 28px rgba(14,107,168,0.55);}
+
+/* Insight pill */
+.i-pill{display:inline-flex;align-items:center;gap:5px;background:rgba(14,107,168,0.12);border:1px solid rgba(72,202,228,0.35);color:#7DD3F0;font-size:12px;font-weight:600;padding:5px 10px;border-radius:8px;margin:6px 0;letter-spacing:0.2px;line-height:1.5;flex-shrink:0;}
+.i-pill::before{content:'💡';font-size:11px;}
+.i-pill b{color:var(--gold);}
+
+/* Toggle & input */
+.ai-toggle-bar{flex-shrink:0;background:#F7F8FA;border-top:1px solid rgba(0,0,0,0.06);padding:8px 14px;display:flex;align-items:center;gap:9px;}
+.toggle-pill{width:40px;height:22px;background:#22C55E;border-radius:11px;position:relative;flex-shrink:0;display:flex;align-items:center;padding:2px;}
+.toggle-pill::after{content:'🤖';font-size:12px;position:absolute;right:3px;width:18px;height:18px;background:white;border-radius:50%;display:flex;align-items:center;justify-content:center;line-height:1;}
+.ai-toggle-lbl{font-size:13px;color:#6B7280;display:flex;align-items:center;gap:5px;}
+.chat-input-bar{flex-shrink:0;background:#F7F8FA;border-top:1px solid rgba(0,0,0,0.07);padding:9px 12px;display:flex;align-items:center;gap:8px;}
+.chat-inp{flex:1;background:rgba(0,0,0,0.04);border:1px solid rgba(0,0,0,0.08);border-radius:22px;padding:10px 16px;color:var(--msg-text);font-size:15px;outline:none;}
+.chat-inp::placeholder{color:#B0B8C4;}
+.chat-send{width:38px;height:38px;border-radius:50%;background:var(--ocean);border:none;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:17px;color:white;flex-shrink:0;}
+
+/* Bottom nav */
+.bottom-nav{flex-shrink:0;background:var(--tabbar-bg);padding:8px 9px;display:flex;align-items:center;gap:4px;}
+.bn-tab{flex:1;padding:8px 4px;border:none;border-radius:8px;background:transparent;color:rgba(255,255,255,0.35);font-size:13px;font-weight:600;cursor:pointer;transition:all 0.2s;white-space:nowrap;}
+.bn-tab.active{background:var(--tab-active);color:#fff;}
+
+/* Transition overlay */
+#trans-overlay{position:fixed;inset:0;background:var(--navy);z-index:9999;opacity:0;pointer-events:none;transition:opacity 0.28s ease;}
+#trans-overlay.on{opacity:1;pointer-events:all;}
+
+/* Body region hover */
+.body-region:hover{filter:brightness(1.1);cursor:pointer;}
+.body-region.active{fill:#66bb6a!important;stroke:#43a047!important;}
+'''
+
+# HTML fragments
+HEADER_PRE = '''</head>
+<body>
+<div id="trans-overlay"></div>
+<div id="app-shell">
+  <div id="inv-banner">
+    <span class="ib-brand">OneChat × 청담한의원</span>
+    <span class="ib-tag">마이크로 비즈니스를 위한 지능형 환자 관리 솔루션</span>
+    <span class="ib-badge">원챗 데모</span>
+  </div>
+  <div id="funnel-bar">
+    <div class="fs active" id="fs1" onclick="jumpToStep(1)" style="cursor:pointer"><div class="fs-dot">1</div><div class="fs-lbl">광고</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs2" onclick="jumpToStep(2)" style="cursor:pointer"><div class="fs-dot">2</div><div class="fs-lbl">진단</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs3" onclick="jumpToStep(3)" style="cursor:pointer"><div class="fs-dot">3</div><div class="fs-lbl">신뢰</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs4" onclick="jumpToStep(4)" style="cursor:pointer"><div class="fs-dot">4</div><div class="fs-lbl">예약</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs5" onclick="jumpToStep(5)" style="cursor:pointer"><div class="fs-dot">5</div><div class="fs-lbl">사후</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs6" onclick="jumpToStep(6)" style="cursor:pointer"><div class="fs-dot">6</div><div class="fs-lbl">회복</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs7" onclick="jumpToStep(7)" style="cursor:pointer"><div class="fs-dot">7</div><div class="fs-lbl">대시</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs8" onclick="jumpToStep(8)" style="cursor:pointer"><div class="fs-dot">8</div><div class="fs-lbl">노쇼</div></div>
+    <div class="fa">›</div>
+    <div class="fs" id="fs9" onclick="jumpToStep(9)" style="cursor:pointer"><div class="fs-dot">9</div><div class="fs-lbl">요약</div></div>
+  </div>
+'''
+
+S0 = r'''  <div id="scr-insta" class="screen active">
+    <div class="insta-statusbar"><span class="sb-time">9:41</span><div class="sb-icons"><svg class="sb-signal" width="17" height="12" viewBox="0 0 17 12" fill="currentColor"><rect x="0" y="7" width="3" height="5" rx="0.5"/><rect x="4.5" y="5" width="3" height="7" rx="0.5"/><rect x="9" y="2.5" width="3" height="9.5" rx="0.5"/><rect x="13.5" y="0" width="3" height="12" rx="0.5"/></svg><svg class="sb-wifi" width="16" height="12" viewBox="0 0 16 12" fill="currentColor"><path d="M8 9.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3z"/><path d="M8 6.2C9.7 6.2 11.2 6.9 12.3 8l1.3-1.3C12.1 5.2 10.1 4.2 8 4.2S3.9 5.2 2.4 6.7L3.7 8C4.8 6.9 6.3 6.2 8 6.2z" opacity=".7"/><path d="M8 2.5C11 2.5 13.7 3.8 15.5 5.9L16.8 4.6C14.6 2.2 11.5.5 8 .5S1.4 2.2-.8 4.6L.5 5.9C2.3 3.8 5 2.5 8 2.5z" opacity=".4"/></svg><svg class="sb-battery" width="25" height="12" viewBox="0 0 25 12" fill="currentColor"><rect x="0" y="1" width="21" height="10" rx="2.5" stroke="currentColor" stroke-width="1.2" fill="none"/><rect x="1.5" y="2.5" width="16" height="7" rx="1.5" fill="currentColor" opacity="0.9"/><path d="M22 4.2v3.6a1.8 1.8 0 0 0 0-3.6z" fill="currentColor" opacity="0.6"/></svg></div></div>
+    <div class="insta-header"><svg class="insta-wordmark" viewBox="0 0 235 55" fill="#000" xmlns="http://www.w3.org/2000/svg"><path d="M14.6 0C6.5 0 0 6.5 0 14.6v25.8C0 48.5 6.5 55 14.6 55h25.8C48.5 55 55 48.5 55 40.4V14.6C55 6.5 48.5 0 40.4 0H14.6zm0 5h25.8C45.7 5 50 9.3 50 14.6v25.8C50 45.7 45.7 50 40.4 50H14.6C9.3 50 5 45.7 5 40.4V14.6C5 9.3 9.3 5 14.6 5zm27.9 7a2.5 2.5 0 1 0 0 5 2.5 2.5 0 0 0 0-5zM27.5 13C19.5 13 13 19.5 13 27.5S19.5 42 27.5 42 42 35.5 42 27.5 35.5 13 27.5 13zm0 5a9.5 9.5 0 1 1 0 19 9.5 9.5 0 0 1 0-19z"/><text x="65" y="41" font-family="'Billabong','Georgia',serif" font-size="46" fill="#000" letter-spacing="-1">Instagram</text></svg><div class="insta-hdr-icons"><button class="ih-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.8"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/></svg></button><button class="ih-icon-btn"><svg viewBox="0 0 24 24" fill="none" stroke="#000" stroke-width="1.8"><path d="M21.99 2L2 10.5l7.5 3.5L13 21.5l3-7.5z"/><line x1="10" y1="14" x2="15.5" y2="8.5"/></svg></button></div></div>
+    <div class="insta-stories"><div class="story-item"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#B2D9F0,#81c784)">🌿</div></div><div class="story-lbl">청담한의원</div></div><div class="story-item"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#c8e6c9,#a5d6a7)">💚</div></div><div class="story-lbl">허리케어</div></div><div class="story-item"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#e8f5e9,#81c784)">🍵</div></div><div class="story-lbl">한방차</div></div><div class="story-item"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#a5d6a7,#4caf50)">🧘</div></div><div class="story-lbl">스트레칭</div></div><div class="story-item"><div class="story-ring"><div class="story-av" style="background:linear-gradient(135deg,#66bb6a,#43a047)">📋</div></div><div class="story-lbl">AI진단</div></div></div>
+    <div class="feed-post-hdr"><div class="feed-av-wrap"><div class="feed-av">🌿</div></div><div class="feed-name-wrap"><div class="feed-name">cheongdam_oriental <svg width="13" height="13" viewBox="0 0 24 24" fill="#0095F6" style="vertical-align:-2px;margin-left:2px"><path d="M9 12l2 2 4-4M7.8 3.2L5.4 5.6H2v3.4L-.4 11.4 2 13.8V17l3.4.4L7.8 20.8l2.2-2.4 2 .8 2-.8 2.2 2.4 2.4-2.4L22 17v-3.2l2.4-2.4-2.4-2.4V5.6h-3.4L16.2 3.2l-2.2 2.4-2-.8-2 .8z"/></svg></div><div class="feed-location">청담한의원 · 스폰서</div></div><button class="feed-more-btn"><svg viewBox="0 0 24 24" fill="#000" width="24" height="24"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg></button></div>
+    <div class="ad-visual"><div style="position:absolute;inset:0;background:linear-gradient(135deg,#1B5E20,#2E7D32,#43A047,#66BB6A,#81C784,#A5D6A7);z-index:0"></div><div style="position:absolute;top:15%;left:10%;font-size:40px;z-index:1">🌿</div><div style="position:absolute;bottom:20%;right:8%;font-size:32px;z-index:1">💆</div><div style="position:absolute;inset:0;background:linear-gradient(180deg,rgba(10,22,40,0.50),transparent 38%,transparent 55%,rgba(10,22,40,0.70));pointer-events:none;z-index:1"></div><div class="ad-sponsored-bar" style="z-index:2"><span class="ad-sp-text">cheongdam_oriental</span><span class="ad-sp-badge">스폰서</span></div><div class="ad-copy-wrap" style="z-index:2"><div class="ad-copy-main">허리 통증,<br><em>참지 마세요</em></div><div class="ad-copy-sub">AI가 알려주는 3분 맞춤 건강 체크</div><div class="ad-copy-badge">🌿 진단 참여자 전용 한방차 레시피 제공</div></div></div>
+    <div class="ad-bottom"><div class="ad-action-row"><button class="ad-icon-btn"><svg viewBox="0 0 24 24" width="24" height="24"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" fill="none" stroke="#000" stroke-width="2"/></svg></button><button class="ad-icon-btn"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#000" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></button><button class="ad-icon-btn"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#000" stroke-width="2"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg></button><button class="ad-icon-btn ad-bookmark-btn"><svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="#000" stroke-width="2"><path d="M19 21l-7-5-7 5V5a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2z"/></svg></button></div><div class="ad-likes">좋아요 <b>847개</b></div><div class="ad-caption"><b>cheongdam_oriental</b> 허리 통증, 참지 마세요 🌿 청담한의원 X 원챗 AI 진단. 지금 바로 무료로 증상을 체크해보세요.</div><div class="ad-comments-link">댓글 126개 모두 보기</div><div class="ad-timestamp">3시간 전 · ↗ 공유 203회</div><div class="i-pill">원챗 퍼널 1단계: 인스타 광고 → AI 챗봇 진단. 클릭률 <b>37.5%</b> (업계 평균 1.2% 대비 31배). 월 8,000 노출 → 336 챗봇 진입.</div><button class="insta-cta" onclick="jumpToStep(2)">🌿 AI 진단 시작하기</button></div>
+    <div class="insta-bottom-nav"><button class="ibn-btn"><svg viewBox="0 0 24 24" width="26" height="26" fill="#000"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg></button><button class="ibn-btn"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#000" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg></button><button class="ibn-btn"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#000" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="3"/><path d="M8 2v20M2 12h6M16 8l-4 4 4 4"/></svg></button><button class="ibn-btn"><svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="#000" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></svg></button><button class="ibn-btn"><div class="ibn-profile"></div></button></div>
+  </div>'''
+
+S1 = r'''  <div id="scr-chat" class="screen">
+    <div class="kiam-header"><div class="kh-back" onclick="jumpToStep(1)">←</div><div class="kh-avatar-char" style="background:linear-gradient(135deg,#2E7D32,#43A047)">청</div><div class="kh-center"><div class="kh-title">청담한의원 AI 진단</div><div class="kh-sub">증상 분석 중 · 맞춤 문진 챗봇</div><div class="kh-badges"><span class="kh-badge myai"><span class="bdot"></span>MY AI</span><span class="kh-badge user"><span class="bdot"></span>나</span><span class="kh-badge state">진단중</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div></div><span class="kh-info">ℹ</span></div>
+    <div class="green-bar"><span class="gb-icon">🤖</span><div><div class="gb-main">AI 증상 분석 중</div><div class="gb-sub">신체 부위를 선택하시면 자동으로 문진이 시작됩니다</div></div></div>
+    <div class="kiam-tabs"><div class="kt active">전체대화</div><div class="kt">AI대화</div><div class="kt">HI대화</div></div>
+    <div class="kiam-msgs" id="chat-msgs"><div class="date-div">2026-05-04</div><div class="row-ai vis"><div class="ai-av">🤖</div><div><div class="ai-bubble">어디가 가장 불편하신가요?<br>아래 신체 부위를 <b>클릭</b>해 주세요.</div><div class="ai-time">14:02</div></div></div><div style="text-align:center;padding:8px 0"><svg width="200" height="360" viewBox="0 0 220 400" id="bodySvg"><rect x="98" y="56" width="24" height="14" rx="6" class="body-region" data-region="목" data-code="N01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="82" cy="80" rx="20" ry="12" class="body-region" data-region="오른쪽 어깨" data-code="S02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="138" cy="80" rx="20" ry="12" class="body-region" data-region="왼쪽 어깨" data-code="S01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><rect x="86" y="72" width="48" height="102" rx="14" class="body-region" data-region="등/허리" data-code="L01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><rect x="56" y="82" width="16" height="82" rx="8" class="body-region" data-region="오른팔" data-code="A02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><rect x="148" y="82" width="16" height="82" rx="8" class="body-region" data-region="왼팔" data-code="A01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="64" cy="172" rx="9" ry="7" class="body-region" data-region="오른손/손목" data-code="W02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="156" cy="172" rx="9" ry="7" class="body-region" data-region="왼손/손목" data-code="W01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><rect x="86" y="174" width="48" height="30" rx="10" class="body-region" data-region="골반" data-code="P01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><rect x="84" y="204" width="22" height="112" rx="10" class="body-region" data-region="오른쪽 다리" data-code="LG02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><rect x="114" y="204" width="22" height="112" rx="10" class="body-region" data-region="왼쪽 다리" data-code="LG01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="95" cy="316" rx="11" ry="9" class="body-region" data-region="오른쪽 무릎" data-code="KN02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="125" cy="316" rx="11" ry="9" class="body-region" data-region="왼쪽 무릎" data-code="KN01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="95" cy="364" rx="13" ry="7" class="body-region" data-region="오른발" data-code="F02" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/><ellipse cx="125" cy="364" rx="13" ry="7" class="body-region" data-region="왼발" data-code="F01" fill="#e8f5e9" stroke="#a5d6a7" stroke-width="1.5" style="cursor:pointer"/></svg></div><div id="diagFollowUp"></div></div>
+    <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">🤖</span>AI가 자동으로 응답합니다</div></div>
+    <div class="chat-input-bar"><input class="chat-inp" placeholder="메시지를 입력하세요..." readonly /><button class="chat-send">➤</button></div>
+    <div class="bottom-nav"><button class="bn-tab active">전체대화</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+  </div>'''
+
+S2 = r'''  <div id="scr-trust" class="screen">
+    <div class="kiam-header"><div class="kh-back" onclick="jumpToStep(2)">←</div><div class="kh-avatar-char" style="background:linear-gradient(135deg,#66BB6A,#43A047)">청</div><div class="kh-center"><div class="kh-title">청담한의원 AI 동행</div><div class="kh-sub">맞춤 건강 콘텐츠 · Day +1</div><div class="kh-badges"><span class="kh-badge myai"><span class="bdot"></span>MY AI</span><span class="kh-badge user"><span class="bdot"></span>나</span><span class="kh-badge state">케어중</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div></div><span class="kh-info">ℹ</span></div>
+    <div class="green-bar"><span class="gb-icon">🌿</span><div><div class="gb-main">맞춤 건강 콘텐츠 발송 중</div><div class="gb-sub">진단 직후부터 AI가 자동으로 개인 맞춤 정보를 제공합니다</div></div></div>
+    <div class="kiam-tabs"><div class="kt active">전체대화</div><div class="kt">AI대화</div><div class="kt">HI대화</div></div>
+    <div class="kiam-msgs"><div class="date-div">2026-05-05 · Day +1</div><div class="row-ai vis"><div class="ai-av">🌿</div><div><div class="ai-bubble"><b>허리 통증</b>에 도움이 되는 정보를 모아봤어요 😊</div><div class="ai-time">09:15</div></div></div><div class="row-ai vis"><div class="ai-av">🌿</div><div><div class="ai-bubble">무리한 운동보다 <b>가벼운 스트레칭</b>이 오히려 효과적이라는 거 아셨나요?</div><div class="ai-time">09:15</div></div></div><div class="widget-card vis" style="margin:0 0 0 39px;width:auto"><div class="widget-card-img" style="background:#e3f2fd">▶️</div><div class="widget-card-body"><div class="widget-card-title">🎥 3분 허리 스트레칭 가이드</div><div class="widget-card-desc">앉아서 따라 하는 초간단 스트레칭 · 청담한의원 원장 직강</div></div><button class="widget-card-btn">시청하기</button></div><div class="widget-card vis" style="margin:0 0 0 39px;width:auto"><div class="widget-card-img" style="background:#fff3e0">🍵</div><div class="widget-card-body"><div class="widget-card-title">🍵 허리 통증 완화 한방차 레시피</div><div class="widget-card-desc">계피·생강·대추 — 집에서 5분 완성</div></div><button class="widget-card-btn">레시피 보기</button></div><div class="row-ai vis"><div class="ai-av">🌿</div><div><div class="ai-bubble">매일 짧은 스트레칭과 따뜻한 차 한 잔으로도 통증이 많이 완화될 수 있어요.<br><br>더 자세한 상담을 원하시면 언제든 말씀해 주세요 🙌</div><div class="ai-time">09:16</div></div></div><div class="i-pill">원챗 전략: 진단 후 예약 강요 없이 맞춤 건강 정보 제공 → 자연스럽게 신뢰 형성. 직원 개입 불필요.</div></div>
+    <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">🤖</span>AI가 자동으로 응답합니다</div></div>
+    <div class="chat-input-bar"><input class="chat-inp" placeholder="메시지를 입력하세요..." readonly /><button class="chat-send">➤</button></div>
+    <div class="bottom-nav"><button class="bn-tab active">전체대화</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+  </div>'''
+
+S3 = r'''  <div id="scr-book" class="screen">
+    <div class="kiam-header"><div class="kh-back" onclick="jumpToStep(3)">←</div><div class="kh-avatar-char" style="background:linear-gradient(135deg,#66BB6A,#2E7D32)">청</div><div class="kh-center"><div class="kh-title">청담한의원 AI 상담</div><div class="kh-sub">맞춤 치료 추천 · Day +3</div><div class="kh-badges"><span class="kh-badge myai"><span class="bdot"></span>MY AI</span><span class="kh-badge user"><span class="bdot"></span>나</span><span class="kh-badge state">추천중</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div></div><span class="kh-info">ℹ</span></div>
+    <div class="kiam-msgs"><div class="date-div">2026-05-07 · Day +3</div><div class="row-ai vis"><div class="ai-av">💉</div><div><div class="ai-bubble">지난 진단 결과를 바탕으로, <b>허리 통증</b>에 가장 효과적인 치료법을 안내해 드릴게요 📋</div><div class="ai-time">11:22</div></div></div><div class="booking-card"><div class="bc-title" style="display:flex;align-items:center;gap:8px"><span style="font-size:22px">🤲</span> 추나요법</div><div style="font-size:12px;color:#6B7280;margin:4px 0 8px;line-height:1.6">틀어진 척추와 관절을 바로잡는 한방 수기 치료<br><span style="color:#2E7D32;font-weight:700">통증 완화율 80%</span> (청담한의원 자체 데이터)</div><div style="background:#e8f5e9;border-radius:8px;padding:10px;font-size:11px;color:#1B5E20;margin-bottom:10px">📌 <b>내게 맞는 이유:</b> 허리 통증(L01) + 장시간 좌식 생활 · 추나요법이 디스크·척추 정렬에 가장 효과적</div></div><div class="booking-card" id="bookingWidget"><div class="bc-title">📅 진료 예약하기</div><div style="font-size:12px;color:#6B7280;margin-bottom:8px">2026년 5월 9일 (토) — 청담한의원</div><div class="booking-slots" id="bookingSlots"><button class="booking-slot" onclick="selectSlot(this)">오전 10:00</button><button class="booking-slot" onclick="selectSlot(this)">오후 2:00</button><button class="booking-slot" onclick="selectSlot(this)">오후 3:30</button><button class="booking-slot" onclick="selectSlot(this)">오후 5:00</button></div><button class="booking-confirm" id="bookingConfirmBtn" onclick="confirmBooking()">예약 확정하기</button><div id="bookingResult" style="display:none;text-align:center;padding:12px;background:#e8f5e9;border-radius:10px;margin-top:10px"><div style="font-size:18px;margin-bottom:4px">✅</div><div style="font-size:14px;font-weight:700;color:#2E7D32">예약이 확정되었습니다!</div><div style="font-size:12px;color:#6B7280;margin-top:2px">5월 9일 (토) <span id="bookedSlot"></span> · 청담한의원</div></div></div><div class="profile-transition">────────────</div><div class="manager-profile"><div class="manager-avatar">👩‍⚕️</div><div><div class="manager-name">청담 매니저</div><div class="manager-role">AI 사후 관리 · 진료 안내</div></div></div><div class="row-ai vis"><div class="ai-av">👩‍⚕️</div><div><div class="ai-bubble">예약 확정을 축하드립니다! 🎉<br>이제부터 <b>청담 매니저</b>가 진료 전까지 필요한 정보를 안내해 드릴게요.</div><div class="ai-time">11:25</div></div></div><div class="i-pill">원챗 핵심: 증상 데이터 기반 치료 추천 + 원클릭 예약. 전환율 <b>41%</b> (업계 평균 4.8% 대비 약 <b>8.5배</b>)</div></div>
+    <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">🤖</span>AI가 자동으로 응답합니다</div></div>
+    <div class="chat-input-bar"><input class="chat-inp" placeholder="메시지를 입력하세요..." readonly /><button class="chat-send">➤</button></div>
+    <div class="bottom-nav"><button class="bn-tab active">전체대화</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+  </div>'''
+
+S4 = r'''  <div id="scr-post" class="screen">
+    <div class="kiam-header"><div class="kh-back" onclick="jumpToStep(4)">←</div><div class="kh-avatar-char" style="background:linear-gradient(135deg,#F59E0B,#D97706)">매</div><div class="kh-center"><div class="kh-title">청담 매니저</div><div class="kh-sub">AI 사후 관리 · 노쇼 방지 · 진료 D-6</div><div class="kh-badges"><span class="kh-badge manager"><span class="bdot"></span>매니저</span><span class="kh-badge user"><span class="bdot"></span>나</span><span class="kh-badge state">케어중</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div></div><span class="kh-info">ℹ</span></div>
+    <div class="green-bar" style="background:linear-gradient(90deg,#3D1D0A,#5D3A1A)"><span class="gb-icon">📋</span><div><div class="gb-main" style="color:#F59E0B">AI 매니저 케어 중</div><div class="gb-sub">진료 전까지 자동 안내 메시지를 발송합니다</div></div></div>
+    <div class="kiam-msgs"><div class="date-div">2026-05-03 · 진료 D-6</div><div class="row-ai vis"><div class="ai-av">📋</div><div><div class="ai-bubble">안녕하세요, 청담 매니저입니다 😊<br>5월 9일 진료까지 <b>필요한 정보</b>를 차근차근 안내해 드릴게요!</div><div class="ai-time">14:30</div></div></div><div class="promise-card vis"><div class="pc-icon">🗺️</div><div><div class="pc-title">오시는 길 &amp; 주차 안내</div><div class="pc-desc">서울 강남구 청담동 123번지 청담빌딩 3층 | 지하 주차장 무료 (2시간)</div></div></div><div class="promise-card vis"><div class="pc-icon">📝</div><div><div class="pc-title">진료 전 준비사항</div><div class="pc-desc">편안한 복장으로 방문해 주세요<br>과거 진료 기록·영상자료 지참<br>진료 30분 전 가벼운 식사만</div></div></div><div class="row-ai vis"><div class="ai-av">📋</div><div><div class="ai-bubble">진료 하루 전에 다시 한번 알림 드릴게요!<br>궁금하신 점은 언제든 물어봐 주세요 🙌</div><div class="ai-time">14:31</div></div></div><div class="profile-transition">··· D-1 ···</div><div class="row-ai vis"><div class="ai-av">📋</div><div><div class="ai-bubble">내일 진료 예정입니다! 💡<br>🕐 <b>5월 9일 (토) 오후 3시 30분</b><br>📍 청담한의원 (청담동 123번지 3층)<br><br>혹시 일정 변경이 필요하시면 지금 말씀해 주세요.</div><div class="ai-time">09:00</div></div></div><div class="i-pill">원챗 핵심: AI 매니저 자동 알림 → 노쇼율 <b>22% → 7%</b> 감소. 월 200건 기준 약 30건 추가 매출 + 직원 업무 월 90시간 절감.</div></div>
+    <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">🤖</span>AI가 자동으로 응답합니다</div></div>
+    <div class="chat-input-bar"><input class="chat-inp" placeholder="메시지를 입력하세요..." readonly /><button class="chat-send">➤</button></div>
+    <div class="bottom-nav"><button class="bn-tab active">전체대화</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+  </div>'''
+
+S5 = r'''  <div id="scr-after" class="screen">
+    <div class="kiam-header"><div class="kh-back" onclick="jumpToStep(5)">←</div><div class="kh-avatar-char" style="background:linear-gradient(135deg,#2E7D32,#22C55E)">청</div><div class="kh-center"><div class="kh-title">청담 매니저</div><div class="kh-sub">진료 후 사후 관리 · Day +1</div><div class="kh-badges"><span class="kh-badge manager"><span class="bdot"></span>매니저</span><span class="kh-badge user"><span class="bdot"></span>나</span><span class="kh-badge state">회복중</span><span class="kh-badge aimode"><span class="bdot"></span>AI</span></div></div><span class="kh-info">ℹ</span></div>
+    <div class="kiam-msgs"><div class="date-div">2026-05-10 · Day +1</div><div class="row-ai vis"><div class="ai-av">💚</div><div><div class="ai-bubble">어제 진료는 어떠셨나요?<br>추나요법 후 가벼운 통증이나 뻐근함은 정상입니다.</div><div class="ai-time">09:30</div></div></div><div class="promise-card vis"><div class="pc-icon">🧘</div><div><div class="pc-title">가정 회복 가이드</div><div class="pc-desc">온찜질: 아침/저녁 15분 | 스트레칭: 하루 2회 | 수분: 8잔 이상 | 무거운 물건 금지 (3일)</div></div></div><div class="row-ai vis"><div class="ai-av">💚</div><div><div class="ai-bubble">통증이 어떻게 변화했는지 알려주세요:</div><div class="ai-time">09:31</div></div></div><div class="choice-group vis"><button class="choice-btn">훨씬 좋아졌어요</button><button class="choice-btn">조금 좋아졌어요</button><button class="choice-btn">비슷해요</button><button class="choice-btn">더 아파요</button></div><div class="row-user vis"><div class="user-av">👤</div><div><div class="user-bubble">처음보다 허리가 훨씬 편해졌어요!</div><div class="user-time">09:35</div></div></div><div class="row-ai vis"><div class="ai-av">💚</div><div><div class="ai-bubble">정말 다행이에요! 꾸준한 관리가 가장 중요합니다.</div><div class="ai-time">09:35</div></div></div><div class="i-pill">원챗 핵심: AI 사후 관리로 환자 만족도 +35%, 재방문율 +65%. 직원 개입 불필요.</div></div>
+    <div class="ai-toggle-bar"><div class="toggle-pill"></div><div class="ai-toggle-lbl"><span style="font-size:15px">🤖</span>AI가 자동으로 응답합니다</div></div>
+    <div class="chat-input-bar"><input class="chat-inp" placeholder="메시지를 입력하세요..." readonly /><button class="chat-send">➤</button></div>
+    <div class="bottom-nav"><button class="bn-tab active">전체대화</button><button class="bn-tab">AI대화</button><button class="bn-tab">HI대화</button></div>
+  </div>'''
+
+S6 = r'''  <div id="scr-dash" class="screen scr-dark">
+    <div class="res-lbl">7단계: Dashboard</div>
+    <div class="dark-card" style="text-align:center"><div class="dark-card-title" style="font-size:15px;color:var(--gold)">핵심 KPI (월 기준)</div><div class="kpi-grid"><div class="kpi-card"><div class="kpi-val green">336</div><div class="kpi-label">진단 참여</div></div><div class="kpi-card"><div class="kpi-val">218</div><div class="kpi-label">진단 완료</div></div><div class="kpi-card"><div class="kpi-val green">98</div><div class="kpi-label">고관심 환자</div></div><div class="kpi-card"><div class="kpi-val">40</div><div class="kpi-label">예약 완료</div></div><div class="kpi-card"><div class="kpi-val green">37</div><div class="kpi-label">실제 내원</div></div><div class="kpi-card"><div class="kpi-val amber">7%</div><div class="kpi-label">노쇼율</div></div></div></div>
+    <div class="dark-card"><div class="dark-card-title" style="font-size:15px;color:var(--gold)">전환 퍼널</div><div id="funnelDash"></div></div>
+    <div class="dark-card"><div class="dark-card-title" style="font-size:15px;color:var(--gold)">환자 신뢰 점수</div><div id="trustDash"></div></div>
+    <div class="dark-card"><div class="dark-card-title" style="font-size:15px;color:var(--gold)">도입 전·후 비교</div><table class="compare-table"><thead><tr><th>지표</th><th>도입 전</th><th>도입 후</th><th>변화</th></tr></thead><tbody><tr><td>월 신규 환자</td><td>9명</td><td class="highlight">37명</td><td class="highlight">+311%</td></tr><tr><td>예약 전환율</td><td>5%</td><td class="highlight">41%</td><td class="highlight">+720%</td></tr><tr><td>노쇼율</td><td>22%</td><td class="highlight">7%</td><td class="highlight">-68%</td></tr><tr><td>직원 상담시간</td><td>120h</td><td class="highlight">30h</td><td class="highlight">-75%</td></tr><tr><td>수집 데이터</td><td>2개</td><td class="highlight">12개</td><td class="highlight">+500%</td></tr></tbody></table></div>
+  </div>'''
+
+S7 = r'''  <div id="scr-noshow" class="screen scr-dark">
+    <div class="res-lbl">8단계: No-Show Prevention</div>
+    <div class="dark-card"><div class="dark-card-title" style="font-size:15px;color:var(--gold)">노쇼 위험 평가 알고리즘</div><table class="compare-table"><thead><tr><th>평가 요소</th><th>가중치</th><th>측정 방식</th></tr></thead><tbody><tr><td>과거 노쇼 이력</td><td class="highlight">0.30</td><td>최근 6개월</td></tr><tr><td>예약까지 남은 기간</td><td class="highlight">0.20</td><td>D-day 간격</td></tr><tr><td>거주지 거리</td><td class="highlight">0.15</td><td>km</td></tr><tr><td>진단 완성도</td><td class="highlight">0.15</td><td>완료율</td></tr><tr><td>콘텐츠 반응도</td><td class="highlight">0.10</td><td>클릭 여부</td></tr><tr><td>초진/재진 구분</td><td class="highlight">0.10</td><td>첫 방문</td></tr></tbody></table></div>
+    <div class="dark-card"><div class="dark-card-title" style="font-size:15px;color:var(--gold)">위험 구간별 자동 대응</div><table class="compare-table"><thead><tr><th>위험 구간</th><th>점수</th><th>자동 알림</th><th>방지 효과</th></tr></thead><tbody><tr><td style="color:#22C55E;font-weight:700">안전</td><td>0~30%</td><td>D-1 리마인드</td><td>3% 미만</td></tr><tr><td style="color:var(--gold);font-weight:700">주의</td><td>31~60%</td><td>D-3 정보 + D-1</td><td>8% 미만</td></tr><tr><td style="color:var(--danger);font-weight:700">위험</td><td>61%+</td><td>D-5 + D-2 + D-1</td><td>15% 미만</td></tr></tbody></table></div>
+    <div class="dark-card"><div class="dark-card-title" style="font-size:15px;color:var(--gold)">현재 예약 환자 노쇼 위험도</div><div id="noshowDash"></div></div>
+  </div>'''
+
+S8 = r'''  <div id="scr-summary" class="screen scr-dark">
+    <div class="res-lbl">9단계: Summary</div>
+    <div class="briefing-card"><h2>원챗(OneChat) × 청담한의원</h2><div class="subtitle">AI 환자 관리 솔루션 — 핵심 가치 요약</div><div class="briefing-grid"><div class="brief-item"><div class="bi-icon">🎯</div><div class="bi-title">정밀 데이터 수집</div><div class="bi-desc">환자당 12개 증상 데이터 포인트 자동 수집 (500% 증가)</div></div><div class="brief-item"><div class="bi-icon">🤝</div><div class="bi-title">신뢰 기반 접근</div><div class="bi-desc">예약 강요 없는 맞춤 콘텐츠. 전환율 41%</div></div><div class="brief-item"><div class="bi-icon">📅</div><div class="bi-title">원클릭 예약</div><div class="bi-desc">치료 추천+예약 한 화면. 전화 대비 8.5배</div></div><div class="brief-item"><div class="bi-icon">🚫</div><div class="bi-title">노쇼 방지</div><div class="bi-desc">6단계 알고리즘. 22% → 7%</div></div><div class="brief-item"><div class="bi-icon">💼</div><div class="bi-title">업무 경감</div><div class="bi-desc">월 90시간 절감. 진료에 집중</div></div><div class="brief-item"><div class="bi-icon">📊</div><div class="bi-title">데이터 자산화</div><div class="bi-desc">인터랙션 데이터 축적. 개선 기반</div></div></div><div class="brief-roi"><div class="roi-label">예상 월간 ROI</div><div class="roi-val">300%+</div><div class="roi-desc">월 30건 추가 진료 (약 1,500만원) · 월 90시간 절감 · 신규 환자 9→37명 (+311%)</div></div><button class="brief-cta" onclick="jumpToStep(1)">처음부터 다시 보기</button></div>
+  </div>'''
+
+FOOTER = '''</div><!-- /app-shell -->
+'''
+
+JS = r'''<script>
+const nowTime=()=>{const d=new Date();return d.getHours().toString().padStart(2,'0')+':'+d.getMinutes().toString().padStart(2,'0')}
+const visEl=el=>setTimeout(()=>el.classList.add('vis'),40)
+function scrollBottom(id){const el=document.getElementById(id);if(!el)return;setTimeout(()=>{el.scrollTop=el.scrollHeight+9999},80)}
+let currentStep=1
+const totalSteps=9
+const screenMap={1:'scr-insta',2:'scr-chat',3:'scr-trust',4:'scr-book',5:'scr-post',6:'scr-after',7:'scr-dash',8:'scr-noshow',9:'scr-summary'}
+function setFunnel(n){for(let i=1;i<=totalSteps;i++){const el=document.getElementById('fs'+i);if(!el)continue;el.classList.remove('active','done');if(i<n)el.classList.add('done');else if(i===n)el.classList.add('active')}}
+function goScreen(id){return new Promise(res=>{const ov=document.getElementById('trans-overlay');ov.classList.add('on');setTimeout(()=>{document.querySelectorAll('.screen').forEach(s=>s.classList.remove('active'));document.getElementById(id).classList.add('active');ov.classList.remove('on');res()},280)})}
+async function jumpToStep(step){currentStep=step;setFunnel(step);await goScreen(screenMap[step]);if(step===7)setTimeout(buildFunnelDash,600);if(step===8)setTimeout(buildNoShowDash,600)}
+function nextStep(){if(currentStep<totalSteps)jumpToStep(currentStep+1)}
+function prevStep(){if(currentStep>1)jumpToStep(currentStep-1)}
+let selectedRegion=null
+document.addEventListener('click',function(e){const region=e.target.closest('.body-region');if(!region)return;const all=document.querySelectorAll('.body-region');for(let i=0;i<all.length;i++){all[i].classList.remove('active');all[i].setAttribute('fill','#e8f5e9')}region.classList.add('active');region.setAttribute('fill','#66bb6a');selectedRegion={name:region.getAttribute('data-region'),code:region.getAttribute('data-code')};const msgs=document.getElementById('chat-msgs');const ur=document.createElement('div');ur.className='row-user vis';ur.innerHTML='<div><div class="user-bubble">'+selectedRegion.name+'이/가 아파요</div><div class="user-time">'+nowTime()+'</div></div><div class="user-av">👤</div>';msgs.appendChild(ur);scrollBottom('chat-msgs');setTimeout(()=>{const typing=document.createElement('div');typing.className='typing-row vis';typing.innerHTML='<div class="ai-av">🤖</div><div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>';msgs.appendChild(typing);scrollBottom('chat-msgs');setTimeout(()=>{typing.remove();const aiRow=document.createElement('div');aiRow.className='row-ai vis';aiRow.innerHTML='<div class="ai-av">🤖</div><div><div class="ai-bubble"><b>'+selectedRegion.name+'</b> 통증을 확인했습니다.<br><br>추가로 알려주세요:<br>• 통증 강도 (1~10)<br>• 통증 지속 기간<br>• 악화되는 자세</div><div class="ai-time">'+nowTime()+'</div></div>';msgs.appendChild(aiRow);scrollBottom('chat-msgs');const choiceGrp=document.createElement('div');choiceGrp.className='choice-group';choiceGrp.innerHTML='<button class="choice-btn">통증 강도: 7/10</button><button class="choice-btn">2주 이상 지속</button><button class="choice-btn">앉을 때 악화</button>';msgs.appendChild(choiceGrp);setTimeout(()=>choiceGrp.classList.add('vis'),40);scrollBottom('chat-msgs');choiceGrp.querySelectorAll('.choice-btn').forEach(b=>{b.onclick=()=>{choiceGrp.querySelectorAll('.choice-btn').forEach(cb=>{cb.disabled=true;cb.classList.add('sel')});appendUserQuick(b.textContent)}});const pill=document.createElement('div');pill.className='i-pill';pill.innerHTML='원챗 핵심: 환자당 최대 <b>12개 데이터 포인트</b> 자동 수집. 진단 완료율 <b>65%</b> (업계 최고).';pill.style.marginLeft='39px';msgs.appendChild(pill);scrollBottom('chat-msgs')},1400)},400)})
+function appendUserQuick(text){const msgs=document.getElementById('chat-msgs');const ur=document.createElement('div');ur.className='row-user vis';ur.innerHTML='<div><div class="user-bubble">'+text+'</div><div class="user-time">'+nowTime()+'</div></div><div class="user-av">👤</div>';msgs.appendChild(ur);scrollBottom('chat-msgs');setTimeout(()=>{const typing=document.createElement('div');typing.className='typing-row vis';typing.innerHTML='<div class="ai-av">🤖</div><div class="typing-dots"><div class="td"></div><div class="td"></div><div class="td"></div></div>';msgs.appendChild(typing);scrollBottom('chat-msgs');setTimeout(()=>{typing.remove();const aiRow=document.createElement('div');aiRow.className='row-ai vis';aiRow.innerHTML='<div class="ai-av">🤖</div><div><div class="ai-bubble">진단이 완료되었습니다 ✅<br><b>허리 통증 (L01)</b> — 추나요법 적합.<br><br>내일부터 맞춤 콘텐츠를 보내드릴게요 🌿</div><div class="ai-time">'+nowTime()+'</div></div>';msgs.appendChild(aiRow);scrollBottom('chat-msgs')},1200)},400)}
+function selectSlot(el){document.querySelectorAll('#bookingSlots .booking-slot').forEach(b=>b.classList.remove('sel'));el.classList.add('sel')}
+function confirmBooking(){const sel=document.querySelector('#bookingSlots .booking-slot.sel');if(!sel){alert('시간을 선택해주세요.');return}document.getElementById('bookedSlot').textContent=sel.textContent;document.getElementById('bookingResult').style.display='block';document.getElementById('bookingConfirmBtn').textContent='예약 완료됨';document.getElementById('bookingConfirmBtn').disabled=true}
+function buildFunnelDash(){const data=[{label:'노출',val:8000,color:'#0E6BA8'},{label:'진단 참여',val:336,color:'#1A85CC'},{label:'진단 완료',val:218,color:'#48CAE4'},{label:'고관심 환자',val:98,color:'#22C55E'},{label:'예약 완료',val:40,color:'#4DB6AC'},{label:'실제 내원',val:37,color:'#66BB6A'}];const max=8000;let html='';data.forEach(d=>{const pct=((d.val/max)*100).toFixed(0);html+='<div class="funnel-step"><span style="font-size:11px;color:rgba(255,255,255,0.4);min-width:60px">'+d.label+'</span><div class="funnel-step-bar" style="width:'+pct+'%;background:'+d.color+'">'+d.val+'</div><span class="funnel-step-pct">'+pct+'%</span></div>'});document.getElementById('funnelDash').innerHTML=html;const trusts=[{name:'이OO',pct:72},{name:'김OO',pct:65},{name:'박OO',pct:58},{name:'최OO',pct:51},{name:'정OO',pct:44}];let thtml='';trusts.forEach(t=>{thtml+='<div class="trust-item"><span class="trust-name">'+t.name+'</span><div class="trust-bar-track"><div class="trust-bar-fill" style="width:'+t.pct+'%"></div></div><span class="trust-val">'+t.pct+'%</span></div>'});document.getElementById('trustDash').innerHTML=thtml}
+function buildNoShowDash(){const patients=[{name:'이OO',risk:22,color:'#22C55E'},{name:'김OO',risk:35,color:'#22C55E'},{name:'박OO',risk:48,color:'var(--gold)'},{name:'최OO',risk:62,color:'var(--danger)'},{name:'정OO',risk:71,color:'var(--danger)'}];let html='';patients.forEach(p=>{html+='<div class="trust-item"><span class="trust-name">'+p.name+'</span><div class="trust-bar-track"><div class="trust-bar-fill" style="width:'+p.risk+'%;background:linear-gradient(90deg,'+p.color+','+p.color+')"></div></div><span class="trust-val" style="color:'+p.color+'">'+p.risk+'%</span></div>'});document.getElementById('noshowDash').innerHTML=html}
+document.addEventListener('keydown',function(e){if(e.key==='ArrowRight'||e.key==='ArrowDown'){e.preventDefault();nextStep()}else if(e.key==='ArrowLeft'||e.key==='ArrowUp'){e.preventDefault();prevStep()}})
+setFunnel(1)
+</script>
+</body>
+</html>
+'''
+
+full = '<!DOCTYPE html>\n<html lang="ko">\n<head>\n<meta charset="UTF-8">\n<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">\n<title>원챗(OneChat) × 청담한의원 — 고객사 브리핑</title>\n<style>\n'
+full += CSS
+full += '\n</style>'
+full += '\n' + HEADER_PRE
+full += '\n' + S0
+full += '\n' + S1
+full += '\n' + S2
+full += '\n' + S3
+full += '\n' + S4
+full += '\n' + S5
+full += '\n' + S6
+full += '\n' + S7
+full += '\n' + S8
+full += '\n' + FOOTER
+full += '\n' + JS
+
+with open(OUT, 'w', encoding='utf-8') as f:
+    f.write(full)
+
+size = os.path.getsize(OUT)
+print(f"SUCCESS: Wrote {size:,} bytes to {OUT}")
