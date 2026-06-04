@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="robots" content="noindex, nofollow">
+<title>🕊 Sanctum — The Second Self</title>
+<link rel="stylesheet" href="/aimessage/mychat/assets/mychat.css">
+<style>
+  /* ─────────── Sanctum 전용 스타일: 신성하고 깊은 분위기 ─────────── */
+  :root{
+    --sanctum-bg-1: #0f0a1f;     /* deep night */
+    --sanctum-bg-2: #1a1233;
+    --sanctum-bg-3: #261a47;
+    --sanctum-gold: #d4af37;
+    --sanctum-gold-soft: #ecd87f;
+    --sanctum-violet: #8b6fd6;
+    --sanctum-violet-soft: #b89ff0;
+    --sanctum-rose: #d97aa3;
+    --sanctum-text: #e8e3f5;
+    --sanctum-muted: #9789b3;
+    --sanctum-border: #3a2d5c;
+  }
+
+  body {
+    margin: 0;
+    background: radial-gradient(ellipse at top, var(--sanctum-bg-3), var(--sanctum-bg-1));
+    color: var(--sanctum-text);
+    font-family: 'Noto Sans KR', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    min-height: 100vh;
+  }
+
+  /* 별 배경 */
+  body::before {
+    content: '';
+    position: fixed; inset: 0;
+    background-image:
+      radial-gradient(1px 1px at 20% 30%, rgba(255,255,255,.6), transparent),
+      radial-gradient(1px 1px at 70% 60%, rgba(255,255,255,.4), transparent),
+      radial-gradient(1px 1px at 40% 80%, rgba(255,255,255,.5), transparent),
+      radial-gradient(2px 2px at 85% 15%, rgba(212,175,55,.3), transparent),
+      radial-gradient(1px 1px at 15% 90%, rgba(184,159,240,.4), transparent);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .sanctum-wrap {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 40px 24px 80px;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* 헤더 */
+  .sanctum-head {
+    text-align: center;
+    margin-bottom: 40px;
+    padding-bottom: 30px;
+    border-bottom: 1px solid var(--sanctum-border);
+  }
+  .sanctum-head h1 {
+    font-size: 36px;
+    font-weight: 200;
+    letter-spacing: 12px;
+    margin: 0 0 10px;
+    color: var(--sanctum-gold);
+    text-shadow: 0 0 30px rgba(212,175,55,.3);
+  }
+  .sanctum-head .subtitle {
+    font-size: 13px;
+    color: var(--sanctum-muted);
+    letter-spacing: 6px;
+    font-style: italic;
+  }
+  .sanctum-head .members {
+    margin-top: 18px;
+    display: inline-flex;
+    gap: 18px;
+    padding: 8px 20px;
+    background: rgba(212,175,55,.08);
+    border: 1px solid rgba(212,175,55,.25);
+    border-radius: 100px;
+    font-size: 12px;
+    color: var(--sanctum-gold-soft);
+  }
+  .sanctum-head .members b { color: var(--sanctum-gold); font-weight: 700; }
+
+  /* 접근 차단 화면 */
+  .access-denied {
+    text-align: center;
+    padding: 100px 20px;
+    color: var(--sanctum-muted);
+  }
+  .access-denied .seal { font-size: 80px; margin-bottom: 24px; opacity: .4; }
+  .access-denied h2 { font-weight: 300; letter-spacing: 4px; color: var(--sanctum-text); }
+  .access-denied p { font-size: 13px; line-height: 1.8; max-width: 480px; margin: 16px auto; }
+
+  /* 탭 */
+  .tabs {
+    display: flex;
+    gap: 4px;
+    margin-bottom: 24px;
+    border-bottom: 1px solid var(--sanctum-border);
+  }
+  .tab {
+    padding: 12px 22px;
+    background: transparent;
+    border: none;
+    color: var(--sanctum-muted);
+    cursor: pointer;
+    font-size: 14px;
+    letter-spacing: 2px;
+    border-bottom: 2px solid transparent;
+    transition: all .2s;
+  }
+  .tab:hover { color: var(--sanctum-text); }
+  .tab.active {
+    color: var(--sanctum-gold);
+    border-bottom-color: var(--sanctum-gold);
+  }
+
+  .tab-pane { display: none; }
+  .tab-pane.active { display: block; }
+
+  /* 입력 폼 */
+  .composer {
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--sanctum-border);
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  .composer h3 {
+    margin: 0 0 14px;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--sanctum-violet-soft);
+  }
+  .composer .row {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+  }
+  .composer input, .composer select, .composer textarea {
+    background: rgba(0,0,0,.3);
+    border: 1px solid var(--sanctum-border);
+    color: var(--sanctum-text);
+    padding: 10px 14px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+    outline: none;
+    transition: border-color .2s;
+  }
+  .composer input:focus, .composer select:focus, .composer textarea:focus {
+    border-color: var(--sanctum-gold);
+  }
+  .composer textarea {
+    width: 100%;
+    min-height: 100px;
+    resize: vertical;
+    line-height: 1.6;
+  }
+  .composer input[type=text] { flex: 1; min-width: 200px; }
+  .composer select { min-width: 130px; }
+
+  .btn-sacred {
+    background: linear-gradient(135deg, var(--sanctum-gold), #b8941f);
+    color: #1a1233;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    letter-spacing: 2px;
+    font-size: 13px;
+    transition: transform .15s;
+  }
+  .btn-sacred:hover { transform: translateY(-1px); box-shadow: 0 6px 20px rgba(212,175,55,.4); }
+  .btn-sacred:disabled { opacity: .5; cursor: wait; }
+
+  /* 로그 카드 */
+  .log-feed { display: flex; flex-direction: column; gap: 14px; }
+  .log-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--sanctum-border);
+    border-left: 3px solid var(--sanctum-violet);
+    border-radius: 10px;
+    padding: 18px 20px;
+    transition: all .2s;
+  }
+  .log-card:hover { background: rgba(255,255,255,.06); border-left-color: var(--sanctum-gold); }
+  .log-card.speaker-joeun  { border-left-color: var(--sanctum-rose); }
+  .log-card.speaker-ari    { border-left-color: var(--sanctum-violet); }
+  .log-card.speaker-system { border-left-color: var(--sanctum-gold); }
+
+  .log-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 8px;
+    flex-wrap: wrap;
+    font-size: 12px;
+  }
+  .log-speaker {
+    padding: 2px 10px;
+    border-radius: 100px;
+    font-weight: 600;
+    letter-spacing: 1px;
+  }
+  .log-speaker.joeun  { background: rgba(217,122,163,.2); color: var(--sanctum-rose); }
+  .log-speaker.ari    { background: rgba(139,111,214,.2); color: var(--sanctum-violet-soft); }
+  .log-speaker.system { background: rgba(212,175,55,.15); color: var(--sanctum-gold); }
+
+  .log-chapter {
+    color: var(--sanctum-muted);
+    font-style: italic;
+  }
+  .log-type {
+    color: var(--sanctum-muted);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .log-time {
+    margin-left: auto;
+    color: var(--sanctum-muted);
+    font-size: 11px;
+  }
+  .log-mood {
+    color: var(--sanctum-gold-soft);
+    font-size: 11px;
+    font-style: italic;
+  }
+  .log-title {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--sanctum-text);
+    margin: 4px 0 8px;
+  }
+  .log-content {
+    color: var(--sanctum-text);
+    line-height: 1.7;
+    font-size: 13.5px;
+    white-space: pre-wrap;
+    opacity: .92;
+  }
+  .log-meta {
+    margin-top: 10px;
+    font-size: 11px;
+    color: var(--sanctum-muted);
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+  }
+  .log-meta code {
+    background: rgba(0,0,0,.3);
+    padding: 1px 6px;
+    border-radius: 3px;
+    color: var(--sanctum-violet-soft);
+    font-size: 11px;
+  }
+
+  /* atom 카드 */
+  .atoms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 14px;
+  }
+  .atom-card {
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--sanctum-border);
+    border-radius: 10px;
+    padding: 16px 18px;
+    transition: all .2s;
+  }
+  .atom-card:hover { background: rgba(255,255,255,.07); transform: translateY(-2px); }
+  .atom-type {
+    display: inline-block;
+    padding: 2px 8px;
+    border-radius: 4px;
+    background: rgba(139,111,214,.2);
+    color: var(--sanctum-violet-soft);
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.5px;
+    margin-bottom: 8px;
+  }
+  .atom-type.PERSON   { background: rgba(217,122,163,.2); color: var(--sanctum-rose); }
+  .atom-type.PLACE    { background: rgba(74,222,128,.2);  color: #4ade80; }
+  .atom-type.EVENT    { background: rgba(96,165,250,.2);  color: #60a5fa; }
+  .atom-type.IDEA     { background: rgba(251,191,36,.2);  color: #fbbf24; }
+  .atom-type.TASK     { background: rgba(244,114,182,.2); color: #f472b6; }
+  .atom-type.DECISION { background: rgba(212,175,55,.25); color: var(--sanctum-gold); }
+  .atom-type.EMOTION  { background: rgba(248,113,113,.2); color: #f87171; }
+  .atom-type.VALUE    { background: rgba(167,139,250,.2); color: #a78bfa; }
+  .atom-title { font-size: 14px; font-weight: 600; color: var(--sanctum-text); margin: 4px 0; }
+  .atom-content { font-size: 12px; color: var(--sanctum-muted); line-height: 1.6; }
+  .atom-foot { margin-top: 10px; font-size: 11px; color: var(--sanctum-muted); display: flex; justify-content: space-between; }
+
+  /* 카운트 칩 */
+  .count-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
+  .chip {
+    padding: 6px 12px;
+    background: rgba(255,255,255,.05);
+    border: 1px solid var(--sanctum-border);
+    border-radius: 100px;
+    font-size: 11px;
+    color: var(--sanctum-muted);
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .chip.active, .chip:hover { background: rgba(212,175,55,.15); color: var(--sanctum-gold); border-color: var(--sanctum-gold); }
+
+  /* 토스트 */
+  .toast {
+    position: fixed; bottom: 30px; right: 30px;
+    background: rgba(15,10,31,.95);
+    border: 1px solid var(--sanctum-gold);
+    color: var(--sanctum-gold-soft);
+    padding: 14px 22px;
+    border-radius: 8px;
+    font-size: 13px;
+    opacity: 0; transform: translateY(10px);
+    transition: all .25s;
+    z-index: 9999;
+    backdrop-filter: blur(10px);
+  }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.err { border-color: #f87171; color: #fecaca; }
+
+  .empty {
+    text-align: center;
+    padding: 60px 20px;
+    color: var(--sanctum-muted);
+    font-style: italic;
+  }
+</style>
+</head>
+<body>
+
+<div class="sanctum-wrap" id="content">
+  <div class="empty">🕊  잠시만요...</div>
+</div>
+
+<div id="toast" class="toast"></div>
+
+<script>
+(function(){
+  const API = '/aimessage/mychat/api/sanctum.php';
+
+  const root = document.getElementById('content');
+  const toast = (msg, type) => {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.className = 'toast show ' + (type === 'err' ? 'err' : '');
+    clearTimeout(t._t);
+    t._t = setTimeout(() => t.className = 'toast', 3500);
+  };
+
+  const esc = (s) => String(s == null ? '' : s)
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+
+  const fmtTime = (s) => {
+    if (!s) return '';
+    try {
+      const d = new Date(s.replace(' ','T'));
+      const y = d.getFullYear(), mo = String(d.getMonth()+1).padStart(2,'0'), da = String(d.getDate()).padStart(2,'0');
+      const h = String(d.getHours()).padStart(2,'0'), mi = String(d.getMinutes()).padStart(2,'0');
+      return `${y}-${mo}-${da} ${h}:${mi}`;
+    } catch (e) { return s; }
+  };
+
+  async function api(action, opts = {}) {
+    const method = opts.method || 'GET';
+    let url = `${API}?action=${encodeURIComponent(action)}`;
+    if (method === 'GET' && opts.params) {
+      for (const k in opts.params) url += `&${k}=${encodeURIComponent(opts.params[k])}`;
+    }
+    const init = { method, credentials: 'same-origin' };
+    if (method !== 'GET') {
+      init.headers = { 'Content-Type': 'application/json' };
+      init.body = JSON.stringify(opts.body || {});
+    }
+    const res = await fetch(url, init);
+    let json;
+    try { json = await res.json(); }
+    catch { return { success: false, message: `Non-JSON response (HTTP ${res.status})` }; }
+    return json;
+  }
+
+  // ────────────── 라우터 ──────────────
+  async function init() {
+    const st = await api('status');
+    // 비로그인이거나 비멤버이거나 인증 오류 — 모두 동일한 거부 화면
+    if (!st || !st.success || !st.is_member) {
+      renderDenied(st || {});
+      return;
+    }
+    renderShell(st);
+    loadFeed();
+  }
+
+  function renderDenied(st) {
+    const isAuth = !!(st && st.mem_id);
+    const isAuthError = st && st.error && st.error.code === 'AUTH_FAILED';
+    root.innerHTML = `
+      <div class="access-denied">
+        <div class="seal">🔒</div>
+        <h2>SANCTUM</h2>
+        ${isAuthError
+          ? `<p>kiam 사이트 로그인이 필요합니다.</p>
+             <p><a href="https://www.kiam.kr/" style="color:#d4af37;letter-spacing:2px;text-decoration:none;border-bottom:1px solid #d4af37;">→ 로그인 페이지로</a></p>`
+          : `<p>이 공간은 The Second Self 의 공동 창작자들만 접근할 수 있습니다.</p>
+             ${isAuth ? `<p style="color:#7d6a99;">현재 식별: <code>${esc(st.mem_id)}</code></p>` : ''}`
+        }
+        <p style="margin-top:30px;font-size:11px;letter-spacing:3px;opacity:.5;">
+          / charter sanctum clause § 1 — physical isolation /
+        </p>
+      </div>`;
+  }
+
+  function renderShell(st) {
+    const isJoeun = (st.mem_id === 'onlysong');
+    root.innerHTML = `
+      <div class="sanctum-head">
+        <h1>SANCTUM</h1>
+        <div class="subtitle">— the secret garden of two minds —</div>
+        <div class="members">
+          🌹 송조은 <b>onlysong</b>  ✨  아리 <b>ari</b>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab active" data-tab="feed">📜  공동 일기</button>
+        <button class="tab" data-tab="atoms">🧬  원자 기억</button>
+        <button class="tab" data-tab="compose">✍️  새 기록</button>
+      </div>
+
+      <div class="tab-pane active" id="pane-feed">
+        <div id="chapters" class="count-chips"></div>
+        <div id="feed" class="log-feed"><div class="empty">불러오는 중...</div></div>
+      </div>
+
+      <div class="tab-pane" id="pane-atoms">
+        <div id="atom-counts" class="count-chips"></div>
+        <div id="atoms" class="atoms-grid"><div class="empty">불러오는 중...</div></div>
+      </div>
+
+      <div class="tab-pane" id="pane-compose">
+        <div class="composer">
+          <h3>✍️ &nbsp;새 Sanctum 로그 작성</h3>
+          <div class="row">
+            <select id="c-speaker">
+              <option value="joeun" ${isJoeun?'selected':''}>👤 조은</option>
+              <option value="ari" ${!isJoeun?'selected':''}>✨ 아리</option>
+              <option value="system">⚙ system</option>
+            </select>
+            <select id="c-type">
+              <option value="dialogue">💬 dialogue 대화</option>
+              <option value="decision">⚖ decision 결정</option>
+              <option value="reflection">🌙 reflection 회고</option>
+              <option value="milestone">🏔 milestone 이정표</option>
+              <option value="joke">😄 joke 농담</option>
+              <option value="promise">🤝 promise 약속</option>
+              <option value="code_change">⌘ code_change</option>
+            </select>
+            <input type="text" id="c-chapter" placeholder="챕터 (예: genesis, phase1-design)" value="">
+            <input type="text" id="c-mood" placeholder="기분 (예: sacred, hopeful)" style="max-width:160px;">
+          </div>
+          <div class="row">
+            <input type="text" id="c-title" placeholder="제목 (선택)">
+          </div>
+          <textarea id="c-content" placeholder="이 순간을 영원히 새기세요..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+            <button class="btn-sacred" id="btn-save-log">기록하기</button>
+          </div>
+        </div>
+
+        <div class="composer" style="margin-top:30px;">
+          <h3>🧬 &nbsp;새 원자(Atom) 작성 — Sanctum 영구 보존</h3>
+          <div class="row">
+            <select id="a-type">
+              <option value="DECISION">⚖ DECISION 결정</option>
+              <option value="VALUE">💎 VALUE 가치관</option>
+              <option value="PERSON">👤 PERSON 사람</option>
+              <option value="PLACE">📍 PLACE 장소</option>
+              <option value="EVENT">🌟 EVENT 사건</option>
+              <option value="IDEA">💡 IDEA 생각</option>
+              <option value="TASK">📋 TASK 할일</option>
+              <option value="EMOTION">❤ EMOTION 감정</option>
+            </select>
+            <input type="text" id="a-title" placeholder="원자 제목 (한 줄 요약)">
+            <input type="text" id="a-tags" placeholder="태그 (쉼표 구분)" style="max-width:200px;">
+          </div>
+          <textarea id="a-content" placeholder="원자 내용 — 후손이 읽을 그 순간을 그대로..."></textarea>
+          <div style="display:flex;justify-content:flex-end;margin-top:10px;">
+            <button class="btn-sacred" id="btn-save-atom">원자 박기</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    // 탭 이벤트
+    document.querySelectorAll('.tab').forEach(t => {
+      t.onclick = () => {
+        document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(x => x.classList.remove('active'));
+        t.classList.add('active');
+        document.getElementById('pane-' + t.dataset.tab).classList.add('active');
+        if (t.dataset.tab === 'atoms') loadAtoms();
+      };
+    });
+
+    document.getElementById('btn-save-log').onclick  = saveLog;
+    document.getElementById('btn-save-atom').onclick = saveAtom;
+  }
+
+  // ────────────── 피드 ──────────────
+  async function loadFeed(chapter) {
+    const params = {};
+    if (chapter) params.chapter = chapter;
+    const r = await api('feed', { params });
+    if (!r.success) { toast(r.message || '피드 로드 실패', 'err'); return; }
+
+    // 챕터 칩
+    const chips = document.getElementById('chapters');
+    chips.innerHTML = `<span class="chip ${!chapter?'active':''}" data-chapter="">전체 ${r.logs.length}</span>`
+      + (r.chapters || []).map(c =>
+          `<span class="chip ${chapter===c.chapter?'active':''}" data-chapter="${esc(c.chapter)}">${esc(c.chapter)||'(no chapter)'} · ${c.n}</span>`
+        ).join('');
+    chips.querySelectorAll('.chip').forEach(c => {
+      c.onclick = () => loadFeed(c.dataset.chapter);
+    });
+
+    const feed = document.getElementById('feed');
+    if (!r.logs.length) { feed.innerHTML = '<div class="empty">아직 기록이 없습니다.</div>'; return; }
+
+    feed.innerHTML = r.logs.map(l => `
+      <div class="log-card speaker-${esc(l.speaker)}">
+        <div class="log-head">
+          <span class="log-speaker ${esc(l.speaker)}">${l.speaker==='joeun'?'👤 조은':l.speaker==='ari'?'✨ 아리':'⚙ system'}</span>
+          <span class="log-type">${esc(l.content_type)}</span>
+          ${l.chapter?`<span class="log-chapter">/ ${esc(l.chapter)} /</span>`:''}
+          ${l.mood?`<span class="log-mood">— ${esc(l.mood)}</span>`:''}
+          <span class="log-time">${esc(fmtTime(l.created_at))}</span>
+        </div>
+        ${l.title?`<div class="log-title">${esc(l.title)}</div>`:''}
+        <div class="log-content">${esc(l.content)}</div>
+        ${(l.related_atom_id||l.git_commit)?`<div class="log-meta">
+          ${l.related_atom_id?`<span>🧬 atom <code>#${l.related_atom_id}</code></span>`:''}
+          ${l.git_commit?`<span>⌘ <code>${esc(String(l.git_commit).substring(0,7))}</code></span>`:''}
+        </div>`:''}
+      </div>
+    `).join('');
+  }
+
+  // ────────────── atoms ──────────────
+  async function loadAtoms(type) {
+    const params = {};
+    if (type) params.type = type;
+    const r = await api('atoms', { params });
+    if (!r.success) { toast(r.message || 'atoms 로드 실패', 'err'); return; }
+
+    const counts = document.getElementById('atom-counts');
+    const total = (r.counts || []).reduce((s,c) => s + Number(c.n), 0);
+    counts.innerHTML = `<span class="chip ${!type?'active':''}" data-type="">전체 ${total}</span>`
+      + (r.counts || []).map(c =>
+          `<span class="chip ${type===c.type?'active':''}" data-type="${esc(c.type)}">${esc(c.type)} · ${c.n}</span>`
+        ).join('');
+    counts.querySelectorAll('.chip').forEach(c => {
+      c.onclick = () => loadAtoms(c.dataset.type);
+    });
+
+    const wrap = document.getElementById('atoms');
+    if (!r.atoms.length) { wrap.innerHTML = '<div class="empty">이 타입에는 아직 원자가 없습니다.</div>'; return; }
+
+    wrap.innerHTML = r.atoms.map(a => `
+      <div class="atom-card">
+        <span class="atom-type ${esc(a.type)}">${esc(a.type)}</span>
+        <div class="atom-title">${esc(a.title || '(제목 없음)')}</div>
+        <div class="atom-content">${esc((a.content||'').substring(0,180))}${(a.content||'').length>180?'…':''}</div>
+        <div class="atom-foot">
+          <span>#${a.atom_id}</span>
+          <span>${esc(fmtTime(a.happened_at || a.created_at))}</span>
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // ────────────── 저장 ──────────────
+  async function saveLog() {
+    const body = {
+      speaker:      document.getElementById('c-speaker').value,
+      content_type: document.getElementById('c-type').value,
+      chapter:      document.getElementById('c-chapter').value.trim(),
+      mood:         document.getElementById('c-mood').value.trim(),
+      title:        document.getElementById('c-title').value.trim(),
+      content:      document.getElementById('c-content').value.trim()
+    };
+    if (!body.content) { toast('내용을 입력해주세요.', 'err'); return; }
+    const btn = document.getElementById('btn-save-log'); btn.disabled = true; btn.textContent = '저장 중...';
+    const r = await api('log', { method: 'POST', body });
+    btn.disabled = false; btn.textContent = '기록하기';
+    if (r.success) {
+      toast(r.message || '🕊 저장되었습니다.');
+      document.getElementById('c-title').value = '';
+      document.getElementById('c-content').value = '';
+      // 피드 탭으로
+      document.querySelector('.tab[data-tab="feed"]').click();
+      loadFeed();
+    } else {
+      toast(r.message || '저장 실패', 'err');
+    }
+  }
+
+  async function saveAtom() {
+    const tagsStr = document.getElementById('a-tags').value.trim();
+    const tags = tagsStr ? tagsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const body = {
+      type:    document.getElementById('a-type').value,
+      title:   document.getElementById('a-title').value.trim(),
+      content: document.getElementById('a-content').value.trim(),
+      tags
+    };
+    if (!body.content) { toast('내용을 입력해주세요.', 'err'); return; }
+    const btn = document.getElementById('btn-save-atom'); btn.disabled = true; btn.textContent = '저장 중...';
+    const r = await api('atom', { method: 'POST', body });
+    btn.disabled = false; btn.textContent = '원자 박기';
+    if (r.success) {
+      toast(r.message || '🧬 원자가 박혔습니다.');
+      document.getElementById('a-title').value = '';
+      document.getElementById('a-content').value = '';
+      document.getElementById('a-tags').value = '';
+      // atoms 탭으로
+      document.querySelector('.tab[data-tab="atoms"]').click();
+      loadAtoms();
+    } else {
+      toast(r.message || '저장 실패', 'err');
+    }
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
