@@ -299,7 +299,89 @@
   .atom-type.VALUE    { background: rgba(167,139,250,.2); color: #a78bfa; }
   .atom-title { font-size: 14px; font-weight: 600; color: var(--sanctum-text); margin: 4px 0; }
   .atom-content { font-size: 12px; color: var(--sanctum-muted); line-height: 1.6; }
-  .atom-foot { margin-top: 10px; font-size: 11px; color: var(--sanctum-muted); display: flex; justify-content: space-between; }
+  .atom-foot { margin-top: 10px; font-size: 11px; color: var(--sanctum-muted); display: flex; justify-content: space-between; align-items:center; }
+  .atom-imp { color: var(--sanctum-gold); font-weight: 600; }
+  .atom-imp.high { color: #fcd34d; text-shadow: 0 0 6px rgba(252,211,77,.5); }
+
+  /* atom 카드 액션 버튼 (⭐ / ✏ / 🗑) */
+  .atom-actions {
+    margin-top: 10px;
+    display: flex;
+    gap: 6px;
+    border-top: 1px dashed rgba(255,255,255,.06);
+    padding-top: 8px;
+  }
+  .atom-actions button {
+    flex: 1;
+    background: rgba(255,255,255,.03);
+    border: 1px solid var(--sanctum-border);
+    color: var(--sanctum-muted);
+    padding: 5px 8px;
+    border-radius: 5px;
+    font-size: 11px;
+    cursor: pointer;
+    transition: all .15s;
+    letter-spacing: .5px;
+  }
+  .atom-actions .btn-promote:hover { color: var(--sanctum-gold); border-color: var(--sanctum-gold); background: rgba(212,175,55,.1); }
+  .atom-actions .btn-edit:hover    { color: #60a5fa;             border-color: #60a5fa;             background: rgba(96,165,250,.1); }
+  .atom-actions .btn-del:hover     { color: #f87171;             border-color: #f87171;             background: rgba(248,113,113,.1); }
+  .atom-card.is-deleted { opacity: .45; }
+  .atom-card.is-deleted .atom-title::after { content: ' · 삭제됨'; color: #f87171; font-size: 11px; }
+
+  /* 편집 모달 */
+  .modal-bg {
+    position: fixed; inset: 0;
+    background: rgba(5,3,15,.85);
+    backdrop-filter: blur(8px);
+    display: none;
+    align-items: center; justify-content: center;
+    z-index: 10000;
+  }
+  .modal-bg.show { display: flex; }
+  .modal {
+    background: linear-gradient(180deg, #1a132e 0%, #0f0a1f 100%);
+    border: 1px solid var(--sanctum-violet-soft);
+    border-radius: 12px;
+    padding: 28px 32px;
+    width: 90%;
+    max-width: 640px;
+    box-shadow: 0 20px 60px rgba(0,0,0,.6);
+  }
+  .modal h3 { margin: 0 0 18px; color: var(--sanctum-gold-soft); letter-spacing: 2px; font-weight: 300; }
+  .modal .row { display: flex; gap: 10px; margin-bottom: 12px; }
+  .modal .row > * { flex: 1; }
+  .modal input, .modal select, .modal textarea {
+    background: rgba(0,0,0,.3);
+    border: 1px solid var(--sanctum-border);
+    color: var(--sanctum-text);
+    padding: 8px 12px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-family: inherit;
+  }
+  .modal textarea { width: 100%; min-height: 120px; resize: vertical; line-height: 1.6; }
+  .modal .actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+  .modal .btn-cancel {
+    background: transparent;
+    color: var(--sanctum-muted);
+    border: 1px solid var(--sanctum-border);
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .modal .btn-confirm {
+    background: rgba(212,175,55,.15);
+    color: var(--sanctum-gold);
+    border: 1px solid var(--sanctum-gold);
+    padding: 8px 18px;
+    border-radius: 6px;
+    cursor: pointer;
+    letter-spacing: 1px;
+  }
+  .modal .btn-confirm:hover { background: rgba(212,175,55,.3); }
+  .modal small { color: var(--sanctum-muted); font-size: 11px; }
 
   /* 카운트 칩 */
   .count-chips { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 14px; }
@@ -347,6 +429,37 @@
 </div>
 
 <div id="toast" class="toast"></div>
+
+<!-- 🧬 atom 편집 모달 -->
+<div id="editModal" class="modal-bg">
+  <div class="modal" onclick="event.stopPropagation()">
+    <h3>✏  ATOM 편집 &nbsp;<small id="em-id"></small></h3>
+    <div class="row">
+      <select id="em-type">
+        <option value="DECISION">⚖ DECISION</option>
+        <option value="VALUE">💎 VALUE</option>
+        <option value="PERSON">👤 PERSON</option>
+        <option value="PLACE">📍 PLACE</option>
+        <option value="EVENT">🌟 EVENT</option>
+        <option value="IDEA">💡 IDEA</option>
+        <option value="TASK">📋 TASK</option>
+        <option value="EMOTION">❤ EMOTION</option>
+      </select>
+      <input type="number" id="em-importance" min="0" max="1" step="0.05" placeholder="중요도 0.00~1.00">
+    </div>
+    <div class="row">
+      <input type="text" id="em-title" placeholder="제목">
+    </div>
+    <div class="row">
+      <input type="text" id="em-tags" placeholder="태그 (쉼표 구분)">
+    </div>
+    <textarea id="em-content" placeholder="원자 내용..."></textarea>
+    <div class="actions">
+      <button class="btn-cancel" id="em-cancel">취소</button>
+      <button class="btn-confirm" id="em-save">저장</button>
+    </div>
+  </div>
+</div>
 
 <script>
 (function(){
@@ -560,7 +673,12 @@
   }
 
   // ────────────── atoms ──────────────
+  // 현재 화면에 떠 있는 atoms 데이터 (편집 모달용 캐시)
+  let _atomCache = {};
+  let _currentType = '';
+
   async function loadAtoms(type) {
+    _currentType = type || '';
     const params = {};
     if (type) params.type = type;
     const r = await api('atoms', { params });
@@ -579,18 +697,137 @@
     const wrap = document.getElementById('atoms');
     if (!r.atoms.length) { wrap.innerHTML = '<div class="empty">이 타입에는 아직 원자가 없습니다.</div>'; return; }
 
-    wrap.innerHTML = r.atoms.map(a => `
-      <div class="atom-card">
+    // 캐시
+    _atomCache = {};
+    r.atoms.forEach(a => { _atomCache[a.atom_id] = a; });
+
+    wrap.innerHTML = r.atoms.map(a => {
+      const imp = Number(a.importance) || 0;
+      const isHigh = imp >= 0.90;
+      const tags = Array.isArray(a.tags) ? a.tags : [];
+      return `
+      <div class="atom-card" data-id="${a.atom_id}">
         <span class="atom-type ${esc(a.type)}">${esc(a.type)}</span>
         <div class="atom-title">${esc(a.title || '(제목 없음)')}</div>
         <div class="atom-content">${esc((a.content||'').substring(0,180))}${(a.content||'').length>180?'…':''}</div>
+        ${tags.length ? `<div style="margin-top:8px;font-size:11px;color:#7d6a99;">${tags.map(t=>'#'+esc(t)).join(' ')}</div>` : ''}
         <div class="atom-foot">
-          <span>#${a.atom_id}</span>
+          <span>#${a.atom_id} · <span class="atom-imp ${isHigh?'high':''}">imp ${imp.toFixed(2)}</span></span>
           <span>${esc(fmtTime(a.happened_at || a.created_at))}</span>
         </div>
+        <div class="atom-actions">
+          <button class="btn-promote" data-act="promote" data-id="${a.atom_id}" title="정전 승격 (importance 0.95+)">⭐ 승격</button>
+          <button class="btn-edit"    data-act="edit"    data-id="${a.atom_id}" title="편집">✏ 편집</button>
+          <button class="btn-del"     data-act="delete"  data-id="${a.atom_id}" title="soft delete (복원 가능)">🗑 휴면</button>
+        </div>
       </div>
-    `).join('');
+      `;
+    }).join('');
+
+    // 액션 버튼 이벤트
+    wrap.querySelectorAll('.atom-actions button').forEach(btn => {
+      btn.onclick = () => handleAtomAction(btn.dataset.act, Number(btn.dataset.id));
+    });
   }
+
+  // ────────────── atom 액션 (승격/편집/삭제) ──────────────
+  async function handleAtomAction(action, atomId) {
+    const a = _atomCache[atomId];
+    if (!a) { toast('atom 정보를 찾을 수 없습니다.', 'err'); return; }
+
+    if (action === 'promote') {
+      const curImp = Number(a.importance) || 0;
+      if (curImp >= 0.95) {
+        if (!confirm(`atom #${atomId} 는 이미 importance=${curImp.toFixed(2)} 입니다.\n1.00 으로 끌어올릴까요?`)) return;
+        await doPromote(atomId, 1.00);
+      } else {
+        if (!confirm(`⭐ atom #${atomId} 정전 승격\n\n"${a.title || a.content.substring(0,40)}"\n\nimportance: ${curImp.toFixed(2)} → 0.95\n\n진행할까요?`)) return;
+        await doPromote(atomId, 0.95);
+      }
+    }
+    else if (action === 'edit') {
+      openEditModal(a);
+    }
+    else if (action === 'delete') {
+      if (!confirm(`🗑 atom #${atomId} 휴면\n\n"${a.title || a.content.substring(0,40)}"\n\n언제든 복원 가능합니다.\n진행할까요?`)) return;
+      await doDelete(atomId);
+    }
+  }
+
+  async function doPromote(atomId, importance) {
+    const r = await api('promote', { method: 'POST', body: { atom_id: atomId, importance } });
+    if (r.success) {
+      toast(r.message || '⭐ 승격되었습니다.');
+      loadAtoms(_currentType);
+    } else {
+      toast((r.message || '승격 실패') + (r.detail ? ' — ' + r.detail : ''), 'err');
+    }
+  }
+
+  async function doDelete(atomId) {
+    const r = await api('delete_atom', { method: 'POST', body: { atom_id: atomId } });
+    if (r.success) {
+      toast(r.message || '🗑 삭제되었습니다.');
+      loadAtoms(_currentType);
+    } else {
+      toast((r.message || '삭제 실패') + (r.detail ? ' — ' + r.detail : ''), 'err');
+    }
+  }
+
+  // ────────────── 편집 모달 ──────────────
+  let _editingAtomId = null;
+
+  function openEditModal(a) {
+    _editingAtomId = a.atom_id;
+    document.getElementById('em-id').textContent = `#${a.atom_id}`;
+    document.getElementById('em-type').value      = a.type;
+    document.getElementById('em-importance').value = Number(a.importance).toFixed(2);
+    document.getElementById('em-title').value     = a.title || '';
+    document.getElementById('em-tags').value      = Array.isArray(a.tags) ? a.tags.join(', ') : '';
+    document.getElementById('em-content').value   = a.content || '';
+    document.getElementById('editModal').classList.add('show');
+  }
+  function closeEditModal() {
+    _editingAtomId = null;
+    document.getElementById('editModal').classList.remove('show');
+  }
+  async function saveEdit() {
+    if (!_editingAtomId) return;
+    const tagsStr = document.getElementById('em-tags').value.trim();
+    const tags = tagsStr ? tagsStr.split(',').map(s => s.trim()).filter(Boolean) : [];
+    const body = {
+      atom_id:    _editingAtomId,
+      type:       document.getElementById('em-type').value,
+      title:      document.getElementById('em-title').value.trim(),
+      content:    document.getElementById('em-content').value.trim(),
+      importance: parseFloat(document.getElementById('em-importance').value) || 0.50,
+      tags
+    };
+    if (!body.content) { toast('content 가 비어있습니다.', 'err'); return; }
+
+    const btn = document.getElementById('em-save');
+    btn.disabled = true; btn.textContent = '저장 중...';
+    const r = await api('edit_atom', { method: 'POST', body });
+    btn.disabled = false; btn.textContent = '저장';
+
+    if (r.success) {
+      toast(r.message || '✏ 편집 완료');
+      closeEditModal();
+      loadAtoms(_currentType);
+    } else {
+      toast((r.message || '편집 실패') + (r.detail ? ' — ' + r.detail : ''), 'err');
+    }
+  }
+
+  // 모달 이벤트 (DOM 로드 직후 1회 바인딩)
+  document.getElementById('em-cancel').onclick = closeEditModal;
+  document.getElementById('em-save').onclick   = saveEdit;
+  document.getElementById('editModal').onclick = (e) => {
+    if (e.target.id === 'editModal') closeEditModal();
+  };
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && _editingAtomId) closeEditModal();
+  });
 
   // ────────────── 저장 ──────────────
   async function saveLog() {
