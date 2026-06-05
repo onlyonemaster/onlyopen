@@ -281,6 +281,50 @@ try {
             ok(['atom_id' => $atom_id, 'message' => "🧬 atom #$atom_id 가 Sanctum 에 저장되었습니다."]);
             break;
 
+        // ─────────────────────────────────────────────────────
+        case 'extract':
+            // ss_sources 에서 atom 자동 추출 (DeepSeek)
+            // GET: ?source_id=N&dry_run=1
+            // POST: {"source_id":N, "dry_run":false}
+            require_once __DIR__ . '/_atom_extractor.php';
+            $payload = json_decode(file_get_contents('php://input'), true) ?: $_REQUEST;
+            $src_id = (int)($payload['source_id'] ?? 0);
+            $dry    = !empty($payload['dry_run']);
+            if ($src_id <= 0) fail(400, 'source_id 가 필요합니다.');
+
+            $r = ss_extract_atoms_from_source($db, $src_id, ['dry_run' => $dry]);
+            ok([
+                'source_id'    => $r['source_id'],
+                'atoms'        => $r['atoms'],
+                'inserted_ids' => $r['inserted_ids'],
+                'dry_run'      => $r['dry_run'],
+                'model'        => $r['model'],
+                'visibility'   => $r['visibility'],
+                'message'      => $dry
+                    ? "🧬 " . count($r['atoms']) . "개 atom 추출 (dry-run, 저장 안 함)"
+                    : "🧬 " . count($r['inserted_ids']) . "개 atom 이 박혔습니다.",
+            ]);
+            break;
+
+        // ─────────────────────────────────────────────────────
+        case 'pending_sources':
+            // 아직 atom 추출 안 된 source 목록
+            $st = $db->prepare("
+                SELECT source_id, kind, chat_role, chat_channel, linked_chat_id,
+                       LEFT(text_content, 100) AS preview, created_at
+                FROM ss_sources
+                WHERE process_status='pending' AND user_id=?
+                ORDER BY source_id DESC LIMIT 50
+            ");
+            $st->bind_param('s', $mem_id);
+            $st->execute();
+            $r = $st->get_result();
+            $rows = [];
+            while ($row = $r->fetch_assoc()) $rows[] = $row;
+            $st->close();
+            ok(['pending' => $rows]);
+            break;
+
         default:
             fail(400, "Unknown action: $action");
     }
