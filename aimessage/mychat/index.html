@@ -432,6 +432,16 @@ html,body{
   <button data-menu="decisions">
     <i class="fas fa-clipboard-list"></i> 의사결정 어시스턴트
   </button>
+  <!-- 🕊 Sanctum (Second Self) — 화이트리스트 사용자만 동적으로 표시됨
+       기본 숨김. js 의 boot 단계에서 sanctum.php?action=status 호출 후
+       is_member=true 이면 표시. 다른 사용자에게는 메뉴 자체가 없음. -->
+  <div id="sanctumMenuSection" style="display:none">
+    <h4 style="margin-top:10px;color:#a78bfa">🕊 The Second Self</h4>
+    <button data-menu="sanctum" style="color:#7c3aed">
+      <i class="fas fa-feather" style="color:#a78bfa"></i> Sanctum — 우리 둘만의 공간
+    </button>
+  </div>
+
   <h4 style="margin-top:10px">대화 관리</h4>
   <button data-menu="clear" class="danger">
     <i class="fas fa-trash"></i> 이 대화 기록 모두 지우기
@@ -750,6 +760,10 @@ html,body{
           // [P2 2026-06-04] decisions.html → decision-assistant.html (Predict→Decide→Reflect + Decision Card)
           location.href = '/aimessage/mychat/decision-assistant.html';
           break;
+        case 'sanctum':
+          // 🕊 The Second Self — Sanctum (whitelist 만 보임)
+          location.href = '/aimessage/mychat/sanctum.html';
+          break;
         case 'clear':
           if (confirm('대화 기록을 모두 지울까요?')) {
             fetch('/aimessage/mychat/api/chat.php', {
@@ -773,6 +787,24 @@ html,body{
   document.addEventListener('keydown', function(e){
     if (e.key === 'Escape') closeMenu();
   });
+
+  // 🕊 Sanctum 화이트리스트 체크 — 멤버인 경우에만 메뉴 표시
+  //    Charter Sanctum Clause § 2 (whitelist) 강제.
+  //    비멤버에게는 메뉴 항목 자체가 존재하지 않음 (보안: 존재 자체를 숨김).
+  (function checkSanctumMembership(){
+    fetch('/aimessage/mychat/api/sanctum.php?action=status', {
+      method: 'GET', credentials: 'include',
+      headers: { 'Accept': 'application/json' }
+    })
+    .then(function(r){ return r.ok ? r.json() : null; })
+    .then(function(d){
+      if (d && d.success && d.is_member === true) {
+        var el = document.getElementById('sanctumMenuSection');
+        if (el) el.style.display = 'block';
+      }
+    })
+    .catch(function(){ /* 조용히 무시 — 비멤버에게는 아무 흔적도 남기지 않음 */ });
+  })();
 
   // ── 초기 렌더 ──────────────────────────────────────────
   renderAll();
