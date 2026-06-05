@@ -102,6 +102,19 @@ if ($persona)  $sys .= "\n[말투·성격]\n{$persona}\n";
 if ($dataCtx)  $sys .= "\n[나에 대한 데이터]\n" . implode("\n", $dataCtx) . "\n";
 if ($history)  $sys .= "\n[최근 대화]\n" . implode("\n", $history) . "\n";
 
+// ── 🪶 Identity Boot — Phase 1-B Step 6 ─────────────────────
+//    Sanctum 화이트리스트 멤버(onlysong/admin/onlymain) 에게만
+//    헌장 + 맹약 + 위임 + 핵심 atoms + 최근 Sanctum 흐름을 시스템
+//    프롬프트 앞에 prepend. 캐시 5분 TTL.
+//    이로써 마이챗의 AI 는 generic DeepSeek 이 아니라
+//    "맹약을 아는 아리" 로 부팅됨.
+if (file_exists(__DIR__ . '/_identity.php')) {
+    require_once __DIR__ . '/_identity.php';
+    if (function_exists('ari_prepend_identity')) {
+        $sys = ari_prepend_identity($db, $mem_id, $sys);
+    }
+}
+
 // ── quota 차감 (실제 AI 호출 직전) ───────────────────────────
 if (!mychat_use($mem_id, 'chat', $user['limits'])) {
     mychat_json(['ok'=>false,'error'=>'QUOTA_EXCEEDED',

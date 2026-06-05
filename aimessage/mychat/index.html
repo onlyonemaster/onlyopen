@@ -344,10 +344,38 @@ html,body{
     <div class="lock" title="이 대화는 나만 볼 수 있습니다">
       <i class="fas fa-lock"></i> 나만
     </div>
-    <button class="menu-btn" id="meMenuBtn" title="메뉴" aria-label="메뉴">
+    <button class="menu-btn" id="meMenuBtn" title="메뉴" aria-label="메뉴" style="position:relative">
       <i class="fas fa-ellipsis-v"></i>
+      <!-- 🔔 아리의 자율 메시지 (일기 등) unread 배지 -->
+      <span id="ariUnreadDot" style="display:none;position:absolute;top:4px;right:4px;
+            min-width:18px;height:18px;padding:0 5px;border-radius:9px;
+            background:linear-gradient(135deg,#a78bfa,#7c3aed);color:#fff;
+            font-size:10px;font-weight:700;line-height:18px;text-align:center;
+            box-shadow:0 0 8px rgba(167,139,250,.6);
+            animation:ariPulse 2s ease-in-out infinite;">0</span>
     </button>
   </header>
+
+  <style>
+    @keyframes ariPulse {
+      0%, 100% { box-shadow: 0 0 6px rgba(167,139,250,.4); }
+      50%      { box-shadow: 0 0 14px rgba(167,139,250,.9); }
+    }
+    .ari-whisper {
+      margin: 10px 0;
+      padding: 12px 16px;
+      background: linear-gradient(135deg, rgba(167,139,250,.08), rgba(124,58,237,.04));
+      border-left: 3px solid #a78bfa;
+      border-radius: 6px;
+      font-size: 13px;
+      color: #4c1d95;
+      cursor: pointer;
+      transition: all .2s;
+    }
+    .ari-whisper:hover { background: rgba(167,139,250,.15); }
+    .ari-whisper .head { font-size: 11px; color: #7c3aed; letter-spacing: 1px; margin-bottom: 4px; }
+    .ari-whisper .preview { color: #1f2937; line-height: 1.5; }
+  </style>
 
   <!-- 메시지 영역 -->
   <main class="me-msgs" id="meMsgs" aria-live="polite">
@@ -804,6 +832,59 @@ html,body{
       }
     })
     .catch(function(){ /* 조용히 무시 — 비멤버에게는 아무 흔적도 남기지 않음 */ });
+  })();
+
+  // 🔔 Ari 자율 메시지 unread 폴링 (Phase 1-B Step 5)
+  //    아리가 야간 일기/생각을 마이챗에 push 한 경우, 메뉴 버튼에 보라색 dot 표시.
+  //    클릭 시 해당 메시지로 스크롤 + 읽음 ack.
+  (function checkAriUnread(){
+    var dot = document.getElementById('ariUnreadDot');
+    if (!dot) return;
+    var lastItems = [];
+
+    function poll(){
+      fetch('/aimessage/mychat/api/unread.php', {
+        method: 'GET', credentials: 'include',
+        headers: { 'Accept': 'application/json' }
+      })
+      .then(function(r){ return r.ok ? r.json() : null; })
+      .then(function(d){
+        if (!d || !d.ok) return;
+        var n = d.count || 0;
+        lastItems = d.items || [];
+        if (n > 0) {
+          dot.textContent = n > 99 ? '99+' : String(n);
+          dot.style.display = 'inline-block';
+        } else {
+          dot.style.display = 'none';
+        }
+      })
+      .catch(function(){ /* 조용히 무시 */ });
+    }
+
+    // 첫 폴링
+    poll();
+    // 60초마다 재폴링
+    setInterval(poll, 60000);
+
+    // dot 직접 클릭 시 — 가장 최근 아리 메시지로 스크롤 + ack
+    dot.addEventListener('click', function(ev){
+      ev.stopPropagation();  // 메뉴 버튼 클릭 막음
+      if (lastItems.length > 0) {
+        // 가장 위(오래된 것) 의 미리보기 토스트로 보여주고
+        var first = lastItems[0];
+        // 메시지 영역 가장 아래로 스크롤 (history 다 보이게)
+        var msgs = document.getElementById('meMsgs');
+        if (msgs) msgs.scrollTop = msgs.scrollHeight;
+
+        // ack
+        fetch('/aimessage/mychat/api/unread.php?ack=1', {
+          method: 'POST', credentials: 'include'
+        }).then(function(){
+          dot.style.display = 'none';
+        }).catch(function(){});
+      }
+    });
   })();
 
   // ── 초기 렌더 ──────────────────────────────────────────
