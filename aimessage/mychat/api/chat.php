@@ -130,9 +130,24 @@ $db->query("CREATE TABLE IF NOT EXISTS mychat_chat_history (
 $esc_user  = $db->real_escape_string($user_msg);
 $esc_reply = $db->real_escape_string($ai_reply);
 $db->query("INSERT INTO mychat_chat_history (mem_id,role,content) VALUES ('{$esc}','user','{$esc_user}')");
+$user_chat_id = $db->insert_id;
 $db->query("INSERT INTO mychat_chat_history (mem_id,role,content) VALUES ('{$esc}','assistant','{$esc_reply}')");
+$ai_chat_id = $db->insert_id;
 
-// 최근 200개만 유지
+// 🌌 Second Self — ss_sources 에 영구 미러링 (atom 추출의 토대)
+//    mychat_chat_history 는 표시용 200개 rotation 이지만,
+//    ss_sources 는 삭제 없는 영구 저장소.
+if (file_exists(__DIR__ . '/_secondself_helper.php')) {
+    require_once __DIR__ . '/_secondself_helper.php';
+    if (function_exists('ss_source_mirror_pair')) {
+        ss_source_mirror_pair(
+            $db, $mem_id, $user_msg, $ai_reply,
+            $user_chat_id, $ai_chat_id, 'mychat'
+        );
+    }
+}
+
+// 최근 200개만 유지 (표시용 — ss_sources 영구본은 안전)
 $db->query("DELETE FROM mychat_chat_history WHERE mem_id='{$esc}'
             AND id NOT IN (SELECT id FROM (
                 SELECT id FROM mychat_chat_history WHERE mem_id='{$esc}'
