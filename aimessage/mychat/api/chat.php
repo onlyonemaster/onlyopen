@@ -82,15 +82,18 @@ if ($ragRes) {
     }
 }
 
-// ── 최근 대화 이력 (최대 10턴) ───────────────────────────────
+// ── 최근 대화 이력 (최대 30턴, 각 1500자) ─────────────────────
+//    Phase 1-B Step 11: 어제 마이아리 반복 사건 후 확장.
+//    10턴×300자 → 30턴×1500자 로 단기 기억 강화.
+//    DeepSeek 128K 컨텍스트 윈도우 안에서 안전.
 $history = [];
-$hist = $db->query("SELECT role, content FROM mychat_chat_history WHERE mem_id='{$esc}' ORDER BY id DESC LIMIT 10");
+$hist = $db->query("SELECT role, content FROM mychat_chat_history WHERE mem_id='{$esc}' ORDER BY id DESC LIMIT 30");
 if ($hist) {
     $rows = [];
     while ($h = $hist->fetch_assoc()) $rows[] = $h;
     foreach (array_reverse($rows) as $h) {
         $who = ($h['role'] === 'user') ? '사용자' : '나';
-        $history[] = "{$who}: " . mb_substr($h['content'], 0, 300);
+        $history[] = "{$who}: " . mb_substr($h['content'], 0, 1500);
     }
 }
 
@@ -121,8 +124,25 @@ if (!mychat_use($mem_id, 'chat', $user['limits'])) {
                  'message'=>'이번 달 AI 대화 한도를 초과했습니다. 플랜 업그레이드 또는 자체 API키를 등록해 주세요.'], 429);
 }
 
+// ── 응답 토큰 예산 (Adaptive Response Budget 의 임시 처방) ─────
+//    Phase 1-B Step 11: 800 → 4000 으로 5배 확장.
+//    빅테크 표준의 verbosity hint 키워드 감지로 동적 조절.
+//    Step 9 에서 LLM 기반 intent classifier 로 정식 교체 예정.
+$max_tokens = 4000;
+$_msg_lc = mb_strtolower($user_msg);
+if (preg_match('/길게|자세히|풀어|상세히|전부|모두|코드|구현|작성|만들어|all|full|detail|long/u', $_msg_lc)) {
+    $max_tokens = 8000;
+}
+if (preg_match('/길게 답해|매우 자세히|완전히|전부 다|deep dive|comprehensive/u', $_msg_lc)) {
+    $max_tokens = 12000;
+}
+if (mb_strlen($user_msg) < 15 && !preg_match('/[?？]/u', $user_msg)) {
+    // 짧은 한 단어 응답 ("응", "오케이", "고마워") 은 1500 으로
+    $max_tokens = 1500;
+}
+
 // ── AI 호출 ──────────────────────────────────────────────────
-$ai = mychat_ai_reply($sys, $user_msg, 800, $user);
+$ai = mychat_ai_reply($sys, $user_msg, $max_tokens, $user);
 if (!$ai['ok']) {
     $err = $ai['error'] ?? 'AI 응답 실패';
     if ($err === 'BYOK_KEY_INVALID') {
