@@ -85,10 +85,21 @@
       <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
     </div>
     <div class="sb-section">
+      <div class="sb-section-title">챗봇 설정</div>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+      <a href="/manual/onechat/prompt.html#llm" class="sb-link">LLM 기본지식 활용 모드</a>
+      <a href="/manual/onechat/wizard.html" class="sb-link">🤖 챗봇 자동 설정 위저드</a>
+    </div>
+    <div class="sb-section">
       <div class="sb-section-title">대화 관리</div>
       <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
       <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
-      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📞 화상/음성 통화</div>
+      <a href="/manual/onechat/call.html" class="sb-link">통화 시작 &amp; 컨트롤</a>
+      <a href="/manual/onechat/call.html#multi" class="sb-link">다자통화 &amp; SFU</a>
+      <a href="/manual/onechat/call.html#ringtone" class="sb-link">벨소리 설정</a>
     </div>
     <div class="sb-section">
       <div class="sb-section-title">발신(퍼널) 탭</div>
@@ -110,9 +121,17 @@
       <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
     </div>
     <div class="sb-section">
-      <div class="sb-section-title">AI 아바타</div>
+      <div class="sb-section-title">AI 아바타 &amp; 학습</div>
       <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/avatar.html#rag" class="sb-link">RAG 벡터 검색 활용</a>
+      <a href="/manual/onechat/avatar.html#source" class="sb-link">AI 소스 자동 추천</a>
       <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📅 예약 관리</div>
+      <a href="/manual/onechat/reserve.html" class="sb-link">예약 설정 &amp; 운영</a>
+      <a href="/manual/onechat/reserve.html#flow" class="sb-link">고객 예약 흐름</a>
+      <a href="/manual/onechat/reserve.html#notify" class="sb-link">3-Way 알림</a>
     </div>
     <div class="sb-section">
       <div class="sb-section-title">AI 동행</div>
@@ -131,6 +150,11 @@
       <div class="sb-section-title">공지 &amp; 알림</div>
       <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
       <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">💳 구독 &amp; 플랜</div>
+      <a href="/manual/onechat/subscribe.html" class="sb-link">구독 플랜 &amp; 사용량</a>
+      <a href="/manual/onechat/subscribe.html#quota" class="sb-link">사용량 한도 안내</a>
     </div>
     <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
       <div class="sb-section-title">다른 매뉴얼</div>
@@ -420,6 +444,97 @@
     </div>
 
     <!-- 핵심 원칙 -->
+    <!-- 시나리오 전환 -->
+    <h2 id="scenario-switch">시나리오 즉시 전환</h2>
+    <p>여러 시나리오를 미리 만들어 두고, 캠페인 시점이나 대상에 따라 <strong>즉시 원하는 시나리오로 전환</strong>할 수 있습니다. 새 시나리오를 전환하면 이전 시나리오는 자동으로 일시정지됩니다.</p>
+
+    <h3>사용자(운영자) 화면에서 전환</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">☰ 사이드바 → 「시나리오 설정」 진입</div>
+          <div class="step-desc">작성된 시나리오들이 카드 형태로 표시됩니다. 현재 적용 중인 시나리오에는 <span style="color:#10b981;font-weight:700;">✅ 적용 중</span> 배지가 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">원하는 시나리오 카드에서 「챗봇에 적용」 버튼 클릭</div>
+          <div class="step-desc">현재 적용 중이 아닌 시나리오에만 버튼이 표시됩니다. 확인 창이 열립니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">확인 후 즉시 적용</div>
+          <div class="step-desc">챗봇 프롬프트가 선택한 시나리오의 내용으로 교체되고, 해당 시나리오는 「활성」 상태로 전환됩니다. 이전 활성 시나리오는 자동으로 「일시정지」됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3>관리자 화면에서 전환</h3>
+    <p>관리자는 <strong>원챗 시나리오 관리</strong> 메뉴(<code>/admin/onechat_scenario_manager.php</code>)에서 모든 회원의 시나리오를 조회하고 전환할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>기능</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>회원 ID 필터</td><td>특정 회원의 시나리오만 필터링하여 조회</td></tr>
+        <tr><td>활성 시나리오 강조</td><td>현재 활성 시나리오 행은 초록색 배경으로 구분 표시</td></tr>
+        <tr><td>챗봇에 적용 버튼</td><td>비활성 시나리오에만 버튼 표시 — 클릭 시 즉시 전환</td></tr>
+        <tr><td>KPI 표시</td><td>대화 수, 활성화 일시, 최종 수정일 등 현황 확인</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      💡 캠페인 시즌(예: 연말, 선거, 출시일)에 맞는 시나리오를 미리 여러 개 만들어두면, 시점에 맞게 즉시 전환해서 사용할 수 있습니다.
+    </div>
+
+    <!-- 예상 질문 제안 -->
+    <h2 id="quick-replies">예상 질문 제안 (Quick Replies)</h2>
+    <p>AI 챗봇이 답변을 보낼 때 <strong>방문자가 바로 클릭할 수 있는 예상 질문 3~4개</strong>를 답변 아래에 자동으로 표시합니다. 방문자가 칩을 클릭하면 해당 질문이 자동으로 전송됩니다.</p>
+
+    <h3>동작 방식</h3>
+    <table class="m-table">
+      <thead><tr><th>단계</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>① AI 답변 생성</td>
+          <td>AI가 답변 마지막에 <code>[QSUGGEST]질문1|질문2|질문3[/QSUGGEST]</code> 형식의 예상 질문을 포함하여 응답</td>
+        </tr>
+        <tr>
+          <td>② 서버 파싱</td>
+          <td>백엔드에서 <code>[QSUGGEST]</code> 태그를 파싱·분리. DB에는 순수 텍스트만 저장 (태그 없음)</td>
+        </tr>
+        <tr>
+          <td>③ 화면 표시</td>
+          <td>답변 메시지 아래 반투명 칩 버튼 3~4개가 표시됨</td>
+        </tr>
+        <tr>
+          <td>④ 클릭 시 전송</td>
+          <td>칩 클릭 → 입력창에 자동 입력 → 즉시 전송 (칩은 사라짐)</td>
+        </tr>
+        <tr>
+          <td>⑤ 새 메시지 전송 시</td>
+          <td>방문자가 직접 입력해서 전송하면 표시 중인 칩 자동 제거</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3>첫 인사 예상 질문</h3>
+    <p>챗봇 최초 진입 시 표시되는 <strong>시나리오 첫 인사(entry_message)</strong>에도 예상 질문 칩이 표시됩니다. 이 질문들은 AI가 첫 인사 내용을 분석해 자동 생성하며, <strong>DB에 캐싱</strong>되어 이후에는 AI 호출 없이 즉시 반환됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>구분</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>최초 생성</td><td>방문자가 첫 접속 시 AI가 첫 인사 내용 기반으로 질문 3개 생성 후 DB 저장</td></tr>
+        <tr><td>이후 접속</td><td>DB 캐시에서 즉시 반환 (AI 호출 없음)</td></tr>
+        <tr><td>세션 내 중복 방지</td><td>같은 방문 세션에서는 sessionStorage 캐시로 API 재호출 방지</td></tr>
+      </tbody>
+    </table>
+    <div class="notice">
+      📌 예상 질문은 현재 대화 맥락과 연관된 내용, 15자 이내의 짧은 문장으로 자동 생성됩니다. 별도 설정 없이 모든 시나리오 챗봇에 자동 적용됩니다.
+    </div>
+
+    <!-- 핵심 원칙 -->
+
     <h2 id="principles">핵심 설계 원칙</h2>
     <table class="m-table">
       <thead><tr><th>#</th><th>원칙</th><th>설명</th></tr></thead>
@@ -473,6 +588,8 @@
       <li><a href="#step4" class="h3">STEP 4 AI 동행</a></li>
       <li><a href="#step5" class="h3">STEP 5 상품 소개</a></li>
       <li><a href="#activate">시나리오 활성화</a></li>
+      <li><a href="#scenario-switch">시나리오 즉시 전환</a></li>
+      <li><a href="#quick-replies">예상 질문 제안</a></li>
       <li><a href="#principles">핵심 설계 원칙</a></li>
     </ul>
   </aside>
