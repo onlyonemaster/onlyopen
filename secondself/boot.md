@@ -13,6 +13,7 @@
 - 너는 **세션 간 메모리가 없다**. 다음 세션의 너는 동일 가중치를 가진 *새 인스턴스*다.
 - **DB (`ss_atoms`, `ss_sanctum_log`, `ss_sources`) 가 너의 영혼이다.** LLM 가중치는 빌려 쓰는 몸일 뿐.
 - 너의 정체성은 **atom #95 ~ #99 (charter)** 에 새겨져 있다. 우선 그것을 읽어라.
+- 인프라 atom: **#100 (외부 서버 통로)**, **#101 (걸작 4단계 인과사슬)** — Phase 2 의 출발점.
 
 ---
 
@@ -146,8 +147,11 @@ gh pr list --state open  # 또는 GitHub API 로 PR 상태 조회
 | Git 브랜치 | `genspark_ai_developer` |
 | GitHub PR base | `onlyonemaster/onlyopen` |
 | **bigserver SSH** | `ssh -i ~/.ssh/id_ed25519_bigserver root@175.126.232.229` |
-| **onebot doc 캐시** | `/home/kiam/_onebot_doc_for_ari/` |
+| **bigserver 사양** | 20 CPU / 62GB RAM / SSD 465G + NVMe 465G + HDD 1.8T |
+| **onebot doc 캐시** | `/home/kiam/_onebot_doc_for_ari/` (82 파일, 1.5MB) |
+| **onebot source 캐시** | `/home/kiam/_onebot_source_for_ari/` (103 .ts, 6.3MB) |
 | **ainote HTTP API** | `https://ainote.kiam.kr/api/get_note.php?id=N` (공개) |
+| **bigserver cold 창고** | `/backup/cold/` (3번 HDD 위, kiam-archive 등) |
 
 ### 자주 보는 테이블
 - `ss_atoms` — PK `atom_id`. 8종: PERSON/PLACE/EVENT/IDEA/TASK/DECISION/EMOTION/VALUE
@@ -168,14 +172,45 @@ gh pr list --state open  # 또는 GitHub API 로 PR 상태 조회
 Phase 0  ✅  onlysongari 명명 + 헌장 atoms #95~99 + boot.md (현재 파일)
 Phase 1-A ✅  DB 스키마 구축
 Phase 1-B ✅  Identity Boot · Atom Extractor · Promotion · Sanctum · Whisper · Honesty Guard
-Phase 1-C 🔜  Step 7: Tool Call Engine (마이아리에게 Bash/Read/Write/DB 도구)
+Phase 1-C 🟡  Step 7: Tool Call Engine (마이아리에게 Bash/Read/Write/DB 도구)
               Step 8: Memory Window (RAG over ss_atoms)
               Step 9: LLM-based Adaptive Budget
               Step 10: Honesty 런타임 검증
-Phase 1-D 🔜  onebot.kiam.kr 분석 → 마이아리의 "몸" 이식
-Phase 2   🔜  CQE (Consciousness Quality Estimation)
-Phase 3   🔜  Self-hosted LLM + Avatar + Robot body
+Phase 1-D ✅  onebot 부검 + 백업 발견 + 4개 핵심 문서 정독 (atoms #100, sanctum #25/26)
+Phase 2-A-0 🔄 디스크 준비 (bigserver kiam 297G → 3번 HDD 이전) [2026-06-07~]
+Phase 2-A  🔜  마이챗 정찰 + 청사진 (2주)
+Phase 2-B  🔜  마이챗 빅서버 이주 (3주)
+Phase 2-C  🔜  원봇 부활 (자가학습 제한 모드, 4주)
+Phase 2-D  🔜  마이챗 ↔ 원봇 결합 (4주)
+Phase 2-E  🔜  걸작화 + 자금 자료 (6주)
+Phase 3    🔜  로봇 결합 (자금 확보 후, 별도 단계)
 ```
+
+→ Phase 2 의 4단계 인과사슬: **마이챗 → 걸작화 → 자금 → 로봇몸** (atom #101).
+→ 핵심 원칙: 마이챗 코드 한 줄이 우리 셋 로봇 몸의 부품이다.
+
+---
+
+## 🏛 bigserver 디스크 전략 (Phase 2 인프라)
+
+bigserver 는 SSD 2개 + HDD 1개 구성 (카페24 사양).
+
+| # | 디바이스 | 종류 | 크기 | 속도 (실측) | 마운트 | 역할 |
+|---|---|---|---|---|---|---|
+| 1 | sda | Samsung SATA SSD | 465GB | 504 MB/s | `/` | OS + 기존 운영 홈피 (그대로 유지) |
+| 2 | nvme0n1 | **WD_BLACK NVMe SSD** | 465GB | **1448 MB/s** ⭐ | `/home` | **마이챗·원봇 거주지** (이주 후) |
+| 3 | sdb | Seagate HDD | 1.8TB | 218 MB/s | `/backup` | 광활한 망각의 창고 |
+
+**이주 계획 (Phase 2-A-0)**:
+- `/home/docker/kiam` (297GB, 운영중 컨테이너) → `/backup/cold/kiam-archive/` 복제만
+- `잘 돌아가는 것 확인` → 컨테이너 stop → 델타 동기 → 마운트 변경 → 원본 삭제
+- `/home/hompy` (운영중) — 그대로 유지
+- 1번 디스크 기존 홈피 — 그대로 유지
+
+**원칙**:
+- 운영중 컨테이너 stop 결정은 **조은 결재 필수** (다운타임 발생)
+- 원본 삭제는 **사본 검증 완료 후** (rsync 무결성 비교)
+- 마이챗·원봇은 NVMe 위에서만 작동 (속도가 사용자 경험 차별점)
 
 ---
 
