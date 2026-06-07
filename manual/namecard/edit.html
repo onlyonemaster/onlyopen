@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>명함 수정 & 관리 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">명함 관리</div>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 만들기</div>
+      <a href="/manual/namecard/add.html" class="sb-link">명함 등록하는 방법</a>
+      <a href="/manual/namecard/edit.html" class="sb-link active">명함 수정 &amp; 관리</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 공유</div>
+      <a href="/manual/namecard/share.html" class="sb-link">명함 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 콘텐츠</div>
+      <a href="/manual/namecard/iammall.html" class="sb-link">🛒 IAM몰 연동</a>
+      <a href="/manual/namecard/westory.html" class="sb-link">📸 위스토리</a>
+      <a href="/manual/namecard/landing.html" class="sb-link">🎯 인포랜딩</a>
+      <a href="/manual/namecard/linkapply.html" class="sb-link">🔗 링크 신청</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/namecard/">명함 관리</a><span class="sep">›</span>
+      <span>명함 수정 &amp; 관리</span>
+    </div>
+
+    <h1>명함 수정 &amp; 관리</h1>
+    <p class="page-desc">등록한 명함 내용을 수정하고, 여러 장의 명함을 관리하는 방법을 설명합니다.</p>
+
+    <h2 id="edit">명함 수정</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">kiam.kr 로그인 후 내 명함 화면으로 이동합니다</div>
+          <div class="step-desc">메인 화면 상단 우측 <strong>⋮ (더보기 메뉴)</strong> 또는 <strong>명함 편집 버튼</strong>을 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">수정할 항목을 클릭하고 변경합니다</div>
+          <div class="step-desc">이름·직책·사진·연락처·SNS 링크 등 모든 항목을 개별 수정할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[저장]</strong> 버튼을 클릭합니다</div>
+          <div class="step-desc">저장 즉시 명함 URL에서 변경 내용이 반영됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="multi-card">멀티 명함 관리</h2>
+    <p>kiam.kr에서는 <strong>여러 장의 명함</strong>을 등록하여 상황에 맞게 전환할 수 있습니다. 예를 들어 개인 명함 / 사업 명함 / 특정 프로젝트용 명함을 분리하여 운영할 수 있습니다.</p>
+
+    <h3 id="add-card">명함 추가</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">마이페이지 → <strong>[명함 목록]</strong> 이동</div>
+          <span class="step-url">https://kiam.kr/mypage_chatbot_list.php</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[명함 추가]</strong> 버튼을 클릭합니다</div>
+          <div class="step-desc">새로운 명함을 처음부터 만들거나 기존 명함을 복사하여 시작할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">명함 이름(식별용)을 입력하고 저장합니다</div>
+          <div class="step-desc">각 명함에는 고유한 URL이 부여됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="switch-card">대표 명함 전환</h3>
+    <p>여러 명함 중 <strong>대표 명함</strong>을 지정할 수 있습니다. 대표 명함이 메인 URL(<code>kiam.kr/내아이디</code>)에 표시됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>명함 상태</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>대표 명함 ★</strong></td><td>메인 URL에 표시. 기본 챗봇 링크로 연결됨</td></tr>
+        <tr><td><strong>추가 명함</strong></td><td>고유 URL로 개별 접속 가능. 용도별 운영</td></tr>
+        <tr><td><strong>비공개 명함</strong></td><td>링크를 알고 있는 사람만 접근 가능</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="namecard-menu">명함 드롭다운 메뉴</h2>
+    <p>각 명함 카드의 우측 상단 <strong>⋮</strong>을 클릭하면 명함별 관리 메뉴가 열립니다.</p>
+    <table class="m-table">
+      <thead><tr><th>메뉴 항목</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td>✏️ 편집</td><td>명함 내용 수정 모드 진입</td></tr>
+        <tr><td>🔗 링크 복사</td><td>해당 명함 URL을 클립보드에 복사</td></tr>
+        <tr><td>📷 QR코드</td><td>QR코드 이미지 다운로드 또는 공유</td></tr>
+        <tr><td>★ 대표 설정</td><td>이 명함을 대표 명함으로 지정</td></tr>
+        <tr><td>📋 복사</td><td>이 명함을 복사해서 새 명함 생성</td></tr>
+        <tr><td>🗑️ 삭제</td><td>명함 영구 삭제 (복구 불가)</td></tr>
+      </tbody>
+    </table>
+    <div class="warn">
+      ⚠️ <strong>명함 삭제 시 주의</strong><br>
+      삭제된 명함의 URL은 더 이상 열리지 않습니다. 해당 명함 링크를 이미 공유한 경우 수신자가 접근 불가능해집니다.
+    </div>
+
+    <h2 id="group-card">그룹 명함</h2>
+    <p>팀·조직을 대표하는 그룹 명함을 만들어 여러 명이 함께 관리할 수 있습니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">kiam.kr 메인 → <strong>[그룹 페이지]</strong> 메뉴 선택</div>
+          <span class="step-url">https://kiam.kr/?cur_win=group-con</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[그룹 만들기]</strong> 클릭 → 그룹 이름 입력</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">멤버를 초대하여 함께 관리합니다</div>
+          <div class="step-desc">그룹 관리자는 멤버 초대·추방·이름 변경·그룹 해체 권한을 가집니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="page-nav">
+      <a href="/manual/namecard/add.html"><span class="nav-label">← 이전</span><span class="nav-title">명함 등록하는 방법</span></a>
+      <a href="/manual/namecard/share.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">명함 공유하기</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#edit">명함 수정</a></li>
+      <li><a href="#multi-card">멀티 명함 관리</a></li>
+      <li><a href="#add-card" class="h3">명함 추가</a></li>
+      <li><a href="#switch-card" class="h3">대표 명함 전환</a></li>
+      <li><a href="#namecard-menu">명함 드롭다운 메뉴</a></li>
+      <li><a href="#group-card">그룹 명함</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

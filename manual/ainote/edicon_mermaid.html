@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📐 다이어그램 (Mermaid 19종) 자동 렌더링 — 에디콘 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.flow-input-output { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: stretch; margin: 20px 0; padding: 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;}
+.flow-input-output .col-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase;}
+.flow-input-output pre { background: var(--bg3); border: 1px dashed var(--border); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text2); margin: 0; overflow-x: auto; line-height: 1.6; white-space: pre; }
+.flow-input-output .arrow-col { font-size: 24px; color: #6366f1; text-align: center; align-self: center; }
+.mermaid-result { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 14px; overflow-x: auto; display: flex; align-items: center; justify-content: center; min-height: 120px; }
+.mermaid-result .mermaid { width: 100%; }
+@media(max-width:700px) { .flow-input-output { grid-template-columns: 1fr; } .flow-input-output .arrow-col { transform: rotate(90deg); } }
+
+.kw-grid {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px;
+  margin: 18px 0;
+}
+.kw-card {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 10px;
+  padding: 12px 14px; transition: .2s;
+}
+.kw-card:hover { border-color: #6366f1; }
+.kw-card .kw-icon { font-size: 22px; display: block; margin-bottom: 6px; }
+.kw-card .kw-name { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
+.kw-card .kw-code { font-size: 11px; color: var(--text3); font-family: ui-monospace, monospace; }
+
+.demo-section {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 18px; margin: 16px 0;
+}
+.demo-section h3 { font-size: 15px; font-weight: 800; margin-bottom: 10px; color: var(--text); display: flex; align-items: center; gap: 8px; }
+.demo-section h3 .badge { font-size: 10px; background: rgba(99,102,241,.15); color: #6366f1; padding: 2px 8px; border-radius: 4px; font-weight: 700; letter-spacing: .5px; }
+.demo-section .demo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; align-items: stretch; }
+.demo-section .demo-grid pre { background: var(--bg3); border: 1px solid var(--border); border-radius: 8px; padding: 10px 12px; font-size: 11px; color: var(--text2); margin: 0; overflow-x: auto; line-height: 1.55; white-space: pre; }
+.demo-section .demo-grid .mermaid-result { padding: 10px; min-height: 100px; }
+@media(max-width:700px) { .demo-section .demo-grid { grid-template-columns: 1fr; } }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid@10.9.0/dist/mermaid.min.js"></script>
+<script>
+window.addEventListener('DOMContentLoaded', function() {
+  if (typeof mermaid !== 'undefined') {
+    mermaid.initialize({ startOnLoad: true, theme: 'default', securityLevel: 'loose', fontFamily: 'inherit' });
+  }
+});
+</script>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a></div>
+    <div class="sb-section"><div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a></div>
+    <div class="sb-section"><div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link active">다이어그램 (Mermaid)</a></div>
+    <div class="sb-section"><div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a></div>
+    <div class="sb-section"><div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a></div>
+    <div class="sb-section"><div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a></div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <a href="/manual/ainote/edicon.html">에디콘</a><span class="sep">›</span>
+      <span>다이어그램 (Mermaid)</span>
+    </div>
+
+    <h1>📐 다이어그램 (Mermaid 19종)</h1>
+    <p class="page-desc">에디콘은 <strong>19종의 Mermaid 다이어그램</strong>을 자동으로 감지해 실시간 SVG로 렌더링합니다. 흐름도·시퀀스·클래스·ER·간트·마인드맵·타임라인 등 — AI가 만들어준 다이어그램 코드를 그대로 붙여넣기만 하면 즉시 시각화됩니다. <strong>이 페이지의 모든 다이어그램은 실제로 작동하는 라이브 데모</strong>입니다.</p>
+
+    <h2 id="how">📥 사용 방법</h2>
+    <p>두 가지 방식 모두 자동 감지됩니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card" style="border-left:3px solid #6366f1;">
+        <span class="ti">📋</span>
+        <div class="tn">방법 1: 코드 펜스</div>
+        <div class="td"><code>```mermaid</code>로 시작하고 <code>```</code>로 닫기. AI가 가장 자주 만드는 형식.</div>
+      </div>
+      <div class="tab-card" style="border-left:3px solid #8b5cf6;">
+        <span class="ti">🪄</span>
+        <div class="tn">방법 2: 바로 입력</div>
+        <div class="td">첫 줄이 <code>flowchart TD</code>, <code>sequenceDiagram</code> 같은 키워드면 펜스 없이도 자동 인식.</div>
+      </div>
+    </div>
+
+    <h2 id="example">⚡ 첫 예시 — 흐름도</h2>
+
+    <div class="flow-input-output">
+      <div>
+        <div class="col-label">붙여넣은 텍스트</div>
+        <pre>```mermaid
+flowchart LR
+  A[시작] --&gt; B{조건?}
+  B --&gt;|예| C[작업1]
+  B --&gt;|아니오| D[작업2]
+  C --&gt; E[종료]
+  D --&gt; E
+```</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="col-label">렌더링 결과 (실제 동작)</div>
+        <div class="mermaid-result">
+          <div class="mermaid">
+flowchart LR
+  A[시작] --> B{조건?}
+  B -->|예| C[작업1]
+  B -->|아니오| D[작업2]
+  C --> E[종료]
+  D --> E
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="all-19">🎨 지원하는 19종 다이어그램 전체</h2>
+    <p>아래 모든 키워드 중 어떤 것으로 시작하든 자동으로 Mermaid로 인식됩니다.</p>
+
+    <div class="kw-grid">
+      <div class="kw-card"><span class="kw-icon">📊</span><div class="kw-name">흐름도 (가로)</div><div class="kw-code">graph LR</div></div>
+      <div class="kw-card"><span class="kw-icon">📊</span><div class="kw-name">흐름도 v2</div><div class="kw-code">flowchart TD</div></div>
+      <div class="kw-card"><span class="kw-icon">🔄</span><div class="kw-name">시퀀스</div><div class="kw-code">sequenceDiagram</div></div>
+      <div class="kw-card"><span class="kw-icon">📦</span><div class="kw-name">클래스</div><div class="kw-code">classDiagram</div></div>
+      <div class="kw-card"><span class="kw-icon">🔁</span><div class="kw-name">상태</div><div class="kw-code">stateDiagram-v2</div></div>
+      <div class="kw-card"><span class="kw-icon">🗄️</span><div class="kw-name">ER</div><div class="kw-code">erDiagram</div></div>
+      <div class="kw-card"><span class="kw-icon">🗺️</span><div class="kw-name">사용자 여정</div><div class="kw-code">journey</div></div>
+      <div class="kw-card"><span class="kw-icon">📅</span><div class="kw-name">간트 차트</div><div class="kw-code">gantt</div></div>
+      <div class="kw-card"><span class="kw-icon">🥧</span><div class="kw-name">파이 차트</div><div class="kw-code">pie</div></div>
+      <div class="kw-card"><span class="kw-icon">🌳</span><div class="kw-name">Git 그래프</div><div class="kw-code">gitGraph</div></div>
+      <div class="kw-card"><span class="kw-icon">🧠</span><div class="kw-name">마인드맵</div><div class="kw-code">mindmap</div></div>
+      <div class="kw-card"><span class="kw-icon">⏱️</span><div class="kw-name">타임라인</div><div class="kw-code">timeline</div></div>
+      <div class="kw-card"><span class="kw-icon">🎯</span><div class="kw-name">사분면</div><div class="kw-code">quadrantChart</div></div>
+      <div class="kw-card"><span class="kw-icon">📋</span><div class="kw-name">요구사항</div><div class="kw-code">requirementDiagram</div></div>
+      <div class="kw-card"><span class="kw-icon">🏢</span><div class="kw-name">C4 컨텍스트</div><div class="kw-code">C4Context</div></div>
+      <div class="kw-card"><span class="kw-icon">💧</span><div class="kw-name">상키 (흐름)</div><div class="kw-code">sankey-beta</div></div>
+      <div class="kw-card"><span class="kw-icon">🧱</span><div class="kw-name">블록</div><div class="kw-code">block-beta</div></div>
+      <div class="kw-card"><span class="kw-icon">📈</span><div class="kw-name">XY 차트</div><div class="kw-code">xychart-beta</div></div>
+      <div class="kw-card"><span class="kw-icon">🔃</span><div class="kw-name">상태 (v1)</div><div class="kw-code">stateDiagram</div></div>
+    </div>
+
+    <h2 id="live-demos">🎬 라이브 데모 — 6종 주요 다이어그램</h2>
+    <p>아래 모든 다이어그램은 <strong>실제로 이 페이지에서 렌더링</strong>되고 있습니다. 코드를 복사해서 노트에 붙여넣으면 똑같이 작동합니다.</p>
+
+    <div class="demo-section">
+      <h3>1. 시퀀스 다이어그램 <span class="badge">sequenceDiagram</span></h3>
+      <div class="demo-grid">
+        <pre>sequenceDiagram
+  participant 사용자
+  participant 에디터
+  participant AI
+  사용자-&gt;&gt;에디터: 표 붙여넣기
+  에디터-&gt;&gt;AI: 형식 분석
+  AI--&gt;&gt;에디터: 표 인식 완료
+  에디터--&gt;&gt;사용자: HTML 테이블 표시</pre>
+        <div class="mermaid-result">
+          <div class="mermaid">
+sequenceDiagram
+  participant 사용자
+  participant 에디터
+  participant AI
+  사용자->>에디터: 표 붙여넣기
+  에디터->>AI: 형식 분석
+  AI-->>에디터: 표 인식 완료
+  에디터-->>사용자: HTML 테이블 표시
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h3>2. 클래스 다이어그램 <span class="badge">classDiagram</span></h3>
+      <div class="demo-grid">
+        <pre>classDiagram
+  class Note {
+    +String title
+    +String content
+    +save()
+  }
+  class EdiCon {
+    +detectTable()
+    +detectMermaid()
+  }
+  Note --&gt; EdiCon : uses</pre>
+        <div class="mermaid-result">
+          <div class="mermaid">
+classDiagram
+  class Note {
+    +String title
+    +String content
+    +save()
+  }
+  class EdiCon {
+    +detectTable()
+    +detectMermaid()
+  }
+  Note --> EdiCon : uses
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h3>3. ER 다이어그램 <span class="badge">erDiagram</span></h3>
+      <div class="demo-grid">
+        <pre>erDiagram
+  USER ||--o{ NOTE : owns
+  NOTE ||--o{ BLOCK : contains
+  BLOCK {
+    string type
+    text content
+  }
+  USER {
+    string email
+    string name
+  }</pre>
+        <div class="mermaid-result">
+          <div class="mermaid">
+erDiagram
+  USER ||--o{ NOTE : owns
+  NOTE ||--o{ BLOCK : contains
+  BLOCK {
+    string type
+    text content
+  }
+  USER {
+    string email
+    string name
+  }
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h3>4. 파이 차트 <span class="badge">pie</span></h3>
+      <div class="demo-grid">
+        <pre>pie title 노트 형식 분포
+  "텍스트" : 42
+  "표" : 23
+  "코드" : 18
+  "다이어그램" : 12
+  "수식" : 5</pre>
+        <div class="mermaid-result">
+          <div class="mermaid">
+pie title 노트 형식 분포
+  "텍스트" : 42
+  "표" : 23
+  "코드" : 18
+  "다이어그램" : 12
+  "수식" : 5
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h3>5. 간트 차트 <span class="badge">gantt</span></h3>
+      <div class="demo-grid">
+        <pre>gantt
+  title 트리니티 개발 일정
+  dateFormat YYYY-MM-DD
+  section 에디콘
+    Phase 1 :a1, 2026-01-01, 30d
+    Phase 2 :a2, after a1, 25d
+    Phase 4 (Mermaid) :a3, after a2, 20d
+  section 아트콘
+    아트콘 :b1, 2026-03-01, 60d</pre>
+        <div class="mermaid-result">
+          <div class="mermaid">
+gantt
+  title 트리니티 개발 일정
+  dateFormat YYYY-MM-DD
+  section 에디콘
+    Phase 1 :a1, 2026-01-01, 30d
+    Phase 2 :a2, after a1, 25d
+    Phase 4 (Mermaid) :a3, after a2, 20d
+  section 아트콘
+    아트콘 :b1, 2026-03-01, 60d
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="demo-section">
+      <h3>6. 마인드맵 <span class="badge">mindmap</span></h3>
+      <div class="demo-grid">
+        <pre>mindmap
+  root((아이노트))
+    에디콘
+      URL 카드
+      표 변환
+      Mermaid
+    아트콘
+      아트콘
+      5가지 테마
+    브리콘
+      브리핑
+      공유</pre>
+        <div class="mermaid-result">
+          <div class="mermaid">
+mindmap
+  root((아이노트))
+    에디콘
+      URL 카드
+      표 변환
+      Mermaid
+    아트콘
+      아트콘
+      5가지 테마
+    브리콘
+      브리핑
+      공유
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="ai-prompt">🤖 AI에게 Mermaid 요청하기</h2>
+    <p>ChatGPT·DeepSeek에게 다음과 같이 요청하면 Mermaid 코드로 답변합니다.</p>
+
+    <div style="background: var(--bg2); border-left: 4px solid #6366f1; padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0;">
+      <strong>프롬프트 예시:</strong><br>
+      <em style="color:var(--text2);">"우리 회사의 고객 응대 프로세스를 Mermaid flowchart로 그려 줘. ```mermaid 코드 블록으로 감싸서."</em>
+    </div>
+
+    <p>AI가 코드를 돌려주면 그대로 노트에 붙여넣기 — 자동 렌더링됩니다.</p>
+
+    <h2 id="tips">💡 잘 쓰는 팁</h2>
+
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>방법</th></tr></thead>
+      <tbody>
+        <tr><td>다이어그램 방향 바꾸기</td><td><code>flowchart LR</code>(가로) / <code>TD</code>(위→아래) / <code>BT</code>(아래→위) / <code>RL</code>(가로 역방향)</td></tr>
+        <tr><td>한글 라벨 사용</td><td>대부분 OK. 노드 ID는 영문, 라벨에만 한글 권장: <code>A[작업 시작]</code></td></tr>
+        <tr><td>다이어그램 크기 조절</td><td>노트 너비에 자동 맞춤. 모바일에서도 가로 스크롤로 보임.</td></tr>
+        <tr><td>소스 보기</td><td>다이어그램 위에 마우스 → "소스보기" 버튼 → Mermaid 코드 표시</td></tr>
+        <tr><td>다이어그램 → 인포그래픽</td><td>"🎨 아트콘으로 변환" → ArtCon이 다이어그램을 컬러풀하게 재해석</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      🎨 <strong>다이어그램 → ArtCon 연동</strong><br>
+      Mermaid 다이어그램을 <a href="/manual/ainote/geniart.html">아트콘(ArtCon)</a>으로 보내면 더 풍부한 색상·스타일의 인포그래픽으로 다시 만들 수 있습니다. 표준 SVG보다 마케팅·발표에 적합한 결과물이 나옵니다.
+    </div>
+
+    <h2 id="trouble">🛠️ 문제 해결</h2>
+
+    <table class="m-table">
+      <thead><tr><th>증상</th><th>원인 & 해결</th></tr></thead>
+      <tbody>
+        <tr><td>다이어그램이 렌더링 안 됨</td><td>첫 줄이 19개 키워드 중 하나로 시작해야 함. 예: <code>flowchart TD</code></td></tr>
+        <tr><td>"Syntax error in graph"</td><td>코드에 오타. 노드 ID가 중복되거나 화살표(<code>--&gt;</code>)가 잘못된 경우 많음.</td></tr>
+        <tr><td>한글이 깨짐</td><td>드물게 라벨 안에 특수문자(괄호·따옴표)가 있을 때. 라벨을 따옴표로 감싸기: <code>A["라벨 (1)"]</code></td></tr>
+        <tr><td>너무 복잡한 다이어그램</td><td>50노드 넘으면 가독성 저하. 더 작게 나눠 여러 다이어그램으로.</td></tr>
+        <tr><td>모바일에서 너무 작음</td><td>핀치 줌으로 확대. 또는 다이어그램 우상단 ⛶ 클릭해 전체화면.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/edicon_math.html"><span class="nav-label">← 이전</span><span class="nav-title">∑ 수식 (LaTeX)</span></a>
+      <a href="/manual/ainote/geniart.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🎨 아트콘 (아트콘)</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#how">사용 방법</a></li>
+      <li><a href="#example">첫 예시</a></li>
+      <li><a href="#all-19">19종 전체</a></li>
+      <li><a href="#live-demos">라이브 데모 6종</a></li>
+      <li><a href="#ai-prompt">AI에게 요청</a></li>
+      <li><a href="#tips">잘 쓰는 팁</a></li>
+      <li><a href="#trouble">문제 해결</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

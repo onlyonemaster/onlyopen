@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수신 내역 확인 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/addressbook.html" class="sb-link">📒 주소록 관리</a>
+      <a href="/manual/sms/received.html" class="sb-link active">수신 내역 확인</a>
+      <a href="/manual/sms/block.html" class="sb-link">수신거부 관리</a>
+      <a href="/manual/sms/web-send.html" class="sb-link">웹문자 발송</a>
+      <a href="/manual/sms/bulk20.html" class="sb-link">20건 무료문자</a>
+      <a href="/manual/sms/reservation.html" class="sb-link">예약 발송</a>
+      <a href="/manual/sms/split.html" class="sb-link">분할 발송</a>
+      <a href="/manual/sms/ai-copy.html" class="sb-link">AI 메시지 카피</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 수신 내역 확인</nav>
+    <h1 class="page-title">📨 수신 내역 확인</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">수신 내역이란?</a></li>
+        <li><a href="#access">화면 접속</a></li>
+        <li><a href="#columns">화면 구성</a></li>
+        <li><a href="#reply">회신 문자</a></li>
+        <li><a href="#tips">활용 팁</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>수신 내역이란?</h2>
+      <p>폰문자 수신 내역 화면(<code>sub_4.php?status=5&status2=3</code>)에서는 발신 폰이 실제로 <strong>수신한 문자 메시지</strong>를 확인할 수 있습니다.</p>
+      <p style="margin-top:12px;">고객이 발신 번호로 답문자(회신)를 보낸 경우, 이 화면에서 수신 내역을 확인하고 직접 회신할 수 있습니다.</p>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📌 온리원문자 앱 필요</strong>: 수신 내역은 스마트폰에 설치된 온리원문자 앱이 실행 중일 때만 서버로 전달됩니다. 앱이 꺼진 상태에서는 수신 내역이 등록되지 않을 수 있습니다.
+      </div>
+    </section>
+
+    <section id="access">
+      <h2>화면 접속</h2>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>폰문자 메뉴 접속</strong>
+            <p>kiam.kr 로그인 후 상단 메뉴 → 폰문자 발송(<code>sub_4.php</code>)에 접속합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>수신내역 탭 클릭</strong>
+            <p>화면 상단 탭에서 <strong>수신내역</strong> 탭을 선택합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>발신번호 선택</strong>
+            <p>조회할 발신 폰 번호를 선택하여 해당 폰으로 수신된 문자를 확인합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="columns">
+      <h2>화면 구성</h2>
+      <table>
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>발신/회신문자</td><td>수신된 문자의 종류 (발신 또는 회신)</td></tr>
+          <tr><td>문자인증</td><td>인증 문자 수신 여부 표시</td></tr>
+          <tr><td>수신번호</td><td>문자를 보낸 고객의 번호</td></tr>
+          <tr><td>수신 내용</td><td>수신된 문자 메시지 내용</td></tr>
+          <tr><td>수신 일시</td><td>메시지를 수신한 날짜/시간</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="reply">
+      <h2>회신 문자</h2>
+      <p>수신된 고객 문자에 직접 답문자를 보낼 수 있습니다.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>수신 내역에서 번호 확인</strong>
+            <p>회신할 고객 번호를 확인합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>문자 발송 화면으로 이동</strong>
+            <p>해당 번호를 발송 화면의 수신처에 입력하고 답문자를 작성·발송합니다.</p>
+          </div>
+        </div>
+      </div>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>⚠️ 기본서비스 안내</strong>: 수신 내역 확인은 기본 발신기능 앱(온리원문자)과 연동 시 제공되며, WiFi 상태보다 <strong>LTE/5G 연결 상태</strong>에서 더욱 안정적으로 수신됩니다.
+      </div>
+    </section>
+
+    <section id="tips">
+      <h2>활용 팁</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">🔔</div>
+          <div class="fc-title">즉시 확인</div>
+          <div class="fc-desc">고객 회신 문자는 영업 응대 기회입니다. 수신 후 빠르게 확인하고 후속 대응하세요.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📲</div>
+          <div class="fc-title">앱 백그라운드 실행</div>
+          <div class="fc-desc">온리원문자 앱을 항상 백그라운드로 실행하여 수신 내역이 누락되지 않도록 합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🚫</div>
+          <div class="fc-title">수신거부 처리</div>
+          <div class="fc-desc">수신 문자에 "거부", "해지" 등의 키워드가 있으면 수신거부 목록에 등록하세요.</div>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-nav">
+      <a href="/manual/sms/addressbook.html" class="btn-prev">← 주소록 관리</a>
+      <a href="/manual/sms/block.html" class="btn-next">수신거부 관리 →</a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul>
+      <li><a href="#what">수신 내역이란?</a></li>
+      <li><a href="#access">화면 접속</a></li>
+      <li><a href="#columns">화면 구성</a></li>
+      <li><a href="#reply">회신 문자</a></li>
+      <li><a href="#tips">활용 팁</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

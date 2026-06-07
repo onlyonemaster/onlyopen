@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>메시지 발송하기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI 메시지</div>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aimessage/start.html" class="sb-link">AI 메시지 시작하기</a>
+      <a href="/manual/aimessage/sender-info.html" class="sb-link">발신자 정보 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">메시지 설정</div>
+      <a href="/manual/aimessage/prompt.html" class="sb-link">프롬프트 설정</a>
+      <a href="/manual/aimessage/send.html" class="sb-link active">메시지 발송하기</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 매뉴얼</a>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/aimessage/">AI 메시지</a><span class="sep">›</span>
+      <span>메시지 발송하기</span>
+    </div>
+
+    <h1>메시지 발송하기</h1>
+    <p class="page-desc">수신자 목록을 업로드하고 채널을 선택해 AI 메시지를 발송합니다. 즉시 발송과 예약 발송을 모두 지원합니다.</p>
+
+    <h2 id="tab">퍼널 발송 채널 탭</h2>
+    <p>발신자 정보·프롬프트 설정 완료 후 <strong>[퍼널 발송 채널]</strong> 탭으로 이동합니다.</p>
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">📱</span>
+        <div class="tn">폰문자 (SMS/LMS/MMS)</div>
+        <div class="td">일반 휴대폰 문자. 수신자의 문자함으로 전달. 가장 높은 도달률</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">웹문자 (RCS)</div>
+        <div class="td">인터넷 기반 문자. 이미지·버튼 포함 가능. 스마트폰 전용</div>
+      </div>
+    </div>
+
+    <h2 id="recipient-upload">수신자 목록 업로드</h2>
+    <p>발송할 대상의 전화번호 목록을 파일로 업로드합니다.</p>
+
+    <h3 id="file-format">파일 형식</h3>
+    <table class="m-table">
+      <thead><tr><th>형식</th><th>권장 열 구성</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>Excel (.xlsx)</strong></td>
+          <td>A열: 전화번호 / B열: 이름 (선택)</td>
+          <td>가장 일반적인 형식</td>
+        </tr>
+        <tr>
+          <td><strong>CSV (.csv)</strong></td>
+          <td>phone,name 헤더 또는 번호만</td>
+          <td>DB에서 추출한 파일</td>
+        </tr>
+        <tr>
+          <td><strong>직접 입력</strong></td>
+          <td>번호를 줄바꿈으로 구분하여 입력</td>
+          <td>소량 발송 시 편리</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="notice">
+      📌 <strong>전화번호 형식</strong><br>
+      01012345678 또는 010-1234-5678 모두 허용됩니다. 하이픈(-) 유무와 관계없이 자동 처리됩니다.
+    </div>
+
+    <h3 id="upload-steps">업로드 방법</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[수신자 목록 업로드]</strong> 버튼을 클릭합니다</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">파일을 드래그하거나 클릭하여 선택합니다</div>
+          <div class="step-desc">업로드 후 전화번호 열을 매핑(지정)합니다. 이름 열이 있으면 메시지에 수신자 이름이 자동 삽입됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">업로드된 수신자 수를 확인합니다</div>
+          <div class="step-desc">중복 번호·잘못된 형식은 자동 필터링됩니다. 수신거부 번호는 자동 제외됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="send-options">발송 옵션 설정</h2>
+    <table class="m-table">
+      <thead><tr><th>옵션</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>발송 시작 단계</strong></td>
+          <td>1단계(Hook)부터 시작하거나 특정 단계부터 발송</td>
+        </tr>
+        <tr>
+          <td><strong>발송 간격</strong></td>
+          <td>각 단계 메시지 사이 대기 일수 설정 (기본 3~7일)</td>
+        </tr>
+        <tr>
+          <td><strong>발송 시간대</strong></td>
+          <td>오전 9시~오후 9시 사이로 자동 제한 (스팸 방지)</td>
+        </tr>
+        <tr>
+          <td><strong>즉시/예약</strong></td>
+          <td>지금 즉시 발송 또는 특정 날짜·시간 예약</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="preview">발송 미리보기 & 확인</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[미리보기]</strong> 버튼으로 실제 발송될 메시지를 확인합니다</div>
+          <div class="step-desc">수신자 이름이 삽입된 형태와 챗봇 링크 단축 URL을 포함한 최종 메시지를 미리볼 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">예상 포인트 소비량을 확인합니다</div>
+          <div class="step-desc">수신자 수 × 단계 수 × 건당 단가로 계산됩니다. 잔여 포인트가 부족하면 발송이 중단됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[발송 시작]</strong> 버튼을 클릭합니다</div>
+          <div class="step-desc">예약 발송 시에는 설정한 날짜·시간에 자동으로 발송됩니다.</div>
+        </div>
+      </li>
+    </ul>
+    <div class="warn">
+      ⚠️ <strong>발송 취소는 발송 전에만 가능합니다</strong><br>
+      발송이 시작된 메시지는 취소가 불가능합니다. 미리보기와 수신자 목록을 반드시 확인하세요.
+    </div>
+
+    <h2 id="result">발송 결과 확인</h2>
+    <p>발송 완료 후 결과를 확인합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>확인 항목</th><th>위치</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>발송 내역</strong></td>
+          <td>kiam.kr → 폰문자 → 발신내역</td>
+          <td>발송 성공·실패 건수, 발송 시간</td>
+        </tr>
+        <tr>
+          <td><strong>수신 현황</strong></td>
+          <td>kiam.kr → 폰문자 → 수신내역</td>
+          <td>수신자별 수신 여부, 링크 클릭 여부</td>
+        </tr>
+        <tr>
+          <td><strong>챗봇 유입</strong></td>
+          <td>원챗 → 발신 탭 (퍼널)</td>
+          <td>메시지 링크를 클릭한 고객 목록 자동 등록</td>
+        </tr>
+        <tr>
+          <td><strong>포인트 차감</strong></td>
+          <td>마이페이지 → 이용 내역</td>
+          <td>발송 건당 차감된 포인트 확인</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="after-send">발송 후 관리</h2>
+    <p>AI 메시지 링크를 클릭한 방문자는 <strong>원챗 발신 탭(퍼널)</strong>에 자동 등록됩니다. 이후 AI 동행·시나리오 캠페인으로 자동 후속 관리가 이어집니다.</p>
+    <div class="notice">
+      📌 <strong>원챗과의 연계 흐름</strong><br>
+      AI 메시지 발송 → 수신자 링크 클릭 → <strong>원챗 발신탭 자동 등록</strong> → AI 동행 자동 인사 → 시나리오 캠페인으로 장기 관계 유지
+      <br><a href="/manual/onechat/funnel.html" style="color:var(--brand);">→ 원챗 발신탭 매뉴얼 보기</a>
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aimessage/prompt.html"><span class="nav-label">← 이전</span><span class="nav-title">프롬프트 설정</span></a>
+      <a href="/manual/dashboard/" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📊 대시보드 & 통계</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#tab">퍼널 발송 채널 탭</a></li>
+      <li><a href="#recipient-upload">수신자 목록 업로드</a></li>
+      <li><a href="#file-format" class="h3">파일 형식</a></li>
+      <li><a href="#upload-steps" class="h3">업로드 방법</a></li>
+      <li><a href="#send-options">발송 옵션 설정</a></li>
+      <li><a href="#preview">미리보기 &amp; 확인</a></li>
+      <li><a href="#result">발송 결과 확인</a></li>
+      <li><a href="#after-send">발송 후 관리</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

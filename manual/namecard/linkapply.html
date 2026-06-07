@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>링크 신청 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">명함 관리</div>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 만들기</div>
+      <a href="/manual/namecard/add.html" class="sb-link">명함 등록하는 방법</a>
+      <a href="/manual/namecard/edit.html" class="sb-link">명함 수정 &amp; 관리</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 공유</div>
+      <a href="/manual/namecard/share.html" class="sb-link">명함 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 콘텐츠</div>
+      <a href="/manual/namecard/iammall.html" class="sb-link">🛒 IAM몰 연동</a>
+      <a href="/manual/namecard/westory.html" class="sb-link">📸 위스토리</a>
+      <a href="/manual/namecard/landing.html" class="sb-link">🎯 인포랜딩</a>
+      <a href="/manual/namecard/linkapply.html" class="sb-link active">🔗 링크 신청</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/namecard/">명함 관리</a><span class="sep">›</span>
+      <span>링크 신청</span>
+    </div>
+
+    <h1>🔗 링크 신청</h1>
+    <p class="page-desc">kiam.kr 명함에 외부 서비스 링크, 신청 폼, 예약 버튼 등을 추가하는 방법을 안내합니다. 명함 방문자가 원클릭으로 신청·예약·구매 등을 바로 할 수 있습니다.</p>
+
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">링크 신청이란?</a></li>
+        <li><a href="#types">추가 가능한 링크 종류</a></li>
+        <li><a href="#how">링크 추가 방법</a></li>
+        <li><a href="#apply-form">신청 폼 연동</a></li>
+        <li><a href="#tips">활용 팁</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>링크 신청이란?</h2>
+      <p>명함에 외부 URL·신청 폼·예약 시스템 등의 링크를 <strong>클릭 가능한 버튼</strong> 형태로 추가하는 기능입니다. 명함 방문자가 버튼을 탭하면 바로 해당 페이지로 이동합니다.</p>
+      <div class="notice">
+        📌 <strong>활용 예시</strong><br>
+        • 세미나 신청 → <code>naver.me/xxx</code> 연결<br>
+        • 상담 예약 → 카카오 예약 링크 연결<br>
+        • 설문 참여 → 구글 폼 링크 연결<br>
+        • 제품 구매 → 스토어 링크 연결<br>
+        • 오픈채팅방 → 카카오 오픈채팅 URL 연결
+      </div>
+    </section>
+
+    <section id="types">
+      <h2>추가 가능한 링크 종류</h2>
+      <table class="m-table">
+        <thead><tr><th>링크 유형</th><th>설명</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>일반 URL</strong></td>
+            <td>웹 페이지, 블로그, 유튜브 등 모든 http/https URL</td>
+            <td>홈페이지, 유튜브 채널, 블로그 포스팅</td>
+          </tr>
+          <tr>
+            <td><strong>카카오 오픈채팅</strong></td>
+            <td>오픈채팅방 참여 링크</td>
+            <td>고객 소통방, 커뮤니티 초대</td>
+          </tr>
+          <tr>
+            <td><strong>네이버 폼</strong></td>
+            <td>네이버 설문·신청 폼</td>
+            <td>행사 신청, 강의 등록</td>
+          </tr>
+          <tr>
+            <td><strong>구글 폼</strong></td>
+            <td>Google Forms 링크</td>
+            <td>설문 조사, 피드백 수집</td>
+          </tr>
+          <tr>
+            <td><strong>예약 서비스</strong></td>
+            <td>네이버 예약, 카카오 예약 등</td>
+            <td>상담 예약, 방문 예약</td>
+          </tr>
+          <tr>
+            <td><strong>파일 다운로드</strong></td>
+            <td>PDF, 이미지, 문서 직접 다운로드 링크</td>
+            <td>카탈로그, 제품 소개서</td>
+          </tr>
+          <tr>
+            <td><strong>인포랜딩</strong></td>
+            <td>kiam.kr 인포랜딩 페이지 링크</td>
+            <td>이벤트 랜딩 페이지, 서비스 소개</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="how">
+      <h2>링크 추가 방법</h2>
+      <ul class="step-list">
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">kiam.kr 로그인 후 명함 편집 화면으로 이동합니다</div>
+            <div class="step-desc">메인 화면에서 <strong>[편집]</strong> 또는 <strong>⋮ → 명함 수정</strong>을 클릭하세요.</div>
+            <span class="step-url">https://kiam.kr/?cur_win=my_info</span>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title"><strong>[링크 추가]</strong> 버튼을 클릭합니다</div>
+            <div class="step-desc">명함 편집 화면의 <strong>SNS 링크 / 외부 링크</strong> 섹션에서 링크 추가 버튼을 찾으세요.</div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">링크 유형과 정보를 입력합니다</div>
+            <div class="step-desc">
+              <table class="m-table">
+                <thead><tr><th>항목</th><th>설명</th></tr></thead>
+                <tbody>
+                  <tr><td>링크 이름</td><td>버튼에 표시될 텍스트 (예: "세미나 신청하기")</td></tr>
+                  <tr><td>URL</td><td>연결할 웹 주소</td></tr>
+                  <tr><td>아이콘</td><td>버튼 앞에 표시될 아이콘 선택 (선택 사항)</td></tr>
+                  <tr><td>색상</td><td>버튼 배경색 설정 (선택 사항)</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <div class="step-title"><strong>[저장]</strong>하면 명함에 버튼이 생성됩니다</div>
+            <div class="step-desc">명함 방문자가 버튼을 탭하면 지정한 URL로 바로 이동합니다. 링크는 최대 10개까지 추가 가능합니다.</div>
+          </div>
+        </li>
+      </ul>
+    </section>
+
+    <section id="apply-form">
+      <h2>신청 폼 연동</h2>
+      <p>kiam.kr 자체 신청 이벤트 폼을 명함에 직접 삽입할 수 있습니다. 외부 폼 링크와 달리 명함 내부에서 바로 신청이 가능합니다.</p>
+      <ul class="step-list">
+        <li class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <div class="step-title">명함 편집 → <strong>[콘텐츠 추가] → [신청 이벤트]</strong> 선택</div>
+            <div class="step-desc">신청 이벤트 블록을 명함에 추가합니다.</div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <div class="step-title">신청 폼 항목을 설정합니다</div>
+            <div class="step-desc">
+              <table class="m-table">
+                <thead><tr><th>항목</th><th>설명</th></tr></thead>
+                <tbody>
+                  <tr><td>이벤트 제목</td><td>신청 버튼 위에 표시되는 행사명</td></tr>
+                  <tr><td>수집 항목</td><td>이름, 전화번호, 이메일, 주소 등 원하는 정보 선택</td></tr>
+                  <tr><td>마감 날짜</td><td>신청 기간 설정 (기간 초과 시 자동 마감)</td></tr>
+                  <tr><td>최대 인원</td><td>선착순 마감 인원 설정 (선택)</td></tr>
+                  <tr><td>완료 메시지</td><td>신청 완료 후 표시되는 메시지</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </li>
+        <li class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <div class="step-title">신청자 목록을 확인합니다</div>
+            <div class="step-desc">마이페이지 → 신청 이벤트 관리에서 신청자 목록을 CSV로 다운로드할 수 있습니다. 신청자는 원챗 수신탭에도 자동 등록됩니다.</div>
+          </div>
+        </li>
+      </ul>
+      <div class="tip">
+        💡 <strong>신청자 자동 관리</strong><br>
+        신청 이벤트를 통해 수집된 전화번호는 AI 메시지·SMS 발송 대상 명단으로 바로 활용할 수 있습니다.
+        → <a href="/manual/aimessage/start.html" style="color:var(--brand);">AI 메시지 발송 매뉴얼 보기</a>
+      </div>
+    </section>
+
+    <section id="tips">
+      <h2>활용 팁</h2>
+      <table class="m-table">
+        <thead><tr><th>상황</th><th>추천 링크 설정</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>강의 · 세미나 홍보</td>
+            <td>인포랜딩 + 신청 이벤트 폼 조합 → 랜딩 페이지에서 상세 정보 확인 후 바로 신청</td>
+          </tr>
+          <tr>
+            <td>부동산 · 보험 상담</td>
+            <td>카카오 오픈채팅 링크 + AI 챗봇 연결 → 24시간 자동 상담 제공</td>
+          </tr>
+          <tr>
+            <td>온라인 쇼핑몰</td>
+            <td>IAM몰 블록 + 스마트스토어 URL 버튼 → 바로 구매 유도</td>
+          </tr>
+          <tr>
+            <td>뷰티 · 헬스 예약</td>
+            <td>네이버 예약 또는 카카오 예약 링크 → 명함에서 바로 예약</td>
+          </tr>
+          <tr>
+            <td>포트폴리오 공유</td>
+            <td>구글 드라이브 PDF 링크 + 유튜브 채널 연결</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="notice">
+        📌 <strong>링크 순서 변경</strong><br>
+        명함 편집 화면에서 링크 항목을 드래그하여 순서를 바꿀 수 있습니다. 가장 중요한 버튼을 상단에 배치하세요.
+      </div>
+    </section>
+
+    <div class="page-nav">
+      <a href="/manual/namecard/landing.html"><span class="nav-label">← 이전</span><span class="nav-title">🎯 인포랜딩</span></a>
+      <a href="/manual/onechat/" class="next"><span class="nav-label">다음 →</span><span class="nav-title">💬 원챗 매뉴얼</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">링크 신청이란?</a></li>
+      <li><a href="#types">추가 가능한 링크 종류</a></li>
+      <li><a href="#how">링크 추가 방법</a></li>
+      <li><a href="#apply-form">신청 폼 연동</a></li>
+      <li><a href="#tips">활용 팁</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

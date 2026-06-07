@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>계정 설정 & 요금제 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">계정 &amp; 설정</div>
+      <a href="/manual/account/" class="sb-link">⚙️ 계정 소개</a>
+      <a href="/manual/account/signup.html" class="sb-link">회원가입 &amp; 로그인</a>
+      <a href="/manual/account/settings.html" class="sb-link active">계정 설정 &amp; 요금제</a>
+      <a href="/manual/account/pwa.html" class="sb-link">📱 PWA 앱 설치</a>
+      <a href="/manual/account/coaching.html" class="sb-link">🎓 코칭 &amp; 강연</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗</a>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 SMS</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/account/signup.html">계정 &amp; 설정</a><span class="sep">›</span>
+      <span>계정 설정 &amp; 요금제</span>
+    </div>
+
+    <h1>계정 설정 &amp; 요금제</h1>
+    <p class="page-desc">내 프로필 수정, 사업체 정보 등록, 포인트 충전, 요금제 관리 방법을 안내합니다.</p>
+
+    <h2 id="mypage">마이페이지 접속</h2>
+    <p>로그인 후 상단 <strong>[마이페이지]</strong>를 클릭하거나 아래 주소로 직접 이동합니다.</p>
+    <span class="step-url">https://kiam.kr/mypage.php</span>
+
+    <div class="tab-grid" style="margin-top:20px;">
+      <div class="tab-card">
+        <span class="ti">👤</span>
+        <div class="tn">회원정보 수정</div>
+        <div class="td">이름·이메일·휴대폰·비밀번호 변경</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🏢</span>
+        <div class="tn">사업체 정보</div>
+        <div class="td">사업체명·업종·주소 등록 (AI 메시지 자동 생성에 활용)</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💳</span>
+        <div class="tn">결제 · 포인트</div>
+        <div class="td">포인트 충전, 결제 내역, 이용 내역 확인</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📋</span>
+        <div class="tn">이용 내역</div>
+        <div class="td">서비스별 활동 기록 및 잔여 포인트 확인</div>
+      </div>
+    </div>
+
+    <h2 id="profile-edit">회원정보 수정</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">마이페이지 → <strong>[회원정보 수정]</strong> 클릭</div>
+          <div class="step-desc">또는 아래 주소로 이동합니다.</div>
+          <span class="step-url">https://kiam.kr/mypage_edit.php</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">수정할 항목을 변경합니다</div>
+          <div class="step-desc">
+            <table class="m-table">
+              <thead><tr><th>항목</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td>이름</td><td>AI 아바타·명함에 표시되는 이름</td></tr>
+                <tr><td>이메일</td><td>비밀번호 찾기·알림 수신용</td></tr>
+                <tr><td>휴대폰 번호</td><td>SMS 발송 시 발신번호로 사용</td></tr>
+                <tr><td>비밀번호</td><td>현재 비밀번호 확인 후 새 비밀번호 입력</td></tr>
+                <tr><td>프로필 사진</td><td>명함·원챗 아바타에 표시되는 이미지</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[저장]</strong> 버튼을 클릭합니다</div>
+          <div class="step-desc">변경 사항이 즉시 반영됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="business">사업체 정보 등록</h2>
+    <p>AI 메시지 자동 생성 시 발신자 정보로 활용됩니다. 상세하게 입력할수록 더 정확한 맞춤 메시지가 생성됩니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">마이페이지 → <strong>[사업체 정보]</strong> 메뉴 선택</div>
+          <span class="step-url">https://kiam.kr/mypage_business.php</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">사업체 정보를 입력합니다</div>
+          <div class="step-desc">
+            <table class="m-table">
+              <thead><tr><th>항목</th><th>AI 활용 방식</th></tr></thead>
+              <tbody>
+                <tr><td>사업체명</td><td>메시지 발신자 이름으로 삽입</td></tr>
+                <tr><td>업종·카테고리</td><td>업종에 맞는 메시지 톤·내용 생성</td></tr>
+                <tr><td>소개 정보</td><td>AI가 이 내용을 바탕으로 메시지 작성</td></tr>
+                <tr><td>소개 파일 (PDF·TXT)</td><td>파일 내용을 AI가 학습하여 더 정확한 메시지 생성</td></tr>
+                <tr><td>회사 주소</td><td>지역 맞춤 메시지 생성에 활용</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="tip">
+      💡 소개 파일(PDF, TXT, CSV)을 업로드하면 AI가 파일 내용을 직접 참고하여 훨씬 더 맞춤화된 메시지를 생성합니다. 상품 소개서, 회사 프로필 등을 업로드해 보세요.
+    </div>
+
+    <h2 id="point">포인트 & 결제</h2>
+    <h3 id="point-type">포인트 종류</h3>
+    <table class="m-table">
+      <thead><tr><th>종류</th><th>설명</th><th>사용처</th></tr></thead>
+      <tbody>
+        <tr><td><strong>캐시포인트</strong></td><td>충전하여 사용하는 유료 포인트</td><td>SMS 발송, AI 메시지 생성, 모든 유료 기능</td></tr>
+        <tr><td><strong>씨드포인트</strong></td><td>활동·이벤트로 적립되는 무료 포인트</td><td>플랫폼 내 기능 한정 사용 (출금 불가)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="point-charge">포인트 충전</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">마이페이지 → <strong>[결제/포인트]</strong> 선택</div>
+          <span class="step-url">https://kiam.kr/mypage_payment.php</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">충전 금액을 선택합니다</div>
+          <div class="step-desc">카드 결제·가상계좌·무통장입금을 지원합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">결제 완료 후 포인트가 즉시 적립됩니다</div>
+          <div class="step-desc">이용 내역에서 충전·사용 내역을 확인할 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+    <div class="notice">
+      📌 <strong>환불 정책</strong><br>
+      캐시포인트 잔액 환불 시 서비스 이용 건수에서 할인 금액을 차감하여 지급합니다. AI 콘텐츠 생성 완료 이후에는 환불이 불가능합니다.
+    </div>
+
+    <h2 id="plan">요금제 관리</h2>
+    <p>kiam.kr은 포인트 기반 종량제 서비스입니다. 별도의 월정액 요금제 없이 사용한 만큼 포인트가 차감됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>서비스</th><th>포인트 소비 기준</th></tr></thead>
+      <tbody>
+        <tr><td>SMS 폰문자 발송</td><td>건당 포인트 차감 (수신번호 수 × 단가)</td></tr>
+        <tr><td>AI 메시지 생성</td><td>생성 건당 포인트 차감</td></tr>
+        <tr><td>콘텐츠 전송</td><td>전송 1건당 설정된 포인트 차감</td></tr>
+        <tr><td>원챗 (OneChat)</td><td>별도 요금 (챗봇 이용 요금제 문의)</td></tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      💡 <strong>소기업·개인 사업자 할인</strong><br>
+      일부 서비스는 소기업·개인 사업자에게 최대 70% 할인을 제공합니다. 고객센터(1544-8080)로 문의하세요.
+    </div>
+
+    <h2 id="withdraw">회원 탈퇴</h2>
+    <p>마이페이지 하단 <strong>[회원 탈퇴]</strong> 또는 고객센터를 통해 탈퇴 신청할 수 있습니다.</p>
+    <div class="warn">
+      ⚠️ <strong>탈퇴 전 반드시 확인하세요</strong><br>
+      • 탈퇴 시 모든 데이터(명함·AI 학습 데이터·대화 기록)가 영구 삭제됩니다<br>
+      • 잔여 캐시포인트는 환불 정책에 따라 처리됩니다<br>
+      • 동일 아이디로 재가입이 불가능합니다
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/account/signup.html"><span class="nav-label">← 이전</span><span class="nav-title">회원가입 &amp; 로그인</span></a>
+      <a href="/manual/namecard/" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📇 명함 관리 소개</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#mypage">마이페이지 접속</a></li>
+      <li><a href="#profile-edit">회원정보 수정</a></li>
+      <li><a href="#business">사업체 정보 등록</a></li>
+      <li><a href="#point">포인트 &amp; 결제</a></li>
+      <li><a href="#point-type" class="h3">포인트 종류</a></li>
+      <li><a href="#point-charge" class="h3">포인트 충전</a></li>
+      <li><a href="#plan">요금제 관리</a></li>
+      <li><a href="#withdraw">회원 탈퇴</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

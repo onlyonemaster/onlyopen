@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI와 대화하기 — 마이챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<div class="m-layout">
+  <!-- 사이드바 -->
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">마이챗 매뉴얼</div>
+      <a href="/manual/mychat/" class="sb-link ">🧠 마이챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/mychat/start.html" class="sb-link ">구독 &amp; 첫 진입</a>
+      <a href="/manual/mychat/subscribe.html" class="sb-link ">💳 구독 플랜 안내</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">나만의 AI 대화</div>
+      <a href="/manual/mychat/chat.html" class="sb-link active">💬 AI와 대화하기</a>
+      <a href="/manual/mychat/voice.html" class="sb-link ">🎙️ 음성 대화</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">학습 데이터</div>
+      <a href="/manual/mychat/learn.html" class="sb-link ">📚 데이터 입력하기</a>
+      <a href="/manual/mychat/learn.html#channels" class="sb-link">14개 채널 설명</a>
+      <a href="/manual/mychat/learn.html#scope" class="sb-link">공개 범위 설정</a>
+      <a href="/manual/mychat/phone.html" class="sb-link ">📱 폰 데이터 연동</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">아바타 스튜디오</div>
+      <a href="/manual/mychat/avatar.html" class="sb-link ">😊 얼굴 아바타 만들기</a>
+      <a href="/manual/mychat/avatar.html#voice" class="sb-link">🎙️ 목소리 설정</a>
+      <a href="/manual/mychat/avatar.html#heygen" class="sb-link">🎬 화상 아바타 (HeyGen)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">분석 &amp; 의사결정</div>
+      <a href="/manual/mychat/dashboard.html" class="sb-link ">📊 인생 분석 대시보드</a>
+      <a href="/manual/mychat/decisions.html" class="sb-link ">🧭 의사결정 추적</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">설정 &amp; 보안</div>
+      <a href="/manual/mychat/settings.html" class="sb-link ">⚙️ 설정 &amp; API키</a>
+      <a href="/manual/mychat/settings.html#vault" class="sb-link">🔒 데이터 저장 방식</a>
+      <a href="/manual/mychat/settings.html#panic" class="sb-link">🚨 긴급 차단</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a>
+      <span class="sep">›</span>
+      <a href="/manual/mychat/">마이챗</a>
+      <span class="sep">›</span>
+      <span>AI와 대화하기</span>
+    </div>
+
+    <h1>💬 AI와 대화하기</h1>
+    <p class="page-desc">내 학습 데이터를 기반으로 AI 아바타와 1:1 대화하는 방법을 안내합니다.</p>
+
+    <h2 id="how">대화 방법</h2>
+    <ol class="step-list">
+      <li class="step-item"><div class="step-num">1</div><div class="step-body">마이챗 대화창 하단 입력창에 메시지 입력</div></li>
+      <li class="step-item"><div class="step-num">2</div><div class="step-body">AI가 내 <strong>학습 데이터를 참조</strong>해 답변 생성 (출처 표시: 📔 일기 기반)</div></li>
+      <li class="step-item"><div class="step-num">3</div><div class="step-body">답변 하단 빠른 액션 버튼으로 추가 질문 가능</div></li>
+    </ol>
+
+    <h2 id="quick">빠른 액션 버튼</h2>
+    <table>
+      <tr><th>버튼</th><th>설명</th></tr>
+      <tr><td>🧭 의사결정 등록</td><td>현재 고민을 의사결정 추적에 바로 등록</td></tr>
+      <tr><td>📊 데이터 흐름 분석</td><td>최근 내 데이터 패턴 요약 요청</td></tr>
+      <tr><td>⏰ 7일 후 리마인드</td><td>지금 주제를 7일 뒤 AI가 먼저 꺼내도록 예약</td></tr>
+      <tr><td>🔍 심층 분석</td><td>방금 주제를 더 깊이 분석 요청</td></tr>
+      <tr><td>📝 감정 기록</td><td>오늘 감정을 일기 채널에 저장</td></tr>
+      <tr><td>🔄 패턴 찾기</td><td>내 반복 패턴 탐색 요청</td></tr>
+    </table>
+
+    <h2 id="menu">메뉴 버튼(≡) 기능</h2>
+    <p>대화창 우상단 <strong>≡ 버튼</strong>을 누르면 메뉴가 열립니다.</p>
+    <table>
+      <tr><th>메뉴</th><th>이동</th></tr>
+      <tr><td>✨ 아바타 스튜디오</td><td>얼굴·목소리 설정</td></tr>
+      <tr><td>📚 학습 데이터 추가</td><td>learn.html</td></tr>
+      <tr><td>🔒 공개범위 관리</td><td>데이터 공개범위 설정</td></tr>
+      <tr><td>🚨 긴급 차단</td><td>모든 외부공개 즉시 비공개</td></tr>
+      <tr><td>📊 인생 분석 대시보드</td><td>dashboard.html</td></tr>
+      <tr><td>🧭 의사결정 추적</td><td>decisions.html</td></tr>
+      <tr><td>🗑️ 대화 기록 삭제</td><td>서버 이력 전체 삭제</td></tr>
+    </table>
+
+    <h2 id="data">내 데이터 인용 방식</h2>
+    <p>AI 아바타가 답변할 때 활용한 데이터 출처를 표시합니다.</p>
+    <div class="code-block">📔 일기 기반 | 📱 통화 기록 참조 | 🏃 건강 데이터 | 📅 캘린더</div>
+    <p>이 표시가 많을수록 AI가 내 실제 데이터를 잘 활용하고 있다는 의미입니다.</p>
+
+    <div class="tip">💡 학습 데이터가 많을수록 AI 답변의 정확도와 개인화 수준이 높아집니다. <a href="/manual/mychat/learn.html">데이터 입력 방법</a>을 참고하세요.</div>
+
+    <h2 id="voice">음성 대화</h2>
+    <p>음성 대화(STT→AI→TTS)는 <a href="/manual/mychat/voice.html">🎙️ 음성 대화 페이지</a>를 참고하세요.</p>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

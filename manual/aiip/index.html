@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI변리사 매뉴얼 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link active">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <span>AI변리사</span></div>
+
+    <div class="page-hero">
+      <div class="hero-icon">⚖️</div>
+      <h1>AI변리사 매뉴얼</h1>
+      <p class="hero-desc">ps.kiam.kr — AI가 특허·상표·저작권 컨설팅을 도와드리는 서비스입니다.<br>이 매뉴얼은 서비스의 모든 기능을 단계별로 안내합니다.</p>
+      <a href="https://ps.kiam.kr" target="_blank" class="btn-primary" style="display:inline-block;margin-top:16px;padding:10px 24px;background:var(--brand);color:#fff;border-radius:8px;text-decoration:none;font-weight:600;">ps.kiam.kr 바로가기 →</a>
+    </div>
+
+    <h2 id="overview">서비스 개요</h2>
+    <p><strong>AI변리사</strong>는 ps.kiam.kr에서 제공하는 지식재산권(IP) 전문 AI 컨설팅 서비스입니다. 특허 출원, 상표 등록, 저작권 보호 등 복잡한 지식재산권 분야를 AI가 분석하고 전략을 제시합니다.</p>
+
+    <div class="card-grid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:16px;margin:24px 0;">
+      <div class="info-card" style="padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);">
+        <div style="font-size:28px;margin-bottom:8px;">⚡</div>
+        <strong>빠른 분석</strong>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">자료 업로드 후 수 분 내에 AI 분석 결과를 받아볼 수 있습니다. <b>특허청(KIPRIS) 데이터와 실시간 연동되어 최신 선행기술 문헌을 분석합니다.</b></p>
+      </div>
+      <div class="info-card" style="padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);">
+        <div style="font-size:28px;margin-bottom:8px;">📄</div>
+        <strong>문서 자동 생성</strong>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">분석 결과를 바탕으로 특허 전략서, 출원서 초안 등 문서를 생성합니다.</p>
+      </div>
+      <div class="info-card" style="padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);">
+        <div style="font-size:28px;margin-bottom:8px;">🎯</div>
+        <strong>맞춤 요청</strong>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">AI 요청사항 도우미로 전문적인 컨설팅 요청을 쉽게 작성할 수 있습니다.</p>
+      </div>
+      <div class="info-card" style="padding:20px;border:1px solid var(--border);border-radius:12px;background:var(--bg-card);">
+        <div style="font-size:28px;margin-bottom:8px;">🔒</div>
+        <strong>안전한 보관</strong>
+        <p style="font-size:13px;color:var(--text-muted);margin-top:6px;">의뢰 기록과 생성 문서는 대시보드에서 언제든 다시 열람 가능합니다.</p>
+      </div>
+    </div>
+
+    <h2 id="quickstart">빠른 시작</h2>
+    <ol class="step-list">
+      <li><strong>회원가입 → 로그인</strong> — ps.kiam.kr에서 회원 가입 후 로그인</li>
+      <li><strong>요금제 선택</strong> — 무료 체험 또는 유료 구독으로 분석 크레딧 확보</li>
+      <li><strong>자료 업로드</strong> — 특허·상표 관련 자료 파일 첨부 또는 텍스트 직접 입력</li>
+      <li><strong>요청사항 작성</strong> — 원하는 분석 방향을 입력 (AI 도우미 활용 가능)<br> &nbsp;&nbsp;&nbsp;&nbsp;<em>* 생성 모드 선택 가능: Single (빠른 요약) / Split (상세 분할 생성)</em><br> &nbsp;&nbsp;&nbsp;&nbsp;<em>* 생성 모드 선택 가능: Single (빠른 요약) / Split (상세 분할 생성)</em></li>
+      <li><strong>결과 확인</strong> — AI 분석 리포트와 생성 문서 다운로드</li>
+    </ol>
+
+    <h2 id="chapters">매뉴얼 목차</h2>
+    <table class="m-table">
+      <thead><tr><th>장</th><th>내용</th><th>바로가기</th></tr></thead>
+      <tbody>
+        <tr><td>1장</td><td>서비스 소개 — 주요 기능과 화면 구성</td><td><a href="/manual/aiip/01_intro.html">보기 →</a></td></tr>
+        <tr><td>2장</td><td>회원가입 &amp; 로그인 — 계정 만들기, 로그인 방법</td><td><a href="/manual/aiip/02_auth.html">보기 →</a></td></tr>
+        <tr><td>3장</td><td>요금제 &amp; 결제 — 플랜 비교, 결제 진행</td><td><a href="/manual/aiip/03_pricing.html">보기 →</a></td></tr>
+        <tr><td>4장</td><td>컨설팅 의뢰 — 자료 입력 (파일/텍스트)</td><td><a href="/manual/aiip/04_input.html">보기 →</a></td></tr>
+        <tr><td>5장</td><td>AI 요청사항 도우미 — 전문 요청 자동 생성</td><td><a href="/manual/aiip/05_helper.html">보기 →</a></td></tr>
+        <tr><td>6장</td><td>AI 분석 결과 읽는 법 — 리포트 구조 이해</td><td><a href="/manual/aiip/06_result.html">보기 →</a></td></tr>
+        <tr><td>7장</td><td>생성 문서 다운로드 — 전략서·출원서 다운로드</td><td><a href="/manual/aiip/07_download.html">보기 →</a></td></tr>
+        <tr><td>8장</td><td>대시보드 — 전체 현황 한눈에 보기</td><td><a href="/manual/aiip/08_dashboard.html">보기 →</a></td></tr>
+        <tr><td>9장</td><td>의뢰 결과 목록 — 이전 분석 결과 조회</td><td><a href="/manual/aiip/09_history.html">보기 →</a></td></tr>
+        <tr><td>10장</td><td>내 계정 설정 — 비밀번호 변경, 구독 관리</td><td><a href="/manual/aiip/10_mypage.html">보기 →</a></td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>처음 사용하신다면</strong> 1장 서비스 소개부터 순서대로 읽으시면 전체 흐름을 파악하는 데 도움이 됩니다.
+    </div>
+
+    <div class="page-nav">
+      <span></span>
+      <a href="/manual/aiip/01_intro.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🏠 서비스 소개</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#overview">서비스 개요</a></li>
+      <li><a href="#quickstart">빠른 시작</a></li>
+      <li><a href="#chapters">매뉴얼 목차</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

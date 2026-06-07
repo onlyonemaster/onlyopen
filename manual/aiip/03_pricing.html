@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>요금제 &amp; 결제 — AI변리사 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link active">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <a href="/manual/aiip/">AI변리사</a> <span>›</span> <span>요금제 &amp; 결제</span></div>
+    <h1>💳 요금제 &amp; 결제</h1>
+<div class="update-notice" style="background:#eef6ff; padding:15px; margin-top:20px; border-radius:8px; border-left:4px solid #0066cc;">
+<strong>💳 토스페이먼츠 연동 안내:</strong><br>이제 모든 결제는 <b>토스페이먼츠(TossPayments) 실시간 결제 위젯</b>을 통해 안전하고 빠르게 진행됩니다. 신용카드, 간편결제(토스페이 등), 계좌이체를 모두 지원합니다.
+</div>
+    <p class="page-desc">AI변리사 서비스의 요금제 종류와 결제 진행 방법을 안내합니다.</p>
+<p><strong>안내:</strong> 모든 결제는 <b>토스페이먼츠(TossPayments) 실시간 결제 위젯</b>을 통해 빠르고 안전하게 진행됩니다.</p>
+
+    <h2 id="plans">요금제 비교</h2>
+    <p><a href="https://ps.kiam.kr/pricing" target="_blank">ps.kiam.kr/pricing</a> 페이지에서 현재 제공 중인 모든 요금제를 비교할 수 있습니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>구분</th><th>무료(Free)</th><th>스탠다드(Standard)</th><th>프로(Pro)</th></tr></thead>
+      <tbody>
+        <tr><td>월 분석 횟수</td><td>3회</td><td>30회</td><td>무제한</td></tr>
+        <tr><td>파일 업로드</td><td>최대 5MB</td><td>최대 20MB</td><td>최대 50MB</td></tr>
+        <tr><td>문서 자동 생성</td><td>기본 요약</td><td>전략서 포함</td><td>모든 문서</td></tr>
+        <tr><td>결과 보관 기간</td><td>7일</td><td>90일</td><td>무제한</td></tr>
+        <tr><td>요금 (월)</td><td>무료</td><td>별도 확인</td><td>별도 확인</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>최신 요금 정보</strong>는 <a href="https://ps.kiam.kr/pricing" target="_blank">ps.kiam.kr/pricing</a> 페이지에서 직접 확인하세요. 요금은 사전 안내 없이 변경될 수 있습니다.
+    </div>
+
+    <h2 id="how-to-subscribe">구독 신청 방법</h2>
+    <ol class="step-list">
+      <li>로그인 후 <a href="https://ps.kiam.kr/pricing" target="_blank">요금제 페이지</a>로 이동합니다.</li>
+      <li>원하는 플랜의 <strong>"구독하기"</strong> 버튼을 클릭합니다.</li>
+      <li>결제 페이지(/payment)로 이동합니다.</li>
+      <li>결제 정보를 확인한 후 <strong>"결제하기"</strong> 버튼을 클릭합니다.</li>
+      <li>카드 정보를 입력하고 결제를 완료합니다.</li>
+      <li>결제 완료 후 즉시 해당 플랜이 적용됩니다.</li>
+    </ol>
+
+    <h2 id="payment-method">결제 수단</h2>
+    <p>현재 지원하는 결제 수단은 다음과 같습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>결제 수단</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>💳 <strong>신용카드 / 체크카드</strong></td><td>국내외 주요 카드사 모두 지원 (토스페이먼츠 연동)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="payment-flow">결제 흐름</h2>
+    <p>결제는 <strong>토스페이먼츠</strong>를 통해 안전하게 처리됩니다.</p>
+    <ol class="step-list">
+      <li>요금제 선택 → <strong>"구독하기"</strong> 클릭</li>
+      <li>결제 페이지에서 플랜 정보 확인</li>
+      <li><strong>"결제하기"</strong> 클릭 → 토스페이먼츠 결제창 팝업</li>
+      <li>카드 번호, 유효기간, CVC 입력 후 결제 승인</li>
+      <li>결제 완료 → 구독이 즉시 활성화됩니다</li>
+    </ol>
+
+    <h2 id="payment-fail">결제 실패 &amp; 오류</h2>
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>원인</th><th>조치</th></tr></thead>
+      <tbody>
+        <tr><td>결제창이 열리지 않음</td><td>팝업 차단 또는 브라우저 호환 문제</td><td>팝업 허용 후 다시 시도 / 다른 브라우저 사용</td></tr>
+        <tr><td>카드 결제 실패</td><td>한도 초과, 카드 정보 오류</td><td>카드사 확인 후 다른 카드로 시도</td></tr>
+        <tr><td>결제 완료 후 플랜 미적용</td><td>네트워크 오류로 처리 지연</td><td>마이페이지에서 구독 상태 확인, 5분 후 재확인</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="cancel">구독 해지</h2>
+    <p>구독을 해지하려면 <strong>마이페이지(/mypage)</strong>의 <strong>"구독 관리"</strong> 섹션에서 해지할 수 있습니다. 해지 후 현재 구독 기간 만료일까지는 해당 플랜 혜택을 계속 이용할 수 있습니다.</p>
+
+    <div class="tip">
+      ⚠️ <strong>구독 해지 시 주의사항</strong><br>
+      - 해지 후 남은 분석 크레딧은 소멸됩니다.<br>
+      - 생성된 문서는 보관 기간(무료: 7일, 스탠다드: 90일) 이후 삭제됩니다.<br>
+      - 프로 플랜의 무제한 보관 혜택은 해지 즉시 종료됩니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aiip/02_auth.html"><span class="nav-label">← 이전</span><span class="nav-title">👤 회원가입 &amp; 로그인</span></a>
+      <a href="/manual/aiip/04_input.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📤 자료 입력 방법</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#plans">요금제 비교</a></li>
+      <li><a href="#how-to-subscribe">구독 신청 방법</a></li>
+      <li><a href="#payment-method">결제 수단</a></li>
+      <li><a href="#payment-flow">결제 흐름</a></li>
+      <li><a href="#payment-fail">결제 실패 &amp; 오류</a></li>
+      <li><a href="#cancel">구독 해지</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

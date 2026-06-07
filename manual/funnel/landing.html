@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인포랜딩페이지 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원퍼널문자</div>
+      <a href="/manual/funnel/" class="sb-link">🔀 원퍼널문자 소개</a>
+      <a href="/manual/funnel/daily-intro.html" class="sb-link">📅 데일리문자 소개</a>
+      <a href="/manual/funnel/landing.html" class="sb-link active">🖼️ 인포랜딩페이지</a>
+      <a href="/manual/funnel/apply-page.html" class="sb-link">📋 이벤트신청페이지</a>
+      <a href="/manual/funnel/ai-design.html" class="sb-link">🤖 AI 퍼널 설계</a>
+      <a href="/manual/funnel/customer.html" class="sb-link">👥 신청 고객 관리</a>
+      <a href="/manual/funnel/old-customer.html" class="sb-link">📁 기존 고객 관리</a>
+      <a href="/manual/funnel/schedule.html" class="sb-link">📆 발송 예정 내역</a>
+      <a href="/manual/funnel/result.html" class="sb-link">📊 발송 결과 내역</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/funnel/">원퍼널문자</a> › 인포랜딩페이지</nav>
+    <h1 class="page-title">🖼️ 인포랜딩페이지 제작</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">인포랜딩페이지란?</a></li>
+        <li><a href="#access">접속 방법</a></li>
+        <li><a href="#create">랜딩페이지 만들기</a></li>
+        <li><a href="#manage">목록 관리</a></li>
+        <li><a href="#link">신청페이지와 연결</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>인포랜딩페이지란?</h2>
+      <p><strong>인포랜딩페이지</strong>는 자신의 이벤트·상품·서비스를 소개하거나 상세페이지로 보여주는 <strong>전용 랜딩페이지</strong>입니다. 문자에 링크를 넣어 고객을 유도하고, 하단에 신청창을 연결해 DB를 수집합니다.</p>
+      <div class="notice-box" style="margin-top:14px;">
+        <strong>💡 활용 예시</strong>: "무료 컨설팅 신청 랜딩", "이벤트 할인 소개 페이지", "제품 상세 소개 + 구매 신청"
+      </div>
+    </section>
+
+    <section id="access">
+      <h2>접속 방법</h2>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>kiam.kr 로그인</strong>
+            <p><a href="https://kiam.kr" target="_blank">https://kiam.kr</a> 접속 후 로그인</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>인포랜딩페이지 메뉴 이동</strong>
+            <p>하단 메뉴 → <strong>인포랜딩</strong> 또는 직접 접속: <a href="https://kiam.kr/mypage_landing_list.php" target="_blank">https://kiam.kr/mypage_landing_list.php</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="create">
+      <h2>랜딩페이지 만들기</h2>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>[랜딩페이지 등록하기] 버튼 클릭</strong>
+            <p>목록 상단 오른쪽의 등록 버튼을 클릭합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>기본 정보 입력</strong>
+            <p>제목(내부 식별용)과 랜딩페이지 설명을 입력합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>콘텐츠 편집</strong>
+            <p>이미지, 텍스트, 버튼 등을 편집기에서 구성합니다. HTML 직접 편집도 가능합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>신청창 연결</strong>
+            <p>하단에 이벤트신청페이지 코드를 삽입하여 고객 정보 수집 폼을 연결합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>저장 및 노출 설정</strong>
+            <p>저장 후 [노출] 상태로 변경하면 URL이 활성화됩니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="manage">
+      <h2>목록 관리</h2>
+      <table>
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>제목</td><td>등록 시 입력한 랜딩페이지 이름</td></tr>
+          <tr><td>인포랜딩설명</td><td>관리용 설명 텍스트</td></tr>
+          <tr><td>미리보기</td><td>실제 화면을 미리 확인하는 버튼</td></tr>
+          <tr><td>수정/삭제</td><td>내용 편집 또는 삭제</td></tr>
+          <tr><td>노출/중지</td><td>URL 활성화/비활성화 토글</td></tr>
+        </tbody>
+      </table>
+      <div class="notice-box" style="margin-top:14px;">
+        <strong>📌 링크 복사</strong>: 목록에서 해당 랜딩페이지의 URL을 복사하여 문자 내용에 삽입하면 고객이 클릭 시 랜딩페이지로 이동합니다.
+      </div>
+    </section>
+
+    <section id="link">
+      <h2>신청페이지와 연결</h2>
+      <p>인포랜딩페이지 하단에 <strong>이벤트신청페이지</strong> 코드를 삽입하면 고객이 랜딩페이지에서 바로 신청할 수 있습니다.</p>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>이벤트신청페이지에서 코드 복사</strong>
+            <p>→ <a href="/manual/funnel/apply-page.html">이벤트신청페이지 메뉴얼</a> 참고</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>랜딩페이지 편집 화면에 코드 붙여넣기</strong>
+            <p>HTML 편집 모드에서 신청창 코드를 원하는 위치에 삽입합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>저장 후 미리보기로 확인</strong>
+            <p>신청창이 정상적으로 표시되는지 미리보기로 확인합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-nav">
+      <a href="/manual/funnel/daily-intro.html" class="btn-prev">← 데일리문자 소개</a>
+      <a href="/manual/funnel/apply-page.html" class="btn-next">이벤트신청페이지 →</a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul>
+      <li><a href="#what">인포랜딩페이지란?</a></li>
+      <li><a href="#access">접속 방법</a></li>
+      <li><a href="#create">랜딩페이지 만들기</a></li>
+      <li><a href="#manage">목록 관리</a></li>
+      <li><a href="#link">신청페이지와 연결</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -3788,7 +3788,7 @@ document.addEventListener('DOMContentLoaded', function () {
           '<input type="range" id="cbTokenSlider" min="100" max="800" step="50" value="' + (s.max_tokens || 400) + '" style="flex:1;">' +
           '<span class="cbsetting-token-val" id="cbTokenVal">' + (s.max_tokens || 400) + '</span>' +
         '</div>' +
-        '<div class="cbsetting-section-desc" style="margin-top:6px;">💡 현재 scosh 계정 기본값: 400 · 범위: 100 ~ 800</div>' +
+        '<div class="cbsetting-section-desc" style="margin-top:6px;">💡 기본값: 400 · 범위: 100 ~ 800 토큰</div>' +
       '</div>' +
       '<div class="cbsetting-section">' +
         '<div class="cbsetting-section-title"><i class="fas fa-brain"></i> LLM 기본지식 활용 <span class="cbsetting-section-badge">AI</span></div>' +
@@ -4885,7 +4885,12 @@ document.addEventListener('DOMContentLoaded', function () {
       opts.headers['Content-Type'] = 'application/json';
       opts.body = JSON.stringify(opts.body);
     }
-    return fetch(url, opts).then(function(r) { return r.json().then(function(j){ j._http = r.status; return j; }); });
+    return fetch(url, opts).then(function(r) {
+      return r.text().then(function(txt){
+        try { var j=JSON.parse(txt); j._http=r.status; return j; }
+        catch(e){ return {ok:false,error:'서버 응답 오류 ('+r.status+')',_http:r.status,_raw:txt.slice(0,100)}; }
+      });
+    });
   }
 
   // 토스트
@@ -4912,6 +4917,8 @@ document.addEventListener('DOMContentLoaded', function () {
     bookings: [],
     bookingStat: null,
     calMonth: null,        // YYYY-MM
+    calView: 'month',      // day | week | month | year
+    calDate: null,         // YYYY-MM-DD (선택 날짜)
   };
 
   // ── 패널 열기/닫기 ───────────────────────────────────
@@ -5013,12 +5020,62 @@ document.addEventListener('DOMContentLoaded', function () {
         lbl.textContent = on ? 'ON' : 'OFF';
       }
       rsRenderCentral();
+      // 챗봇 적용 상태 배지 업데이트
+      if (rsState.config) {
+        rsApi('/aimessage/onechat/api/reserve_apply.php?check=1&sms_idx=' + ctx.sms_idx).then(function(ra){
+          if (ra && typeof ra.reserve_applied !== 'undefined') rsUpdateApplyStatus(!!ra.reserve_applied);
+        }).catch(function(){});
+      }
     }).catch(function(e) {
       rsToast('불러오기 실패: ' + e.message, 'err');
     });
   }
 
   // ── 중앙 캔버스 렌더링 (메뉴별) ─────────────────────
+  // ══ 드래그앤드롭 이동 처리 함수 ══
+  function rsDndMove(d, newDate, newTime) {
+    if (!d.id || !newDate) return;
+    var ctx = rsGetCtx();
+    if (d.type === 'schedule') {
+      var sc = (rsState.schedules||[]).find(function(x){ return x.id===d.id; });
+      if (!sc) return;
+      var body = { action:'update', id:d.id,
+        sms_idx: ctx.sms_idx || sc.sms_idx,
+        request_idx: ctx.request_idx || sc.request_idx || 0,
+        start_date: newDate, end_date: newDate };
+      if (newTime) body.start_time = newTime;
+      rsToast('일정 이동 중...', '');
+      rsApi('/aimessage/onechat/api/reserve_schedule.php', { method:'POST', body:body })
+        .then(function(r){
+          if(r && r.ok){
+            var idx = (rsState.schedules||[]).findIndex(function(x){ return x.id===d.id; });
+            if(idx>=0) rsState.schedules[idx] = r.schedule;
+            rsRenderCentral();
+            rsToast('일정 이동 완료 ✅', 'ok');
+          } else {
+            var msg = (r&&r.error) ? (r.error.message||r.error) : '오류';
+            rsToast('이동 실패: '+msg, 'err');
+          }
+        }).catch(function(){ rsToast('네트워크 오류', 'err'); });
+    } else {
+      var body2 = { action:'move', id:d.id, new_date:newDate };
+      if (newTime) body2.new_time = newTime;
+      rsToast('예약 이동 중...', '');
+      rsApi('/aimessage/onechat/api/reserve_booking.php', { method:'POST', body:body2 })
+        .then(function(r){
+          if(r && r.ok && r.moved){
+            var idx = (rsState.bookings||[]).findIndex(function(x){ return x.id===d.id; });
+            if(idx>=0) rsState.bookings[idx] = r.booking;
+            rsRenderCentral();
+            rsToast('예약 이동 완료 ✅', 'ok');
+          } else {
+            var msg2 = (r&&r.error) ? (r.error.message||r.error) : (r&&r.moved===false ? '같은 날짜입니다.' : '오류');
+            rsToast(msg2, '');
+          }
+        }).catch(function(){ rsToast('네트워크 오류', 'err'); });
+    }
+  }
+
   function rsRenderCentral() {
     var c = document.getElementById('rsCentral');
     if (!c) return;
@@ -5062,6 +5119,33 @@ document.addEventListener('DOMContentLoaded', function () {
       +     (bos.length ? bos.map(function(b){return '<div class="rs-bo">' + esc(b.label||'제외') + ' · ' + esc(b.kind) + (b.weekday!==null?(' · '+dayLbl[b.weekday]):'') + ' · ' + esc((b.time_from||'')+'~'+(b.time_to||'')) + '<i class="fas fa-times x" data-bo-del="' + b.id + '"></i></div>';}).join('')
                     : '<div style="font-size:11px;color:#64748b;padding:6px;">등록된 제외시간이 없습니다.</div>')
       +   '</div>'
+      +   '<div class="rs-bo-form" id="rsBoForm" style="display:none">'
+      +     '<div class="rs-bf-row"><span class="rs-bf-lbl">&#9312; 이름</span>'
+      +       '<div class="rs-bf-presets">'
+      +         '<button type="button" class="rs-bf-preset active" data-preset="점심시간">점심시간</button>'
+      +         '<button type="button" class="rs-bf-preset" data-preset="브레이크">브레이크</button>'
+      +         '<button type="button" class="rs-bf-preset" data-preset="휴무일">휴무일</button>'
+      +         '<button type="button" class="rs-bf-preset" data-preset="__custom">직접입력</button>'
+      +       '</div>'
+      +       '<input class="rs-in txt rs-bf-custom-inp" id="rsBoCustomLabel" placeholder="이름 직접 입력" />'
+      +     '</div>'
+      +     '<div class="rs-bf-row"><span class="rs-bf-lbl">&#9313; 요일</span>'
+      +       '<div class="rs-day-toggle" id="rsBoWeekdays">'
+      +         '<span class="rs-day" data-d="0">일</span><span class="rs-day" data-d="1">월</span><span class="rs-day" data-d="2">화</span><span class="rs-day" data-d="3">수</span><span class="rs-day" data-d="4">목</span><span class="rs-day" data-d="5">금</span><span class="rs-day" data-d="6">토</span>'
+      +       '</div>'
+      +     '</div>'
+      +     '<div class="rs-bf-row"><span class="rs-bf-lbl">&#9314; 시간</span>'
+      +       '<div style="display:flex;align-items:center;gap:8px;">'
+      +         '<select class="rs-in" id="rsBoFrom"><option value="00:00">00:00</option><option value="00:30">00:30</option><option value="01:00">01:00</option><option value="01:30">01:30</option><option value="02:00">02:00</option><option value="02:30">02:30</option><option value="03:00">03:00</option><option value="03:30">03:30</option><option value="04:00">04:00</option><option value="04:30">04:30</option><option value="05:00">05:00</option><option value="05:30">05:30</option><option value="06:00">06:00</option><option value="06:30">06:30</option><option value="07:00">07:00</option><option value="07:30">07:30</option><option value="08:00">08:00</option><option value="08:30">08:30</option><option value="09:00">09:00</option><option value="09:30">09:30</option><option value="10:00">10:00</option><option value="10:30">10:30</option><option value="11:00">11:00</option><option value="11:30">11:30</option><option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="15:30">15:30</option><option value="16:00">16:00</option><option value="16:30">16:30</option><option value="17:00">17:00</option><option value="17:30">17:30</option><option value="18:00">18:00</option><option value="18:30">18:30</option><option value="19:00">19:00</option><option value="19:30">19:30</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option><option value="22:30">22:30</option><option value="23:00">23:00</option><option value="23:30">23:30</option></select>'
+      +         '<span style="color:#94a3b8;">~</span>'
+      +         '<select class="rs-in" id="rsBoTo"><option value="00:00">00:00</option><option value="00:30">00:30</option><option value="01:00">01:00</option><option value="01:30">01:30</option><option value="02:00">02:00</option><option value="02:30">02:30</option><option value="03:00">03:00</option><option value="03:30">03:30</option><option value="04:00">04:00</option><option value="04:30">04:30</option><option value="05:00">05:00</option><option value="05:30">05:30</option><option value="06:00">06:00</option><option value="06:30">06:30</option><option value="07:00">07:00</option><option value="07:30">07:30</option><option value="08:00">08:00</option><option value="08:30">08:30</option><option value="09:00">09:00</option><option value="09:30">09:30</option><option value="10:00">10:00</option><option value="10:30">10:30</option><option value="11:00">11:00</option><option value="11:30">11:30</option><option value="12:00">12:00</option><option value="12:30">12:30</option><option value="13:00">13:00</option><option value="13:30">13:30</option><option value="14:00">14:00</option><option value="14:30">14:30</option><option value="15:00">15:00</option><option value="15:30">15:30</option><option value="16:00">16:00</option><option value="16:30">16:30</option><option value="17:00">17:00</option><option value="17:30">17:30</option><option value="18:00">18:00</option><option value="18:30">18:30</option><option value="19:00">19:00</option><option value="19:30">19:30</option><option value="20:00">20:00</option><option value="20:30">20:30</option><option value="21:00">21:00</option><option value="21:30">21:30</option><option value="22:00">22:00</option><option value="22:30">22:30</option><option value="23:00">23:00</option><option value="23:30">23:30</option></select>'
+      +       '</div>'
+      +     '</div>'
+      +     '<div class="rs-bf-btns">'
+      +       '<button type="button" class="rs-bf-cancel" id="rsBoCancel">취소</button>'
+      +       '<button type="button" class="rs-bf-submit" id="rsBoSubmit"><i class="fas fa-check"></i> 추가 확정</button>'
+      +     '</div>'
+      +   '</div>'
       +   '<button class="rs-add-btn" id="rsAddBo"><i class="fas fa-plus"></i> 제외시간 추가</button>'
       + '</div>'
       + '<div class="rs-card"><div class="h"><span class="lab">부가 정책</span><span class="b">선택</span></div>'
@@ -5073,47 +5157,606 @@ document.addEventListener('DOMContentLoaded', function () {
   }
 
   /* ════════ View 2: 캘린더 (핵심 시각화) ════════ */
-  function rsViewCalendar() {
+  /* ──── 캘린더 공통 툴바 ──── */
+  function rsCalToolbar() {
+    var view = rsState.calView || 'month';
+    var title = '';
     var now = new Date();
     if (!rsState.calMonth) rsState.calMonth = now.getFullYear() + '-' + String(now.getMonth()+1).padStart(2,'0');
-    var [y, m] = rsState.calMonth.split('-').map(Number);
-    var first = new Date(y, m-1, 1);
-    var last  = new Date(y, m, 0);
+    var ym = rsState.calMonth.split('-').map(Number);
+    if (view === 'year') {
+      title = ym[0] + '년';
+    } else if (view === 'month') {
+      title = ym[0] + '년 ' + ym[1] + '월';
+    } else if (view === 'week') {
+      var base = rsState.calDate ? new Date(rsState.calDate + 'T00:00:00') : now;
+      var dow = base.getDay();
+      var mon = new Date(base); mon.setDate(base.getDate() - dow);
+      var sun = new Date(base); sun.setDate(base.getDate() + (6 - dow));
+      title = (mon.getMonth()+1) + '/' + mon.getDate() + ' – ' + (sun.getMonth()+1) + '/' + sun.getDate();
+    } else if (view === 'day') {
+      var base = rsState.calDate ? new Date(rsState.calDate + 'T00:00:00') : now;
+      var dl = ['일','월','화','수','목','금','토'];
+      title = ym[0] + '년 ' + (base.getMonth()+1) + '월 ' + base.getDate() + '일 (' + dl[base.getDay()] + ')';
+    }
+    return '<div class="rs-cal-toolbar">'
+      + '<div class="rs-cal-nav"><button data-cal-prev>◀</button><button data-cal-today>'
+      + ({day:'오늘',week:'이번주',month:'금월',year:'금년'}[view]||'오늘')
+      + '</button><button data-cal-next>▶</button></div>'
+      + '<div class="rs-cal-period-title">' + title + '</div>'
+      + '<div class="rs-view-switcher">'
+      + ['day','week','month','year'].map(function(v){
+          var lbl = {day:'일',week:'주',month:'월',year:'년'}[v];
+          return '<button class="rvs-btn' + (v===view?' active':'') + '" data-view="' + v + '">' + lbl + '</button>';
+        }).join('')
+      + '</div></div>';
+  }
+
+  /* ──── 캘린더 dispatcher ──── */
+  function rsViewCalendar() {
+    var view = rsState.calView || 'month';
+    var toolbar = rsCalToolbar();
+    if (view === 'day')  return toolbar + rsCalDayView();
+    if (view === 'week') return toolbar + rsCalWeekView();
+    if (view === 'year') return toolbar + rsCalYearView();
+    return toolbar + rsCalMonthView();
+  }
+
+  /* ──── 월간 뷰 ──── */
+  function rsCalMonthView() {
+    var now = new Date();
+    var ym = rsState.calMonth.split('-').map(Number);
+    var y = ym[0], m = ym[1];
+    var first = new Date(y, m-1, 1), last = new Date(y, m, 0);
     var startW = first.getDay();
     var byD = rsState.slotsByDate || {};
     var todayStr = now.toISOString().slice(0,10);
-
+    var bkByDate = {};
+    (rsState.bookings||[]).forEach(function(b){
+      if(!bkByDate[b.slot_date]) bkByDate[b.slot_date]=[];
+      bkByDate[b.slot_date].push({_type:'booking',id:b.id,slot_time:b.slot_time,customer_name:b.customer_name,headcount:b.headcount,status:b.status,color:({confirmed:'#22c55e',pending:'#f59e0b',cancelled:'#ef4444'}[b.status]||'#94a3b8')});
+    });
+    (rsState.schedules||[]).forEach(function(s){
+      if(!bkByDate[s.start_date]) bkByDate[s.start_date]=[];
+      bkByDate[s.start_date].push({_type:'schedule',id:s.id,slot_time:s.start_time,customer_name:s.title,headcount:null,status:s.event_type,color:s.color||'#3b82f6'});
+    });
     var cells = '';
     for (var i = 0; i < startW; i++) cells += '<div class="rs-cal-cell dim"></div>';
     for (var d = 1; d <= last.getDate(); d++) {
       var ds = y + '-' + String(m).padStart(2,'0') + '-' + String(d).padStart(2,'0');
-      var info = byD[ds];
+      var info = byD[ds]; var bks = bkByDate[ds] || [];
+      var statCls = (info && info.open === 0) ? ' full' : '';
       var statTxt = info ? (info.open + '/' + info.total) : '–';
-      var statCls = info && info.full > 0 && info.open === 0 ? 'full' : '';
       var todayCls = (ds === todayStr) ? ' today' : '';
-      cells += '<div class="rs-cal-cell' + todayCls + '" data-cal-date="' + ds + '"><div class="d">' + d + '</div><div class="stat ' + statCls + '">' + statTxt + '</div></div>';
+      // 이벤트 바 렌더링 (구글 캘린더 스타일)
+      var maxBars = 3;
+      var bars = bks.slice(0, maxBars).map(function(b){
+        var cl = b.color || ({confirmed:'#22c55e',pending:'#f59e0b',cancelled:'#ef4444'}[b.status]||'#94a3b8');
+        var dataAttr = b._type==='schedule' ? 'data-sc-id="'+b.id+'"' : 'data-bk-id="'+b.id+'"';
+        var timeStr = b.slot_time ? b.slot_time.slice(0,5)+' ' : '';
+        var label = esc(timeStr + (b.customer_name||'일정'));
+        return '<div class="rs-cal-bar" '+dataAttr+' draggable="true" data-drag-type="'+b._type+'" data-drag-date="'+ds+'" style="background:'+cl+';" title="'+label+'">'
+          +'<span class="rs-bar-lbl">'+label+'</span></div>';
+      }).join('');
+      var moreHtml = bks.length > maxBars
+        ? '<div class="rs-cal-more" data-cal-date="'+ds+'">+' + (bks.length-maxBars) + '개 더보기</div>'
+        : '';
+      cells += '<div class="rs-cal-cell' + todayCls + '" data-cal-date="' + ds + '">'
+        + '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px;">'
+        + '<div class="d" data-goto-day="' + ds + '">' + d + '</div>'
+        + '<div class="stat' + statCls + '">' + statTxt + '</div>'
+        + '</div>'
+        + '<div class="rs-cal-bars">' + bars + moreHtml + '</div>'
+        + '</div>';
     }
-
-    var todayBks = (rsState.bookings || []).filter(function(b){ return b.slot_date === todayStr; });
-
-    return ''
-      + '<div class="rs-head"><div><h2><i class="fas fa-calendar-alt"></i> 캘린더</h2><div class="rs-help">하루별 슬롯 가용 현황 (열림/전체)</div></div></div>'
-      + '<div class="rs-card">'
-      +   '<div class="rs-cal-head"><div style="font-size:15px;font-weight:800;">' + y + '년 ' + m + '월</div>'
-      +     '<div class="rs-cal-nav"><button data-cal-prev>◀</button><button data-cal-today>오늘</button><button data-cal-next>▶</button></div></div>'
-      +   '<div class="rs-cal-grid">'
-      +     ['일','월','화','수','목','금','토'].map(function(d){return '<div style="text-align:center;font-size:10px;color:#64748b;padding:4px 0;font-weight:700;">'+d+'</div>';}).join('')
-      +     cells
-      +   '</div>'
-      + '</div>'
-      + '<div class="rs-card"><div class="h"><span class="lab">오늘 예약 (' + todayBks.length + '건)</span></div>'
-      +   (todayBks.length ? todayBks.map(rsBkRow).join('') : '<div style="font-size:11px;color:#64748b;padding:6px;">오늘 예약 없음</div>')
-      + '</div>';
+    return '<div class="rs-card"><div class="rs-cal-grid">'
+      + ['일','월','화','수','목','금','토'].map(function(d){return '<div class="rs-cal-dow">'+d+'</div>';}).join('')
+      + cells + '</div></div>';
   }
-  function rsBkRow(b) {
-    return '<div class="rs-bk-row"><span class="id">#' + b.id + '</span>'
+
+  /* ──── 일간 뷰 ──── */
+  function rsCalDayView() {
+    var now = new Date();
+    var dateStr = rsState.calDate || rsDateStr(now);
+    var bks = (rsState.bookings||[]).filter(function(b){ return b.slot_date === dateStr; });
+    var bkByHour = {};
+    bks.forEach(function(b){ var h=b.slot_time?parseInt(b.slot_time.slice(0,2)):-1; if(!bkByHour[h])bkByHour[h]=[]; bkByHour[h].push(b); });
+    var rows = '';
+    for (var h = 8; h <= 21; h++) {
+      var bksH = bkByHour[h] || [];
+      var bkHtml = bksH.map(function(b){
+        var cl = {confirmed:'#22c55e',pending:'#f59e0b',cancelled:'#ef4444'}[b.status]||'#64748b';
+        return '<div class="rs-day-bk" data-bk-id="'+b.id+'" draggable="true" data-drag-type="booking" data-drag-date="'+dateStr+'" data-drag-hour="'+h+'" style="border-left:3px solid '+cl+';cursor:pointer;">'
+          + '<span class="rs-day-bk-time">'+(b.slot_time||'').slice(0,5)+'</span>'
+          + '<span class="rs-day-bk-name">'+esc(b.customer_name||'고객')+'</span>'
+          + '<span class="rs-day-bk-cnt">'+(b.headcount||1)+'명</span>'
+          + '<span class="rs-day-bk-st" style="color:'+cl+'">'+b.status+'</span>'
+          + '<span style="margin-left:auto;color:#94a3b8;font-size:10px;">✏</span></div>';
+      }).join('');
+      rows += '<div class="rs-day-row' + (bksH.length?' has-bk':'') + '">'
+        + '<div class="rs-day-time">'+String(h).padStart(2,'0')+':00</div>'
+        + '<div class="rs-day-slot">'+bkHtml+'</div></div>';
+    }
+    return '<div class="rs-card rs-day-wrap"><div class="rs-day-summary">'
+      + (bks.length ? '<strong>'+bks.length+'건</strong> 예약' : '<span style="color:#64748b">예약 없음</span>')
+      + '</div><div class="rs-day-timeline">'+rows+'</div></div>';
+  }
+
+  /* ──── 주간 뷰 ──── */
+  function rsCalWeekView() {
+    var now = new Date();
+    var _cd=rsState.calDate?rsState.calDate.split('-').map(Number):[now.getFullYear(),now.getMonth()+1,now.getDate()];
+    var base = new Date(_cd[0],_cd[1]-1,_cd[2]);
+    var dow = base.getDay();
+    var week = [];
+    for (var i=0;i<7;i++){ var d=new Date(base); d.setDate(base.getDate()-dow+i); week.push(d); }
+    var todayStr = now.toISOString().slice(0,10);
+    var bkByDate = {};
+    (rsState.bookings||[]).forEach(function(b){ if(!bkByDate[b.slot_date]) bkByDate[b.slot_date]=[]; bkByDate[b.slot_date].push(b); });
+    var dl = ['일','월','화','수','목','금','토'];
+    var hdr = '<div class="rs-week-hdr"><div class="rs-week-time-col"></div>'
+      + week.map(function(d,i){
+          var ds=d.toISOString().slice(0,10), isTd=ds===todayStr;
+          return '<div class="rs-week-day-col'+(isTd?' today':'')+'"><div class="rs-week-day-lbl">'+dl[i]+'</div><div class="rs-week-day-num'+(isTd?' today':'')+'">'+d.getDate()+'</div></div>';
+        }).join('')
+      + '</div>';
+    var grid = '';
+    for (var h=8;h<=21;h++) {
+      grid += '<div class="rs-week-row"><div class="rs-week-time-col">'+String(h).padStart(2,'0')+':00</div>'
+        + week.map(function(d){
+            var ds=d.toISOString().slice(0,10);
+            var bksH=(bkByDate[ds]||[]).filter(function(b){ return b.slot_time && parseInt(b.slot_time.slice(0,2))===h; });
+            return '<div class="rs-week-cell" data-cal-date="'+ds+'" data-cal-hour="'+h+'">'
+              + bksH.map(function(b){
+                  var cl={confirmed:'#22c55e',pending:'#f59e0b',cancelled:'#ef4444'}[b.status]||'#64748b';
+                  return '<div class="rs-week-bk" data-bk-id="'+b.id+'" draggable="true" data-drag-type="booking" data-drag-date="'+ds+'" data-drag-hour="'+h+'" style="background:'+cl+'20;border-left:2px solid '+cl+';cursor:pointer;">'
+                    + '<div style="font-size:9px;font-weight:700;color:'+cl+'">'+(b.slot_time||'').slice(0,5)+'</div>'
+                    + '<div style="font-size:9px;color:#e2e8f0;">'+esc(b.customer_name||'고객')+'</div></div>';
+                }).join('')
+              + '</div>';
+          }).join('')
+        + '</div>';
+    }
+    return '<div class="rs-card rs-week-wrap">'+hdr+'<div class="rs-week-grid">'+grid+'</div></div>';
+  }
+
+  /* ──── 연간 뷰 ──── */
+  function rsCalYearView() {
+    var y = parseInt(rsState.calMonth.split('-')[0]);
+    var bkByDate = {};
+    (rsState.bookings||[]).forEach(function(b){ bkByDate[b.slot_date]=(bkByDate[b.slot_date]||0)+1; });
+    var todayStr = new Date().toISOString().slice(0,10);
+    var months = '';
+    for (var mo=1;mo<=12;mo++) {
+      var first=new Date(y,mo-1,1), last=new Date(y,mo,0), sw=first.getDay();
+      var cells='';
+      for(var i=0;i<sw;i++) cells+='<div class="rs-yr-cell dim"></div>';
+      for(var d=1;d<=last.getDate();d++){
+        var ds=y+'-'+String(mo).padStart(2,'0')+'-'+String(d).padStart(2,'0');
+        var cnt=bkByDate[ds]||0;
+        var bg=cnt>3?'background:#3b82f6;color:#fff':cnt>1?'background:#60a5fa;color:#fff':cnt===1?'background:#bfdbfe;color:#1e40af':'';
+        var isTd=ds===todayStr?' today':'';
+        cells+='<div class="rs-yr-cell'+isTd+'" data-cal-date="'+ds+'" style="'+bg+'">'+d+'</div>';
+      }
+      months+='<div class="rs-yr-month" data-cal-month="'+y+'-'+String(mo).padStart(2,'0')+'">'
+        +'<div class="rs-yr-month-title">'+mo+'월</div>'
+        +'<div class="rs-yr-grid">'
+        +['일','월','화','수','목','금','토'].map(function(dn){return '<div class="rs-yr-dow">'+dn+'</div>';}).join('')
+        +cells+'</div></div>';
+    }
+    return '<div class="rs-card rs-yr-wrap">'
+      +'<div class="rs-yr-legend"><span style="background:#bfdbfe;display:inline-block;width:10px;height:10px;border-radius:2px;"></span> 1건 '
+      +'<span style="background:#60a5fa;display:inline-block;width:10px;height:10px;border-radius:2px;"></span> 2-3건 '
+      +'<span style="background:#3b82f6;display:inline-block;width:10px;height:10px;border-radius:2px;"></span> 4건+</div>'
+      +'<div class="rs-yr-grid-outer">'+months+'</div></div>';
+  }
+
+  /* ──── 날짜 팝업 ──── */
+  /* ── 날짜 클릭: 구글 캘린더 스타일 ──
+     0건 → 새 예약 입력창 바로 열기
+     1건 → 해당 예약 편집창 바로 열기
+     2건+ → 목록 미니 팝업 (각 항목 편집 + 새 예약 추가)
+  */
+  function rsShowDayPopup(dateStr) {
+    rsHideDayPopup();
+    var bks = (rsState.bookings||[]).filter(function(b){ return b.slot_date===dateStr; });
+    // 0건: 새 예약 입력창 바로
+    if(bks.length === 0){ rsOpenNewBk(dateStr); return; }
+    // 1건: 편집창 바로
+    if(bks.length === 1){ rsOpenBkEdit(bks[0]); return; }
+    // 2건+: 미니 팝업 (목록 + 새 예약 버튼)
+    var d = new Date(dateStr+'T00:00:00');
+    var dl = ['일','월','화','수','목','금','토'];
+    var title = (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+dl[d.getDay()]+')';
+    var stColors = {confirmed:'#22c55e',pending:'#f59e0b',done:'#94a3b8',no_show:'#ef4444',cancelled:'#ef4444'};
+    var bkHtml = bks.map(function(b){
+      var cl = stColors[b.status]||'#94a3b8';
+      return '<div class="rs-popup-bk" data-bk-id="'+b.id+'" style="cursor:pointer;border-radius:8px;transition:background .12s;">'
+        +'<span class="rs-popup-bk-time">'+(b.slot_time||'--:--').slice(0,5)+'</span>'
+        +'<span class="rs-popup-bk-name">'+esc(b.customer_name||'고객')+'</span>'
+        +'<span class="rs-popup-bk-cnt">'+(b.headcount||1)+'명</span>'
+        +'<span class="rs-popup-bk-st" style="color:'+cl+'">● '+(b.status||'')+'</span>'
+        +'<span style="margin-left:auto;color:#64748b;font-size:10px;">✏</span></div>';
+    }).join('');
+    var pop = document.createElement('div');
+    pop.id = 'rsCalPopup';
+    pop.innerHTML = '<div class="rs-popup-overlay" id="rsPopupOv"></div>'
+      +'<div class="rs-popup-card">'
+      +'<div class="rs-popup-hdr"><span>📅 '+title+'</span><button class="rs-popup-close" id="rsPopupX">&#x2715;</button></div>'
+      +'<div class="rs-popup-body">'+bkHtml+'</div>'
+      +'<div class="rs-popup-foot">'
+      +'<button id="rsPopupNewBk" style="flex:1;background:linear-gradient(135deg,#3b82f6,#1d4ed8);border:none;color:#fff;border-radius:8px;padding:7px 14px;font-size:12px;font-weight:700;cursor:pointer;display:flex;align-items:center;gap:6px;justify-content:center;">'
+      +'<i class="fas fa-plus"></i> 새 예약 추가</button>'
+      +'</div></div>';
+    var panel = document.getElementById('reservePanel');
+    if(panel){ panel.appendChild(pop); } else { document.body.appendChild(pop); }
+    document.getElementById('rsPopupX').addEventListener('click', rsHideDayPopup);
+    document.getElementById('rsPopupOv').addEventListener('click', rsHideDayPopup);
+    document.getElementById('rsPopupNewBk').addEventListener('click', function(){
+      rsHideDayPopup(); rsOpenNewBk(dateStr);
+    });
+    pop.querySelectorAll('[data-bk-id]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.stopPropagation();
+        var bkId = parseInt(this.getAttribute('data-bk-id'));
+        var bk = (rsState.bookings||[]).find(function(x){ return x.id===bkId; });
+        if(bk){ rsHideDayPopup(); rsOpenBkEdit(bk); }
+      });
+    });
+  }
+  function rsHideDayPopup(){ var p=document.getElementById('rsCalPopup'); if(p) p.remove(); }
+
+  /* ════════ 예약 편집 모달 ════════ */
+  var rsEditModal = null;
+  function rsOpenBkEdit(bk) {
+    rsCloseBkEdit();
+    var stColors = {confirmed:'#22c55e',pending:'#f59e0b',done:'#94a3b8',no_show:'#ef4444',cancelled:'#ef4444'};
+    var stLabels = {confirmed:'확정',pending:'대기',done:'완료',no_show:'노쇼',cancelled:'취소'};
+    var cl = stColors[bk.status]||'#94a3b8';
+    var modal = document.createElement('div');
+    modal.id = 'rsBkEditModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:11000;display:flex;align-items:center;justify-content:center;padding:16px;';
+    var statusBtns = ['confirmed','pending','done','no_show','cancelled'].map(function(s){
+      var active = s === bk.status;
+      return '<button class="rs-bk-st-btn" data-st="' + s + '" style="padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;cursor:pointer;border:1px solid rgba(255,255,255,.12);background:' + (active ? stColors[s] : 'rgba(255,255,255,.05)') + ';color:' + (active ? '#fff' : (stColors[s]||'#94a3b8')) + ';">' + (stLabels[s]||s) + '</button>';
+    }).join('');
+    modal.innerHTML =
+      '<div id="rsBkEditOv" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:11000;"></div>'
+      + '<div style="position:relative;z-index:11001;background:#1e2535;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.55);width:100%;max-width:420px;border:1px solid rgba(255,255,255,.1);overflow:hidden;">'
+      + '<div style="background:linear-gradient(135deg,' + cl + '22,transparent);padding:16px 18px;border-bottom:1px solid rgba(255,255,255,.08);display:flex;align-items:center;gap:10px;">'
+      + '<div style="width:10px;height:10px;border-radius:50%;background:' + cl + ';flex-shrink:0;"></div>'
+      + '<div style="flex:1;"><div style="font-size:15px;font-weight:800;color:#e2e8f0;">예약 #' + bk.id + '</div>'
+      + '<div style="font-size:11px;color:#94a3b8;margin-top:1px;">' + bk.slot_date + ' ' + (bk.slot_time||'').slice(0,5) + '</div></div>'
+      + '<button id="rsBkEditClose" style="background:none;border:none;color:#64748b;font-size:18px;cursor:pointer;width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;">&#x2715;</button>'
+      + '</div>'
+      + '<div style="padding:18px;">'
+      + '<div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;">고객 이름</label>'
+      + '<input id="rsBkEditName" type="text" value="' + esc(bk.customer_name||'') + '" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#e2e8f0;font-size:13px;padding:8px 11px;outline:none;" placeholder="고객 이름"></div>'
+      + '<div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;">연락처</label>'
+      + '<input id="rsBkEditPhone" type="tel" value="' + esc(bk.customer_phone||'') + '" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#e2e8f0;font-size:13px;padding:8px 11px;outline:none;" placeholder="010-0000-0000"></div>'
+      + '<div style="margin-bottom:12px;display:flex;gap:12px;align-items:flex-end;">'
+      + '<div><label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;">인원</label>'
+      + '<input id="rsBkEditHead" type="number" min="1" max="99" value="' + (bk.headcount||1) + '" style="width:70px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#e2e8f0;font-size:13px;padding:8px 11px;outline:none;text-align:center;"></div></div>'
+      + '<div style="margin-bottom:12px;"><label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;">상태</label>'
+      + '<div style="display:flex;gap:6px;flex-wrap:wrap;" id="rsBkStatusBtns">' + statusBtns + '</div></div>'
+      + '<div style="margin-bottom:16px;"><label style="display:block;font-size:11px;font-weight:700;color:#94a3b8;margin-bottom:5px;">메모</label>'
+      + '<textarea id="rsBkEditMemo" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:8px;color:#e2e8f0;font-size:13px;padding:8px 11px;outline:none;resize:vertical;min-height:70px;" placeholder="메모 (선택)">' + esc(bk.memo||'') + '</textarea></div>'
+      + '<div style="display:flex;gap:8px;justify-content:space-between;">'
+      + '<button id="rsBkEditCancelBk" style="padding:9px 16px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);cursor:pointer;">예약 취소</button>'
+      + '<div style="display:flex;gap:8px;">'
+      + '<button id="rsBkEditClose2" style="padding:9px 16px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(255,255,255,.08);color:#94a3b8;border:1px solid rgba(255,255,255,.12);cursor:pointer;">닫기</button>'
+      + '<button id="rsBkEditSave" style="padding:9px 18px;border-radius:8px;font-size:12px;font-weight:700;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border:none;cursor:pointer;">저장</button>'
+      + '</div></div>'
+      + '</div></div>';
+    document.body.appendChild(modal);
+    rsEditModal = modal;
+    var selectedStatus = bk.status;
+    modal.querySelectorAll('.rs-bk-st-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        selectedStatus = this.getAttribute('data-st');
+        modal.querySelectorAll('.rs-bk-st-btn').forEach(function(b2){
+          var s2 = b2.getAttribute('data-st');
+          b2.style.background = s2 === selectedStatus ? (stColors[s2]||'#64748b') : 'rgba(255,255,255,.05)';
+          b2.style.color = s2 === selectedStatus ? '#fff' : (stColors[s2]||'#94a3b8');
+        });
+      });
+    });
+    function doSave(){
+      var btn = document.getElementById('rsBkEditSave');
+      if(!btn || btn.disabled) return;
+      btn.textContent = '저장 중...'; btn.disabled = true;
+      rsApi('/aimessage/onechat/api/reserve_booking.php', { method:'POST', body: {
+        action:'update', id:bk.id,
+        customer_name: document.getElementById('rsBkEditName').value.trim(),
+        customer_phone: document.getElementById('rsBkEditPhone').value.trim(),
+        headcount: parseInt(document.getElementById('rsBkEditHead').value)||1,
+        memo: document.getElementById('rsBkEditMemo').value,
+        status: selectedStatus
+      }}).then(function(r){
+        if(r && r.ok){
+          var idx = (rsState.bookings||[]).findIndex(function(x){ return x.id===bk.id; });
+          if(idx>=0) rsState.bookings[idx]=r.booking;
+          rsCloseBkEdit(); rsRenderCentral();
+        } else {
+          if(btn){ btn.textContent='저장'; btn.disabled=false; }
+          alert('저장 실패: '+(r&&r.error?r.error:'알 수 없는 오류'));
+        }
+      }).catch(function(){ if(btn){ btn.textContent='저장'; btn.disabled=false; } alert('네트워크 오류'); });
+    }
+    document.getElementById('rsBkEditSave').addEventListener('click', doSave);
+    document.getElementById('rsBkEditCancelBk').addEventListener('click', function(){
+      if(!confirm('예약 #'+bk.id+'을(를) 취소하시겠습니까?')) return;
+      var btn = this; btn.textContent='처리 중...'; btn.disabled=true;
+      rsApi('/aimessage/onechat/api/reserve_booking.php', {method:'POST', body:{action:'cancel',id:bk.id}})
+        .then(function(r){
+          if(r&&r.ok){ var idx=(rsState.bookings||[]).findIndex(function(x){return x.id===bk.id;}); if(idx>=0) rsState.bookings[idx].status='cancelled'; rsCloseBkEdit(); rsRenderCentral(); }
+          else { btn.textContent='예약 취소'; btn.disabled=false; alert('취소 실패: '+(r&&r.error?r.error:'')); }
+        }).catch(function(){ btn.textContent='예약 취소'; btn.disabled=false; alert('네트워크 오류'); });
+    });
+    document.getElementById('rsBkEditClose').addEventListener('click', rsCloseBkEdit);
+    document.getElementById('rsBkEditClose2').addEventListener('click', rsCloseBkEdit);
+    document.getElementById('rsBkEditOv').addEventListener('click', rsCloseBkEdit);
+  }
+  function rsCloseBkEdit(){ if(rsEditModal){ rsEditModal.remove(); rsEditModal=null; } }
+  window.rsOpenBkEdit = rsOpenBkEdit;
+  window.rsCloseBkEdit = rsCloseBkEdit;
+  /* ════════ 새 예약 입력 모달 ════════ */
+  var rsNewBkModal = null;
+  /* 구 rsOpenNewBk → 새 일정 모달로 위임 */
+  function rsOpenNewBk(dateStr) { rsOpenNewSchedule(dateStr); }
+
+  /* ════════ 새 일정 추가 모달 (구글 캘린더 스타일) ════════ */
+  var rsNewScModal = null;
+  var EVENT_TYPES = [
+    { key:'schedule', label:'일정',  color:'#3b82f6', icon:'📅' },
+    { key:'booking',  label:'예약',  color:'#22c55e', icon:'📋' },
+    { key:'event',    label:'행사',  color:'#f59e0b', icon:'🎉' },
+    { key:'personal', label:'개인',  color:'#a855f7', icon:'👤' }
+  ];
+  function rsOpenNewSchedule(dateStr) {
+    rsCloseNewBk();
+    var d = new Date(dateStr+'T00:00:00');
+    var dl = ['일','월','화','수','목','금','토'];
+    var dateLabel = (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+dl[d.getDay()]+')';
+    var now = new Date();
+    var defH = now.getHours();
+    var defStart = String(defH).padStart(2,'0')+':00';
+    var defEnd   = String(Math.min(defH+1,23)).padStart(2,'0')+':00';
+    var selType = 'schedule', selColor = '#3b82f6';
+    var typeBtns = EVENT_TYPES.map(function(t){
+      var act = t.key===selType;
+      return '<button class="rs-sc-type-btn" data-type="'+t.key+'" data-color="'+t.color
+        +'" style="padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;'
+        +'border:2px solid '+(act?t.color:'rgba(255,255,255,.12)')
+        +';background:'+(act?t.color+'22':'rgba(255,255,255,.05)')
+        +';color:'+(act?t.color:'#94a3b8')+';transition:all .15s;">'+t.icon+' '+t.label+'</button>';
+    }).join('');
+    var modal = document.createElement('div');
+    modal.id = 'rsNewScModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:11000;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML =
+      '<div id="rsNewScOv" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:11000;"></div>'
+      +'<div style="position:relative;z-index:11001;background:#1e2535;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.55);width:100%;max-width:440px;border:1px solid rgba(255,255,255,.1);overflow:hidden;">'
+      +'<div style="padding:20px 20px 0;">'
+      // 제목 입력 (구글 캘린더처럼 크게, 밑줄만)
+      +'<input id="rsScTitle" type="text" placeholder="제목 추가" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:2px solid rgba(255,255,255,.15);color:#e2e8f0;font-size:20px;font-weight:700;padding:4px 0 10px;outline:none;transition:border-color .2s;">'
+      // 유형 버튼
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px;" id="rsScTypeBtns">'+typeBtns+'</div>'
+      +'</div>'
+      +'<div style="height:1px;background:rgba(255,255,255,.07);margin:12px 0;"></div>'
+      +'<div style="padding:0 20px 18px;">'
+      // 날짜/시간
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">'
+      +'<span style="font-size:16px;flex-shrink:0;">🕐</span>'
+      +'<div style="flex:1;">'
+      +'<div style="font-size:12px;color:#64748b;font-weight:700;margin-bottom:5px;">'+dateLabel+'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'
+      +'<input id="rsScStart" type="time" value="'+defStart+'" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:6px 10px;outline:none;">'
+      +'<span style="color:#64748b;">~</span>'
+      +'<input id="rsScEnd" type="time" value="'+defEnd+'" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:6px 10px;outline:none;">'
+      +'<label style="display:flex;align-items:center;gap:5px;font-size:12px;color:#94a3b8;cursor:pointer;">'
+      +'<input type="checkbox" id="rsScAllDay" style="width:14px;height:14px;"> 종일</label>'
+      +'</div></div></div>'
+      // 참석자
+      +'<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;">'
+      +'<span style="font-size:16px;flex-shrink:0;margin-top:6px;">👤</span>'
+      +'<div style="flex:1;">'
+      +'<input id="rsScAttendee" type="text" inputmode="text" autocomplete="name" placeholder="참석자 이름 (선택)" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;margin-bottom:6px;">'
+      +'<input id="rsScPhone" type="tel" placeholder="연락처 (선택)" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;">'
+      +'</div></div>'
+      // 위치
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">'
+      +'<span style="font-size:16px;flex-shrink:0;">📍</span>'
+      +'<input id="rsScLocation" type="text" placeholder="위치 추가 (선택)" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;">'
+      +'</div>'
+      // 설명
+      +'<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;">'
+      +'<span style="font-size:16px;flex-shrink:0;margin-top:6px;">📝</span>'
+      +'<textarea id="rsScDesc" placeholder="설명 추가 (선택)" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;resize:vertical;min-height:60px;box-sizing:border-box;"></textarea>'
+      +'</div>'
+      +'<div style="display:flex;justify-content:flex-end;gap:8px;">'
+      +'<button id="rsScCancelBtn" style="padding:9px 18px;border-radius:8px;font-size:13px;font-weight:600;background:rgba(255,255,255,.08);color:#94a3b8;border:1px solid rgba(255,255,255,.12);cursor:pointer;">취소</button>'
+      +'<button id="rsScSaveBtn" style="padding:9px 22px;border-radius:8px;font-size:13px;font-weight:700;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border:none;cursor:pointer;">저장</button>'
+      +'</div></div></div>';
+    document.body.appendChild(modal);
+    rsNewScModal = modal;
+    setTimeout(function(){ var t=document.getElementById('rsScTitle'); if(t) t.focus(); }, 80);
+    // 유형 버튼 토글
+    modal.querySelectorAll('.rs-sc-type-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        selType=this.getAttribute('data-type'); selColor=this.getAttribute('data-color');
+        modal.querySelectorAll('.rs-sc-type-btn').forEach(function(b2){
+          var c2=b2.getAttribute('data-color'), act2=b2.getAttribute('data-type')===selType;
+          b2.style.borderColor=act2?c2:'rgba(255,255,255,.12)';
+          b2.style.background=act2?c2+'22':'rgba(255,255,255,.05)';
+          b2.style.color=act2?c2:'#94a3b8';
+        });
+        var ti=document.getElementById('rsScTitle'); if(ti) ti.style.borderBottomColor=selColor;
+      });
+    });
+    // 종일 토글
+    document.getElementById('rsScAllDay').addEventListener('change', function(){
+      var s=document.getElementById('rsScStart'), e=document.getElementById('rsScEnd');
+      s.style.display=this.checked?'none':''; e.style.display=this.checked?'none':'';
+    });
+    document.getElementById('rsNewScOv').addEventListener('click', rsCloseNewBk);
+    document.getElementById('rsScCancelBtn').addEventListener('click', rsCloseNewBk);
+    // 저장
+    document.getElementById('rsScSaveBtn').addEventListener('click', function(){
+      var btn=this;
+      var ctx=rsGetCtx();
+      if(!ctx.sms_idx){ rsToast('채팅방을 먼저 선택해주세요','err'); return; }
+      var title=document.getElementById('rsScTitle').value.trim();
+      if(!title){ document.getElementById('rsScTitle').focus(); document.getElementById('rsScTitle').style.borderBottomColor='#ef4444'; return; }
+      var allDay=document.getElementById('rsScAllDay').checked;
+      var startTime=allDay?null:document.getElementById('rsScStart').value;
+      var endTime=allDay?null:document.getElementById('rsScEnd').value;
+      btn.textContent='저장 중...'; btn.disabled=true;
+      rsApi('/aimessage/onechat/api/reserve_schedule.php', {method:'POST', body:{
+        action:'add', sms_idx:ctx.sms_idx, request_idx:ctx.request_idx||0,
+        title:title, event_type:selType, color:selColor,
+        start_date:dateStr, start_time:startTime, end_date:dateStr, end_time:endTime,
+        all_day:allDay?1:0,
+        attendee_name:document.getElementById('rsScAttendee').value.trim()||null,
+        attendee_phone:document.getElementById('rsScPhone').value.trim()||null,
+        location:document.getElementById('rsScLocation').value.trim()||null,
+        description:document.getElementById('rsScDesc').value||null
+      }}).then(function(r){
+        if(r&&r.ok){
+          if(!rsState.schedules) rsState.schedules=[];
+          rsState.schedules.push(r.schedule);
+          rsCloseNewBk(); rsRenderCentral();
+        } else { btn.textContent='저장'; btn.disabled=false; alert('저장 실패: '+(r&&r.error?r.error:'')); }
+      }).catch(function(){ btn.textContent='저장'; btn.disabled=false; alert('네트워크 오류'); });
+    });
+  }
+
+  /* ════════ 일정 편집 모달 ════════ */
+  var rsScEditModal = null;
+  function rsOpenScEdit(sc) {
+    rsCloseScEdit();
+    var d = new Date(sc.start_date+'T00:00:00');
+    var dl = ['일','월','화','수','목','금','토'];
+    var dateLabel = (d.getMonth()+1)+'월 '+d.getDate()+'일 ('+dl[d.getDay()]+')';
+    var selType = sc.event_type||'schedule', selColor = sc.color||'#3b82f6';
+    var typeBtns = EVENT_TYPES.map(function(t){
+      var act=t.key===selType;
+      return '<button class="rs-sce-type-btn" data-type="'+t.key+'" data-color="'+t.color
+        +'" style="padding:6px 13px;border-radius:20px;font-size:12px;font-weight:700;cursor:pointer;'
+        +'border:2px solid '+(act?t.color:'rgba(255,255,255,.12)')
+        +';background:'+(act?t.color+'22':'rgba(255,255,255,.05)')
+        +';color:'+(act?t.color:'#94a3b8')+';transition:all .15s;">'+t.icon+' '+t.label+'</button>';
+    }).join('');
+    var modal = document.createElement('div');
+    modal.id = 'rsScEditModal';
+    modal.style.cssText = 'position:fixed;inset:0;z-index:11000;display:flex;align-items:center;justify-content:center;padding:16px;';
+    modal.innerHTML =
+      '<div id="rsScEditOv" style="position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:11000;"></div>'
+      +'<div style="position:relative;z-index:11001;background:#1e2535;border-radius:16px;box-shadow:0 24px 64px rgba(0,0,0,.55);width:100%;max-width:440px;border:1px solid rgba(255,255,255,.1);overflow:hidden;">'
+      +'<div style="padding:20px 20px 0;">'
+      +'<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">'
+      +'<span style="font-size:11px;color:#64748b;font-weight:700;">일정 #'+sc.id+' · '+dateLabel+'</span>'
+      +'<button id="rsScEditClose" style="background:none;border:none;color:#64748b;font-size:18px;cursor:pointer;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;">&#x2715;</button>'
+      +'</div>'
+      +'<input id="rsScEditTitle" type="text" value="'+esc(sc.title||'')+'" style="width:100%;box-sizing:border-box;background:none;border:none;border-bottom:2px solid '+selColor+';color:#e2e8f0;font-size:20px;font-weight:700;padding:4px 0 10px;outline:none;">'
+      +'<div style="display:flex;gap:6px;flex-wrap:wrap;margin:14px 0 4px;" id="rsScETypeBtns">'+typeBtns+'</div>'
+      +'</div>'
+      +'<div style="height:1px;background:rgba(255,255,255,.07);margin:12px 0;"></div>'
+      +'<div style="padding:0 20px 18px;">'
+      +'<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;">'
+      +'<span style="font-size:16px;flex-shrink:0;margin-top:6px;">🕐</span>'
+      +'<div style="flex:1;">'
+      +'<div style="font-size:12px;color:#64748b;font-weight:700;margin-bottom:5px;">'+dateLabel+'</div>'
+      +'<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">'
+      +'<input id="rsScEditStart" type="time" value="'+(sc.start_time||'').slice(0,5)+'" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:6px 10px;outline:none;">'
+      +'<span style="color:#64748b;">~</span>'
+      +'<input id="rsScEditEnd" type="time" value="'+(sc.end_time||'').slice(0,5)+'" style="background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:6px 10px;outline:none;">'
+      +'<label style="display:flex;align-items:center;gap:5px;font-size:12px;color:#94a3b8;cursor:pointer;">'
+      +'<input type="checkbox" id="rsScEditAllDay" '+(sc.all_day?'checked':'')+' style="width:14px;height:14px;"> 종일</label>'
+      +'</div></div></div>'
+      +'<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:14px;">'
+      +'<span style="font-size:16px;flex-shrink:0;margin-top:6px;">👤</span>'
+      +'<div style="flex:1;">'
+      +'<input id="rsScEditAttendee" type="text" inputmode="text" autocomplete="name" value="'+esc(sc.attendee_name||'')+'" placeholder="참석자 이름" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;margin-bottom:6px;">'
+      +'<input id="rsScEditPhone" type="tel" value="'+esc(sc.attendee_phone||'')+'" placeholder="연락처" style="width:100%;box-sizing:border-box;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;">'
+      +'</div></div>'
+      +'<div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">'
+      +'<span style="font-size:16px;flex-shrink:0;">📍</span>'
+      +'<input id="rsScEditLoc" type="text" value="'+esc(sc.location||'')+'" placeholder="위치" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;">'
+      +'</div>'
+      +'<div style="display:flex;align-items:flex-start;gap:10px;margin-bottom:18px;">'
+      +'<span style="font-size:16px;flex-shrink:0;margin-top:6px;">📝</span>'
+      +'<textarea id="rsScEditDesc" placeholder="설명" style="flex:1;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.12);border-radius:7px;color:#e2e8f0;font-size:13px;padding:7px 10px;outline:none;resize:vertical;min-height:60px;box-sizing:border-box;">'+esc(sc.description||'')+'</textarea>'
+      +'</div>'
+      +'<div style="display:flex;justify-content:space-between;gap:8px;">'
+      +'<button id="rsScEditDel" style="padding:9px 14px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(239,68,68,.15);color:#fca5a5;border:1px solid rgba(239,68,68,.3);cursor:pointer;">삭제</button>'
+      +'<div style="display:flex;gap:8px;">'
+      +'<button id="rsScEditCloseBtn" style="padding:9px 14px;border-radius:8px;font-size:12px;font-weight:700;background:rgba(255,255,255,.08);color:#94a3b8;border:1px solid rgba(255,255,255,.12);cursor:pointer;">취소</button>'
+      +'<button id="rsScEditSave" style="padding:9px 20px;border-radius:8px;font-size:13px;font-weight:700;background:linear-gradient(135deg,#3b82f6,#1d4ed8);color:#fff;border:none;cursor:pointer;">저장</button>'
+      +'</div></div></div></div>';
+    document.body.appendChild(modal);
+    rsScEditModal = modal;
+    modal.querySelectorAll('.rs-sce-type-btn').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        selType=this.getAttribute('data-type'); selColor=this.getAttribute('data-color');
+        modal.querySelectorAll('.rs-sce-type-btn').forEach(function(b2){
+          var c2=b2.getAttribute('data-color'), a=b2.getAttribute('data-type')===selType;
+          b2.style.borderColor=a?c2:'rgba(255,255,255,.12)'; b2.style.background=a?c2+'22':'rgba(255,255,255,.05)'; b2.style.color=a?c2:'#94a3b8';
+        });
+      });
+    });
+    document.getElementById('rsScEditClose').addEventListener('click', rsCloseScEdit);
+    document.getElementById('rsScEditCloseBtn').addEventListener('click', rsCloseScEdit);
+    document.getElementById('rsScEditOv').addEventListener('click', rsCloseScEdit);
+    document.getElementById('rsScEditDel').addEventListener('click', function(){
+      if(!confirm('이 일정을 삭제하시겠습니까?')) return;
+      var btn=this; btn.textContent='삭제 중...'; btn.disabled=true;
+      var ctx=rsGetCtx();
+      rsApi('/aimessage/onechat/api/reserve_schedule.php', {method:'POST', body:{action:'delete',id:sc.id,sms_idx:ctx.sms_idx||sc.sms_idx,request_idx:ctx.request_idx||sc.request_idx||0}})
+        .then(function(r){
+          if(r&&r.ok){ rsState.schedules=(rsState.schedules||[]).filter(function(x){return x.id!==sc.id;}); rsCloseScEdit(); rsRenderCentral(); }
+          else { btn.textContent='삭제'; btn.disabled=false; alert('삭제 실패'); }
+        }).catch(function(){ btn.textContent='삭제'; btn.disabled=false; alert('네트워크 오류'); });
+    });
+    document.getElementById('rsScEditSave').addEventListener('click', function(){
+      var btn=this, title=document.getElementById('rsScEditTitle').value.trim();
+      if(!title){ document.getElementById('rsScEditTitle').focus(); return; }
+      var allDay=document.getElementById('rsScEditAllDay').checked;
+      var ctx=rsGetCtx();
+      btn.textContent='저장 중...'; btn.disabled=true;
+      rsApi('/aimessage/onechat/api/reserve_schedule.php', {method:'POST', body:{
+        action:'update', id:sc.id, sms_idx:ctx.sms_idx||sc.sms_idx, request_idx:ctx.request_idx||sc.request_idx||0,
+        title:title, event_type:selType, color:selColor,
+        start_time:allDay?null:document.getElementById('rsScEditStart').value,
+        end_time:allDay?null:document.getElementById('rsScEditEnd').value,
+        all_day:allDay?1:0,
+        attendee_name:document.getElementById('rsScEditAttendee').value.trim()||null,
+        attendee_phone:document.getElementById('rsScEditPhone').value.trim()||null,
+        location:document.getElementById('rsScEditLoc').value.trim()||null,
+        description:document.getElementById('rsScEditDesc').value||null
+      }}).then(function(r){
+        if(r&&r.ok){
+          var idx=(rsState.schedules||[]).findIndex(function(x){return x.id===sc.id;});
+          if(idx>=0) rsState.schedules[idx]=r.schedule;
+          rsCloseScEdit(); rsRenderCentral();
+        } else { btn.textContent='저장'; btn.disabled=false; alert('저장 실패: '+(r&&r.error?r.error:'')); }
+      }).catch(function(){ btn.textContent='저장'; btn.disabled=false; alert('네트워크 오류'); });
+    });
+  }
+  function rsCloseScEdit(){ if(rsScEditModal){ rsScEditModal.remove(); rsScEditModal=null; } }
+  window.rsOpenNewSchedule = rsOpenNewSchedule;
+  window.rsOpenScEdit = rsOpenScEdit;
+  window.rsCloseScEdit = rsCloseScEdit;
+
+  function rsCloseNewBk(){ if(rsNewScModal){ rsNewScModal.remove(); rsNewScModal=null; } }
+  window.rsOpenNewBk = rsOpenNewBk;
+  window.rsCloseNewBk = rsCloseNewBk;
+
+    function rsBkRow(b) {
+    return '<div class="rs-bk-row" data-bk-id="' + b.id + '" style="cursor:pointer;"><span class="id">#' + b.id + '</span>'
          + '<span>' + esc(b.customer_name || '고객') + ' · ' + (b.slot_time||'').slice(0,5) + ' · ' + b.headcount + '명</span>'
-         + '<span class="st ' + b.status + '">' + b.status + '</span></div>';
+         + '<span class="st ' + b.status + '">' + b.status + '</span>'
+         + '<span style="margin-left:auto;color:#64748b;font-size:11px;">✏ 편집</span></div>';
   }
 
   /* ════════ View 3: 트리거 ════════ */
@@ -5127,7 +5770,34 @@ document.addEventListener('DOMContentLoaded', function () {
       ['interest',  '관심사 매칭',  'ME가 관심사와 매칭'],
     ];
     return ''
-      + '<div class="rs-head"><div><h2><i class="fas fa-bolt"></i> 트리거 (왜 말 걸지)</h2><div class="rs-help">각 트리거는 "왜 말 걸었나" 합리적 이유를 함께 전달합니다 (마케팅 아님)</div></div></div>'
+      + '<div class="rs-head"><div><h2><i class="fas fa-bolt"></i> 트리거 설정</h2><div class="rs-help">각 트리거는 "왜 말 걸었나" 합리적 이유를 함께 전달합니다.</div></div></div>'
+      + '<div class="rs-trig-tools">'
+      + '<div class="rs-tt-section">'
+      + '<div class="rs-tt-label"><i class="fas fa-store"></i> 방법 B · 업종 프리셋</div>'
+      + '<div class="rs-tt-desc">업종을 선택하면 각 트리거에 맞는 키워드를 바로 채워드립니다.</div>'
+      + '<div class="rs-preset-genres">'
+      + '<button type="button" class="rs-genre-btn" data-genre="cafe">☕ 카페/음식점</button>'
+      + '<button type="button" class="rs-genre-btn" data-genre="beauty">💅 미용실/뷰티</button>'
+      + '<button type="button" class="rs-genre-btn" data-genre="clinic">🏥 병원/클리닉</button>'
+      + '<button type="button" class="rs-genre-btn" data-genre="consult">💼 컨설팅/코칭</button>'
+      + '<button type="button" class="rs-genre-btn" data-genre="studio">🎨 스튜디오/공방</button>'
+      + '<button type="button" class="rs-genre-btn" data-genre="etc">📋 기타서비스</button>'
+      + '</div>'
+      + '<button type="button" class="rs-genre-apply" id="rsGenreApply" disabled><i class="fas fa-check"></i> 선택한 업종으로 적용</button>'
+      + '</div>'
+      + '<div class="rs-tt-divider"></div>'
+      + '<div class="rs-tt-section">'
+      + '<div class="rs-tt-label"><i class="fas fa-magic"></i> 방법 A · AI 자동 생성</div>'
+      + '<div class="rs-tt-desc">학습 데이터와 챗봇 설정을 분석해서 AI가 최적 키워드를 추천합니다.</div>'
+      + '<button type="button" class="rs-ai-gen-btn" id="rsTrigAiGen"><i class="fas fa-robot"></i> AI 트리거 자동 생성</button>'
+      + '<div class="rs-ai-result" id="rsTrigAiResult" style="display:none"></div>'
+      + '</div>'
+      + '<div class="rs-tt-divider"></div>'
+      + '<div class="rs-tt-section rs-tt-c">'
+      + '<div class="rs-tt-label"><i class="fas fa-check-circle" style="color:#34d399"></i> 방법 C · 실시간 의도 감지 (이미 활성화)</div>'
+      + '<div class="rs-tt-desc">위 키워드를 고객이 말하는 순간, 챗봇이 자동으로 예약 안내를 시작합니다. 별도 설정 없이 바로 동작합니다.</div>'
+      + '</div>'
+      + '</div>'
       + defs.map(function(d){
           var t = tMap[d[0]] || {};
           return '<div class="rs-trig">'
@@ -5244,7 +5914,36 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // 제외시간 추가
     var addBo = c.querySelector('#rsAddBo');
-    if (addBo) addBo.addEventListener('click', addBlackout);
+    if (addBo) addBo.addEventListener('click', openBoForm);
+    var boForm = c.querySelector('#rsBoForm');
+    if (boForm) {
+      boForm.querySelectorAll('.rs-bf-preset').forEach(function(btn){
+        btn.addEventListener('click', function(){
+          boForm.querySelectorAll('.rs-bf-preset').forEach(function(b){ b.classList.remove('active'); });
+          btn.classList.add('active');
+          var ci = boForm.querySelector('.rs-bf-custom-inp');
+          if (btn.getAttribute('data-preset') === '__custom') { ci.style.display='block'; ci.focus(); }
+          else { ci.style.display='none'; }
+        });
+      });
+      boForm.querySelectorAll('#rsBoWeekdays .rs-day').forEach(function(d){
+        d.addEventListener('click', function(){ d.classList.toggle('on'); });
+      });
+      var boCancel = boForm.querySelector('#rsBoCancel');
+      if (boCancel) boCancel.addEventListener('click', closeBoForm);
+      var boSubmit = boForm.querySelector('#rsBoSubmit');
+      if (boSubmit) boSubmit.addEventListener('click', submitBoForm);
+      var boFrom = boForm.querySelector('#rsBoFrom');
+      var boTo   = boForm.querySelector('#rsBoTo');
+      if (boFrom && boTo) {
+        boFrom.addEventListener('change', function(){
+          if (boFrom.value >= boTo.value) {
+            var idx = Array.from(boFrom.options).findIndex(function(o){ return o.value===boFrom.value; });
+            boTo.value = boFrom.options[Math.min(idx+2, boFrom.options.length-1)].value;
+          }
+        });
+      }
+    }
     c.querySelectorAll('[data-bo-del]').forEach(function(el){
       el.addEventListener('click', function(){
         var id = parseInt(el.getAttribute('data-bo-del'), 10);
@@ -5256,11 +5955,257 @@ document.addEventListener('DOMContentLoaded', function () {
     var prev = c.querySelector('[data-cal-prev]');
     var next = c.querySelector('[data-cal-next]');
     var today= c.querySelector('[data-cal-today]');
-    if (prev) prev.addEventListener('click', function(){ shiftMonth(-1); });
-    if (next) next.addEventListener('click', function(){ shiftMonth(1); });
-    if (today)today.addEventListener('click', function(){ var n=new Date(); rsState.calMonth = n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0'); rsRenderCentral(); });
+    if (prev) prev.addEventListener('click', function(){ shiftCalPeriod(-1); });
+    if (next) next.addEventListener('click', function(){ shiftCalPeriod(1); });
+    if (today) today.addEventListener('click', function(){
+      var n=new Date();
+      rsState.calDate=rsDateStr(n);
+      rsState.calMonth=n.getFullYear()+'-'+String(n.getMonth()+1).padStart(2,'0');
+      rsRenderCentral();
+    });
+    // 뷰 전환 버튼
+    c.querySelectorAll('.rvs-btn[data-view]').forEach(function(btn){
+      btn.addEventListener('click', function(){
+        rsState.calView=this.getAttribute('data-view'); rsHideDayPopup(); rsRenderCentral();
+      });
+    });
+    // 날짜 셀 클릭 — 바 클릭 vs 빈 공간 클릭 분리
+    c.querySelectorAll('[data-cal-date]').forEach(function(cell){
+      cell.addEventListener('click', function(e){
+        e.stopPropagation();
+        var ds = this.getAttribute('data-cal-date'); if(!ds) return;
+        if(rsState.calView==='day') return;
+        // 주간 뷰: 예약/일정 바 클릭 → 편집, 빈 공간 → 새 일정
+        if(rsState.calView==='week'){
+          if(e.target.closest('[data-bk-id]') || e.target.closest('[data-sc-id]')) return; // 바 이벤트로 처리
+          rsOpenNewBk(ds); return;
+        }
+        // 날짜 숫자(data-goto-day) 클릭 → 일간 뷰
+        if(e.target.closest('[data-goto-day]')) {
+          rsState.calView='day'; rsState.calDate=ds; rsHideDayPopup(); rsRenderCentral(); return;
+        }
+        // 월간/연간 뷰: 바 클릭은 바 이벤트에서 처리 → 빈 공간은 항상 새 일정 입력창
+        if(e.target.closest('[data-bk-id]') || e.target.closest('[data-sc-id]') || e.target.closest('.rs-cal-more')) return;
+        rsOpenNewBk(ds);
+      });
+    });
+
+    // ══ 드래그앤드롭 이벤트 ══
+    var _dndData = {};
+    // 드래그 시작
+    c.querySelectorAll('[draggable="true"]').forEach(function(bar){
+      bar.addEventListener('dragstart', function(e){
+        var tp = this.getAttribute('data-drag-type');
+        var id = parseInt(this.getAttribute(tp==='schedule'?'data-sc-id':'data-bk-id'));
+        _dndData = { type:tp, id:id, origDate:this.getAttribute('data-drag-date'), origHour:this.getAttribute('data-drag-hour') };
+        e.dataTransfer.effectAllowed = 'move';
+        e.dataTransfer.setData('text/plain', String(id));
+        var el = this; setTimeout(function(){ el.style.opacity='0.45'; }, 0);
+      });
+      bar.addEventListener('dragend', function(){
+        this.style.opacity = '1';
+        c.querySelectorAll('.dnd-over').forEach(function(el){ el.classList.remove('dnd-over'); });
+      });
+    });
+    // 월간뷰 셀: 드롭 대상
+    c.querySelectorAll('.rs-cal-cell:not(.dim)').forEach(function(cell){
+      cell.addEventListener('dragover', function(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; this.classList.add('dnd-over'); });
+      cell.addEventListener('dragleave', function(e){ if(!this.contains(e.relatedTarget)) this.classList.remove('dnd-over'); });
+      cell.addEventListener('drop', function(e){
+        e.preventDefault(); e.stopPropagation();
+        this.classList.remove('dnd-over');
+        var d = _dndData; if(!d.id) return;
+        var newDate = this.getAttribute('data-cal-date'); if(!newDate || newDate===d.origDate) return;
+        rsDndMove(d, newDate, null);
+      });
+    });
+    // 주간뷰 셀: 드롭 대상
+    c.querySelectorAll('.rs-week-cell[data-cal-date]').forEach(function(cell){
+      cell.addEventListener('dragover', function(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; this.classList.add('dnd-over'); });
+      cell.addEventListener('dragleave', function(e){ if(!this.contains(e.relatedTarget)) this.classList.remove('dnd-over'); });
+      cell.addEventListener('drop', function(e){
+        e.preventDefault(); e.stopPropagation();
+        this.classList.remove('dnd-over');
+        var d = _dndData; if(!d.id) return;
+        var newDate = this.getAttribute('data-cal-date');
+        var newHour = this.getAttribute('data-cal-hour');
+        var newTime = newHour ? String(newHour).padStart(2,'0')+':00' : null;
+        rsDndMove(d, newDate, newTime);
+      });
+    });
+    // 일간뷰 시간 슬롯: 드롭 대상
+    c.querySelectorAll('.rs-day-slot').forEach(function(slot){
+      slot.addEventListener('dragover', function(e){ e.preventDefault(); e.dataTransfer.dropEffect='move'; this.classList.add('dnd-over'); });
+      slot.addEventListener('dragleave', function(e){ if(!this.contains(e.relatedTarget)) this.classList.remove('dnd-over'); });
+      slot.addEventListener('drop', function(e){
+        e.preventDefault(); e.stopPropagation();
+        this.classList.remove('dnd-over');
+        var d = _dndData; if(!d.id) return;
+        var row = this.closest('.rs-day-row');
+        var timeEl = row ? row.querySelector('.rs-day-time') : null;
+        var timeStr = timeEl ? timeEl.textContent.trim() : null;
+        rsDndMove(d, rsState.calDate || d.origDate, timeStr);
+      });
+    });
+    // 월간뷰 이벤트 바 클릭 (data-bk-id)
+    c.querySelectorAll('.rs-cal-bar[data-bk-id]').forEach(function(bar){
+      bar.addEventListener('click', function(e){
+        e.stopPropagation();
+        var bkId = parseInt(this.getAttribute('data-bk-id'));
+        var bk = (rsState.bookings||[]).find(function(x){ return x.id===bkId; });
+        if(bk) rsOpenBkEdit(bk);
+      });
+    });
+    // 월간뷰 일정 바 클릭 (data-sc-id)
+    c.querySelectorAll('.rs-cal-bar[data-sc-id]').forEach(function(bar){
+      bar.addEventListener('click', function(e){
+        e.stopPropagation();
+        var scId = parseInt(this.getAttribute('data-sc-id'));
+        var sc = (rsState.schedules||[]).find(function(x){ return x.id===scId; });
+        if(sc) rsOpenScEdit(sc);
+      });
+    });
+    // 더보기 클릭
+    c.querySelectorAll('.rs-cal-more').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.stopPropagation();
+        var ds = this.getAttribute('data-cal-date'); if(!ds) return;
+        rsShowDayPopup(ds);
+      });
+    });
+    // 연간 뷰: 월 클릭
+    c.querySelectorAll('[data-cal-month]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        if(e.target.closest('[data-cal-date]')) return;
+        rsState.calView='month'; rsState.calMonth=this.getAttribute('data-cal-month'); rsRenderCentral();
+      });
+    });
+
+    // 예약 항목 클릭 → 편집 모달
+    c.querySelectorAll('[data-bk-id]').forEach(function(el){
+      el.addEventListener('click', function(e){
+        e.stopPropagation();
+        var bkId = parseInt(this.getAttribute('data-bk-id'));
+        var bk = (rsState.bookings||[]).find(function(x){ return x.id === bkId; });
+        if(bk) rsOpenBkEdit(bk);
+      });
+    });
 
     // 트리거 enabled 토글
+    // ── 업종 프리셋 (방법 B) ──
+    var genrePresets = {
+      cafe:    { manual: '예약,예약하고싶어,자리예약,테이블예약,방문예약', mood: '카페가고싶다,커피마시고싶다,쉬고싶다,데이트하고싶다', interest: '카페,커피,디저트,베이커리' },
+      beauty:  { manual: '예약,예약하고싶어,시술예약,헤어예약,방문예약', mood: '머리하고싶다,예뻐지고싶다,관리받고싶다,변신하고싶다', interest: '헤어,미용,네일,피부관리' },
+      clinic:  { manual: '예약,진료예약,상담예약,검진예약,방문예약', mood: '몸이불편해,건강체크하고싶다,상담받고싶다,진찰받고싶다', interest: '건강,진료,치료,검진' },
+      consult: { manual: '예약,상담예약,미팅예약,컨설팅예약,방문예약', mood: '고민있어,조언구하고싶다,방향잡고싶다,도움받고싶다', interest: '코칭,컨설팅,상담,멘토링' },
+      studio:  { manual: '예약,수업예약,클래스예약,작업예약,방문예약', mood: '뭔가만들고싶다,배우고싶다,창작하고싶다,힐링하고싶다', interest: '공방,클래스,체험,만들기' },
+      etc:     { manual: '예약,예약하고싶어,방문예약,이용예약,신청', mood: '이용하고싶다,방문하고싶다,써보고싶다,경험하고싶다', interest: '서비스,체험,이용,방문' }
+    };
+    var selectedGenre = null;
+    c.querySelectorAll('.rs-genre-btn').forEach(function(btn) {
+      btn.addEventListener('click', function() {
+        c.querySelectorAll('.rs-genre-btn').forEach(function(b){ b.classList.remove('active'); });
+        btn.classList.add('active');
+        selectedGenre = btn.getAttribute('data-genre');
+        var applyBtn = c.querySelector('#rsGenreApply');
+        if (applyBtn) applyBtn.disabled = false;
+      });
+    });
+    var genreApply = c.querySelector('#rsGenreApply');
+    if (genreApply) genreApply.addEventListener('click', function() {
+      if (!selectedGenre || !genrePresets[selectedGenre]) return;
+      var p = genrePresets[selectedGenre];
+      // 각 트리거 필드에 값 채우기
+      var applyField = function(trigType, fieldName, val) {
+        var el = c.querySelector('[data-trig-field="' + fieldName + '"][data-trig-type="' + trigType + '"]');
+        if (el) { el.value = val; saveTriggerField(trigType, fieldName, val); }
+      };
+      applyField('manual', 'keywords', p.manual);
+      applyField('mood', 'mood_signals', p.mood);
+      applyField('interest', 'interest_tags', p.interest);
+      rsToast('업종 프리셋 적용됨 ✓ — 상단 저장 버튼을 눌러주세요', 'ok');
+    });
+
+    // ── AI 자동 생성 (방법 A) ──
+    var aiGenBtn = c.querySelector('#rsTrigAiGen');
+    var aiResult = c.querySelector('#rsTrigAiResult');
+    if (aiGenBtn) aiGenBtn.addEventListener('click', function() {
+      aiGenBtn.disabled = true;
+      aiGenBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> AI 분석 중...';
+      if (aiResult) aiResult.style.display = 'none';
+      var ctx = rsGetCtx();
+      rsApi('/aimessage/onechat/api/reserve_trigger_ai.php?sms_idx=' + ctx.sms_idx + '&request_idx=' + (ctx.request_idx || 0))
+        .then(function(j) {
+          aiGenBtn.disabled = false;
+          aiGenBtn.innerHTML = '<i class="fas fa-robot"></i> AI 트리거 자동 생성';
+          if (!j.ok) { rsToast('AI 생성 실패: ' + (j.error || '오류'), 'err'); return; }
+          var r = j.result;
+          var info = j.context || {};
+          if (!aiResult) return;
+          aiResult.style.display = 'block';
+          var manKws  = (r.manual_keywords  || []).join(', ');
+          var moodKws = (r.mood_signals     || []).join(', ');
+          var intTags = (r.interest_tags    || []).join(', ');
+          var rt = r.reason_template  || {};
+          var mt = r.message_template || {};
+          aiResult.innerHTML = ''
+            + '<div class="rs-air-head"><i class="fas fa-check-circle"></i> AI 추천 완료'
+            + (info.chatbot_name ? ' · ' + info.chatbot_name : '')
+            + (info.learn_count  ? ' · 학습데이터 ' + info.learn_count + '건 분석' : '')
+            + '</div>'
+            + '<div class="rs-air-row"><span class="rs-air-lbl">수동 키워드</span>'
+            + '<span class="rs-air-val">' + esc(manKws) + '</span>'
+            + '<button type="button" class="rs-air-apply" data-apply-field="keywords" data-apply-type="manual" data-apply-val="' + esc(manKws) + '">적용</button></div>'
+            + '<div class="rs-air-row"><span class="rs-air-lbl">분위기 신호</span>'
+            + '<span class="rs-air-val">' + esc(moodKws) + '</span>'
+            + '<button type="button" class="rs-air-apply" data-apply-field="mood_signals" data-apply-type="mood" data-apply-val="' + esc(moodKws) + '">적용</button></div>'
+            + '<div class="rs-air-row"><span class="rs-air-lbl">관심 태그</span>'
+            + '<span class="rs-air-val">' + esc(intTags) + '</span>'
+            + '<button type="button" class="rs-air-apply" data-apply-field="interest_tags" data-apply-type="interest" data-apply-val="' + esc(intTags) + '">적용</button></div>'
+            + (rt.manual ? '<div class="rs-air-row"><span class="rs-air-lbl">이유 템플릿</span><span class="rs-air-val">' + esc(rt.manual) + '</span><button type="button" class="rs-air-apply" data-apply-field="reason_template" data-apply-type="manual" data-apply-val="' + esc(rt.manual) + '">적용</button></div>' : '')
+            + '<button type="button" class="rs-air-all-btn" id="rsAirApplyAll">모두 적용하기</button>';
+
+          // 개별 적용 버튼
+          aiResult.querySelectorAll('.rs-air-apply').forEach(function(b) {
+            b.addEventListener('click', function() {
+              var ft = b.getAttribute('data-apply-type');
+              var ff = b.getAttribute('data-apply-field');
+              var fv = b.getAttribute('data-apply-val');
+              var el = c.querySelector('[data-trig-field="' + ff + '"][data-trig-type="' + ft + '"]');
+              if (el) { el.value = fv; saveTriggerField(ft, ff, fv); rsToast(ff + ' 적용됨 ✓', 'ok'); }
+              else rsToast('필드를 찾지 못했습니다', 'err');
+            });
+          });
+
+          // 모두 적용 버튼
+          var allBtn = aiResult.querySelector('#rsAirApplyAll');
+          if (allBtn) allBtn.addEventListener('click', function() {
+            var applyF = function(type, field, val) {
+              if (!val) return;
+              var el = c.querySelector('[data-trig-field="' + field + '"][data-trig-type="' + type + '"]');
+              if (el) { el.value = val; saveTriggerField(type, field, val); }
+            };
+            applyF('manual',   'keywords',       manKws);
+            applyF('mood',     'mood_signals',    moodKws);
+            applyF('interest', 'interest_tags',   intTags);
+            if (rt.manual)    applyF('manual',    'reason_template',  rt.manual);
+            if (rt.mood)      applyF('mood',      'reason_template',  rt.mood);
+            if (rt.companion) applyF('companion', 'reason_template',  rt.companion);
+            if (rt.interest)  applyF('interest',  'reason_template',  rt.interest);
+            if (mt.manual)    applyF('manual',    'message_template', mt.manual);
+            if (mt.mood)      applyF('mood',      'message_template', mt.mood);
+            if (mt.companion) applyF('companion', 'message_template', mt.companion);
+            if (mt.interest)  applyF('interest',  'message_template', mt.interest);
+            rsToast('모든 추천값 적용됨 ✓ — 상단 저장 버튼을 눌러주세요', 'ok');
+          });
+        })
+        .catch(function(e) {
+          aiGenBtn.disabled = false;
+          aiGenBtn.innerHTML = '<i class="fas fa-robot"></i> AI 트리거 자동 생성';
+          rsToast('네트워크 오류: ' + e.message, 'err');
+        });
+    });
+
     c.querySelectorAll('.rs-sw[data-trig-enabled]').forEach(function(sw){
       sw.addEventListener('click', function(){
         sw.classList.toggle('on');
@@ -5281,10 +6226,34 @@ document.addEventListener('DOMContentLoaded', function () {
     });
   }
 
-  function shiftMonth(diff) {
-    var [y, m] = rsState.calMonth.split('-').map(Number);
-    var d = new Date(y, m-1+diff, 1);
-    rsState.calMonth = d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0');
+  // 타임존 안전 날짜 문자열 (로컬 시간 기준)
+  function rsDateStr(d) {
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function shiftMonth(diff) { shiftCalPeriod(diff); }
+  function shiftCalPeriod(dir) {
+    var view = rsState.calView || 'month';
+    var now = new Date();
+    if (!rsState.calMonth) rsState.calMonth = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+    if (view === 'month') {
+      var ym=rsState.calMonth.split('-').map(Number), nd=new Date(ym[0],ym[1]-1+dir,1);
+      rsState.calMonth=nd.getFullYear()+'-'+String(nd.getMonth()+1).padStart(2,'0');
+    } else if (view === 'week') {
+      var ym2=rsState.calDate?rsState.calDate.split('-').map(Number):[now.getFullYear(),now.getMonth()+1,now.getDate()];
+      var base=new Date(ym2[0],ym2[1]-1,ym2[2]);
+      base.setDate(base.getDate()+dir*7);
+      rsState.calDate=rsDateStr(base);
+      rsState.calMonth=rsState.calDate.slice(0,7);
+    } else if (view === 'day') {
+      var ym3=rsState.calDate?rsState.calDate.split('-').map(Number):[now.getFullYear(),now.getMonth()+1,now.getDate()];
+      var base2=new Date(ym3[0],ym3[1]-1,ym3[2]);
+      base2.setDate(base2.getDate()+dir);
+      rsState.calDate=rsDateStr(base2);
+      rsState.calMonth=rsState.calDate.slice(0,7);
+    } else if (view === 'year') {
+      var y2=parseInt(rsState.calMonth.split('-')[0]);
+      rsState.calMonth=(y2+dir)+'-'+rsState.calMonth.slice(5);
+    }
     rsRenderCentral();
   }
 
@@ -5357,6 +6326,53 @@ document.addEventListener('DOMContentLoaded', function () {
     _doSaveConfig(null, true);
   }
 
+  // 챗봇에 적용 버튼 핸들러
+  function rsApplyToBot() {
+    var ctx = rsGetCtx();
+    if (!ctx.sms_idx) { rsToast('설정을 먼저 불러와주세요.', 'err'); return; }
+    var btn = document.getElementById('reserveApplyBtn');
+    if (btn) { btn.disabled = true; btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> 적용 중...'; }
+    rsApi('/aimessage/onechat/api/reserve_apply.php', {
+      method: 'POST',
+      body: { sms_idx: ctx.sms_idx, request_idx: ctx.request_idx || 0 }
+    }).then(function(j) {
+      if (j.ok) {
+        rsToast(j.message || '챗봇에 적용됐습니다 ✓', 'ok');
+        if (btn) {
+          btn.innerHTML = '<i class="fas fa-check-circle"></i> 적용됨';
+          btn.classList.add('applied');
+          btn.disabled = false;
+        }
+        rsUpdateApplyStatus(true);
+        if (j.prompt_changed && j.removed_phrases && j.removed_phrases.length > 0) {
+          setTimeout(function(){
+            rsToast('네이버 예약 문구 자동 교체 완료 ✓', 'ok');
+          }, 1500);
+        }
+      } else {
+        rsToast((j.error || '적용 실패'), 'err');
+        if (btn) { btn.innerHTML = '<i class="fas fa-robot"></i> 챗봇에 적용'; btn.disabled = false; }
+      }
+    }).catch(function(e) {
+      rsToast('네트워크 오류: ' + e.message, 'err');
+      if (btn) { btn.innerHTML = '<i class="fas fa-robot"></i> 챗봇에 적용'; btn.disabled = false; }
+    });
+  }
+
+  // 적용 상태 배지 업데이트
+  function rsUpdateApplyStatus(applied) {
+    var el = document.getElementById('rsApplyStatus');
+    if (!el) return;
+    var btn = document.getElementById('reserveApplyBtn');
+    if (applied) {
+      el.className = 'on'; el.innerHTML = '<i class="fas fa-circle" style="font-size:7px"></i> 챗봇 적용됨';
+      if (btn) { btn.classList.add('applied'); btn.innerHTML = '<i class="fas fa-check-circle"></i> 적용됨'; }
+    } else {
+      el.className = 'off'; el.innerHTML = '<i class="fas fa-circle" style="font-size:7px"></i> 미적용';
+      if (btn) { btn.classList.remove('applied'); btn.innerHTML = '<i class="fas fa-robot"></i> 챗봇에 적용'; }
+    }
+  }
+
   function saveTriggerField(type, field, val) {
     var ctx = rsGetCtx();
     if (!ctx.sms_idx) return;
@@ -5374,23 +6390,61 @@ document.addEventListener('DOMContentLoaded', function () {
     }, 400);
   }
 
-  function addBlackout() {
-    var label  = prompt('제외시간 이름 (예: 점심시간, 휴무)', '점심시간');
-    if (!label) return;
-    var kind = 'weekly';
-    var weekday = parseInt(prompt('요일 (0=일~6=토)','1'),10);
-    if (isNaN(weekday)||weekday<0||weekday>6) return;
-    var tf = prompt('시작 (HH:MM)','12:00');
-    var tt = prompt('종료 (HH:MM)','13:00');
-    if (!tf || !tt) return;
+  function openBoForm() {
+    var form = document.getElementById('rsBoForm');
+    var addBtn = document.getElementById('rsAddBo');
+    if (!form) return;
+    form.style.display = 'block';
+    if (addBtn) addBtn.style.display = 'none';
+    var fromSel = form.querySelector('#rsBoFrom');
+    var toSel   = form.querySelector('#rsBoTo');
+    if (fromSel) fromSel.value = '12:00';
+    if (toSel)   toSel.value   = '13:00';
+    form.querySelectorAll('#rsBoWeekdays .rs-day').forEach(function(d){ d.classList.remove('on'); });
+    var mon = form.querySelector('#rsBoWeekdays [data-d="1"]');
+    if (mon) mon.classList.add('on');
+    form.querySelectorAll('.rs-bf-preset').forEach(function(b){ b.classList.remove('active'); });
+    var first = form.querySelector('.rs-bf-preset');
+    if (first) first.classList.add('active');
+    var ci = form.querySelector('.rs-bf-custom-inp');
+    if (ci) { ci.style.display='none'; ci.value=''; }
+  }
+  function closeBoForm() {
+    var form = document.getElementById('rsBoForm');
+    var addBtn = document.getElementById('rsAddBo');
+    if (form) form.style.display = 'none';
+    if (addBtn) addBtn.style.display = 'block';
+  }
+  function submitBoForm() {
+    var form = document.getElementById('rsBoForm');
+    if (!form) return;
+    var ap = form.querySelector('.rs-bf-preset.active');
+    var label = '';
+    if (ap && ap.getAttribute('data-preset') === '__custom') {
+      label = (form.querySelector('#rsBoCustomLabel').value||'').trim();
+      if (!label) { rsToast('이름을 입력해주세요','err'); return; }
+    } else if (ap) { label = ap.getAttribute('data-preset'); }
+    if (!label) { rsToast('이름을 선택해주세요','err'); return; }
+    var days = [];
+    form.querySelectorAll('#rsBoWeekdays .rs-day.on').forEach(function(d){
+      days.push(parseInt(d.getAttribute('data-d'),10));
+    });
+    if (days.length===0) { rsToast('요일을 하나 이상 선택해주세요','err'); return; }
+    var tf = form.querySelector('#rsBoFrom').value;
+    var tt = form.querySelector('#rsBoTo').value;
+    if (tf>=tt) { rsToast('종료시간은 시작시간보다 늦어야 합니다','err'); return; }
     var ctx = rsGetCtx();
-    rsApi('/aimessage/onechat/api/reserve_blackout.php', {method:'POST', body:{
-      sms_idx: ctx.sms_idx, request_idx: ctx.request_idx || 0,
-      label: label, kind: kind, weekday: weekday,
-      time_from: tf+':00', time_to: tt+':00'
-    }}).then(function(j){
-      if (j.ok) { rsToast('제외시간 추가됨 ✓','ok'); rsLoadAll(); }
-      else rsToast('추가 실패: '+(typeof j.error==='string'?j.error:(j.error&&j.error.message)||'unknown'),'err');
+    var promises = days.map(function(wd){
+      return rsApi('/aimessage/onechat/api/reserve_blackout.php', {method:'POST', body:{
+        sms_idx:ctx.sms_idx, request_idx:ctx.request_idx||0,
+        label:label, kind:'weekly', weekday:wd,
+        time_from:tf+':00', time_to:tt+':00'
+      }});
+    });
+    Promise.all(promises).then(function(results){
+      var fails = results.filter(function(j){ return !j.ok; });
+      if (fails.length===0) { rsToast('제외시간 '+days.length+'개 추가됨 ✓','ok'); closeBoForm(); rsLoadAll(); }
+      else { rsToast('일부 추가 실패','err'); rsLoadAll(); }
     }).catch(function(e){ rsToast('네트워크 오류: '+e.message,'err'); });
   }
 
@@ -5417,6 +6471,9 @@ document.addEventListener('DOMContentLoaded', function () {
     // saveBtn: 전체 설정을 한번에 저장
     var sv = document.getElementById('reserveSaveBtn');
     if (sv) sv.addEventListener('click', function(){ rsSaveFullConfig(); });
+    // 챗봇에 적용 버튼
+    var applyBtnEl = document.getElementById('reserveApplyBtn');
+    if (applyBtnEl) applyBtnEl.addEventListener('click', function(){ rsApplyToBot(); });
     // 해시 라우팅
     if (location.hash === '#reserve') setTimeout(openReservePanel, 300);
   });

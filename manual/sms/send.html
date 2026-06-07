@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>문자 발송하기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link active">문자 발송하기</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 문자 발송하기</nav>
+    <h1 class="page-title">📤 문자 발송하기</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#access">발송 화면 접속</a></li>
+        <li><a href="#recipient">수신자 입력</a></li>
+        <li><a href="#message">메시지 작성</a></li>
+        <li><a href="#channel">발송 채널 선택</a></li>
+        <li><a href="#schedule">예약 발송</a></li>
+        <li><a href="#send">발송 실행</a></li>
+        <li><a href="#chatbot">챗봇 링크 삽입</a></li>
+      </ul>
+    </div>
+    <section id="access">
+      <h2>발송 화면 접속</h2>
+      <p><a href="https://kiam.kr/sub_6.php" target="_blank">https://kiam.kr/sub_6.php</a> 로 접속하거나 상단 메뉴 → <strong>문자발송</strong>을 클릭합니다.</p>
+      <div class="notice-box">준비사항: ① 발신번호 등록 완료 ② 캐시포인트 충전 ③ 수신자 명단(CSV/엑셀)</div>
+    </section>
+    <section id="recipient">
+      <h2>수신자 입력</h2>
+      <h3>방법 1 — 직접 입력</h3>
+      <p>수신번호 입력창에 번호를 하나씩 입력합니다. 줄바꿈(Enter)으로 여러 번호를 구분합니다.</p>
+      <h3>방법 2 — 파일 업로드 (대량 발송)</h3>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">CSV 파일 준비: 열 순서 = <code>이름, 전화번호</code> (헤더 포함)</div></li>
+        <li><div class="step-num">2</div><div class="step-body">[수신자 파일 업로드] 버튼 클릭 → CSV 파일 선택</div></li>
+        <li><div class="step-num">3</div><div class="step-body">미리보기에서 이름·번호 확인 → 오류 수정</div></li>
+      </ol>
+      <table class="m-table">
+        <thead><tr><th>지원 파일 형식</th><th>최대 행 수</th><th>인코딩</th></tr></thead>
+        <tbody>
+          <tr><td>CSV (.csv)</td><td>50,000건</td><td>UTF-8 또는 EUC-KR</td></tr>
+          <tr><td>Excel (.xlsx)</td><td>30,000건</td><td>—</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="message">
+      <h2>메시지 작성</h2>
+      <ul class="m-list">
+        <li><strong>제목</strong>(선택): LMS/MMS에서 표시됩니다.</li>
+        <li><strong>본문</strong>: 직접 입력 또는 템플릿 불러오기</li>
+        <li><strong>변수 사용</strong>: <code>#{이름}</code> 입력 시 수신자 이름으로 자동 치환됩니다.</li>
+        <li><strong>이미지 첨부</strong>(MMS): JPG/PNG, 최대 300KB, 최대 3장</li>
+      </ul>
+      <div class="info-box">
+        <strong>💡 팁</strong>: 90바이트 이하면 SMS(0.7원), 초과하면 자동으로 LMS(2.5원)로 전환됩니다. 글자 수 카운터를 확인하세요.
+      </div>
+    </section>
+    <section id="channel">
+      <h2>발송 채널 선택</h2>
+      <table class="m-table">
+        <thead><tr><th>채널</th><th>언제 사용</th><th>비용</th></tr></thead>
+        <tbody>
+          <tr><td>SMS 자동</td><td>90바이트 이하 단문</td><td>0.7원</td></tr>
+          <tr><td>LMS 강제</td><td>장문·링크 포함 시</td><td>2.5원</td></tr>
+          <tr><td>MMS</td><td>이미지 포함 시</td><td>15원</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="schedule">
+      <h2>예약 발송</h2>
+      <p>[예약 발송] 체크박스를 활성화하면 날짜·시간을 지정해 나중에 자동 발송할 수 있습니다.</p>
+      <ul class="m-list">
+        <li>최소 10분 이후로 예약 가능</li>
+        <li>예약 취소는 발송 2분 전까지 가능</li>
+        <li>예약 문자 목록: <a href="https://kiam.kr/mypage_reservation_list.php" target="_blank">예약 문자 관리</a></li>
+      </ul>
+    </section>
+    <section id="send">
+      <h2>발송 실행</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">발신번호 선택 (등록된 번호 중 선택)</div></li>
+        <li><div class="step-num">2</div><div class="step-body">발송 미리보기 확인 (수신자 수, 총 예상 비용)</div></li>
+        <li><div class="step-num">3</div><div class="step-body">[발송하기] 버튼 클릭 → 포인트 차감 후 즉시 발송</div></li>
+      </ol>
+      <div class="notice-box"><strong>⚠️ 주의</strong>: 발송 후 취소/환불이 불가합니다. 수신자 명단과 메시지 내용을 반드시 확인하세요.</div>
+    </section>
+    <section id="chatbot">
+      <h2>챗봇 링크 삽입 (퍼널 마케팅 연동)</h2>
+      <p>문자 본문에 챗봇 링크를 삽입하면, 링크를 클릭한 고객이 <strong>원챗 수신탭에 자동 등록</strong>됩니다.</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">원챗 → 프로필 설정에서 내 챗봇 링크 복사 (<code>https://chatbot.kiam.kr/s/내아이디</code>)</div></li>
+        <li><div class="step-num">2</div><div class="step-body">메시지 본문에 링크 붙여넣기</div></li>
+        <li><div class="step-num">3</div><div class="step-body">링크 클릭 고객 → 원챗 퍼널 자동 등록 → AI 챗봇 자동 응답 시작</div></li>
+      </ol>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/sms/register.html" class="btn-prev">← 발신번호 등록</a>
+      <a href="/manual/sms/history.html" class="btn-next">발송 내역 확인 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">발송 화면 접속</a></li>
+      <li><a href="#recipient">수신자 입력</a></li>
+      <li><a href="#message">메시지 작성</a></li>
+      <li><a href="#channel">발송 채널 선택</a></li>
+      <li><a href="#schedule">예약 발송</a></li>
+      <li><a href="#send">발송 실행</a></li>
+      <li><a href="#chatbot">챗봇 링크 삽입</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 & 통계 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">대시보드 & 통계</div>
+      <a href="/manual/dashboard/" class="sb-link active">📊 대시보드 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">통계 분석</div>
+      <a href="/manual/dashboard/#chatbot-stats" class="sb-link">챗봇 방문 통계</a>
+      <a href="/manual/dashboard/#message-stats" class="sb-link">메시지 발송 통계</a>
+      <a href="/manual/dashboard/#funnel-stats" class="sb-link">퍼널 전환 통계</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 매뉴얼</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">원챗 대시보드</a>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <span>대시보드 &amp; 통계</span>
+    </div>
+
+    <h1>📊 대시보드 &amp; 통계</h1>
+    <p class="page-desc">kiam.kr 플랫폼 전체의 활동 현황을 한눈에 파악합니다. 챗봇 방문·대화·메시지 발송·퍼널 전환 데이터를 실시간으로 확인하세요.</p>
+
+    <h2 id="overview">대시보드 개요</h2>
+    <p>kiam.kr 대시보드는 두 가지 영역으로 구성됩니다.</p>
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">원챗 대시보드</div>
+        <div class="td">챗봇 방문자 수, 대화 수, AI 응답률, 수신·발신 탭 통계를 원챗 내에서 확인</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📱</span>
+        <div class="tn">폰문자 발송 통계</div>
+        <div class="td">AI 메시지·폰문자 발송 건수, 성공·실패, 수신여부, 링크 클릭 현황</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📇</span>
+        <div class="tn">명함 통계</div>
+        <div class="td">명함 조회 수, QR코드 스캔 수, 챗봇 링크 클릭 전환율</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💳</span>
+        <div class="tn">포인트 내역</div>
+        <div class="td">서비스별 포인트 소비 내역, 잔여 포인트, 충전 이력</div>
+      </div>
+    </div>
+
+    <h2 id="chatbot-stats">챗봇 방문 통계</h2>
+    <p>원챗 대시보드에서 챗봇으로 방문한 방문자 데이터를 확인합니다.</p>
+    <span class="step-url">https://kiam.kr/aimessage/onechat/ → 대시보드 탭</span>
+
+    <table class="m-table" style="margin-top:16px;">
+      <thead><tr><th>지표</th><th>설명</th><th>활용 방법</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>총 방문자 수</strong></td>
+          <td>챗봇 링크에 접속한 고유 방문자 수</td>
+          <td>마케팅 채널별 유입 효과 비교</td>
+        </tr>
+        <tr>
+          <td><strong>대화 시작 수</strong></td>
+          <td>실제로 AI와 대화를 시작한 방문자 수</td>
+          <td>챗봇 첫인상·프롬프트 품질 평가</td>
+        </tr>
+        <tr>
+          <td><strong>대화 전환율</strong></td>
+          <td>방문자 중 대화를 시작한 비율</td>
+          <td>챗봇 소개 문구·UI 개선 지표</td>
+        </tr>
+        <tr>
+          <td><strong>DM 전환 수</strong></td>
+          <td>AI 대화 후 DM(1:1 채팅)으로 전환된 수</td>
+          <td>고관심 리드 파악</td>
+        </tr>
+        <tr>
+          <td><strong>평균 대화 길이</strong></td>
+          <td>방문자 1인당 평균 주고받은 메시지 수</td>
+          <td>AI 응답 품질·관심도 측정</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="tip">
+      💡 <strong>원챗 대시보드 상세 보기</strong><br>
+      원챗 내 대시보드 탭에서 기간별(오늘/이번주/이번달/전체) 필터로 더 세밀한 통계를 확인할 수 있습니다.
+      <a href="/manual/onechat/dashboard.html" style="color:var(--brand);">→ 원챗 대시보드 매뉴얼</a>
+    </div>
+
+    <h2 id="message-stats">메시지 발송 통계</h2>
+    <p>폰문자·AI 메시지 발송 결과를 확인합니다.</p>
+    <span class="step-url">https://kiam.kr/sub_4.php (수신내역) / sub_4_return_.php (발신내역)</span>
+
+    <table class="m-table" style="margin-top:16px;">
+      <thead><tr><th>메뉴</th><th>확인 내용</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>발신내역</strong></td>
+          <td>발송 일시, 수신자 수, 발송 성공/실패 건수, 사용 포인트</td>
+        </tr>
+        <tr>
+          <td><strong>수신내역</strong></td>
+          <td>각 수신자별 수신 여부, 수신 시각</td>
+        </tr>
+        <tr>
+          <td><strong>수신여부</strong></td>
+          <td>특정 번호의 수신 확인 여부 조회</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="funnel-stats">퍼널 전환 통계</h2>
+    <p>AI 메시지 6단계 퍼널 중 어느 단계에서 방문자가 챗봇에 유입되는지 파악합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>단계</th><th>확인 지표</th></tr></thead>
+      <tbody>
+        <tr><td>1단계 Hook 발송</td><td>발송 수, 링크 클릭 수, 챗봇 방문 전환율</td></tr>
+        <tr><td>2~4단계 발송</td><td>각 단계별 발송 수, 이전 단계 대비 재참여율</td></tr>
+        <tr><td>DM 전환</td><td>AI 대화 후 DM(1:1)으로 전환된 리드 수</td></tr>
+        <tr><td>최종 성과</td><td>6단계 완료 후 실제 상담·구매·신청으로 이어진 건수</td></tr>
+      </tbody>
+    </table>
+    <div class="notice">
+      📌 <strong>퍼널 통계 확인 위치</strong><br>
+      원챗 → 발신 탭에서 각 방문자가 어느 퍼널 단계를 통해 유입되었는지 카드별로 확인할 수 있습니다.
+      <a href="/manual/onechat/funnel.html" style="color:var(--brand);">→ 원챗 발신탭 매뉴얼</a>
+    </div>
+
+    <h2 id="namecard-stats">명함 방문 통계</h2>
+    <p>내 IAM 명함이 얼마나 조회되고 있는지 확인합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>지표</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>명함 조회 수</strong></td><td>내 명함 URL에 접속한 총 횟수</td></tr>
+        <tr><td><strong>QR 스캔 수</strong></td><td>QR코드를 통한 접속 횟수</td></tr>
+        <tr><td><strong>챗봇 클릭 수</strong></td><td>명함에서 AI 챗봇 링크를 클릭한 횟수</td></tr>
+        <tr><td><strong>연락처 클릭</strong></td><td>전화·이메일·SNS 링크 클릭 횟수</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="point-history">포인트 이용 내역</h2>
+    <p>서비스별로 소비된 포인트를 항목별로 확인합니다.</p>
+    <span class="step-url">https://kiam.kr/m/iam_mypage.php (IAM 만들기 결제/이용내역)</span>
+    <table class="m-table" style="margin-top:16px;">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>일시</td><td>서비스 이용 날짜 및 시간</td></tr>
+        <tr><td>활동</td><td>어떤 서비스를 이용했는지 (예: AI 메시지 생성, SMS 발송)</td></tr>
+        <tr><td>분야</td><td>서비스 분류 (원챗 / AI 메시지 / 명함 등)</td></tr>
+        <tr><td>차감 포인트</td><td>해당 이용 건에서 차감된 포인트</td></tr>
+        <tr><td>잔여 포인트</td><td>이용 후 남은 캐시포인트 잔액</td></tr>
+      </tbody>
+    </table>
+    <div class="warn">
+      ⚠️ <strong>환불 정책 주의</strong><br>
+      잔여 캐시포인트 환불 요청 시, 서비스 이용 건수에서 할인 받은 금액을 차감한 후 지급합니다. AI 콘텐츠 생성·발송 완료 건은 환불되지 않습니다.
+    </div>
+
+    <h2 id="tips">데이터 활용 팁</h2>
+    <div class="tip">
+      💡 <strong>주간 점검 루틴 추천</strong><br>
+      • 매주 월요일: 원챗 대시보드에서 지난주 방문자·대화 수 확인<br>
+      • AI 대화 전환율이 낮으면: 챗봇 소개 문구 및 프롬프트 수정<br>
+      • DM 전환이 적으면: 원챗 AI 동행 설정 점검<br>
+      • 메시지 클릭률이 낮으면: Hook 단계 프롬프트 및 내용 개선
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aimessage/send.html"><span class="nav-label">← 이전</span><span class="nav-title">메시지 발송하기</span></a>
+      <a href="/manual/" class="next"><span class="nav-label">↑ 홈</span><span class="nav-title">전체 매뉴얼 홈</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#overview">대시보드 개요</a></li>
+      <li><a href="#chatbot-stats">챗봇 방문 통계</a></li>
+      <li><a href="#message-stats">메시지 발송 통계</a></li>
+      <li><a href="#funnel-stats">퍼널 전환 통계</a></li>
+      <li><a href="#namecard-stats">명함 방문 통계</a></li>
+      <li><a href="#point-history">포인트 이용 내역</a></li>
+      <li><a href="#tips">데이터 활용 팁</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데일리문자 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원퍼널문자</div>
+      <a href="/manual/funnel/" class="sb-link">🔀 원퍼널문자 소개</a>
+      <a href="/manual/funnel/daily-intro.html" class="sb-link active">📅 데일리문자 소개</a>
+      <a href="/manual/funnel/landing.html" class="sb-link">🖼️ 인포랜딩페이지</a>
+      <a href="/manual/funnel/apply-page.html" class="sb-link">📋 이벤트신청페이지</a>
+      <a href="/manual/funnel/ai-design.html" class="sb-link">🤖 AI 퍼널 설계</a>
+      <a href="/manual/funnel/customer.html" class="sb-link">👥 신청 고객 관리</a>
+      <a href="/manual/funnel/old-customer.html" class="sb-link">📁 기존 고객 관리</a>
+      <a href="/manual/funnel/schedule.html" class="sb-link">📆 발송 예정 내역</a>
+      <a href="/manual/funnel/result.html" class="sb-link">📊 발송 결과 내역</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/funnel/">원퍼널문자</a> › 데일리문자 소개</nav>
+    <h1 class="page-title">📅 데일리문자 소개</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">데일리문자란?</a></li>
+        <li><a href="#why">활용 이유</a></li>
+        <li><a href="#structure">활용 구조</a></li>
+        <li><a href="#features">주요 기능</a></li>
+        <li><a href="#how">사용 방법</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>데일리문자란?</h2>
+      <p><strong>데일리문자</strong>는 <strong>주소록(DB)을 일정 분량으로 나누어 매일 자동 발송</strong>하는 IAM의 문자 자동화 솔루션입니다.</p>
+      <p style="margin-top:10px;">한 번의 큰 홍보보다 <strong>매일의 작은 연결이 더 오래 갑니다.</strong> 기존 고객을 꾸준히 관리하면서 비용은 최소화할 수 있습니다.</p>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📱 무료문자 활용 가능</strong>: 휴대폰 주소록과 엑셀 주소록 모두 활용할 수 있으며, 온리원문자 앱의 <strong>무료 발송 건수</strong>를 최대한 활용하여 문자 비용을 절감합니다.
+      </div>
+    </section>
+
+    <section id="why">
+      <h2>활용 이유</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">💰</div>
+          <div class="fc-title">비용 절감</div>
+          <div class="fc-desc">하루 무료 발송 건수 한도 내에서 매일 발송해 전체 문자 비용을 최소화합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📅</div>
+          <div class="fc-title">꾸준한 접촉</div>
+          <div class="fc-desc">한 번에 대량 발송보다 매일 소량 발송이 고객과의 관계 유지에 더 효과적입니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">👥</div>
+          <div class="fc-title">기존 고객 관리</div>
+          <div class="fc-desc">신규 유입이 없어도 기존 DB를 활용해 지속적인 마케팅을 자동으로 진행합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📱</div>
+          <div class="fc-title">주소록 활용</div>
+          <div class="fc-desc">휴대폰 연락처와 엑셀 주소록을 모두 활용할 수 있습니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="structure">
+      <h2>활용 구조</h2>
+      <table>
+        <thead><tr><th>항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>주소록 등록</td><td>휴대폰 주소록 또는 엑셀(.xls) 업로드</td></tr>
+          <tr><td>일 발송량 설정</td><td>하루에 몇 건씩 발송할지 수량 지정</td></tr>
+          <tr><td>발송 기간</td><td>시작일~마감일 설정, 자동으로 나눠 발송</td></tr>
+          <tr><td>메시지 세트</td><td>날짜별로 다른 메시지 등록 가능</td></tr>
+          <tr><td>퍼널 연결</td><td>문자 내 챗봇 링크로 원챗 퍼널 자동 연결</td></tr>
+          <tr><td>발송 결과</td><td>daily_list.php에서 전체 발송 현황 확인</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="features">
+      <h2>주요 기능</h2>
+      <ul class="feature-list">
+        <li><strong>데일리 세트리스트</strong> — 등록된 데일리 발송 그룹 전체 목록 조회</li>
+        <li><strong>메시지 세트 등록</strong> — 각 날짜별 발송 메시지 내용 저장·관리</li>
+        <li><strong>발신내역 확인</strong> — 날짜별 실제 발송 결과 추적</li>
+        <li><strong>자동 분할 발송</strong> — 전체 주소록을 발송 일수로 자동 균등 분배</li>
+        <li><strong>발송 중단/재개</strong> — 필요 시 특정 세트 일시 중단 가능</li>
+      </ul>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📌 데일리발송 접속 경로</strong><br>
+        kiam.kr 로그인 → 상단 메뉴 → <strong>데일리발송</strong> (<a href="https://kiam.kr/daily_list.php" target="_blank">https://kiam.kr/daily_list.php</a>)
+      </div>
+    </section>
+
+    <section id="how">
+      <h2>사용 방법</h2>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>데일리발송 메뉴 접속</strong>
+            <p><a href="https://kiam.kr/daily_list.php" target="_blank">https://kiam.kr/daily_list.php</a> 접속</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>새 세트 등록</strong>
+            <p>[메시지세트 등록하기] 버튼 클릭 → 제목, 발송폰번호, 주소록 선택</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>발송 설정</strong>
+            <p>일발송량, 발송시작일, 발송마감일 입력 → 저장</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>발송 시작</strong>
+            <p>설정 완료 후 매일 자정 이후 자동으로 지정 수량 발송 시작</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">5</div>
+          <div class="step-body">
+            <strong>결과 확인</strong>
+            <p>세트리스트에서 발신내역 클릭 → 날짜별 발송 결과 확인</p>
+          </div>
+        </div>
+      </div>
+      <table style="margin-top:20px;">
+        <thead><tr><th>표시 항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>메시지제목</td><td>등록 시 입력한 세트 이름</td></tr>
+          <tr><td>발송폰번호</td><td>발송에 사용하는 등록된 폰번호</td></tr>
+          <tr><td>주소록이름</td><td>연결된 주소록 그룹명</td></tr>
+          <tr><td>주소건수</td><td>전체 수신 대상 수</td></tr>
+          <tr><td>발송일수</td><td>총 발송 예정 일수</td></tr>
+          <tr><td>일발송량</td><td>하루 발송 건수</td></tr>
+          <tr><td>발송시작일</td><td>자동 발송 시작 날짜</td></tr>
+          <tr><td>발송마감일</td><td>자동 발송 종료 날짜</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <div class="page-nav">
+      <a href="/manual/funnel/" class="btn-prev">← 원퍼널문자 소개</a>
+      <a href="/manual/funnel/landing.html" class="btn-next">인포랜딩페이지 →</a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul>
+      <li><a href="#what">데일리문자란?</a></li>
+      <li><a href="#why">활용 이유</a></li>
+      <li><a href="#structure">활용 구조</a></li>
+      <li><a href="#features">주요 기능</a></li>
+      <li><a href="#how">사용 방법</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

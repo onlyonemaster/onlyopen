@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>HI 공지발송 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link active">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>HI 공지발송</span>
+    </div>
+
+    <h1>📢 HI 공지발송</h1>
+    <p class="page-desc">챗봇을 통해 퍼널·공유 수신자 전체에게 운영자 공지 메시지를 일괄 발송합니다. SMS 비용 없이 무제한으로 발송할 수 있는 강력한 마케팅 도구입니다.</p>
+
+    <h2 id="what">HI 공지발송이란?</h2>
+    <p>챗봇 링크를 한 번이라도 클릭한 수신자는 이후 챗봇을 통해 계속 메시지를 받을 수 있습니다. <strong>HI 공지발송</strong>은 이 원리를 이용해 운영자가 원하는 시점에 등록된 수신자 전체 또는 일부에게 공지 메시지를 일괄로 보내는 기능입니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">📨</span>
+        <div class="tn">문자 1회 → 무제한 발송</div>
+        <div class="td">최초 챗봇 링크 문자 1회로 이후 모든 공지는 챗봇으로 무료 발송</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🎯</span>
+        <div class="tn">3가지 발송 대상</div>
+        <div class="td">전체 / 퍼널(명함 수신자) / 공유(링크 방문자) 중 선택 발송</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">👁️</span>
+        <div class="tn">읽음·응답 통계</div>
+        <div class="td">발송 후 읽은 사람, 응답한 사람을 실시간으로 확인</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔍</span>
+        <div class="tn">필터 발송</div>
+        <div class="td">이름·연락처로 특정 대상만 골라서 발송 가능</div>
+      </div>
+    </div>
+
+    <h2 id="concept">발송 대상 구분</h2>
+    <p>수신자는 챗봇 링크를 받은 경로에 따라 두 가지로 구분됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>구분</th><th>대상</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>퍼널(Funnel)</strong></td>
+          <td>명함 문자(SMS)로 챗봇 링크를 받은 수신자</td>
+          <td>이름·연락처 정보가 등록되어 있음</td>
+        </tr>
+        <tr>
+          <td><strong>공유(Shared)</strong></td>
+          <td>카카오톡·SNS·QR 등으로 공유 링크를 클릭한 방문자</td>
+          <td>익명으로 시작하며 전화번호 인증 후 식별 가능</td>
+        </tr>
+        <tr>
+          <td><strong>전체</strong></td>
+          <td>퍼널 + 공유 전체</td>
+          <td>모든 챗봇 수신자에게 동시 발송</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>마케팅의 끝판왕</strong><br>
+      명함 문자를 한 번만 보내면 그 이후 신제품 출시, 이벤트 안내, 프로모션 공지를 모두 챗봇으로 무료 발송할 수 있습니다. 오픈 카카오톡 채널과 유사하지만 내 AI 아바타가 답변까지 해준다는 점이 다릅니다.
+    </div>
+
+    <h2 id="how">사용 방법</h2>
+
+    <h3 id="open">공지발송 패널 열기</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">우측 상단 아바타 아이콘을 클릭합니다</div>
+          <div class="step-desc">원챗 화면 오른쪽 위에 있는 내 아바타 사진을 클릭하면 드롭다운 메뉴가 나타납니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">메뉴에서 <strong>HI 공지발송</strong>을 선택합니다</div>
+          <div class="step-desc">📢 HI 공지발송 항목을 클릭하면 발송 타입 선택 화면이 올라옵니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">발송 타입을 선택합니다</div>
+          <div class="step-desc">
+            <table class="m-table" style="margin-top:8px;">
+              <tbody>
+                <tr><td>📢 전체 발송</td><td>퍼널 + 공유 수신자 모두에게 발송</td></tr>
+                <tr><td>🔵 퍼널 발송</td><td>명함 SMS 수신자에게만 발송</td></tr>
+                <tr><td>🟣 공유 발송</td><td>챗봇 공유 링크 방문자에게만 발송</td></tr>
+                <tr><td>📊 발송 이력</td><td>과거 발송 내역 및 통계 조회</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="compose">메시지 작성 및 발송</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">발송 대상 수를 확인합니다</div>
+          <div class="step-desc">패널 상단에 현재 퍼널 N명 / 공유 N명 / 합계 N명이 자동으로 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">(선택) 이름·연락처로 특정 대상만 필터링합니다</div>
+          <div class="step-desc">검색창에 이름이나 연락처를 입력하면 대상이 자동으로 필터링되고, 발송 인원 수도 갱신됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">공지 제목을 입력합니다 (선택사항)</div>
+          <div class="step-desc">제목을 입력하지 않아도 발송 가능하지만, 이력 목록에서 구분하기 쉬우므로 입력을 권장합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">메시지 내용을 입력합니다</div>
+          <div class="step-desc">입력하는 즉시 아래 미리보기 영역에 실제 수신자에게 표시되는 모습이 보라색 공지 카드로 미리 보여집니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title"><strong>📢 발송 N명</strong> 버튼을 눌러 발송합니다</div>
+          <div class="step-desc">확인창에서 "확인"을 누르면 즉시 발송됩니다. 발송 완료 후 몇 명에게 전달됐는지 토스트 알림이 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>수신자 화면에서는 어떻게 보일까요?</strong><br>
+      수신자가 챗봇을 열면 채팅 내역 사이에 <strong>보라색 "운영자 공지" 카드</strong>가 표시됩니다. 카드에는 공지 아이콘(📢), "운영자 공지" 표시, NOTICE 배지, 그리고 메시지 내용이 담겨 있습니다. 수신자는 챗봇으로 바로 답장을 남길 수 있습니다.
+    </div>
+
+    <h2 id="history">발송 이력 확인</h2>
+    <p>HI 공지발송 → <strong>발송 이력</strong>을 선택하면 그동안 보낸 모든 공지 목록이 표시됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>전체/퍼널/공유 배지</td><td>해당 공지의 발송 대상 타입</td></tr>
+        <tr><td>발송 일시</td><td>공지를 보낸 날짜와 시간</td></tr>
+        <tr><td>제목 / 메시지 미리보기</td><td>공지 내용 요약</td></tr>
+        <tr><td>📨 발송 N명</td><td>총 발송 수신자 수</td></tr>
+        <tr><td>👁 읽음 N명(%)</td><td>공지를 읽은 수신자 수와 읽음률</td></tr>
+        <tr><td>↩ 응답 N명(%)</td><td>챗봇으로 답장한 수신자 수와 응답률</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="stat">공지 상세 통계</h2>
+    <p>이력 목록에서 특정 공지를 클릭하면 상세 통계 화면이 열립니다.</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">📊</div>
+        <div class="step-body">
+          <div class="step-title">발송 / 읽음 / 응답 통계 바</div>
+          <div class="step-desc">각 항목의 비율이 막대 그래프로 시각화됩니다. 읽음률과 응답률을 한눈에 파악할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">👥</div>
+        <div class="step-body">
+          <div class="step-title">수신자별 목록 (탭 필터)</div>
+          <div class="step-desc">
+            <strong>전체 / 응답 / 읽음 / 미읽음</strong> 탭으로 필터링하여 수신자별 상태를 개별 확인할 수 있습니다.<br>
+            각 수신자 카드에는 이름, 연락처, 답장 미리보기, 읽음/응답 여부가 표시됩니다.
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="tip">
+      💡 <strong>활용 팁</strong><br>
+      응답률이 높은 메시지 유형을 파악해 다음 공지에 활용하세요. 특히 퍼널과 공유의 응답률 차이를 비교하면 어떤 채널이 더 효과적인지 알 수 있습니다.
+    </div>
+
+    <h2 id="flow">전체 발송 흐름</h2>
+    <div class="notice" style="background:var(--surface2);border-color:var(--brand);">
+      <strong>📌 마케팅 채널로서의 원챗 공지발송 흐름</strong>
+      <ol style="margin:12px 0 0 20px;line-height:2;">
+        <li>명함 SMS <strong>1회 발송</strong> → 수신자가 챗봇 링크 클릭 → 챗봇에 등록</li>
+        <li>이후 이벤트·신제품·프로모션 공지 → <strong>챗봇으로 무제한 무료 발송</strong></li>
+        <li>수신자가 공지에 답장 → 운영자에게 <strong>알림 수신</strong> → 1:1 대화 가능</li>
+        <li>AI 아바타가 답변 자동화 → 운영자 없이도 <strong>24시간 응대</strong></li>
+      </ol>
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/dashboard.html"><span class="nav-label">← 이전</span><span class="nav-title">대시보드 &amp; 분석</span></a>
+      <a href="/manual/onechat/notification.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">알림 수신 설정</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">HI 공지발송이란?</a></li>
+      <li><a href="#concept">발송 대상 구분</a></li>
+      <li><a href="#how">사용 방법</a></li>
+      <li><a href="#open" class="h3">패널 열기</a></li>
+      <li><a href="#compose" class="h3">메시지 작성 및 발송</a></li>
+      <li><a href="#history">발송 이력 확인</a></li>
+      <li><a href="#stat">공지 상세 통계</a></li>
+      <li><a href="#flow">전체 발송 흐름</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

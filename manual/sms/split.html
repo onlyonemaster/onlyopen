@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>분할 발송 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/addressbook.html" class="sb-link">📒 주소록 관리</a>
+      <a href="/manual/sms/received.html" class="sb-link">수신 내역 확인</a>
+      <a href="/manual/sms/block.html" class="sb-link">수신거부 관리</a>
+      <a href="/manual/sms/web-send.html" class="sb-link">💬 웹문자 발송</a>
+      <a href="/manual/sms/bulk20.html" class="sb-link">20건 무료문자</a>
+      <a href="/manual/sms/reservation.html" class="sb-link">⏰ 예약 발송</a>
+      <a href="/manual/sms/split.html" class="sb-link active">✂️ 분할 발송</a>
+      <a href="/manual/sms/ai-copy.html" class="sb-link">AI 메시지 카피</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 분할 발송</nav>
+    <h1 class="page-title">✂️ 분할 발송</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">분할 발송이란?</a></li>
+        <li><a href="#why">활용 이유</a></li>
+        <li><a href="#how">설정 방법</a></li>
+        <li><a href="#oldcustomer">기존 고객 DB 분할 발송</a></li>
+        <li><a href="#daily">일별 자동발송(데일리)과의 차이</a></li>
+        <li><a href="#notice">주의사항</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>분할 발송이란?</h2>
+      <p>분할 발송은 <strong>대량의 수신자 DB를 여러 구간(시작 건수 ~ 종료 건수)으로 나누어 순차적으로 발송</strong>하는 기능입니다. 하루 발송 한도 내에서 DB 전체를 여러 날에 나누어 보낼 때 사용합니다.</p>
+      <div class="notice-box" style="margin-top:14px;">
+        <strong>📌 활용 예시:</strong> 1만 명 DB를 보유했을 때, 하루 2,000건씩 5일에 걸쳐 분할 발송합니다.
+      </div>
+    </section>
+
+    <section id="why">
+      <h2>활용 이유</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">📊</div>
+          <div class="fc-title">발송 한도 관리</div>
+          <div class="fc-desc">일별·월별 발송 한도를 초과하지 않도록 DB를 나누어 전송합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🎯</div>
+          <div class="fc-title">스팸 필터 회피</div>
+          <div class="fc-desc">한 번에 대량 발송 시 스팸 차단될 위험을 줄입니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">💰</div>
+          <div class="fc-title">비용 분산</div>
+          <div class="fc-desc">포인트를 미리 충전하지 않고 필요한 만큼만 순차 사용합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📅</div>
+          <div class="fc-title">일정 관리</div>
+          <div class="fc-desc">캠페인 기간에 맞추어 날짜별 발송 일정을 수립합니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="how">
+      <h2>설정 방법</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>문자 발송 화면</strong>에서 주소록을 선택합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>시작 건수</strong>와 <strong>종료 건수</strong>를 입력합니다. (예: 1~2000 / 2001~4000 / ...)
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            메시지를 작성하고 <strong>[발송]</strong> 버튼을 클릭합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">
+            다음 날 같은 주소록에서 <strong>다음 구간</strong>(2001~4000)을 입력하여 반복 발송합니다.
+          </div>
+        </li>
+      </ol>
+      <div class="notice-box info" style="margin-top:16px;">
+        <strong>💡 팁:</strong> 시작/종료 건수는 주소록 내 행 번호 기준입니다. 엑셀 업로드 시 헤더(1행) 제외 후 순번이 적용됩니다.
+      </div>
+    </section>
+
+    <section id="oldcustomer">
+      <h2>기존 고객 DB 분할 발송</h2>
+      <p><a href="https://kiam.kr/mypage_oldrequest_list.php" target="_blank">마이페이지 → 기존고객 DB 예약 리스트</a>에서 기존 고객 DB 분할 예약 발송을 관리합니다.</p>
+      <table class="m-table" style="margin-top:14px;">
+        <thead>
+          <tr><th>컬럼</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>발송폰번호</td><td>발신에 사용할 등록된 폰 번호</td></tr>
+          <tr><td>주소록명</td><td>발송에 사용할 수신자 주소록</td></tr>
+          <tr><td>시작 건수</td><td>해당 회차 발송 시작 행 번호</td></tr>
+          <tr><td>종료 건수</td><td>해당 회차 발송 종료 행 번호</td></tr>
+          <tr><td>예약 건수</td><td>해당 구간의 총 발송 예정 건수</td></tr>
+          <tr><td>메시지 내용</td><td>발송될 문자 내용</td></tr>
+          <tr><td>발송 시작일</td><td>발송 시작 예정 날짜</td></tr>
+          <tr><td>발송 마감일</td><td>발송 종료 예정 날짜</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="daily">
+      <h2>일별 자동발송(데일리)과의 차이</h2>
+      <table class="m-table">
+        <thead>
+          <tr><th>구분</th><th>분할 발송</th><th>일별 자동발송(데일리)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>발송 방식</td><td>수동으로 구간 지정</td><td>시스템이 자동으로 일별 분배</td></tr>
+          <tr><td>자동화 수준</td><td>낮음 (매번 수동 설정)</td><td>높음 (한 번 설정 후 자동)</td></tr>
+          <tr><td>유연성</td><td>구간 자유 조정 가능</td><td>고정 일정 기반</td></tr>
+          <tr><td>적합 대상</td><td>단기 캠페인, 비정기 발송</td><td>장기 DB 소진, 정기 홍보</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;">장기 자동화가 필요하다면 <a href="/manual/sms/daily.html">일별 자동발송(데일리)</a> 기능을 사용하는 것을 권장합니다.</p>
+    </section>
+
+    <section id="notice">
+      <h2>주의사항</h2>
+      <ul>
+        <li>시작 건수와 종료 건수를 입력하지 않으면 전체 주소록이 발송됩니다.</li>
+        <li>발송 전 <strong>충분한 포인트 잔액</strong>을 확보하세요.</li>
+        <li>분할 발송 중 주소록을 수정하면 이후 발송에 영향이 생길 수 있습니다.</li>
+        <li>하루 최대 발송 건수는 등록된 폰 수와 폰별 설정에 따라 달라집니다.</li>
+      </ul>
+    </section>
+
+    <nav class="page-nav">
+      <a href="/manual/sms/reservation.html" class="btn-prev">← 예약 발송</a>
+      <a href="/manual/sms/ai-copy.html" class="btn-next">AI 메시지 카피 →</a>
+    </nav>
+  </main>
+</div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var h=document.documentElement;
+    var t=h.getAttribute('data-theme')==='light'?'dark':'light';
+    h.setAttribute('data-theme',t);
+    this.textContent=t==='light'?'🌙':'☀️';
+  });
+  document.getElementById('hamburgerBtn').addEventListener('click',function(){
+    document.querySelector('.m-sidebar').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

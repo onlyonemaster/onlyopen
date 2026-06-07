@@ -1,0 +1,320 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 & 분석 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 (OneChat)</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대시보드 & 분석</div>
+      <a href="/manual/onechat/dashboard.html" class="sb-link active">📊 대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신 / 수신</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">발신 탭 (퍼널)</a>
+      <a href="/manual/onechat/received.html" class="sb-link">수신 탭</a>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">공지 방송 발송</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">AI 아바타 학습</a>
+      <a href="/manual/onechat/companion.html" class="sb-link">AI 동행</a>
+      <a href="/manual/onechat/scenario.html" class="sb-link">시나리오 캠페인</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/dashboard/" class="sb-link">📊 통합 대시보드</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>대시보드 &amp; 분석</span>
+    </div>
+
+    <h1>📊 대시보드 &amp; 분석</h1>
+    <p class="page-desc">원챗 대시보드는 챗봇 운영 현황을 실시간으로 파악하고, AI가 분석한 대화 데이터를 기반으로 운영 의사결정을 지원하는 종합 관제 화면입니다.</p>
+
+    <h2 id="access">대시보드 접속 방법</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">원챗 상단 아바타 이미지 클릭 → <strong>[📊 대시보드]</strong> 선택</div>
+          <div class="step-desc">또는 사이드바(☰) → <strong>[대시보드]</strong> 메뉴를 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">대시보드 전용 화면이 열립니다</div>
+          <div class="step-desc">아래 주소로 직접 접속도 가능합니다.</div>
+          <span class="step-url">https://kiam.kr/aimessage/onechat/dashboard.html</span>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="overview">대시보드 구성 — 5개 패널</h2>
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">📈</span>
+        <div class="tn">KPI 요약</div>
+        <div class="td">오늘의 방문자·대화·미읽음·AI 처리율 핵심 지표 한눈에</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🤖</span>
+        <div class="tn">AI 승인 대기</div>
+        <div class="td">AI가 제안한 응답 중 운영자 승인이 필요한 항목 목록 및 처리</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">대화 분석</div>
+        <div class="td">의도·감정·키워드·이슈 자동 추출. 챗봇 대화 품질 개선 지표</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📢</span>
+        <div class="tn">공지 발송 현황</div>
+        <div class="td">HI 공지 발송 이력 및 반응률 확인</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📋</span>
+        <div class="tn">경영 요약</div>
+        <div class="td">AI가 작성한 오늘의 챗봇 운영 요약 리포트</div>
+      </div>
+    </div>
+
+    <h2 id="kpi">① KPI 요약 패널</h2>
+    <p>오늘 챗봇 운영 상태를 숫자로 빠르게 파악합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>지표</th><th>설명</th><th>판단 기준</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>총 방문자</strong></td>
+          <td>오늘 챗봇 링크에 접속한 고유 방문자 수</td>
+          <td>전일 대비 증감 표시</td>
+        </tr>
+        <tr>
+          <td><strong>대화 참여율</strong></td>
+          <td>방문자 중 실제로 AI와 대화를 시작한 비율(%)</td>
+          <td>80% 이상 → 우수 / 50% 이하 → 개선 필요</td>
+        </tr>
+        <tr>
+          <td><strong>미읽음 건수</strong></td>
+          <td>운영자가 아직 확인하지 않은 새 메시지 수</td>
+          <td>즉시 처리 필요 항목 강조 표시</td>
+        </tr>
+        <tr>
+          <td><strong>직접 연결 요청</strong></td>
+          <td>방문자가 AI 대신 운영자 직접 대화를 요청한 건수</td>
+          <td>우선 처리 항목</td>
+        </tr>
+        <tr>
+          <td><strong>AI 자동 처리율</strong></td>
+          <td>전체 대화 중 AI가 단독으로 처리 완료한 비율</td>
+          <td>높을수록 운영 효율 우수</td>
+        </tr>
+        <tr>
+          <td><strong>AI 승인 대기</strong></td>
+          <td>운영자 승인이 필요한 AI 제안 응답 건수</td>
+          <td>0이면 모두 처리 완료</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="ai-approval">② AI 승인 대기 패널</h2>
+    <p>원챗은 AI 처리 방식을 <strong>5단계 자율도</strong>로 운영합니다. 단계에 따라 운영자 개입 범위가 달라집니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>단계</th><th>모드명</th><th>동작 방식</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>1단계</strong></td>
+          <td>AI 즉시 실행</td>
+          <td>AI가 판단·응답·발송까지 완전 자동 처리. 승인 불필요</td>
+        </tr>
+        <tr>
+          <td><strong>2단계</strong></td>
+          <td>AI 제안 → 승인</td>
+          <td>AI가 응답 초안 작성 후 운영자 승인 대기. 승인 시 발송</td>
+        </tr>
+        <tr>
+          <td><strong>3단계</strong></td>
+          <td>의사결정</td>
+          <td>AI가 분석만 제공, 운영자가 발송 여부 최종 결정</td>
+        </tr>
+        <tr>
+          <td><strong>4단계</strong></td>
+          <td>직접 처리</td>
+          <td>운영자가 직접 응답 작성 및 발송</td>
+        </tr>
+        <tr>
+          <td><strong>5단계</strong></td>
+          <td>보류</td>
+          <td>즉각 처리 불필요. 나중에 처리 예정으로 보류</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3 id="approval-action">승인 대기 항목 처리 방법</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">대기 목록에서 항목을 클릭합니다</div>
+          <div class="step-desc">방문자 이름, AI 제안 응답 내용, 대화 맥락이 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">처리 방식을 선택합니다</div>
+          <div class="step-desc">
+            <table class="m-table">
+              <thead><tr><th>버튼</th><th>동작</th></tr></thead>
+              <tbody>
+                <tr><td>✅ <strong>승인</strong></td><td>AI 제안 응답을 그대로 발송</td></tr>
+                <tr><td>✏️ <strong>수정 후 승인</strong></td><td>내용을 수정한 뒤 발송</td></tr>
+                <tr><td>⏸ <strong>보류</strong></td><td>나중에 처리 (보류 목록으로 이동)</td></tr>
+                <tr><td>🙋 <strong>직접 대응</strong></td><td>내가 직접 채팅창에서 응답</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+    </ul>
+    <div class="tip">
+      💡 <strong>긴급 항목</strong>: 불만 표현·VIP 고객·전화/계약 요청이 감지된 대화는 빨간색으로 강조 표시됩니다. 즉시 처리를 권장합니다.
+    </div>
+
+    <h2 id="conversation-analysis">③ 대화 분석 패널</h2>
+    <p>AI가 챗봇 대화 전체를 분석하여 <strong>의도·감정·키워드·이슈</strong>를 자동으로 추출합니다. <strong>[대화 분석 실행]</strong> 버튼을 클릭하면 분석이 시작됩니다.</p>
+
+    <h3 id="intent-analysis">의도(Intent) 분류</h3>
+    <table class="m-table">
+      <thead><tr><th>의도 유형</th><th>설명</th><th>대응 방법</th></tr></thead>
+      <tbody>
+        <tr><td>FAQ / 단순 안내</td><td>자주 묻는 일반 질문</td><td>AI 아바타 학습 데이터 보강</td></tr>
+        <tr><td>전화 / 계약</td><td>직접 통화·계약 의향 표현</td><td>즉시 운영자 직접 대응</td></tr>
+        <tr><td>불만 / VIP</td><td>불만족 표현 또는 중요 고객</td><td>우선 처리, 감정 케어</td></tr>
+        <tr><td>재발송 / 이벤트</td><td>이전 메시지 재문의·이벤트 참여</td><td>AI 동행 또는 시나리오 캠페인 연결</td></tr>
+        <tr><td>의도 불명확</td><td>AI가 의도 판단 불가</td><td>프롬프트 개선 또는 직접 대응</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="sentiment-analysis">감정(Sentiment) 분포</h3>
+    <p>전체 대화의 감정 분포를 긍정 / 중립 / 부정으로 시각화합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>지표</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td>긍정 비율 높음</td><td>챗봇 만족도 우수. 현재 프롬프트·학습 데이터 유지</td></tr>
+        <tr><td>부정 비율 증가</td><td>프롬프트 또는 학습 데이터 개선 필요. 자주 묻는 FAQ 추가 검토</td></tr>
+        <tr><td>중립 대부분</td><td>단순 정보 조회 위주. 전환율 향상 위해 CTA 강화 필요</td></tr>
+      </tbody>
+    </table>
+    <div class="notice">
+      📌 <strong>분석 주기</strong><br>
+      대화 분석은 실시간이 아닌 <strong>[대화 분석 실행]</strong> 버튼 클릭 시 수동으로 실행됩니다. 데이터 축적 후 주 1회 이상 실행을 권장합니다.
+    </div>
+
+    <h2 id="broadcast-status">④ 공지 발송 현황</h2>
+    <p>HI 공지 방송으로 발송한 메시지의 이력과 반응률을 확인합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td>발송 일시</td><td>공지 방송 발송 날짜 및 시각</td></tr>
+        <tr><td>수신 대상</td><td>전체 / 대화중 / 특정 그룹 등 발송 대상 구분</td></tr>
+        <tr><td>발송 건수</td><td>실제 발송된 메시지 수</td></tr>
+        <tr><td>반응률</td><td>발송 후 대화를 재개한 방문자 비율</td></tr>
+        <tr><td>메시지 내용</td><td>발송한 공지 메시지 미리보기</td></tr>
+      </tbody>
+    </table>
+    <a href="/manual/onechat/broadcast.html" style="color:var(--brand);font-size:14px;">→ 공지 방송 발송 매뉴얼 보기</a>
+
+    <h2 id="summary">⑤ 경영 요약 (AI 리포트)</h2>
+    <p>AI가 오늘의 챗봇 운영 상태를 자연어로 요약한 리포트입니다. 대시보드 상단에서 확인할 수 있습니다.</p>
+    <div class="tip">
+      💡 <strong>경영 요약 예시</strong><br>
+      "오늘 방문자 24명 중 18명(75%)이 대화에 참여했습니다. AI가 15건을 자동 처리하고 있습니다. 미읽음 3건, 직접 연결 요청 1건이 있습니다. 승인 대기 2건이 있어 확인이 필요합니다. 대화 참여율 75% — 참여율이 양호한 수준입니다."
+    </div>
+    <div class="notice">
+      📌 경영 요약은 5분마다 자동 갱신됩니다. 수동 갱신이 필요하면 페이지를 새로고침하세요.
+    </div>
+
+    <h2 id="realtime">실시간 갱신</h2>
+    <p>대시보드 데이터는 <strong>5분마다 자동으로 갱신</strong>됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>갱신 방식</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>자동 갱신</td><td>5분 간격으로 전체 데이터 자동 로드</td></tr>
+        <tr><td>수동 갱신</td><td>페이지 새로고침 (F5 또는 브라우저 새로고침)</td></tr>
+        <tr><td>대화 분석</td><td>[대화 분석 실행] 버튼 클릭 시 즉시 분석 실행</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="tips">대시보드 활용 팁</h2>
+    <div class="tip">
+      💡 <strong>매일 아침 체크리스트</strong><br>
+      1. 미읽음 / 직접 연결 요청 건수 확인 → 즉시 처리<br>
+      2. AI 승인 대기 목록 처리<br>
+      3. 경영 요약으로 어제 대비 방문자·참여율 변화 파악<br>
+      4. 주 1회 대화 분석 실행 → 부정 감정·불명확 의도 개선
+    </div>
+    <div class="warn">
+      ⚠️ <strong>로그인 세션 만료 시</strong><br>
+      "로그인이 필요합니다" 메시지가 표시되면 kiam.kr에 다시 로그인 후 대시보드를 새로고침하세요.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/scenario.html"><span class="nav-label">← 이전</span><span class="nav-title">시나리오 캠페인</span></a>
+      <a href="/manual/onechat/notification.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">공지 &amp; 알림</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">대시보드 접속 방법</a></li>
+      <li><a href="#overview">5개 패널 구성</a></li>
+      <li><a href="#kpi">① KPI 요약</a></li>
+      <li><a href="#ai-approval">② AI 승인 대기</a></li>
+      <li><a href="#approval-action" class="h3">처리 방법</a></li>
+      <li><a href="#conversation-analysis">③ 대화 분석</a></li>
+      <li><a href="#intent-analysis" class="h3">의도 분류</a></li>
+      <li><a href="#sentiment-analysis" class="h3">감정 분포</a></li>
+      <li><a href="#broadcast-status">④ 공지 발송 현황</a></li>
+      <li><a href="#summary">⑤ 경영 요약</a></li>
+      <li><a href="#realtime">실시간 갱신</a></li>
+      <li><a href="#tips">활용 팁</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

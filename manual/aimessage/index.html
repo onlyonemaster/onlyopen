@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 메시지 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI 메시지</div>
+      <a href="/manual/aimessage/" class="sb-link active">✉️ AI 메시지 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aimessage/start.html" class="sb-link">AI 메시지 시작하기</a>
+      <a href="/manual/aimessage/sender-info.html" class="sb-link">발신자 정보 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">메시지 설정</div>
+      <a href="/manual/aimessage/prompt.html" class="sb-link">프롬프트 설정</a>
+      <a href="/manual/aimessage/send.html" class="sb-link">메시지 발송하기</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 매뉴얼</a>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <span>AI 메시지</span>
+    </div>
+
+    <h1>✉️ AI 메시지 (AI Message)</h1>
+    <p class="page-desc">고객 데이터를 분석해 AI가 개인화된 문자를 자동 생성하고 발송하는 서비스입니다. 대량 발송이지만 각 수신자에게 맞춤형 메시지를 보냅니다.</p>
+
+    <h2 id="what">AI 메시지란?</h2>
+    <p>기존 대량 문자 발송의 한계를 극복한 <strong>AI 개인화 문자 발송 서비스</strong>입니다. 모든 수신자에게 동일한 메시지를 보내는 게 아니라, AI가 발신자 정보·수신자 정보·문맥을 분석해 <strong>각 사람에게 최적화된 메시지</strong>를 자동 생성합니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">🤖</span>
+        <div class="tn">AI 자동 생성</div>
+        <div class="td">발신자 정보와 프롬프트를 바탕으로 AI가 메시지를 자동 작성. 직접 쓸 필요 없음</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🎯</span>
+        <div class="tn">개인화 메시지</div>
+        <div class="td">수신자별 이름·상황·관심사를 반영한 맞춤 메시지 생성</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔗</span>
+        <div class="tn">챗봇 링크 포함</div>
+        <div class="td">메시지에 AI 챗봇 링크를 자동 삽입. 클릭 → AI와 대화 시작</td>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📊</span>
+        <div class="tn">6단계 퍼널</div>
+        <div class="td">후크→분석→인사이트→솔루션→리텐션→케어 6단계로 자동 이어지는 메시지</div>
+      </div>
+    </div>
+
+    <h2 id="funnel">6단계 퍼널 메시지</h2>
+    <p>AI 메시지는 단순 1회 발송이 아닌 <strong>6단계 자동화 시퀀스</strong>로 구성됩니다. 첫 메시지 발송 후 고객 반응에 따라 자동으로 후속 메시지가 발송됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>단계</th><th>이름</th><th>목적</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>1단계</strong></td>
+          <td>🎣 Hook (훅)</td>
+          <td>관심 유발, 첫 접점 형성</td>
+          <td>"안녕하세요! 혹시 이런 고민 있으신가요?"</td>
+        </tr>
+        <tr>
+          <td><strong>2단계</strong></td>
+          <td>🔍 Analysis (분석)</td>
+          <td>고객 상황 파악, 공감 형성</td>
+          <td>"많은 분들이 이런 어려움을 겪고 있더라고요"</td>
+        </tr>
+        <tr>
+          <td><strong>3단계</strong></td>
+          <td>💡 Insight (인사이트)</td>
+          <td>문제의 핵심 제시</td>
+          <td>"사실 이 문제의 핵심은 이것이었습니다"</td>
+        </tr>
+        <tr>
+          <td><strong>4단계</strong></td>
+          <td>✅ Solution (솔루션)</td>
+          <td>해결책 제안, CTA</td>
+          <td>"제가 이런 방법으로 도와드릴 수 있습니다"</td>
+        </tr>
+        <tr>
+          <td><strong>5단계</strong></td>
+          <td>🔄 Retention (리텐션)</td>
+          <td>재참여 유도</td>
+          <td>"지난번에 말씀드린 내용, 혹시 궁금한 점은요?"</td>
+        </tr>
+        <tr>
+          <td><strong>6단계</strong></td>
+          <td>❤️ Care (케어)</td>
+          <td>장기 관계 유지</td>
+          <td>"요즘 어떻게 지내세요? 도움이 필요하시면 언제든지"</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="channels">발송 채널</h2>
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">📱</span>
+        <div class="tn">폰문자 (SMS/LMS/MMS)</div>
+        <div class="td">일반 휴대폰 문자로 발송. 수신자의 스마트폰 문자함에 도착</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">웹문자 (RCS)</div>
+        <div class="td">인터넷 기반 문자. 더 풍부한 이미지·버튼 포함 가능</div>
+      </div>
+    </div>
+
+    <h2 id="flow">전체 흐름</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">발신자 정보 입력</div>
+          <div class="step-desc">내 사업체 정보, 챗봇 링크, 발송 설정을 입력합니다.</div>
+          <a href="/manual/aimessage/sender-info.html" style="color:var(--brand);font-size:14px;">→ 발신자 정보 설정 보기</a>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">프롬프트 설정</div>
+          <div class="step-desc">AI가 어떤 방향으로 메시지를 생성할지 지시합니다.</div>
+          <a href="/manual/aimessage/prompt.html" style="color:var(--brand);font-size:14px;">→ 프롬프트 설정 보기</a>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">메시지 생성 & 발송</div>
+          <div class="step-desc">AI가 30회치 메시지를 미리 생성하고 예약·자동 발송합니다.</div>
+          <a href="/manual/aimessage/send.html" style="color:var(--brand);font-size:14px;">→ 메시지 발송 보기</a>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">원챗에서 응답자 관리</div>
+          <div class="step-desc">링크 클릭자가 원챗 발신 탭에 자동 등록됩니다. AI 동행·시나리오로 후속 관리합니다.</div>
+          <a href="/manual/onechat/funnel.html" style="color:var(--brand);font-size:14px;">→ 원챗 발신탭 보기</a>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>AI 메시지와 원챗의 연계</strong><br>
+      AI 메시지로 발송한 링크를 클릭한 고객은 원챗 <strong>발신 탭(퍼널)</strong>에 자동 등록됩니다. 이후 AI 동행, 시나리오 캠페인으로 자동 관리가 이어집니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/avatar/settings.html"><span class="nav-label">← 이전</span><span class="nav-title">챗봇 동작 설정</span></a>
+      <a href="/manual/aimessage/start.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">AI 메시지 시작하기</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">AI 메시지란?</a></li>
+      <li><a href="#funnel">6단계 퍼널 메시지</a></li>
+      <li><a href="#channels">발송 채널</a></li>
+      <li><a href="#flow">전체 흐름</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

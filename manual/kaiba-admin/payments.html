@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>결제 관리 — K-AIBA 관리자 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">관리자 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 홈</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/kaiba-admin/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/kaiba-admin/bot-manager.html" class="sb-link">🤖 봇 관리</a>
+      <a href="/manual/kaiba-admin/subscriber.html" class="sb-link">👥 구독자 관리</a>
+      <a href="/manual/kaiba-admin/scenario.html" class="sb-link">🎯 시나리오 관리</a>
+      <a href="/manual/kaiba-admin/system-config.html" class="sb-link">🛠️ 시스템 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI · 분석</div>
+      <a href="/manual/kaiba-admin/ai-analytics.html" class="sb-link">📈 AI 분석</a>
+      <a href="/manual/kaiba-admin/ai-insight.html" class="sb-link">💡 AI 인사이트</a>
+      <a href="/manual/kaiba-admin/companion.html" class="sb-link">🧠 AI 컴패니언</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">운영 관리</div>
+      <a href="/manual/kaiba-admin/messages.html" class="sb-link">💬 메시지 관리</a>
+      <a href="/manual/kaiba-admin/operator.html" class="sb-link">🎧 상담원 관리</a>
+      <a href="/manual/kaiba-admin/contacts.html" class="sb-link">📇 연락처 관리</a>
+      <a href="/manual/kaiba-admin/payments.html" class="sb-link active">💳 결제 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 사용자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba-admin/">K-AIBA 관리자</a><span class="sep">›</span>
+      <span>결제 관리</span>
+    </div>
+
+    <h1>결제 관리 (Payments)</h1>
+    <p class="page-desc">결제 내역 조회, 구독 플랜 과금 관리, 환불 처리, 매출 통계를 제공하는 페이지입니다.</p>
+
+    <div class="notice">
+      📌 <strong>접속 경로:</strong> 좌측 메뉴 → <strong>"결제 관리"</strong> 클릭합니다.
+    </div>
+
+    <h2 id="overview">화면 구성</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">탭</th><th>설명</th></tr>
+      <tr><td>결제 내역</td><td>전체 결제 트랜잭션 목록</td></tr>
+      <tr><td>구독 관리</td><td>활성 구독의 다음 결제일, 금액, 상태</td></tr>
+      <tr><td>환불 처리</td><td>환불 요청 접수 및 처리</td></tr>
+      <tr><td>매출 통계</td><td>일별/월별 매출 차트 및 분석</td></tr>
+    </table>
+
+    <h2 id="history">결제 내역</h2>
+    <table class="info-table">
+      <tr><th style="width:140px;">컬럼</th><th>설명</th></tr>
+      <tr><td>결제 ID</td><td>고유 트랜잭션 번호</td></tr>
+      <tr><td>일시</td><td>결제 처리 일시</td></tr>
+      <tr><td>고객명</td><td>결제 고객 이름 (클릭 시 상세)</td></tr>
+      <tr><td>플랜</td><td>결제 대상 구독 플랜</td></tr>
+      <tr><td>금액</td><td>결제 금액 (원화)</td></tr>
+      <tr><td>결제 수단</td><td>카드/계좌이체/간편결제 등</td></tr>
+      <tr><td>상태</td><td>성공 ✅ / 실패 ❌ / 환불 🔄 / 대기 ⏳</td></tr>
+      <tr><td>작업</td><td>영수증 / 환불 / 상세보기</td></tr>
+    </table>
+
+    <h2 id="plans">구독 플랜 과금</h2>
+    <table class="info-table">
+      <tr><th style="width:120px;">플랜</th><th>월 요금</th><th>연 요금 (할인)</th><th style="width:100px;">비고</th></tr>
+      <tr><td>Free</td><td>무료</td><td>-</td><td>기능 제한</td></tr>
+      <tr><td>Basic</td><td>29,000원</td><td>290,000원 (17%↓)</td><td>-</td></tr>
+      <tr><td>Standard</td><td>79,000원</td><td>790,000원 (17%↓)</td><td>인기</td></tr>
+      <tr><td>Pro</td><td>199,000원</td><td>1,990,000원 (17%↓)</td><td>-</td></tr>
+      <tr><td>Business</td><td>499,000원</td><td>4,990,000원 (17%↓)</td><td>SLA 포함</td></tr>
+      <tr><td>B2B</td><td>협의</td><td>협의</td><td>맞춤 견적</td></tr>
+    </table>
+
+    <h2 id="refund">환불 처리</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">환불 요청 확인</div>
+          <div class="step-desc">"환불 처리" 탭에서 접수된 환불 요청 목록을 확인합니다. 요청 사유, 결제 금액, 사용 기간을 검토합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">환불 금액 산정</div>
+          <div class="step-desc">전액 환불 / 일할 계산(사용 일수 제외) / 부분 환불 중 선택합니다. 시스템이 자동으로 일할 금액을 계산해 제안합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">환불 승인</div>
+          <div class="step-desc">"환불 승인" 버튼 클릭 → 결제 수단으로 환불 진행. PG사 처리 완료 시 상태 자동 업데이트.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">구독 처리</div>
+          <div class="step-desc">환불 완료 시 구독이 자동으로 Free 플랜으로 다운그레이드되거나 해지 처리됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      ⚠️ <strong>주의:</strong> 결제일로부터 7일 이내는 전액 환불, 7~30일은 일할 계산, 30일 초과는 환불 불가가 기본 정책입니다. 예외 처리 시 "슈퍼관리자" 권한이 필요합니다.
+    </div>
+
+    <h2 id="stats">매출 통계</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">지표</th><th>설명</th></tr>
+      <tr><td>월간 매출 (MRR)</td><td>이번 달 반복 수익 합계</td></tr>
+      <tr><td>연간 매출 (ARR)</td><td>MRR × 12 환산 연간 수익</td></tr>
+      <tr><td>ARPU</td><td>사용자당 평균 매출 (구독자 수 대비)</td></tr>
+      <tr><td>Churn Rate</td><td>월간 구독 이탈율</td></tr>
+      <tr><td>LTV</td><td>고객 생애 가치 (평균 구독 기간 × ARPU)</td></tr>
+      <tr><td>신규 구독</td><td>이번 달 새로 시작된 유료 구독 수</td></tr>
+      <tr><td>업그레이드</td><td>플랜 업그레이드 건수</td></tr>
+      <tr><td>다운그레이드</td><td>플랜 다운그레이드 건수</td></tr>
+    </table>
+
+    <h3>차트 유형</h3>
+    <table class="info-table">
+      <tr><th style="width:160px;">차트</th><th>설명</th></tr>
+      <tr><td>매출 추이</td><td>일별/주별/월별 매출 금액 라인 차트</td></tr>
+      <tr><td>플랜 분포</td><td>플랜별 구독자 수 파이 차트</td></tr>
+      <tr><td>결제 성공률</td><td>결제 시도 대비 성공률 추이</td></tr>
+      <tr><td>코호트 분석</td><td>가입 월별 유지율 히트맵</td></tr>
+    </table>
+
+    <h2 id="actions">관리자 작업</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">작업</th><th>설명</th><th style="width:100px;">권한</th></tr>
+      <tr><td>수동 결제 처리</td><td>B2B 고객 등 수동 청구 후 결제 확인 등록</td><td>관리자</td></tr>
+      <tr><td>크레딧 부여</td><td>무료 사용 크레딧 수동 지급 (프로모션 등)</td><td>관리자</td></tr>
+      <tr><td>환불 승인</td><td>환불 요청 검토 및 승인</td><td>관리자</td></tr>
+      <tr><td>정책 초과 환불</td><td>환불 정책 기간 초과 건 예외 환불</td><td>슈퍼관리자</td></tr>
+      <tr><td>정산 내역 다운로드</td><td>세금계산서용 정산 데이터 Excel 다운로드</td><td>관리자</td></tr>
+    </table>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> Churn Rate이 높아지면 "환불 사유"와 "다운그레이드 이유"를 분석하세요. AI 인사이트에서 이탈 예측 모델을 통해 위험 고객을 사전에 식별하고 리텐션 캠페인을 실행할 수 있습니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

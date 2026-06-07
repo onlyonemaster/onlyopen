@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube 트렌드 분석 &#8212; VAG 영상팩토리 / kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VAG 영상팩토리</div>
+      <a href="/manual/vag/" class="sb-link">&#127916; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/vag/quickstart.html" class="sb-link">&#9889; 빠른 시작 (5분)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">파이프라인</div>
+      <a href="/manual/vag/pipeline.html" class="sb-link">&#9881; 영상 생성 파이프라인</a>
+      <a href="/manual/vag/engines.html" class="sb-link">&#129302; AI 엔진 비교</a>
+      <a href="/manual/vag/audio.html" class="sb-link">&#127925; 음성 &middot; 자막 &middot; 환경음</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">트렌드 분석</div>
+      <a href="/manual/vag/trend.html" class="sb-link active">&#128200; YouTube 트렌드 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/vag/pricing.html" class="sb-link">&#128181; 요금제 안내</a>
+      <a href="/manual/vag/faq.html" class="sb-link">&#10067; 자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/vag/">VAG 영상팩토리</a><span class="sep">&#8250;</span>
+      YouTube 트렌드 분석
+    </div>
+    <h1>&#128200; YouTube 트렌드 분석 솔루션</h1>
+    <p class="lead">YouTube 인기 영상 데이터를 수집하고 Claude AI가 패턴을 분석하여<br>
+    최적의 콘텐츠 전략과 영상 제작 아이디어를 자동으로 도출합니다.</p>
+
+    <div class="callout callout-blue">
+      <strong>연동 방식</strong>: 트렌드 분석 결과를 바탕으로 VAG 영상 생성의 주제·방향을 자동 설정할 수 있습니다.
+    </div>
+
+    <h2>핵심 기능</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:16px 0 28px;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="font-size:26px;margin-bottom:8px;">&#128269;</div>
+        <div style="font-weight:700;margin-bottom:6px;">카테고리별 분석</div>
+        <div style="font-size:13px;color:var(--text2);">건강, 재테크, 라이프스타일 등 원하는 카테고리의 YouTube 인기 영상 실시간 수집</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="font-size:26px;margin-bottom:8px;">&#129504;</div>
+        <div style="font-weight:700;margin-bottom:6px;">Claude AI 인사이트</div>
+        <div style="font-size:13px;color:var(--text2);">수집된 데이터를 Claude Sonnet이 분석하여 성공 패턴·키워드·최적 영상 길이 도출</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="font-size:26px;margin-bottom:8px;">&#127775;</div>
+        <div style="font-weight:700;margin-bottom:6px;">바이럴 잠재력 점수</div>
+        <div style="font-size:13px;color:var(--text2);">각 트렌드 주제에 바이럴 잠재력 점수(1~10)를 자동으로 부여</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:18px;">
+        <div style="font-size:26px;margin-bottom:8px;">&#127919;</div>
+        <div style="font-weight:700;margin-bottom:6px;">즉시 영상 제작</div>
+        <div style="font-size:13px;color:var(--text2);">분석 결과에서 원클릭으로 VAG 영상 생성 페이지로 이동하여 바로 영상 제작</div>
+      </div>
+    </div>
+
+    <h2>분석 프로세스 (6단계)</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>카테고리 선택</strong>
+        <p>분석할 YouTube 카테고리를 선택합니다.<br>
+        건강·재테크·라이프스타일·기술·음식·여행·교육 등 지원</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>YouTube Data API 수집</strong>
+        <p>YouTube Data API v3으로 해당 카테고리 인기 영상 최대 50개를 수집합니다.<br>
+        제목 · 설명 · 조회수 · 좋아요수 · 구독자수 · 영상 길이 수집</p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>데이터 전처리</strong>
+        <p>수집된 영상 데이터를 정규화하고 분석용 구조로 변환합니다.<br>
+        중복 제거 · 이상치 처리 · 참여율(engagement rate) 계산</p>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <strong>Claude AI 분석</strong>
+        <p>전처리된 데이터를 Claude Sonnet API에 전달하여 심층 분석을 요청합니다.<br>
+        성공 패턴 · 공통 키워드 · 최적 제목 구조 · 영상 길이 분포 분석</p>
+      </div></div>
+      <div class="step"><div class="step-num">5</div><div class="step-body">
+        <strong>트렌드 주제 생성</strong>
+        <p>분석 결과를 바탕으로 현재 트렌딩 주제 목록을 생성합니다.<br>
+        각 주제에 바이럴 잠재력 점수(1~10)와 추천 영상 길이를 부여</p>
+      </div></div>
+      <div class="step"><div class="step-num">6</div><div class="step-body">
+        <strong>결과 확인 &amp; 영상 제작</strong>
+        <p>분석 결과를 대시보드에서 확인하고, 마음에 드는 트렌드 주제를 선택하면<br>
+        해당 주제가 자동으로 VAG 영상 생성 폼에 입력됩니다.</p>
+      </div></div>
+    </div>
+
+    <h2>분석 결과 구성</h2>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:16px 0;">
+      <div style="font-weight:700;margin-bottom:14px;">Claude AI 분석 보고서 구성</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;font-size:13px;">
+        <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:12px;">
+          <div style="font-weight:600;margin-bottom:6px;">&#127775; 성공 영상 패턴</div>
+          <div style="color:var(--text2);">조회수·좋아요 상위 영상의 공통 요소 (제목 패턴, 썸네일 키워드, 도입부 구조)</div>
+        </div>
+        <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:12px;">
+          <div style="font-weight:600;margin-bottom:6px;">&#128221; 핵심 키워드</div>
+          <div style="color:var(--text2);">고참여율 영상에서 반복 등장하는 키워드 TOP 10 (제목·설명·태그 기준)</div>
+        </div>
+        <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:12px;">
+          <div style="font-weight:600;margin-bottom:6px;">&#9203; 최적 영상 길이</div>
+          <div style="color:var(--text2);">카테고리별 참여율이 가장 높은 영상 길이 구간 분석</div>
+        </div>
+        <div style="background:white;border:1px solid var(--border);border-radius:8px;padding:12px;">
+          <div style="font-weight:600;margin-bottom:6px;">&#127775; 트렌드 주제 TOP 5</div>
+          <div style="color:var(--text2);">현재 가장 높은 바이럴 잠재력을 가진 콘텐츠 주제와 점수</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>필요 API 키</h2>
+    <table>
+      <thead><tr><th>API</th><th>용도</th><th>설정 위치</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>YouTube Data API v3</td>
+          <td>인기 영상 데이터 수집</td>
+          <td><code>[서버 설정]</code>의 <code>[YouTube API 키]</code></td>
+        </tr>
+        <tr>
+          <td>Claude (Anthropic) API</td>
+          <td>데이터 분석 및 인사이트 생성</td>
+          <td><code>[서버 설정]</code>의 <code>[Anthropic API 키]</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="background:var(--bg2);border-left:4px solid var(--brand);">
+      <strong>YouTube Data API</strong>는 Google Cloud Console에서 무료로 발급 가능합니다.<br>
+      일일 10,000 쿼터 제공 (영상 50개 수집 시 약 50 쿼터 소모).
+    </div>
+
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="/manual/vag/pricing.html" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128181; 요금제 안내 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아바타 학습 방법 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타 학습</div>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">학습시키기</div>
+      <a href="/manual/avatar/learn.html" class="sb-link active">아바타 학습 방법</a>
+      <a href="/manual/avatar/settings.html" class="sb-link">챗봇 동작 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 매뉴얼</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">원챗 프롬프팅 설정</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/avatar/">AI 아바타</a><span class="sep">›</span>
+      <span>아바타 학습 방법</span>
+    </div>
+
+    <h1>아바타 학습 방법</h1>
+    <p class="page-desc">텍스트, 파일, 음성, 일기 4가지 방법으로 AI 아바타를 학습시키는 상세한 방법을 안내합니다.</p>
+
+    <h2 id="access">학습 화면 접속</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">원챗 상단 아바타 이미지 클릭</div>
+          <div class="step-desc">우측 상단 내 아바타 이미지(이니셜 원)를 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">드롭다운에서 <strong>[🧠 아바타 학습시키기]</strong> 선택</div>
+          <div class="step-desc">AI 아바타 학습 화면으로 이동합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="text-input">① 텍스트 직접 입력</h2>
+    <p>가장 기본적인 학습 방법입니다. 직접 타이핑하거나 붙여넣기로 내용을 입력합니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">학습 화면에서 <strong>[텍스트 입력]</strong> 탭을 선택합니다</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">입력창에 내용을 작성합니다</div>
+          <div class="step-desc">
+            <table class="m-table">
+              <thead><tr><th>추천 입력 내용</th><th>예시</th></tr></thead>
+              <tbody>
+                <tr><td>자기소개</td><td>"저는 10년 경력의 마케팅 전문가입니다. 중소기업 디지털 전환을 돕고 있습니다."</td></tr>
+                <tr><td>자주 묻는 질문 (FAQ)</td><td>"Q: 상담 비용은 얼마인가요? A: 초기 상담은 무료이며 이후 프로젝트별 견적을 드립니다."</td></tr>
+                <tr><td>서비스·상품 설명</td><td>제공하는 서비스의 특징, 가격, 사용 방법</td></tr>
+                <tr><td>업무 시간·연락 방법</td><td>"평일 오전 9시~오후 6시에 운영합니다."</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title"><strong>[저장 & 학습]</strong> 버튼을 클릭합니다</div>
+          <div class="step-desc">저장 후 동기화 아이콘이 🔄 → ✅로 바뀌면 적용 완료입니다.</div>
+        </div>
+      </li>
+    </ul>
+    <div class="tip">
+      💡 <strong>효과적인 텍스트 작성 팁</strong><br>
+      • 질문-답변 형식으로 작성하면 AI가 더 정확하게 답변합니다<br>
+      • 핵심 키워드를 반복적으로 포함시키세요<br>
+      • 하나의 주제를 짧고 명확하게 여러 번 나눠서 입력하는 것이 좋습니다
+    </div>
+
+    <h2 id="file-upload">② 파일 업로드</h2>
+    <p>이미 작성된 문서가 있다면 파일로 한 번에 업로드합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>지원 형식</th><th>활용 예시</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PDF</strong></td><td>회사 소개서, 상품 카탈로그, 서비스 안내서</td></tr>
+        <tr><td><strong>TXT</strong></td><td>텍스트로 작성된 FAQ, 스크립트</td></tr>
+        <tr><td><strong>CSV</strong></td><td>상품 목록, 가격표, 데이터 테이블</td></tr>
+        <tr><td><strong>Word (DOCX)</strong></td><td>제안서, 보고서, 메뉴얼</td></tr>
+      </tbody>
+    </table>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">학습 화면 → <strong>[파일 업로드]</strong> 탭 선택</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">파일을 드래그하거나 클릭하여 업로드합니다</div>
+          <div class="step-desc">파일 크기 제한: 최대 10MB. 여러 파일을 동시에 업로드할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">업로드 완료 후 AI가 자동으로 내용을 분석·학습합니다</div>
+          <div class="step-desc">파일이 크거나 내용이 많으면 동기화에 수십 초~수 분이 소요될 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+    <div class="warn">
+      ⚠️ <strong>개인정보가 포함된 파일 주의</strong><br>
+      고객 개인정보, 비밀 계약서 등 민감한 정보가 담긴 파일은 업로드하지 마세요. 업로드된 내용은 AI 응답 생성에 활용됩니다.
+    </div>
+
+    <h2 id="voice-input">③ 음성 입력</h2>
+    <p>타이핑이 어렵거나 말로 설명하는 것이 편하다면 음성 입력을 활용하세요.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">학습 화면 → <strong>[음성 입력]</strong> 탭 선택</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">🎙️ 마이크 버튼을 눌러 녹음을 시작합니다</div>
+          <div class="step-desc">브라우저 마이크 권한 허용이 필요합니다. 조용한 환경에서 명확하게 말하세요.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">녹음 완료 후 텍스트로 자동 변환됩니다</div>
+          <div class="step-desc">변환된 텍스트를 확인·수정 후 <strong>[저장 & 학습]</strong>을 클릭합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="daily-diary">④ 일기 (Daily) 학습</h2>
+    <p>매일의 경험·생각·인사이트를 일기 형태로 기록하여 AI에게 지속적으로 학습시킵니다. 누적될수록 더 풍부한 AI 아바타가 됩니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">원챗 사이드바 ☰ → <strong>[일기 쓰기]</strong> 또는 학습 화면 → <strong>[일기]</strong> 탭</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">오늘의 내용을 자유롭게 작성합니다</div>
+          <div class="step-desc">업무 경험, 고객과의 대화, 새로 배운 지식, 인사이트 등을 자연스럽게 기록합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">저장하면 AI가 자동으로 학습합니다</div>
+          <div class="step-desc">날짜별로 기록이 누적되어 AI가 내 최근 경험을 반영한 답변을 생성합니다.</div>
+        </div>
+      </li>
+    </ul>
+    <div class="tip">
+      💡 매일 짧게라도 기록하는 것이 좋습니다. 3~5줄의 짧은 메모도 충분합니다.
+    </div>
+
+    <h2 id="manage">학습 데이터 관리</h2>
+    <p>입력한 학습 데이터는 목록에서 확인·수정·삭제할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>작업</th><th>방법</th></tr></thead>
+      <tbody>
+        <tr><td>목록 확인</td><td>학습 화면 → [학습 데이터] 탭에서 전체 목록 보기</td></tr>
+        <tr><td>내용 수정</td><td>항목 클릭 → 내용 수정 → 저장 (재동기화 자동 진행)</td></tr>
+        <tr><td>항목 삭제</td><td>항목 우측 🗑️ 버튼 클릭 (삭제 후 재동기화 필요)</td></tr>
+        <tr><td>전체 초기화</td><td>설정 → [학습 데이터 초기화] (주의: 복구 불가)</td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/avatar/"><span class="nav-label">← 이전</span><span class="nav-title">AI 아바타 소개</span></a>
+      <a href="/manual/avatar/settings.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">챗봇 동작 설정</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">학습 화면 접속</a></li>
+      <li><a href="#text-input">① 텍스트 직접 입력</a></li>
+      <li><a href="#file-upload">② 파일 업로드</a></li>
+      <li><a href="#voice-input">③ 음성 입력</a></li>
+      <li><a href="#daily-diary">④ 일기 학습</a></li>
+      <li><a href="#manage">학습 데이터 관리</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

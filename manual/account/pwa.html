@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>PWA 앱 설치 가이드 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">계정 &amp; 설정</div>
+      <a href="/manual/account/" class="sb-link">⚙️ 계정 소개</a>
+      <a href="/manual/account/signup.html" class="sb-link">회원가입 &amp; 로그인</a>
+      <a href="/manual/account/settings.html" class="sb-link">계정 설정 &amp; 요금제</a>
+      <a href="/manual/account/pwa.html" class="sb-link active">📱 PWA 앱 설치</a>
+      <a href="/manual/account/coaching.html" class="sb-link">🎓 코칭 &amp; 강연</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗</a>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 SMS</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/account/settings.html">계정 & 설정</a> › PWA 앱 설치</nav>
+    <h1 class="page-title">📲 PWA 앱 설치 가이드</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">PWA란?</a></li>
+        <li><a href="#android">Android에서 설치</a></li>
+        <li><a href="#ios">iPhone(iOS)에서 설치</a></li>
+        <li><a href="#pc">PC에서 설치</a></li>
+        <li><a href="#notify">알림 설정</a></li>
+        <li><a href="#uninstall">앱 삭제</a></li>
+      </ul>
+    </div>
+    <section id="what">
+      <h2>PWA란?</h2>
+      <p><strong>PWA(Progressive Web App)</strong>는 웹사이트를 스마트폰·PC 앱처럼 설치하는 기술입니다. 별도의 앱 스토어 없이 브라우저에서 바로 설치하고, 홈 화면에 아이콘이 추가됩니다.</p>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">⚡</div>
+          <div class="fc-title">빠른 실행</div>
+          <div class="fc-desc">앱처럼 즉시 실행, 로딩 속도 향상</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🔔</div>
+          <div class="fc-title">푸시 알림</div>
+          <div class="fc-desc">새 메시지·방문자 실시간 알림 수신</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📴</div>
+          <div class="fc-title">오프라인 지원</div>
+          <div class="fc-desc">인터넷 없이도 일부 기능 사용 가능</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🆓</div>
+          <div class="fc-title">무료 설치</div>
+          <div class="fc-desc">앱 스토어 불필요, 저장 공간 최소 사용</div>
+        </div>
+      </div>
+    </section>
+    <section id="android">
+      <h2>Android에서 설치</h2>
+      <h3>Chrome 브라우저 (권장)</h3>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">Chrome으로 <a href="https://kiam.kr" target="_blank">https://kiam.kr</a> 접속 후 로그인</div></li>
+        <li><div class="step-num">2</div><div class="step-body">주소창 아래 <strong>"홈 화면에 추가"</strong> 배너가 나타나면 탭</div></li>
+        <li><div class="step-num">3</div><div class="step-body">배너가 없으면: 우측 상단 ⋮ 메뉴 → <strong>"앱 설치"</strong> 또는 <strong>"홈 화면에 추가"</strong></div></li>
+        <li><div class="step-num">4</div><div class="step-body">[설치] 확인 → 홈 화면에 kiam.kr 아이콘 생성</div></li>
+      </ol>
+      <div class="info-box">원챗 고객(방문자)도 동일한 방법으로 설치 가능합니다. 수신탭 → PWA 설치 유도 버튼을 활용하세요.</div>
+    </section>
+    <section id="ios">
+      <h2>iPhone(iOS)에서 설치</h2>
+      <div class="notice-box"><strong>⚠️ Safari 브라우저 필수</strong>: iOS에서는 Safari에서만 PWA 설치가 가능합니다.</div>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">Safari로 <a href="https://kiam.kr" target="_blank">https://kiam.kr</a> 접속</div></li>
+        <li><div class="step-num">2</div><div class="step-body">하단 공유 버튼(□↑) 탭</div></li>
+        <li><div class="step-num">3</div><div class="step-body">스크롤 → <strong>"홈 화면에 추가"</strong> 선택</div></li>
+        <li><div class="step-num">4</div><div class="step-body">앱 이름 확인 → [추가] 탭</div></li>
+        <li><div class="step-num">5</div><div class="step-body">홈 화면에 kiam.kr 아이콘 생성 완료</div></li>
+      </ol>
+    </section>
+    <section id="pc">
+      <h2>PC에서 설치</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">Chrome 또는 Edge 브라우저로 <a href="https://kiam.kr" target="_blank">https://kiam.kr</a> 접속</div></li>
+        <li><div class="step-num">2</div><div class="step-body">주소창 우측 <strong>설치 아이콘(⊕)</strong> 클릭</div></li>
+        <li><div class="step-num">3</div><div class="step-body">[설치] 클릭 → 바탕화면/시작 메뉴에 앱 추가</div></li>
+      </ol>
+    </section>
+    <section id="notify">
+      <h2>알림 설정</h2>
+      <p>PWA 설치 후 푸시 알림을 허용하면 다음 이벤트 발생 시 알림을 받습니다:</p>
+      <table class="m-table">
+        <thead><tr><th>알림 유형</th><th>발생 조건</th></tr></thead>
+        <tbody>
+          <tr><td>새 방문자</td><td>챗봇에 새 방문자가 입장했을 때</td></tr>
+          <tr><td>직접 대화 요청</td><td>고객이 사람 상담원을 요청했을 때</td></tr>
+          <tr><td>DM 메시지</td><td>원챗 DM에 새 메시지가 왔을 때</td></tr>
+          <tr><td>발송 완료</td><td>AI 메시지·문자 발송이 완료됐을 때</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;">알림 허용: 브라우저 팝업에서 [허용] 클릭 또는 브라우저 설정 → kiam.kr → 알림 허용</p>
+    </section>
+    <section id="uninstall">
+      <h2>앱 삭제</h2>
+      <ul class="m-list">
+        <li><strong>Android</strong>: 홈 화면 아이콘 길게 누르기 → [삭제] 또는 [앱 정보 → 삭제]</li>
+        <li><strong>iOS</strong>: 홈 화면 아이콘 길게 누르기 → [앱 제거] → [홈 화면에서 제거]</li>
+        <li><strong>PC</strong>: 시작 메뉴 또는 바탕화면 아이콘 우클릭 → [제거]</li>
+      </ul>
+      <div class="info-box">앱을 삭제해도 kiam.kr 계정과 데이터는 유지됩니다.</div>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/account/settings.html" class="btn-prev">← 계정 설정</a>
+      <a href="/manual/account/coaching.html" class="btn-next">코칭 & 강연 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">PWA란?</a></li>
+      <li><a href="#android">Android에서 설치</a></li>
+      <li><a href="#ios">iPhone(iOS)에서 설치</a></li>
+      <li><a href="#pc">PC에서 설치</a></li>
+      <li><a href="#notify">알림 설정</a></li>
+      <li><a href="#uninstall">앱 삭제</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

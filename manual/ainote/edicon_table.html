@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 표 자동 변환 (TSV·Pipe·CSV) — 에디콘 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.flow-input-output {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: stretch;
+  margin: 20px 0; padding: 18px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+}
+.flow-input-output .col-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase;}
+.flow-input-output pre { background: var(--bg3); border: 1px dashed var(--border); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text2); margin: 0; overflow-x: auto; line-height: 1.6; white-space: pre; }
+.flow-input-output .arrow-col { font-size: 24px; color: #10b981; text-align: center; align-self: center; }
+@media(max-width:700px) { .flow-input-output { grid-template-columns: 1fr; } .flow-input-output .arrow-col { transform: rotate(90deg); } }
+.v2-vs-v1 {
+  background: linear-gradient(135deg, rgba(16,185,129,.06), rgba(34,197,94,.04));
+  border: 1.5px solid rgba(16,185,129,.3);
+  border-radius: 14px; padding: 20px 24px; margin: 24px 0;
+}
+.v2-vs-v1 h3 { color: #10b981; font-weight: 800; font-size: 16px; margin-bottom: 8px; }
+.v2-vs-v1 .vv-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 12px; }
+.v2-vs-v1 .vv { background: var(--bg2); border: 1px solid var(--border); border-radius: 10px; padding: 14px; }
+.v2-vs-v1 .vv h4 { font-size: 13px; margin-bottom: 8px; }
+.v2-vs-v1 .vv h4.v1 { color: #ef4444; }
+.v2-vs-v1 .vv h4.v2 { color: #10b981; }
+.v2-vs-v1 .vv code { background: var(--bg3); padding: 2px 6px; border-radius: 4px; font-size: 11px; }
+@media(max-width:600px) { .v2-vs-v1 .vv-grid { grid-template-columns: 1fr; } }
+.demo-table {
+  border-collapse: collapse; width: 100%; margin: 8px 0; font-size: 13px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px; overflow: hidden;
+}
+.demo-table th { background: rgba(16,185,129,.08); padding: 8px 12px; text-align: left; border-bottom: 1px solid var(--border); font-weight: 700; color: var(--text); }
+.demo-table td { padding: 8px 12px; border-bottom: 1px solid var(--border); color: var(--text2); }
+.demo-table tr:last-child td { border-bottom: none; }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a></div>
+    <div class="sb-section"><div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a></div>
+    <div class="sb-section"><div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link active">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a></div>
+    <div class="sb-section"><div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a></div>
+    <div class="sb-section"><div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a></div>
+    <div class="sb-section"><div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a></div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <a href="/manual/ainote/edicon.html">에디콘</a><span class="sep">›</span>
+      <span>표 자동 변환</span>
+    </div>
+
+    <h1>📊 표 자동 변환 (TSV·Pipe·CSV)</h1>
+    <p class="page-desc">AI에게 받은 표 — 탭으로 구분된 데이터, 파이프(<code>|</code>)로 만든 마크다운 표, 콤마로 구분된 CSV — 무엇이든 그대로 붙여넣기만 하면 에디콘이 자동으로 깔끔한 HTML 테이블로 변환합니다. <strong>표 위·아래의 설명 문장도 함께 잘 보존</strong>됩니다.</p>
+
+    <h2 id="three-formats">📋 지원하는 3가지 표 형식</h2>
+
+    <div class="tab-grid">
+      <div class="tab-card" style="border-left:3px solid #10b981;">
+        <span class="ti">⌨️</span>
+        <div class="tn">TSV (탭 구분)</div>
+        <div class="td">엑셀에서 복사하거나 AI가 만든 표는 대부분 <strong>탭 문자</strong>로 열이 구분됩니다. 가장 자주 만나는 형식.</div>
+      </div>
+      <div class="tab-card" style="border-left:3px solid #3b82f6;">
+        <span class="ti">📝</span>
+        <div class="tn">Pipe (마크다운 표)</div>
+        <div class="td">ChatGPT·DeepSeek이 자주 만드는 <code>| 열1 | 열2 |</code> 형태의 마크다운 표. 구분선 줄이 있어도 자동 인식.</div>
+      </div>
+      <div class="tab-card" style="border-left:3px solid #f59e0b;">
+        <span class="ti">,</span>
+        <div class="tn">CSV (콤마 구분)</div>
+        <div class="td">CSV 파일을 그대로 복사해 붙여도 OK. 값에 따옴표(")가 있어도 안전하게 파싱.</div>
+      </div>
+    </div>
+
+    <h2 id="example-tsv">⚡ 예시 1: TSV (탭 구분)</h2>
+    <p>엑셀·구글시트·DeepSeek이 만든 표를 그대로 복사해 붙여넣기.</p>
+
+    <div class="flow-input-output">
+      <div>
+        <div class="col-label">입력 (탭으로 구분)</div>
+        <pre>지역	1Q	2Q	3Q	4Q
+서울	120	135	148	162
+부산	88	92	101	115
+대구	72	78	85	93</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="col-label">변환 결과 (HTML 테이블)</div>
+        <table class="demo-table">
+          <thead><tr><th>지역</th><th>1Q</th><th>2Q</th><th>3Q</th><th>4Q</th></tr></thead>
+          <tbody>
+            <tr><td>서울</td><td>120</td><td>135</td><td>148</td><td>162</td></tr>
+            <tr><td>부산</td><td>88</td><td>92</td><td>101</td><td>115</td></tr>
+            <tr><td>대구</td><td>72</td><td>78</td><td>85</td><td>93</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 id="example-pipe">⚡ 예시 2: 마크다운 파이프 표</h2>
+    <p>ChatGPT 등 LLM이 가장 자주 만드는 표 형식. 구분선(<code>|---|---|</code>)이 있어도 자동으로 무시됩니다.</p>
+
+    <div class="flow-input-output">
+      <div>
+        <div class="col-label">입력 (파이프 표)</div>
+        <pre>| 제품 | 가격 | 재고 |
+|------|------|------|
+| 노트북 | 1,500,000 | 12 |
+| 마우스 | 35,000 | 240 |
+| 키보드 | 89,000 | 87 |</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="col-label">변환 결과</div>
+        <table class="demo-table">
+          <thead><tr><th>제품</th><th>가격</th><th>재고</th></tr></thead>
+          <tbody>
+            <tr><td>노트북</td><td>1,500,000</td><td>12</td></tr>
+            <tr><td>마우스</td><td>35,000</td><td>240</td></tr>
+            <tr><td>키보드</td><td>89,000</td><td>87</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <h2 id="example-mixed">⚡ 예시 3: 표 위·아래에 설명이 있을 때 (v2의 핵심 강점)</h2>
+    <p>AI는 표만 단독으로 주지 않고 보통 <strong>"이것은 ~ 표입니다"</strong> 같은 안내 문장과 함께 줍니다. 에디콘 v2는 표만 정확히 분리해 변환하고 나머지 문장은 단락으로 보존합니다.</p>
+
+    <div class="flow-input-output">
+      <div>
+        <div class="col-label">입력 (제목 + 표 + 결론)</div>
+        <pre>2024년 분기별 매출 현황입니다.
+
+지역	1Q	2Q	3Q	4Q
+서울	120	135	148	162
+부산	88	92	101	115
+
+서울 매출이 가장 높았으며,
+전년 대비 약 12% 증가했습니다.</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="col-label">변환 결과 (3개 블록)</div>
+        <div style="font-size:13px; line-height:1.6; color:var(--text2);">
+          <div style="padding:8px 0; border-bottom:1px dashed var(--border);">📄 <em>"2024년 분기별 매출 현황입니다."</em> → 단락</div>
+          <table class="demo-table" style="margin:8px 0;">
+            <thead><tr><th>지역</th><th>1Q</th><th>2Q</th><th>3Q</th><th>4Q</th></tr></thead>
+            <tbody><tr><td>서울</td><td>120</td><td>135</td><td>148</td><td>162</td></tr><tr><td>부산</td><td>88</td><td>92</td><td>101</td><td>115</td></tr></tbody>
+          </table>
+          <div style="padding:8px 0;">📄 <em>"서울 매출이 가장 높았으며…"</em> → 단락</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="v2-vs-v1">
+      <h3>🆕 v2 알고리즘 — 이전 버전과의 차이</h3>
+      <p style="font-size:13px;color:var(--text2);margin:0;">에디콘 v2는 표 위·아래 문장이 있어도 표만 정확히 추출합니다. 이전 v1은 첫 줄을 헤더로 가정해 자주 실패했지만, v2는 "가장 긴 연속된 일관된 구분자 행"을 찾는 방식으로 작동합니다.</p>
+      <div class="vv-grid">
+        <div class="vv">
+          <h4 class="v1">❌ v1 (이전)</h4>
+          <p style="font-size:12px;color:var(--text2);margin:0;">첫 줄에 탭이 없으면 → <strong>표 인식 실패</strong>. 제목·설명 문장이 위에 있으면 전체가 단순 텍스트로 처리됨.</p>
+        </div>
+        <div class="vv">
+          <h4 class="v2">✅ v2 (현재)</h4>
+          <p style="font-size:12px;color:var(--text2);margin:0;">전체 텍스트를 스캔해 <strong>일관된 구분자 행이 3행 이상 연속</strong>되는 부분만 표로 추출. 위·아래 문장은 자동으로 단락으로 보존(lead/trail).</p>
+        </div>
+      </div>
+    </div>
+
+    <h2 id="rules">🎯 표 인식 규칙</h2>
+
+    <table class="m-table">
+      <thead><tr><th>조건</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>최소 행 수</td><td><strong>3행 이상</strong>이 동일한 구분자 개수를 가져야 표로 인식</td></tr>
+        <tr><td>최소 열 수</td><td><strong>2열 이상</strong> (구분자 1개 이상)</td></tr>
+        <tr><td>구분자 우선순위</td><td>TSV(탭) → Pipe(<code>|</code>) → CSV(<code>,</code>) 순으로 시도</td></tr>
+        <tr><td>일관성 검사</td><td>각 행의 구분자 개수가 같아야 함 (불일치 시 표가 끊긴 것으로 판정)</td></tr>
+        <tr><td>빈 줄 처리</td><td>빈 줄은 표의 경계 — 위·아래 문장과 분리</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="tips">💡 잘 쓰는 팁</h2>
+
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>방법</th></tr></thead>
+      <tbody>
+        <tr><td>표가 인식 안 될 때</td><td>각 행의 열 개수가 다를 수 있음. AI에게 "각 행의 열 개수를 통일해 줘"라고 요청.</td></tr>
+        <tr><td>표를 단순 텍스트로 두고 싶을 때</td><td>변환 후 표 위에 마우스 → "원본 보기" → "텍스트로 복원" 클릭</td></tr>
+        <tr><td>표가 너무 넓어 화면을 벗어날 때</td><td>표 컨테이너는 자동으로 가로 스크롤. 모바일에서도 자연스럽게 표시됨.</td></tr>
+        <tr><td>표 행을 추가하고 싶을 때</td><td>표 마지막 행에 커서 → Enter → 새 행이 자동 추가됨</td></tr>
+        <tr><td>표를 ArtCon으로 변환</td><td>표 위에 마우스 → "🎨 아트콘으로 변환" 버튼 → 컬러 인포그래픽으로 다시 만들어줌</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      🎨 <strong>표 → ArtCon(아트콘) 연동</strong><br>
+      에디콘이 인식한 표는 그대로 <a href="/manual/ainote/geniart.html">아트콘(ArtCon)</a>으로 보낼 수 있습니다. 표가 막대 그래프·도넛 차트·비교 인포그래픽 등 다양한 시각화로 다시 태어납니다 — <strong>트리니티 사이클</strong>의 핵심.
+    </div>
+
+    <h2 id="trouble">🛠️ 문제 해결</h2>
+
+    <table class="m-table">
+      <thead><tr><th>증상</th><th>원인 & 해결</th></tr></thead>
+      <tbody>
+        <tr><td>표가 단순 텍스트로 보임</td><td>구분자가 일관되지 않거나 행이 3행 미만. 빈 줄로 둘러싸여 있는지 확인.</td></tr>
+        <tr><td>열이 어긋남</td><td>일부 행에 추가 탭/콤마가 있을 수 있음. AI에게 "표를 다시 만들어 줘. 모든 행의 열 개수를 같게."</td></tr>
+        <tr><td>한글이 깨짐</td><td>드물게 인코딩 문제. 다른 곳(예: 메모장)에 한 번 거친 뒤 다시 붙여넣기.</td></tr>
+        <tr><td>CSV가 표로 인식 안 됨</td><td>탭(TSV)으로 먼저 시도하기 때문. CSV로 강제하려면 열을 콤마로만 구분(탭이나 파이프가 없게).</td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/edicon_url.html"><span class="nav-label">← 이전</span><span class="nav-title">🔗 URL → 카드</span></a>
+      <a href="/manual/ainote/edicon_code.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">💻 코드 블록</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#three-formats">3가지 표 형식</a></li>
+      <li><a href="#example-tsv">TSV 예시</a></li>
+      <li><a href="#example-pipe">파이프 표 예시</a></li>
+      <li><a href="#example-mixed">표+설명 예시</a></li>
+      <li><a href="#rules">표 인식 규칙</a></li>
+      <li><a href="#tips">잘 쓰는 팁</a></li>
+      <li><a href="#trouble">문제 해결</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

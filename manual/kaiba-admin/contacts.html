@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>연락처 관리 — K-AIBA 관리자 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">관리자 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 홈</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/kaiba-admin/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/kaiba-admin/bot-manager.html" class="sb-link">🤖 봇 관리</a>
+      <a href="/manual/kaiba-admin/subscriber.html" class="sb-link">👥 구독자 관리</a>
+      <a href="/manual/kaiba-admin/scenario.html" class="sb-link">🎯 시나리오 관리</a>
+      <a href="/manual/kaiba-admin/system-config.html" class="sb-link">🛠️ 시스템 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI · 분석</div>
+      <a href="/manual/kaiba-admin/ai-analytics.html" class="sb-link">📈 AI 분석</a>
+      <a href="/manual/kaiba-admin/ai-insight.html" class="sb-link">💡 AI 인사이트</a>
+      <a href="/manual/kaiba-admin/companion.html" class="sb-link">🧠 AI 컴패니언</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">운영 관리</div>
+      <a href="/manual/kaiba-admin/messages.html" class="sb-link">💬 메시지 관리</a>
+      <a href="/manual/kaiba-admin/operator.html" class="sb-link">🎧 상담원 관리</a>
+      <a href="/manual/kaiba-admin/contacts.html" class="sb-link active">📇 연락처 관리</a>
+      <a href="/manual/kaiba-admin/payments.html" class="sb-link">💳 결제 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 사용자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba-admin/">K-AIBA 관리자</a><span class="sep">›</span>
+      <span>연락처 관리</span>
+    </div>
+
+    <h1>연락처 관리 (Contacts)</h1>
+    <p class="page-desc">고객 연락처 데이터베이스를 관리하고, 그룹/태그 분류, 가져오기/내보내기 기능을 제공합니다.</p>
+
+    <div class="notice">
+      📌 <strong>접속 경로:</strong> 좌측 메뉴 → <strong>"연락처 관리"</strong> 클릭합니다.
+    </div>
+
+    <h2 id="list">연락처 목록</h2>
+    <table class="info-table">
+      <tr><th style="width:140px;">컬럼</th><th>설명</th></tr>
+      <tr><td>체크박스</td><td>일괄 작업 대상 선택</td></tr>
+      <tr><td>이름</td><td>연락처 이름 (클릭 시 상세 정보)</td></tr>
+      <tr><td>이메일</td><td>이메일 주소</td></tr>
+      <tr><td>전화번호</td><td>휴대폰/유선 번호</td></tr>
+      <tr><td>회사</td><td>소속 회사명</td></tr>
+      <tr><td>태그</td><td>분류 태그 뱃지 (복수 가능)</td></tr>
+      <tr><td>마지막 대화</td><td>가장 최근 대화 일시</td></tr>
+      <tr><td>작업</td><td>편집 / 메시지 발송 / 삭제</td></tr>
+    </table>
+
+    <h2 id="search">검색 및 필터</h2>
+    <table class="info-table">
+      <tr><th style="width:140px;">필터</th><th>설명</th></tr>
+      <tr><td>키워드 검색</td><td>이름, 이메일, 전화번호, 회사명으로 검색</td></tr>
+      <tr><td>태그 필터</td><td>특정 태그가 부여된 연락처만 표시</td></tr>
+      <tr><td>그룹 필터</td><td>지정 그룹에 속한 연락처만 표시</td></tr>
+      <tr><td>활동 기간</td><td>최근 대화가 있었던 기간으로 필터링</td></tr>
+      <tr><td>채널 필터</td><td>유입 채널별 필터 (웹/카카오/네이버 등)</td></tr>
+    </table>
+
+    <h2 id="groups">그룹 관리</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">그룹 생성</div>
+          <div class="step-desc">"그룹 관리" 탭 → "새 그룹" 버튼 → 그룹명 입력, 설명 작성 → 저장</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">연락처 배정</div>
+          <div class="step-desc">연락처 선택(체크박스) → "그룹 배정" 버튼 → 대상 그룹 선택 → 적용</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">동적 그룹</div>
+          <div class="step-desc">조건 기반 자동 그룹 (예: "최근 30일 대화 있음 + Pro 플랜" → 자동 분류)</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="tags">태그 시스템</h2>
+    <table class="info-table">
+      <tr><th style="width:140px;">기능</th><th>설명</th></tr>
+      <tr><td>태그 추가</td><td>연락처 상세에서 새 태그 입력 또는 기존 태그 선택</td></tr>
+      <tr><td>일괄 태그</td><td>다수 연락처 선택 후 일괄 태그 부여/제거</td></tr>
+      <tr><td>태그 색상</td><td>시각 구분을 위한 태그별 색상 지정</td></tr>
+      <tr><td>자동 태그</td><td>특정 행동(구매, 문의, 이탈 등) 시 자동 태그 부여 규칙 설정</td></tr>
+    </table>
+
+    <h2 id="import-export">가져오기 / 내보내기</h2>
+    <h3>가져오기 (Import)</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">파일 업로드</div>
+          <div class="step-desc">"가져오기" 버튼 → CSV 또는 Excel 파일 선택 → 업로드</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">컬럼 매핑</div>
+          <div class="step-desc">파일의 각 열을 시스템 필드(이름, 이메일, 전화번호 등)에 매핑</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">중복 처리</div>
+          <div class="step-desc">이미 존재하는 연락처 발견 시: 덮어쓰기 / 건너뛰기 / 병합 선택</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">가져오기 실행</div>
+          <div class="step-desc">미리보기 확인 → "가져오기 실행" → 완료 후 결과 리포트 표시</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3>내보내기 (Export)</h3>
+    <table class="info-table">
+      <tr><th style="width:140px;">옵션</th><th>설명</th></tr>
+      <tr><td>전체 내보내기</td><td>모든 연락처를 CSV/Excel로 다운로드</td></tr>
+      <tr><td>필터 내보내기</td><td>현재 적용된 필터 조건의 연락처만 내보내기</td></tr>
+      <tr><td>선택 내보내기</td><td>체크박스로 선택한 연락처만 내보내기</td></tr>
+      <tr><td>필드 선택</td><td>내보낼 컬럼(필드)을 사용자 지정</td></tr>
+    </table>
+
+    <h2 id="detail">연락처 상세 정보</h2>
+    <p>연락처 이름 클릭 시 표시되는 상세 화면에서 아래 정보를 확인/편집합니다.</p>
+    <table class="info-table">
+      <tr><th style="width:160px;">섹션</th><th>내용</th></tr>
+      <tr><td>기본 정보</td><td>이름, 이메일, 전화번호, 회사, 직책</td></tr>
+      <tr><td>태그 · 그룹</td><td>부여된 태그 목록, 소속 그룹</td></tr>
+      <tr><td>대화 이력</td><td>해당 연락처와의 전체 대화 타임라인</td></tr>
+      <tr><td>구독 정보</td><td>연결된 구독 플랜, 사용량, 결제 이력</td></tr>
+      <tr><td>메모</td><td>관리자가 작성한 내부 메모</td></tr>
+    </table>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> "동적 그룹" 기능을 활용하면 마케팅 대상을 자동으로 세분화할 수 있습니다. 예를 들어 "30일 이상 미접속 + Pro 플랜"인 고객에게 리텐션 메시지를 자동 발송하는 워크플로우를 구성할 수 있습니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

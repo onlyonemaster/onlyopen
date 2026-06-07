@@ -1,0 +1,456 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아이노트 AI Note — 콘-트리니티 매뉴얼 · kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+/* ===== 히어로 ===== */
+.hero-ainote {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  padding: 64px 40px 56px;
+  text-align: center;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.hero-ainote::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(99,102,241,.18) 0%, transparent 70%);
+  pointer-events: none;
+}
+.hero-ainote .badge-world {
+  display: inline-block;
+  background: rgba(245,158,11,.15);
+  border: 1px solid rgba(245,158,11,.4);
+  color: #fbbf24;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  padding: 6px 18px;
+  border-radius: 50px;
+  margin-bottom: 20px;
+  position: relative;
+}
+.hero-ainote h1 {
+  font-size: 40px;
+  font-weight: 900;
+  margin-bottom: 16px;
+  letter-spacing: -1px;
+  background: linear-gradient(135deg, #c4b5fd, #818cf8, #60a5fa);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  position: relative;
+}
+.hero-ainote .tagline {
+  font-size: 17px;
+  opacity: .85;
+  max-width: 600px;
+  margin: 0 auto 14px;
+  line-height: 1.7;
+  position: relative;
+}
+.hero-ainote .sub {
+  font-size: 13px;
+  opacity: .55;
+  max-width: 540px;
+  margin: 0 auto 28px;
+  line-height: 1.6;
+  position: relative;
+}
+.hero-ainote .btn-try {
+  display: inline-block;
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  color: white;
+  padding: 13px 34px;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 15px;
+  text-decoration: none;
+  box-shadow: 0 4px 24px rgba(99,102,241,.4);
+  position: relative;
+}
+
+/* ===== 트리니티 삼각도 ===== */
+.trinity-stage {
+  display: flex; gap: 16px; align-items: center; justify-content: center;
+  flex-wrap: wrap; margin: 18px 0 48px; padding: 28px 16px;
+  background: linear-gradient(135deg, rgba(99,102,241,.04), rgba(139,92,246,.04));
+  border: 1px solid var(--border); border-radius: 16px;
+}
+.trinity-svg-wrap { flex: 0 0 280px; max-width: 100%; }
+.trinity-svg-wrap svg { width: 100%; height: auto; }
+.trinity-desc { flex: 1 1 320px; min-width: 280px; }
+.trinity-desc h3 { font-size: 17px; font-weight: 800; margin-bottom: 10px; color: var(--text); }
+.trinity-desc p  { font-size: 14px; color: var(--text2); line-height: 1.75; margin-bottom: 0; }
+.trinity-svg-wrap .node-edi  text { fill: #6366f1; }
+.trinity-svg-wrap .node-art  text { fill: #f59e0b; }
+.trinity-svg-wrap .node-bri  text { fill: #10b981; }
+
+/* ===== Trinity 카드 ===== */
+.trinity-card-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0 32px;
+}
+.tcard {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; padding: 22px; text-decoration: none; display: block; transition:.2s;
+  position: relative; overflow: hidden;
+}
+.tcard:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(99,102,241,.12); }
+.tcard.edi:hover { border-color: #6366f1; }
+.tcard.art:hover { border-color: #f59e0b; }
+.tcard.bri:hover { border-color: #10b981; }
+.tcard .tc-label { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.tcard.edi .tc-label { color: #6366f1; }
+.tcard.art .tc-label { color: #f59e0b; }
+.tcard.bri .tc-label { color: #10b981; }
+.tcard .tc-title { font-size: 18px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.tcard .tc-ko    { font-size: 13px; color: var(--text3); margin-bottom: 12px; font-weight: 600; }
+.tcard .tc-desc  { font-size: 13px; color: var(--text2); line-height: 1.7; margin-bottom: 14px; }
+.tcard .tc-link  { font-size: 13px; font-weight: 700; }
+.tcard.edi .tc-link { color: #6366f1; }
+.tcard.art .tc-link { color: #f59e0b; }
+.tcard.bri .tc-link { color: #10b981; }
+
+/* ===== 세계 최초 박스 ===== */
+.world-first-box {
+  background: linear-gradient(135deg, rgba(245,158,11,.08) 0%, rgba(251,191,36,.04) 100%);
+  border: 1.5px solid rgba(245,158,11,.3);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin: 32px 0;
+}
+.world-first-box .wf-title {
+  font-size: 18px; font-weight: 800; color: #f59e0b;
+  margin-bottom: 12px; display: flex; align-items: center; gap: 8px;
+}
+.world-first-box ul { margin: 0; padding-left: 20px; }
+.world-first-box ul li { font-size: 14px; line-height: 1.8; color: var(--text2); margin-bottom: 4px; }
+
+/* ===== 비교표 ===== */
+.compare-box { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; margin: 24px 0; }
+.compare-box table { width: 100%; border-collapse: collapse; }
+.compare-box th { padding: 14px 18px; font-size: 13px; font-weight: 700; background: var(--bg3); border-bottom: 1px solid var(--border); text-align: center; }
+.compare-box th:first-child { text-align: left; }
+.compare-box th.geni { color: #6366f1; }
+.compare-box td { padding: 12px 18px; font-size: 13px; border-bottom: 1px solid var(--border); text-align: center; }
+.compare-box td:first-child { text-align: left; font-weight: 600; }
+.compare-box tr:last-child td { border-bottom: none; }
+.compare-box .ck { color: #10b981; font-size: 18px; font-weight: 900; }
+.compare-box .cx { color: var(--text3); font-size: 18px; }
+.compare-box .geni-col { background: rgba(99,102,241,.04); }
+
+/* ===== 챕터 카드 ===== */
+.chapter-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 24px 0; }
+.chapter-card { background: var(--bg2); border: 1px solid var(--border); border-radius: 14px; padding: 20px; text-decoration: none; display: block; transition:.2s; }
+.chapter-card:hover { border-color: var(--brand); transform: translateY(-2px); box-shadow: 0 6px 20px rgba(37,99,235,.1); }
+.chapter-card .ci { font-size: 26px; margin-bottom: 8px; display: block; }
+.chapter-card .ct { font-size: 14px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.chapter-card .cd { font-size: 13px; color: var(--text2); line-height: 1.6; }
+.chapter-card .num { font-size: 11px; color: var(--text3); font-weight: 600; margin-bottom: 6px; }
+
+@media(max-width:900px) { .trinity-card-grid { grid-template-columns: 1fr; } .chapter-grid { grid-template-columns: 1fr; } }
+@media(max-width:700px) { .hero-ainote h1 { font-size: 30px; } }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="hero-ainote" style="margin-top:60px;">
+  <div class="badge-world">⭐ World First · 세계 최초 · 콘-트리니티</div>
+  <h1>아이노트 (AI Note)</h1>
+  <p class="tagline">AI가 만든 텍스트를 <strong>붙여넣는 순간</strong> — URL은 카드로, 표는 깔끔한 테이블로, 코드는 형광 코드블록으로, 수식은 수식으로, 다이어그램은 다이어그램으로 자동 변환됩니다.<br>그리고 한 번 더 클릭하면 <strong>예술 작품 수준의 인포그래픽</strong>으로 다시 태어납니다.</p>
+  <p class="sub">노트 입력 · 시각 변환 · 비즈니스 브리핑의 3원 사이클을 처음으로 하나의 노트 안에서 완성한 시스템 — <em>콘-트리니티 (Con-Trinity)</em></p>
+  <a href="https://ainote.kiam.kr" target="_blank" class="btn-try">아이노트 시작하기 →</a>
+</div>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link active">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 매뉴얼</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <span>아이노트 (AI Note)</span>
+    </div>
+
+    <h1>🎨 아이노트 — 콘-트리니티(Con-Trinity)</h1>
+    <p class="page-desc">아이노트는 단순한 노트 앱이 아닙니다. <strong>에디콘(EdiCon) · 아트콘(ArtCon) · 브리콘(BriCon)</strong> — 세 개의 엔진이 하나의 노트 안에서 완벽한 사이클을 이루는, 세계 최초의 <strong>AI 노트 트리니티 시스템</strong>입니다.</p>
+
+    <div style="background:linear-gradient(135deg,rgba(99,102,241,.08),rgba(236,72,153,.08));border:1px solid rgba(99,102,241,.25);border-radius:12px;padding:16px 20px;margin:18px 0;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#6366f1;margin-bottom:8px;">📝 NAMING UPDATE · 명칭 변경 안내 (2026-05)</div>
+      <div style="font-size:14px;color:var(--text);line-height:1.75;">
+        콘-트리니티 도입과 함께 다음 명칭이 공식적으로 통합되었습니다.
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px;margin-top:10px;">
+          <div style="background:var(--bg2);border-radius:8px;padding:8px 12px;font-size:13px;"><span style="color:var(--text3);text-decoration:line-through;">지니노트(GeniNote)</span> → <strong style="color:#6366f1;">아이노트 (AI Note)</strong></div>
+          <div style="background:var(--bg2);border-radius:8px;padding:8px 12px;font-size:13px;"><span style="color:var(--text3);text-decoration:line-through;">지니아트(GeniArt)</span> → <strong style="color:#ec4899;">아트콘 (ArtCon)</strong></div>
+          <div style="background:var(--bg2);border-radius:8px;padding:8px 12px;font-size:13px;"><span style="color:var(--text3);text-decoration:line-through;">브리핑메이커</span> → <strong style="color:#10b981;">브리콘 (BriCon)</strong></div>
+          <div style="background:var(--bg2);border-radius:8px;padding:8px 12px;font-size:13px;"><span style="color:var(--text3);text-decoration:line-through;">DeepSeek · 딥시크 AI</span> → <strong style="color:#f59e0b;">SuperAI</strong></div>
+        </div>
+        <div style="margin-top:10px;font-size:12.5px;color:var(--text2);">URL과 데이터베이스 슬러그(<code>ainote</code>, <code>geniart</code>)는 호환성을 위해 유지되며, UI·문서 표기만 새 이름으로 통일됩니다. AI 엔진 브랜드 표기는 <strong>SuperAI</strong>로 통일됩니다.</div>
+      </div>
+    </div>
+
+    <!-- 트리니티 삼각도 -->
+    <div class="trinity-stage">
+      <div class="trinity-svg-wrap">
+        <svg viewBox="0 0 320 280" xmlns="http://www.w3.org/2000/svg" aria-label="콘-트리니티 다이어그램">
+          <defs>
+            <linearGradient id="gradEdi" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/>
+            </linearGradient>
+            <linearGradient id="gradArt" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/>
+            </linearGradient>
+            <linearGradient id="gradBri" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#06b6d4"/>
+            </linearGradient>
+            <marker id="arrTri" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+            </marker>
+          </defs>
+          <!-- Connecting arrows (cycle) -->
+          <path d="M 100 90 Q 160 60 220 90" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrTri)" stroke-dasharray="4 3"/>
+          <path d="M 235 130 Q 235 200 175 220" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrTri)" stroke-dasharray="4 3"/>
+          <path d="M 130 220 Q 80 200 80 130" stroke="#94a3b8" stroke-width="1.5" fill="none" marker-end="url(#arrTri)" stroke-dasharray="4 3"/>
+          <!-- EdiCon (top-left) -->
+          <g class="node-edi">
+            <circle cx="80" cy="80" r="42" fill="url(#gradEdi)" opacity="0.92"/>
+            <text x="80" y="76" text-anchor="middle" font-size="14" font-weight="800" fill="white">✏️</text>
+            <text x="80" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="white">EdiCon</text>
+            <text x="80" y="140" text-anchor="middle" font-size="11" font-weight="700">에디콘</text>
+            <text x="80" y="154" text-anchor="middle" font-size="9" fill="#94a3b8">입력 · 자동 인식</text>
+          </g>
+          <!-- ArtCon (top-right) -->
+          <g class="node-art">
+            <circle cx="240" cy="80" r="42" fill="url(#gradArt)" opacity="0.92"/>
+            <text x="240" y="76" text-anchor="middle" font-size="14" font-weight="800" fill="white">🎨</text>
+            <text x="240" y="94" text-anchor="middle" font-size="11" font-weight="700" fill="white">ArtCon</text>
+            <text x="240" y="140" text-anchor="middle" font-size="11" font-weight="700">아트콘</text>
+            <text x="240" y="154" text-anchor="middle" font-size="9" fill="#94a3b8">변환 · AI 인포그래픽</text>
+          </g>
+          <!-- BriCon (bottom-center) -->
+          <g class="node-bri">
+            <circle cx="160" cy="220" r="42" fill="url(#gradBri)" opacity="0.92"/>
+            <text x="160" y="216" text-anchor="middle" font-size="14" font-weight="800" fill="white">📊</text>
+            <text x="160" y="234" text-anchor="middle" font-size="11" font-weight="700" fill="white">BriCon</text>
+            <text x="160" y="278" text-anchor="middle" font-size="11" font-weight="700">브리콘</text>
+          </g>
+        </svg>
+      </div>
+      <div class="trinity-desc">
+        <h3>🔱 세 개의 콘(Con)이 하나의 사이클을 이룹니다</h3>
+        <p>
+          <strong style="color:#6366f1;">에디콘(EdiCon)</strong>이 붙여넣은 텍스트를 자동으로 인식해 깨끗하게 정돈하고,<br>
+          <strong style="color:#f59e0b;">아트콘(ArtCon)</strong>이 그 내용을 예술 작품 수준의 인포그래픽으로 변환하며,<br>
+          <strong style="color:#10b981;">브리콘(BriCon)</strong>이 결과물을 비즈니스 브리핑·발표 자료로 완성합니다.<br><br>
+          <em style="font-size:13px;">— 입력 → 시각화 → 전달 의 완전한 노트 사이클.</em>
+        </p>
+      </div>
+    </div>
+
+    <!-- 트리니티 3-카드 -->
+    <h2 id="trinity">🔱 콘-트리니티 자세히 보기</h2>
+    <div class="trinity-card-grid">
+      <a href="/manual/ainote/edicon.html" class="tcard edi">
+        <div class="tc-label">EDICON · 에디콘</div>
+        <div class="tc-title">✏️ 5대 자동 디스패치</div>
+        <div class="tc-ko">붙여넣는 순간 인식하는 에디터 엔진</div>
+        <div class="tc-desc">URL · 표 · 코드 · 수식 · 다이어그램 — 클립보드 텍스트의 형태를 자동으로 알아채고, 각각에 맞는 깔끔한 블록으로 변환합니다. <strong>210/210 시뮬레이션 통과</strong>.</div>
+        <div class="tc-link">에디콘 매뉴얼 →</div>
+      </a>
+      <a href="/manual/ainote/geniart.html" class="tcard art">
+        <div class="tc-label">ARTCON · 아트콘</div>
+        <div class="tc-title">🎨 AI 인포그래픽</div>
+        <div class="tc-ko">텍스트를 예술 작품으로 (아트콘)</div>
+        <div class="tc-desc">SuperAI + 4단계 안전망으로 표·흐름도·다이어그램을 예술 수준의 HTML 인포그래픽으로 자동 변환. 5가지 테마 실시간 전환. <strong>특허 출원 완료</strong>.</div>
+        <div class="tc-link">아트콘 매뉴얼 →</div>
+      </a>
+      <a href="/manual/ainote/bricon.html" class="tcard bri">
+        <div class="tc-label">BRICON · 브리콘</div>
+        <div class="tc-title">📊 비즈니스 브리핑</div>
+        <div class="tc-ko">노트를 발표 자료로</div>
+        <div class="tc-desc">완성된 노트를 투자자 브리핑·인적자원 분석·요약 카드로 자동 구성. 공유 링크로 누구든 보고 받을 수 있습니다. <strong>60페이지 자동 생성</strong>.</div>
+        <div class="tc-link">브리콘 매뉴얼 →</div>
+      </a>
+    </div>
+
+    <div class="world-first-box">
+      <div class="wf-title">🌍 세계 최초 — 어디서도 구현 못한 기능</div>
+      <ul>
+        <li><strong>Notion·에버노트·MS Teams·네이버 메모</strong> 어느 곳도 못 한 — AI 텍스트의 <strong>5종 자동 인식</strong> + <strong>AI 인포그래픽 변환</strong> + <strong>브리핑 자동 생성</strong>의 3원 사이클</li>
+        <li>EdiCon이 <strong>19종 Mermaid 다이어그램</strong>을 자동 감지·렌더링 (graph·flowchart·sequence·class·er·journey·gantt·pie·gitGraph·mindmap·timeline·quadrant·requirement·C4·sankey·block·xychart 등)</li>
+        <li>ArtCon은 SuperAI + 독자적 <strong>4단계 안전망</strong>으로 예술가 수준 HTML 인포그래픽을 생성 — 5가지 테마가 실시간으로 전체 화면과 함께 전환</li>
+        <li>BriCon은 노트 내용으로부터 <strong>60페이지 투자자 브리핑</strong>을 자동 구성 — 발표·공유·아카이브가 한 번에</li>
+        <li><strong>특허 출원 완료</strong> — 특허권으로 보호되는 독점 기술</li>
+      </ul>
+    </div>
+
+    <h2 id="compare">🏆 경쟁 서비스 비교</h2>
+    <p>전 세계 유명 노트 서비스들과 아이노트를 비교해 보세요. 콘-트리니티의 세 기능을 동시에 가진 서비스는 지구상에 없습니다.</p>
+
+    <div class="compare-box">
+      <table>
+        <thead>
+          <tr>
+            <th>기능</th>
+            <th class="geni">아이노트 ✨</th>
+            <th>Notion</th>
+            <th>에버노트</th>
+            <th>MS Teams</th>
+            <th>네이버 메모</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>기본 노트 작성</td><td class="geni-col"><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="ck">✓</span></td></tr>
+          <tr><td>붙여넣기 시 URL→카드 자동 변환</td><td class="geni-col"><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+          <tr><td>TSV/CSV/Pipe 표 자동 인식</td><td class="geni-col"><span class="ck">✓</span></td><td>△</td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+          <tr><td>LaTeX 수식 자동 렌더링</td><td class="geni-col"><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+          <tr><td>Mermaid 19종 다이어그램 자동 변환</td><td class="geni-col"><span class="ck">✓</span></td><td>△</td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+          <tr><td>AI 텍스트 → 인포그래픽 자동 변환</td><td class="geni-col"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+          <tr><td>5가지 테마 실시간 전환</td><td class="geni-col"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+          <tr><td>비즈니스 브리핑 자동 생성</td><td class="geni-col"><span class="ck">✓</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td><td><span class="cx">✗</span></td></tr>
+          <tr><td>노트 링크 공유</td><td class="geni-col"><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="ck">✓</span></td><td><span class="ck">✓</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h2 id="chapters">📖 매뉴얼 목차</h2>
+    <p>아래 각 장을 순서대로 따라가면 콘-트리니티의 모든 기능을 익힐 수 있습니다.</p>
+
+    <div class="chapter-grid">
+      <a href="/manual/ainote/trinity.html" class="chapter-card" style="border-color:rgba(99,102,241,.3);background:linear-gradient(135deg,rgba(99,102,241,.04),rgba(139,92,246,.04));">
+        <div class="num">📚 입문</div>
+        <span class="ci">🔱</span>
+        <div class="ct">콘-트리니티란?</div>
+        <div class="cd">에디콘·아트콘·브리콘이 어떻게 하나의 사이클을 이루는지 — 트리니티 철학과 사용 시나리오</div>
+      </a>
+      <a href="/manual/ainote/start.html" class="chapter-card">
+        <div class="num">1장</div>
+        <span class="ci">🚀</span>
+        <div class="ct">처음 시작하기</div>
+        <div class="cd">ainote.kiam.kr 접속, 로그인, 첫 화면 안내</div>
+      </a>
+      <a href="/manual/ainote/notes.html" class="chapter-card">
+        <div class="num">2장</div>
+        <span class="ci">📋</span>
+        <div class="ct">노트 목록 화면</div>
+        <div class="cd">노트 목록 보기, 검색, 새 노트 만들기</div>
+      </a>
+      <a href="/manual/ainote/write.html" class="chapter-card">
+        <div class="num">3장</div>
+        <span class="ci">✏️</span>
+        <div class="ct">노트 쓰기</div>
+        <div class="cd">에디터 기본, 자동 저장, 그리고 에디콘 진입</div>
+      </a>
+      <a href="/manual/ainote/edicon.html" class="chapter-card" style="border-color:rgba(99,102,241,.3);">
+        <div class="num">4장 · 에디콘</div>
+        <span class="ci">✏️</span>
+        <div class="ct">EdiCon — 5대 자동 디스패치</div>
+        <div class="cd">URL·표·코드·수식·다이어그램을 붙여넣는 순간 자동 변환</div>
+      </a>
+      <a href="/manual/ainote/geniart.html" class="chapter-card" style="border-color:rgba(245,158,11,.3);">
+        <div class="num">5장 · 아트콘 ⭐핵심</div>
+        <span class="ci">🎨</span>
+        <div class="ct">ArtCon — 아트콘 AI 인포그래픽</div>
+        <div class="cd">텍스트를 예술 인포그래픽으로, 재변환, 원본 보기</div>
+      </a>
+      <a href="/manual/ainote/bricon.html" class="chapter-card" style="border-color:rgba(16,185,129,.3);">
+        <div class="num">6장 · 브리콘</div>
+        <span class="ci">📊</span>
+        <div class="ct">BriCon — 비즈니스 브리핑</div>
+        <div class="cd">투자자 자료·인적자원 분석·요약 카드 자동 생성</div>
+      </a>
+      <a href="/manual/ainote/theme.html" class="chapter-card">
+        <div class="num">7장</div>
+        <span class="ci">🌈</span>
+        <div class="ct">5가지 테마</div>
+        <div class="cd">다크·클래식·딥플로트·그래디언트·웜 테마 변경</div>
+      </a>
+      <a href="/manual/ainote/share.html" class="chapter-card">
+        <div class="num">8장</div>
+        <span class="ci">🔗</span>
+        <div class="ct">공유하기</div>
+        <div class="cd">공유 링크 생성, 공개/비공개 설정, 공유 화면</div>
+      </a>
+    </div>
+
+    <div class="notice">
+      💡 <strong>처음이라면 1장부터 차근차근 → 트리니티(콘-트리니티란?)에서 큰 그림 → 4·5·6장에서 핵심 기능 실습!</strong><br>
+      트리니티 세 엔진을 모두 익히는 데 약 30분이면 충분합니다. 5장(아트콘)과 6장(브리콘)은 천천히 읽어 보세요 — 세계 최초의 놀라운 기능입니다.
+    </div>
+
+    <h2 id="investor">📊 투자자·사업자용 정보</h2>
+    <p>아이노트의 기술적 우수성과 시장 가치에 대한 상세한 자료는 아래에서 확인하세요. 이 자료 자체가 <strong>브리콘(BriCon)으로 생성된 결과물</strong>입니다.</p>
+    <a href="https://ainote.kiam.kr/investor_briefing.html" target="_blank" style="display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-decoration:none;color:var(--text);font-size:14px;font-weight:600;">
+      📊 투자자 브리핑 자료 보기 (60페이지) →
+    </a>
+
+    <div class="page-nav">
+      <a href="/manual/">← 매뉴얼 홈으로</a>
+      <a href="/manual/ainote/trinity.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🔱 콘-트리니티란?</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#trinity">콘-트리니티 자세히</a></li>
+      <li><a href="#compare">경쟁 서비스 비교</a></li>
+      <li><a href="#chapters">매뉴얼 목차</a></li>
+      <li><a href="#investor">투자자용 정보</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>명함 관리 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">명함 관리</div>
+      <a href="/manual/namecard/" class="sb-link active">📇 명함 관리 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 만들기</div>
+      <a href="/manual/namecard/add.html" class="sb-link">명함 등록하는 방법</a>
+      <a href="/manual/namecard/edit.html" class="sb-link">명함 수정 &amp; 관리</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 공유</div>
+      <a href="/manual/namecard/share.html" class="sb-link">명함 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 콘텐츠</div>
+      <a href="/manual/namecard/iammall.html" class="sb-link">🛒 IAM몰 연동</a>
+      <a href="/manual/namecard/westory.html" class="sb-link">📸 위스토리</a>
+      <a href="/manual/namecard/landing.html" class="sb-link">🎯 인포랜딩</a>
+      <a href="/manual/namecard/linkapply.html" class="sb-link">🔗 링크 신청</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <span>명함 관리</span>
+    </div>
+
+    <h1>📇 명함 관리</h1>
+    <p class="page-desc">kiam.kr의 디지털 멀티명함 시스템을 소개합니다. 종이명함을 넘어 AI 챗봇 링크·퍼널 마케팅·콘텐츠 공유까지 한 번에 관리합니다.</p>
+
+    <h2 id="what">IAM 멀티명함이란?</h2>
+    <p>kiam.kr의 핵심 서비스입니다. 단순한 디지털 명함이 아니라 <strong>마케팅 자동화 플랫폼</strong>을 명함 한 장에 담은 개념입니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">📇</span>
+        <div class="tn">디지털 명함</div>
+        <div class="td">이름·직책·연락처·사진·SNS 링크를 담은 모바일 명함. QR코드로 즉시 공유</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🤖</span>
+        <div class="tn">AI 챗봇 연결</div>
+        <div class="td">명함에 AI 챗봇 링크를 연결하여 방문자가 즉시 대화 시작 가능</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📢</span>
+        <div class="tn">퍼널 마케팅</div>
+        <div class="td">명함을 통해 유입된 고객을 SMS·AI 메시지로 자동 후속 관리</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📊</span>
+        <div class="tn">통계 분석</div>
+        <div class="td">명함 조회 수, 클릭 수, 챗봇 대화 전환율 실시간 확인</div>
+      </div>
+    </div>
+
+    <h2 id="types">명함 종류</h2>
+    <table class="m-table">
+      <thead><tr><th>종류</th><th>설명</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>개인 명함</strong></td>
+          <td>나 자신을 대표하는 기본 명함</td>
+          <td>AI 챗봇 링크 포함, QR코드 자동 생성</td>
+        </tr>
+        <tr>
+          <td><strong>그룹 명함</strong></td>
+          <td>팀·조직·브랜드를 대표하는 명함</td>
+          <td>여러 멤버가 공동 운영, 그룹 페이지 연결</td>
+        </tr>
+        <tr>
+          <td><strong>종이명함 연동</strong></td>
+          <td>기존 오프라인 명함과 연동</td>
+          <td>QR코드를 종이명함에 인쇄하여 디지털 연결</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="structure">명함 화면 구성</h2>
+    <p>명함은 크게 3개 영역으로 구성됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>영역</th><th>위치</th><th>포함 내용</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>프로필 영역</strong></td>
+          <td>상단</td>
+          <td>사진, 이름, 직책, 사업체명, 소개 문구</td>
+        </tr>
+        <tr>
+          <td><strong>연락처 영역</strong></td>
+          <td>중단</td>
+          <td>전화번호, 이메일, 주소, SNS 링크, 챗봇 링크</td>
+        </tr>
+        <tr>
+          <td><strong>콘텐츠 영역</strong></td>
+          <td>하단</td>
+          <td>내가 작성한 IAM 콘텐츠 피드 (위스토리)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="quickstart">빠른 시작 가이드</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">명함 등록하기</div>
+          <div class="step-desc">기본 정보를 입력하고 첫 명함을 만드세요.</div>
+          <a href="/manual/namecard/add.html" style="color:var(--brand);font-size:14px;">→ 명함 등록 매뉴얼 보기</a>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">AI 챗봇 연결하기</div>
+          <div class="step-desc">원챗(OneChat) 챗봇 링크를 명함에 연결하면 방문자가 바로 AI와 대화할 수 있습니다.</div>
+          <a href="/manual/onechat/profile.html" style="color:var(--brand);font-size:14px;">→ 챗봇 링크 설정 보기</a>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">명함 공유하기</div>
+          <div class="step-desc">QR코드, 링크, 카카오톡으로 명함을 공유하세요.</div>
+          <a href="/manual/namecard/share.html" style="color:var(--brand);font-size:14px;">→ 명함 공유 매뉴얼 보기</a>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>원챗과의 연계</strong><br>
+      명함에 연결된 챗봇 링크로 방문한 고객은 원챗의 <strong>수신 탭</strong>에 자동 등록됩니다. AI 동행·시나리오 캠페인으로 자동 후속 관리가 가능합니다.
+      <a href="/manual/onechat/" style="color:var(--brand);">→ 원챗 매뉴얼 보기</a>
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/account/settings.html"><span class="nav-label">← 이전</span><span class="nav-title">계정 설정 &amp; 요금제</span></a>
+      <a href="/manual/namecard/add.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">명함 등록하는 방법</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">IAM 멀티명함이란?</a></li>
+      <li><a href="#types">명함 종류</a></li>
+      <li><a href="#structure">명함 화면 구성</a></li>
+      <li><a href="#quickstart">빠른 시작 가이드</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

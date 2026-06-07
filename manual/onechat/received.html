@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>수신(공유)탭 사용법 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link active">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>수신(공유)탭 사용법</span>
+    </div>
+
+    <h1>📥 수신(공유)탭 사용법</h1>
+    <p class="page-desc">카카오톡·SNS·QR코드 등 공유 링크를 통해 직접 접속한 방문자를 관리하는 탭입니다. DM 전환, PWA 설치 유도 등 다양한 기능을 제공합니다.</p>
+
+    <h2 id="overview">수신탭이란?</h2>
+    <p>수신탭은 <strong>내 챗봇 공유 링크를 클릭해 먼저 찾아온 방문자</strong>들의 목록입니다. 운영자가 직접 발송한 SMS 퍼널과 달리, 카카오·SNS·명함·홈페이지 등 다양한 채널에서 유입된 방문자를 한 곳에서 관리합니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">👥</span>
+        <div class="tn">방문자 구독 관리</div>
+        <div class="td">공유 링크로 접속한 방문자가 챗봇을 구독하면 이 탭에 자동 등록됩니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">DM 전환</div>
+        <div class="td">방문자와 더 깊은 관계를 원할 때 1:1 DM 채팅으로 전환할 수 있습니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📱</span>
+        <div class="tn">PWA 설치 유도</div>
+        <div class="td">방문자에게 챗봇을 홈 화면에 추가하도록 유도해 재방문율을 높입니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔗</span>
+        <div class="tn">방문자 전용 링크</div>
+        <div class="td">각 방문자에게 고유한 링크(?v=ID)를 복사해 개별 안내할 수 있습니다</div>
+      </div>
+    </div>
+
+    <h2 id="layout">화면 구성</h2>
+    <p>수신탭 화면은 위에서부터 <strong>검색바 → 통계바 → 필터 칩 → 목록</strong> 순서로 구성됩니다.</p>
+
+    <h3 id="stats-bar">통계 바</h3>
+    <table class="m-table">
+      <thead><tr><th>표시 항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>전체 <span style="color:#f59e0b;">N명</span></td><td>현재 구독 중인 방문자 전체 수</td></tr>
+        <tr><td>대화중 <span style="color:#22c55e;">N명</span></td><td>한 번 이상 대화한 방문자 수</td></tr>
+        <tr><td>미대화 <span style="color:#ef4444;">N명</span></td><td>구독만 하고 아직 대화하지 않은 방문자 수</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="filters">필터 칩 (4가지)</h3>
+    <table class="m-table">
+      <thead><tr><th>필터 칩</th><th>표시 내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>전체</strong></td><td>구독 중인 모든 방문자 (DM 전환된 사람 제외)</td></tr>
+        <tr><td><strong>대화중</strong></td><td>AI 챗봇과 한 번 이상 대화한 방문자</td></tr>
+        <tr><td><strong>미대화</strong></td><td>구독했으나 아직 대화하지 않은 방문자</td></tr>
+        <tr><td><strong>DM전환됨</strong></td><td>운영자가 DM 채팅으로 전환한 방문자 (수신탭에서 제외 후 DM탭으로 이동)</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="visitor-card">방문자 카드 구성</h2>
+    <p>각 방문자는 카드 형태로 표시됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>카드 요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>아바타 (색상+이니셜)</td><td>방문자 ID 기반 자동 생성 색상 · 닉네임 첫 글자</td></tr>
+        <tr><td>💬 대화 인디케이터</td><td>대화한 적 있는 방문자는 아바타에 파란 대화 아이콘이 표시됨</td></tr>
+        <tr><td>닉네임</td><td>자동 생성 닉네임 (예: 파란고양이) 또는 운영자가 직접 지정한 이름</td></tr>
+        <tr><td>챗봇 링크 버튼</td><td>해당 방문자 전용 링크 복사 (<code>?v=방문자ID</code>)</td></tr>
+        <tr><td><span style="background:#dcfce7;color:#16a34a;padding:2px 6px;border-radius:4px;font-size:12px;">N회</span> 배지</td><td>대화 횟수</td></tr>
+        <tr><td>방문자 ID</td><td>8자리 고유 식별 코드 (예: WGGTOBPX)</td></tr>
+        <tr><td>챗봇 이름</td><td>방문자가 사용한 챗봇 이름</td></tr>
+        <tr><td>전화번호</td><td>PWA 설치 시 등록한 전화번호 (파란색으로 표시)</td></tr>
+        <tr><td>마지막 메시지</td><td>가장 최근 대화 내용 미리보기 (🤖 AI 응답 / 사용자 메시지 구분)</td></tr>
+        <tr><td>✏️ 이름 수정 버튼</td><td>방문자 닉네임을 운영자가 직접 지정</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="section-labels">대화중 / 미대화 그룹 구분</h3>
+    <p>목록은 자동으로 두 그룹으로 나뉩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>그룹</th><th>조건</th></tr></thead>
+      <tbody>
+        <tr><td>💬 대화중 · N명</td><td>chat_count &gt; 0 — 챗봇과 대화한 적 있는 방문자</td></tr>
+        <tr><td>🕐 미대화 · N명</td><td>chat_count = 0 — 구독만 하고 아직 대화 없음</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="pwa">PWA 앱 설치 유도</h2>
+    <p>방문자가 챗봇과 일정 횟수 이상 대화하면, 챗봇 화면 안에서 <strong>홈 화면에 추가</strong> 안내 카드가 자동으로 표시됩니다.</p>
+
+    <h3 id="pwa-flow">PWA 설치 흐름</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">방문자가 챗봇과 대화를 이어갑니다</div>
+          <div class="step-desc">일정 메시지 수(시스템 기준)를 넘으면 챗봇 화면 하단에 PWA 설치 안내 카드가 나타납니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">방문자가 "홈 화면에 추가" 버튼을 탭합니다</div>
+          <div class="step-desc">스마트폰 홈 화면에 챗봇 아이콘이 추가됩니다. 이후 앱처럼 바로 실행할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">(선택) 전화번호를 등록합니다</div>
+          <div class="step-desc">PWA 설치 카드에서 전화번호를 입력하면 운영자의 원챗에서 해당 방문자 카드에 전화번호가 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">운영자 원챗 → 아바타 메뉴 → "PWA 등록자"에서 목록 확인</div>
+          <div class="step-desc">아바타 드롭다운 메뉴의 <strong>📱 PWA 등록자</strong>를 클릭하면 앱을 설치하고 전화번호를 등록한 방문자 전체 목록을 볼 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>PWA란?</strong><br>
+      Progressive Web App — 웹페이지를 스마트폰 홈 화면에 앱처럼 추가하는 기술입니다. 별도 앱스토어 설치 없이 아이콘 한 번으로 챗봇을 바로 실행할 수 있습니다. iOS Safari와 Android Chrome 모두 지원합니다.
+    </div>
+
+    <h3 id="pwa-list">PWA 등록자 관리 패널</h3>
+    <p>아바타 드롭다운 → <strong>📱 PWA 등록자</strong>를 클릭하면 별도 패널이 열립니다.</p>
+    <table class="m-table">
+      <thead><tr><th>패널 기능</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>이름·전화번호·방문자ID 검색</td><td>등록된 정보로 빠르게 방문자를 찾을 수 있습니다</td></tr>
+        <tr><td>방문자 목록</td><td>PWA 설치 + 전화번호 등록한 방문자 전체 목록</td></tr>
+        <tr><td>전화번호 표시</td><td>등록한 전화번호가 파란색으로 표시됩니다</td></tr>
+        <tr><td>마지막 방문 시간</td><td>가장 최근에 챗봇을 방문한 시각</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="dm">DM 채팅으로 전환</h2>
+    <p>방문자와 더 깊은 관계를 원하거나, 공개 챗봇 대화가 아닌 1:1 개인 채팅으로 전환하고 싶을 때 사용하는 기능입니다.</p>
+
+    <div class="notice">
+      📌 <strong>DM 전환이란?</strong><br>
+      수신탭의 방문자를 kiam.kr 회원 DM 채팅방으로 연결하는 기능입니다. 전환 후 해당 방문자는 수신탭에서 제거되고 <strong>DM전환됨</strong> 필터에서만 확인할 수 있습니다.
+    </div>
+
+    <h3 id="dm-flow">DM 전환 방법</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">수신탭에서 방문자 카드를 클릭해 채팅창을 엽니다</div>
+          <div class="step-desc">방문자와의 챗봇 대화 내용이 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">채팅창 상단 메뉴에서 "DM 전환" 옵션을 선택합니다</div>
+          <div class="step-desc">DM 방 생성 여부를 확인하는 다이얼로그가 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">확인하면 DM 채팅방이 생성됩니다</div>
+          <div class="step-desc">채팅탭에 새 DM 방이 생성되고, 방문자는 수신탭의 <strong>DM전환됨</strong> 필터로 이동합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="tip">
+      💡 DM 전환 후에도 방문자는 기존 챗봇 링크(<code>?v=방문자ID</code>)로 다시 챗봇에 접속할 수 있습니다. DM 전환은 운영자 측 관리 상태를 변경하는 것이며, 방문자 경험에는 영향을 주지 않습니다.
+    </div>
+
+    <h2 id="visitor-link">방문자 전용 링크 복사</h2>
+    <p>각 방문자 카드에는 <strong>챗봇 링크</strong> 버튼이 있어, 해당 방문자에게만 적용되는 개인화된 링크를 복사할 수 있습니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>링크 형태</td><td><code>chatbot.kiam.kr/s/onechat1?v=WGGTOBPX</code></td></tr>
+        <tr><td>복사 방법</td><td>카드의 <strong>챗봇 링크 <i class="fas fa-copy" style="font-size:12px;"></i></strong> 버튼 클릭 → 클립보드에 자동 복사</td></tr>
+        <tr><td>활용</td><td>특정 방문자에게 링크를 재발송 시, 기존 대화 기록과 연결됨</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>방문자 전용 링크(<code>?v=</code>)와 일반 공유 링크의 차이</strong><br>
+      • 일반 공유 링크 <code>/s/onechat1</code>: 새 방문자로 등록 (새 대화 시작)<br>
+      • 방문자 전용 링크 <code>/s/onechat1?v=WGGTOBPX</code>: 해당 방문자의 기존 대화에 이어짐
+    </div>
+
+    <h2 id="rename">방문자 이름 지정</h2>
+    <p>방문자에게는 자동으로 닉네임이 배정되지만, 운영자가 직접 이름을 지정할 수 있습니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">✏️</div>
+        <div class="step-body">
+          <div class="step-title">카드 오른쪽 ✏️ 버튼을 클릭합니다</div>
+          <div class="step-desc">이름 입력 팝업이 열립니다. 원하는 이름을 입력하고 확인하면 저장됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="search">검색 기능</h2>
+    <p>상단 🔍 검색 버튼을 누르면 검색바가 나타납니다. 챗봇명 · 운영자명으로 검색할 수 있습니다.</p>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/funnel.html"><span class="nav-label">← 이전</span><span class="nav-title">발신(퍼널)탭 사용법</span></a>
+      <a href="/manual/onechat/chat.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">채팅 화면 사용법</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#overview">수신탭이란?</a></li>
+      <li><a href="#layout">화면 구성</a></li>
+      <li><a href="#stats-bar" class="h3">통계 바</a></li>
+      <li><a href="#filters" class="h3">필터 칩 4가지</a></li>
+      <li><a href="#visitor-card">방문자 카드 구성</a></li>
+      <li><a href="#pwa">PWA 앱 설치 유도</a></li>
+      <li><a href="#pwa-flow" class="h3">PWA 설치 흐름</a></li>
+      <li><a href="#pwa-list" class="h3">PWA 등록자 관리</a></li>
+      <li><a href="#dm">DM 채팅으로 전환</a></li>
+      <li><a href="#dm-flow" class="h3">DM 전환 방법</a></li>
+      <li><a href="#visitor-link">방문자 전용 링크</a></li>
+      <li><a href="#rename">방문자 이름 지정</a></li>
+      <li><a href="#search">검색 기능</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>일별 자동발송 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link active">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 일별 자동발송</nav>
+    <h1 class="page-title">🔄 일별 자동발송</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">일별 자동발송이란?</a></li>
+        <li><a href="#setup">설정 방법</a></li>
+        <li><a href="#split">DB 분할 방식</a></li>
+        <li><a href="#manage">발송 현황 관리</a></li>
+        <li><a href="#tips">활용 팁</a></li>
+      </ul>
+    </div>
+    <section id="what">
+      <h2>일별 자동발송이란?</h2>
+      <p><strong>일별 자동발송</strong>은 대용량 수신자 DB를 <strong>날짜별로 자동 분할하여 매일 일정량씩 발송</strong>하는 스케줄 발송 솔루션입니다.</p>
+      <div class="info-box">
+        <strong>예시</strong>: 10,000명의 DB를 업로드하고 하루 500건으로 설정하면, 매일 오전 9시에 500건씩 자동 발송됩니다. (20일 소요)
+      </div>
+      <p style="margin-top:12px;">스팸 차단 회피, 발송 비용 분산, 반응 모니터링 후 조정 등 다양한 마케팅 전략에 활용됩니다.</p>
+    </section>
+    <section id="setup">
+      <h2>설정 방법</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>일별발송 페이지 접속</strong><br><a href="https://kiam.kr/sub_16.php" target="_blank">https://kiam.kr/sub_16.php</a> 로 이동합니다.</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>[새 일별발송 등록] 클릭</strong></div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>수신자 파일 업로드</strong><br>CSV 형식 (이름, 전화번호 열 필수). 최대 100,000건.</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>메시지 작성</strong><br>발송할 문자 내용을 작성합니다. 챗봇 링크 포함 권장.</div></li>
+        <li><div class="step-num">5</div><div class="step-body"><strong>일별 발송량 설정</strong><br>하루에 발송할 건수를 입력합니다. (최소 10건, 최대 5,000건)</div></li>
+        <li><div class="step-num">6</div><div class="step-body"><strong>발송 시작 시간 설정</strong><br>매일 발송이 시작되는 시각을 지정합니다. (오전 9시 ~ 오후 9시)</div></li>
+        <li><div class="step-num">7</div><div class="step-body"><strong>활성화</strong><br>[시작] 버튼을 누르면 다음 날부터 자동 발송이 시작됩니다.</div></li>
+      </ol>
+    </section>
+    <section id="split">
+      <h2>DB 분할 방식</h2>
+      <table class="m-table">
+        <thead><tr><th>분할 기준</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>균등 분할</td><td>전체 DB를 일별 발송량으로 나누어 순서대로 발송</td></tr>
+          <tr><td>랜덤 분할</td><td>매일 무작위로 수신자를 선택하여 발송</td></tr>
+          <tr><td>날짜 지정</td><td>특정 날짜에 특정 수신자 그룹을 지정 (고급)</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="manage">
+      <h2>발송 현황 관리</h2>
+      <p>등록된 일별발송 목록은 <a href="https://kiam.kr/daily_list.php" target="_blank">일별발송 관리 페이지</a>에서 확인합니다.</p>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>진행률</td><td>전체 DB 중 발송된 비율 (%)</td></tr>
+          <tr><td>오늘 발송</td><td>당일 발송된 건수와 성공/실패</td></tr>
+          <tr><td>남은 일수</td><td>전체 DB 소진까지 예상 일수</td></tr>
+          <tr><td>상태</td><td>진행중 / 일시정지 / 완료 / 오류</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;"><strong>일시정지 / 재개</strong>: 언제든지 발송을 멈추고 재개할 수 있습니다.</p>
+      <p><strong>발송량 조정</strong>: 진행 중에도 일별 발송량을 변경할 수 있습니다.</p>
+    </section>
+    <section id="tips">
+      <h2>활용 팁</h2>
+      <ul class="m-list">
+        <li>📈 <strong>반응률 모니터링</strong>: 초기 2~3일간 링크 클릭률을 확인하고 메시지를 A/B 테스트하세요.</li>
+        <li>⏰ <strong>최적 발송 시간</strong>: 업종별로 오전 10시, 오후 2시, 오후 7시대가 반응률이 높습니다.</li>
+        <li>🔗 <strong>챗봇 연동</strong>: 링크 클릭 고객은 원챗에 자동 등록되므로 AI 챗봇이 즉시 대화를 이어갑니다.</li>
+        <li>🚫 <strong>수신 거부 관리</strong>: 수신 거부 고객은 자동으로 제외되어 재발송되지 않습니다.</li>
+        <li>💰 <strong>비용 관리</strong>: 포인트 잔액이 부족하면 자동으로 일시정지됩니다. 미리 충전해 두세요.</li>
+      </ul>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/sms/callback.html" class="btn-prev">← 콜백문자</a>
+      <a href="/manual/" class="btn-next">매뉴얼 홈 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">일별 자동발송이란?</a></li>
+      <li><a href="#setup">설정 방법</a></li>
+      <li><a href="#split">DB 분할 방식</a></li>
+      <li><a href="#manage">발송 현황 관리</a></li>
+      <li><a href="#tips">활용 팁</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

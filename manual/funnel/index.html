@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원퍼널문자 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원퍼널문자</div>
+      <a href="/manual/funnel/" class="sb-link active">🔀 원퍼널문자 소개</a>
+      <a href="/manual/funnel/daily-intro.html" class="sb-link">📅 데일리문자 소개</a>
+      <a href="/manual/funnel/landing.html" class="sb-link">🖼️ 인포랜딩페이지</a>
+      <a href="/manual/funnel/apply-page.html" class="sb-link">📋 이벤트신청페이지</a>
+      <a href="/manual/funnel/ai-design.html" class="sb-link">🤖 AI 퍼널 설계</a>
+      <a href="/manual/funnel/customer.html" class="sb-link">👥 신청 고객 관리</a>
+      <a href="/manual/funnel/old-customer.html" class="sb-link">📁 기존 고객 관리</a>
+      <a href="/manual/funnel/schedule.html" class="sb-link">📆 발송 예정 내역</a>
+      <a href="/manual/funnel/result.html" class="sb-link">📊 발송 결과 내역</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+      <a href="/manual/diver/" class="sb-link">DB 수집(디버)</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › 원퍼널문자</nav>
+    <h1 class="page-title">🔀 원퍼널문자 소개</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">원퍼널문자란?</a></li>
+        <li><a href="#flow">작동 흐름</a></li>
+        <li><a href="#features">핵심 기능</a></li>
+        <li><a href="#components">구성 요소</a></li>
+        <li><a href="#quickstart">빠른 시작</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>원퍼널문자란?</h2>
+      <p><strong>원퍼널문자</strong>는 <strong>고객 정보 수집 → 자동 문자 발송 → AI 챗봇 연결</strong>을 하나의 흐름으로 자동화한 마케팅 문자 솔루션입니다.</p>
+      <p style="margin-top:12px;">이벤트 신청창을 통해 고객이 정보를 입력하면, 미리 설계된 AI 퍼널 메시지 시퀀스에 따라 문자가 자동으로 발송되고, 원챗 챗봇으로 연결됩니다.</p>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>💡 핵심 가치</strong>: 한 번 설계하면 신규 고객이 등록될 때마다 <strong>자동으로</strong> 맞춤 메시지가 순차 발송됩니다. 영업 자동화의 핵심 도구입니다.
+      </div>
+    </section>
+
+    <section id="flow">
+      <h2>작동 흐름</h2>
+      <div style="background:var(--bg-card);border:1px solid var(--border);border-radius:10px;padding:20px;margin-top:12px;">
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="background:#4f46e5;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">1</div>
+            <div><strong>인포랜딩페이지 제작</strong> — 상품/서비스 소개 및 고객 정보 수집 페이지 만들기</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="background:#4f46e5;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">2</div>
+            <div><strong>이벤트신청페이지 연결</strong> — 고객이 이름/연락처를 입력하여 신청</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="background:#4f46e5;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">3</div>
+            <div><strong>AI 퍼널 메시지 설계</strong> — 신청 후 N일차에 발송할 메시지 시퀀스 설계</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="background:#4f46e5;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">4</div>
+            <div><strong>자동 문자 발송</strong> — 설계된 시퀀스대로 고객에게 자동 발송</div>
+          </div>
+          <div style="display:flex;align-items:center;gap:12px;">
+            <div style="background:#10b981;color:#fff;border-radius:50%;width:32px;height:32px;display:flex;align-items:center;justify-content:center;font-weight:700;flex-shrink:0;">5</div>
+            <div><strong>원챗 챗봇 연결</strong> — 문자 클릭 고객이 AI 챗봇으로 자동 이동</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="features">
+      <h2>핵심 기능</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">🖼️</div>
+          <div class="fc-title">인포랜딩페이지</div>
+          <div class="fc-desc">상품·서비스를 소개하고 고객 신청을 받는 전용 랜딩페이지를 직접 제작합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📋</div>
+          <div class="fc-title">이벤트신청페이지</div>
+          <div class="fc-desc">이름, 연락처, 추가 항목을 받는 고객 신청창을 코딩 없이 만들 수 있습니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🤖</div>
+          <div class="fc-title">AI 퍼널 설계</div>
+          <div class="fc-desc">신청 후 1일차, 3일차, 7일차 등 날짜별 자동 발송 메시지 시퀀스를 AI로 설계합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📊</div>
+          <div class="fc-title">발송 결과 관리</div>
+          <div class="fc-desc">예약 발송 예정 내역과 실제 발송 결과를 한눈에 확인합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">👥</div>
+          <div class="fc-title">고객 DB 관리</div>
+          <div class="fc-desc">신규 신청 고객과 기존 DB 고객을 분리·통합 관리합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🔗</div>
+          <div class="fc-title">원챗 자동 연결</div>
+          <div class="fc-desc">문자에 포함된 챗봇 링크 클릭 시 자동으로 원챗 퍼널에 등록됩니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="components">
+      <h2>구성 요소</h2>
+      <table>
+        <thead><tr><th>메뉴</th><th>위치(URL)</th><th>역할</th></tr></thead>
+        <tbody>
+          <tr><td>인포랜딩페이지</td><td>/mypage_landing_list.php</td><td>랜딩페이지 목록 관리 및 신규 제작</td></tr>
+          <tr><td>이벤트신청페이지</td><td>/mypage_link_list.php</td><td>고객 신청창 생성·관리·코드 복사</td></tr>
+          <tr><td>AI 퍼널 설계</td><td>/mypage_reservation_list.php</td><td>메시지 시퀀스 설계 등록</td></tr>
+          <tr><td>신청 고객 관리</td><td>/mypage_request_list.php</td><td>신규 신청 고객 DB 리스트</td></tr>
+          <tr><td>기존 고객 관리</td><td>/mypage_oldrequest_list.php</td><td>기존 DB 고객 예약발송 관리</td></tr>
+          <tr><td>발송 예정 내역</td><td>/mypage_wsend_list.php</td><td>예약된 발송 일정 확인</td></tr>
+          <tr><td>발송 결과 내역</td><td>/mypage_send_list.php</td><td>실제 발송 완료 결과 확인</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="quickstart">
+      <h2>빠른 시작</h2>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>인포랜딩페이지 제작</strong>
+            <p>→ <a href="/manual/funnel/landing.html">인포랜딩페이지 만들기</a></p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>이벤트신청페이지 연결</strong>
+            <p>→ <a href="/manual/funnel/apply-page.html">이벤트신청페이지 설정</a></p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>AI 퍼널 메시지 시퀀스 설계</strong>
+            <p>→ <a href="/manual/funnel/ai-design.html">AI 퍼널 설계하기</a></p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>발송 결과 확인</strong>
+            <p>→ <a href="/manual/funnel/result.html">발송 결과 내역</a></p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="page-nav">
+      <a href="/manual/" class="btn-prev">← 매뉴얼 홈</a>
+      <a href="/manual/funnel/daily-intro.html" class="btn-next">데일리문자 소개 →</a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul>
+      <li><a href="#what">원퍼널문자란?</a></li>
+      <li><a href="#flow">작동 흐름</a></li>
+      <li><a href="#features">핵심 기능</a></li>
+      <li><a href="#components">구성 요소</a></li>
+      <li><a href="#quickstart">빠른 시작</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

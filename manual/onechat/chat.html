@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>채팅 화면 사용법 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link active">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>채팅 화면 사용법</span>
+    </div>
+
+    <h1>채팅 화면 사용법</h1>
+    <p class="page-desc">고객과의 대화를 확인하고 관리하는 방법을 설명합니다. AI 아바타와 직접 대화를 자유롭게 전환할 수 있습니다.</p>
+
+    <h2 id="list">채팅 목록 확인</h2>
+    <p>하단 탭에서 <strong>채팅(💬)</strong>을 누르면 대화가 진행 중인 고객 목록이 표시됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>표시 요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>🔴 빨간 숫자 배지</td><td>아직 읽지 않은 새 메시지 수입니다</td></tr>
+        <tr><td>굵은 이름</td><td>미읽음 메시지가 있는 상대를 강조 표시합니다</td></tr>
+        <tr><td>메시지 미리보기</td><td>최근 대화 내용 28자를 미리 보여줍니다</td></tr>
+        <tr><td>시간 표시</td><td>오늘 / 어제 / N일 전 형식으로 표시됩니다</td></tr>
+        <tr><td>✓ 아이콘</td><td>대화가 완료된 상태입니다</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>이름으로 검색할 수 있어요</strong><br>
+      상단 검색창에 이름, 직함, 연락처를 입력하면 실시간으로 필터링됩니다.
+    </div>
+
+    <h2 id="enter">채팅방 입장</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">목록에서 대화할 상대를 클릭합니다</div>
+          <div class="step-desc">채팅 목록 또는 명함 리스트에서 이름을 클릭하면 전체화면 채팅방이 열립니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">채팅방이 열리면서 대화 내용이 표시됩니다</div>
+          <div class="step-desc">이전 대화 내용 전체가 복원되어 표시됩니다. 채팅방에 들어오는 순간 미읽음이 자동으로 읽음 처리됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="chatroom">채팅방 구성</h2>
+
+    <h3 id="header-info">상단 헤더</h3>
+    <table class="m-table">
+      <thead><tr><th>요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>← 뒤로가기</td><td>채팅 목록으로 돌아갑니다</td></tr>
+        <tr><td>상대 이름/직함</td><td>현재 대화 중인 상대방 정보입니다</td></tr>
+        <tr><td>참여자 아이콘 4개</td><td>MY AI(내 아바타) / 나 / 상대 / AI(상대 아바타)를 나타냅니다</td></tr>
+        <tr><td>ℹ️ 정보 버튼</td><td>이 상대에 대한 맞춤 프롬프팅 설정 패널을 엽니다</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="messages">메시지 종류</h3>
+    <table class="m-table">
+      <thead><tr><th>표시</th><th>의미</th><th>말풍선 위치</th></tr></thead>
+      <tbody>
+        <tr><td>🤖 MY AI</td><td>내 AI 아바타가 자동 응답한 메시지</td><td>오른쪽</td></tr>
+        <tr><td>✍️ 나</td><td>내가 직접 입력한 메시지</td><td>오른쪽</td></tr>
+        <tr><td>👤 상대</td><td>고객이 보낸 메시지</td><td>왼쪽</td></tr>
+        <tr><td>🤖 AI</td><td>상대방 AI 아바타의 응답</td><td>왼쪽</td></tr>
+        <tr><td>🤝 AI 동행</td><td>AI 동행 기능이 자동 발송한 맞춤 메시지 (핑크 카드)</td><td>오른쪽</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="companion-card" style="margin-top:24px;">🤝 AI 동행 메시지 카드</h3>
+    <p>AI 동행 기능이 켜져 있으면, 대화 종료 후 AI가 자동으로 상대방에게 맞춤 메시지를 보냅니다.<br>
+    채팅창 안에서는 아래와 같이 <strong>핑크 그라데이션 카드</strong>로 구별되어 표시됩니다.</p>
+
+    <div style="max-width:320px;margin:16px 0;background:linear-gradient(135deg,#fdf2f8,#fce7f3);border:1px solid #fbcfe8;border-radius:14px;padding:14px 16px;">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;">
+        <span style="background:linear-gradient(135deg,#f43f5e,#e11d48);color:white;border-radius:20px;padding:2px 10px;font-size:11px;font-weight:700;">🤝 AI 동행</span>
+        <span style="font-size:11px;color:#9ca3af;">오전 9:15</span>
+      </div>
+      <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">조은님, 오랜만이에요! 지난번에 말씀하셨던 선거 전략 관련해서 궁금한 점은 잘 해결되셨나요? 도움이 필요하시면 언제든지 알려주세요 😊</p>
+    </div>
+
+    <table class="m-table" style="margin-top:12px;">
+      <thead><tr><th>카드 요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>🤝 AI 동행 배지</td><td>일반 메시지와 구별되는 분홍 배지로 AI 자동 발송임을 표시</td></tr>
+        <tr><td>핑크 그라데이션 배경</td><td>AI 동행 메시지만의 고유 디자인 — 채팅창에서 바로 식별 가능</td></tr>
+        <tr><td>메시지 내용</td><td>DeepSeek AI가 이전 대화 맥락을 분석하여 자동 생성한 맞춤 문장</td></tr>
+        <tr><td>발송 시각</td><td>크론 자동 발송 시각이 표시됨</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice" style="margin-top:12px;">
+      📌 <strong>AI 동행 메시지는 어떻게 만들어지나요?</strong><br>
+      이전 대화에서 상대방의 관심사·감정·미해결 주제를 분석하여, 설정된 역할 프롬프트와 메시지 유형(안부·정보·뉴스·응원)에 맞는 문장을 AI가 작성합니다.<br>
+      <a href="/manual/onechat/companion.html" style="color:var(--brand);">→ AI 동행 설정 매뉴얼 보기</a>
+    </div>
+
+    <h2 id="send">메시지 보내기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">하단 입력창에 메시지를 입력합니다</div>
+          <div class="step-desc">AI 아바타가 OFF 상태일 때 입력창이 활성화됩니다. 긴 메시지는 입력창이 자동으로 늘어납니다 (최대 120px).</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Enter 키 또는 ➤ 버튼으로 전송합니다</div>
+          <div class="step-desc">Enter 키를 누르면 전송됩니다. 줄바꿈은 Shift+Enter를 사용하세요.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="attach">파일 & 이미지 첨부</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">+</div>
+        <div class="step-body">
+          <div class="step-title">입력창 왼쪽 + 버튼을 누릅니다</div>
+          <div class="step-desc">팝업 메뉴에서 첨부 유형을 선택합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <table class="m-table">
+      <thead><tr><th>첨부 유형</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>🖼️ 이미지</td><td>사진 파일을 선택하여 첨부합니다. 썸네일로 미리보기됩니다.</td></tr>
+        <tr><td>📎 파일</td><td>PDF, DOC, TXT, PPT, XLS 등 문서 파일을 첨부합니다.</td></tr>
+        <tr><td>📷 카메라</td><td>카메라를 열어 바로 사진을 촬영하여 첨부합니다.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      📌 <strong>AI 아바타 ON 상태에서 직접 입력하려면</strong><br>
+      AI 아바타가 켜져 있을 때는 "챗봇이 자동으로 응답합니다" 배너가 표시됩니다. 직접 입력하고 싶으면 <strong>"직접 입력"</strong> 버튼을 눌러 일시적으로 직접 입력 모드로 전환할 수 있습니다. 전송 후 자동으로 AI 모드로 돌아갑니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/share.html"><span class="nav-label">← 이전</span><span class="nav-title">챗봇 링크 공유하기</span></a>
+      <a href="/manual/onechat/ai-toggle.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">AI 아바타 ON/OFF</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#list">채팅 목록 확인</a></li>
+      <li><a href="#enter">채팅방 입장</a></li>
+      <li><a href="#chatroom">채팅방 구성</a></li>
+      <li><a href="#header-info" class="h3">상단 헤더</a></li>
+      <li><a href="#messages" class="h3">메시지 종류</a></li>
+      <li><a href="#companion-card" class="h3">AI 동행 메시지 카드</a></li>
+      <li><a href="#send">메시지 보내기</a></li>
+      <li><a href="#attach">파일 & 이미지 첨부</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

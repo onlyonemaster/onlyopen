@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>데모 체험하기 &#8212; VoiceGen AI &#47; kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VoiceGen AI 매뉴얼</div>
+      <a href="/manual/voicegen/" class="sb-link ">&#128266; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/voicegen/start.html" class="sb-link ">회원가입 &amp; 로그인</a>
+      <a href="/manual/voicegen/demo.html" class="sb-link active">데모 체험하기</a>
+      <a href="/manual/voicegen/start.html#apikey" class="sb-link">API 키 발급</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">API 연동</div>
+      <a href="/manual/voicegen/api.html" class="sb-link ">API 레퍼런스</a>
+      <a href="/manual/voicegen/voices.html" class="sb-link ">음성 프리셋 목록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/voicegen/clone.html" class="sb-link ">음성 클로닝</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/voicegen/plan.html" class="sb-link ">요금제 안내</a>
+      <a href="/manual/voicegen/faq.html" class="sb-link ">자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/voicegen/">VoiceGen AI</a><span class="sep">&#8250;</span><span>데모 체험</span>
+    </div>
+    <h1>데모 체험하기</h1>
+    <p class="lead">회원가입 없이도 VoiceGen AI의 음성 합성 품질을 바로 체험할 수 있습니다.<br>
+    데모는 IP당 1시간에 5회, 최대 200자까지 무료로 제공됩니다.</p>
+
+    <h2>데모 사용 방법</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>텍스트 입력</strong>
+        <p><a href="https://vg.kiam.kr/" target="_blank">vg.kiam.kr 메인</a>에서 스크롤을 내리면<br>
+        텍스트 입력창이 보입니다. 음성으로 변환할 텍스트를 입력하세요 (최대 200자)</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>음성 선택</strong>
+        <p>6종의 음성 프리셋 중 원하는 음성을 클릭하여 선택합니다<br>
+        &#8594; <a href="/manual/voicegen/voices.html">각 음성의 특징 보기</a></p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>속도 조절 (선택)</strong>
+        <p>슬라이더로 0.5x ~ 2.0x 범위에서 재생 속도를 조절할 수 있습니다<br>
+        기본값은 1.0x입니다</p>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <strong>음성 생성</strong>
+        <p><strong>&#128266; 음성 생성하기</strong> 버튼을 클릭하면 수 초 내에 음성이 생성됩니다<br>
+        완료 후 플레이어에서 재생하거나 WAV 파일로 다운로드할 수 있습니다</p>
+      </div></div>
+    </div>
+
+    <h2>음성 프리셋 미리보기</h2>
+    <table>
+      <thead><tr><th>이름</th><th>언어</th><th>특징</th><th>추천 용도</th></tr></thead>
+      <tbody>
+        <tr><td><strong>수아</strong></td><td>한국어</td><td>밝고 명랑한 여성 목소리</td><td>안내 방송, 앱 알림</td></tr>
+        <tr><td><strong>민준</strong></td><td>한국어</td><td>신뢰감 있는 남성 목소리</td><td>뉴스, 설명 영상</td></tr>
+        <tr><td><strong>지은</strong></td><td>한국어</td><td>전문적이고 차분한 여성</td><td>기업 안내, 프레젠테이션</td></tr>
+        <tr><td><strong>준서</strong></td><td>한국어</td><td>에너지 넘치는 남성</td><td>광고, 마케팅 콘텐츠</td></tr>
+        <tr><td><strong>Emma</strong></td><td>영어</td><td>따뜻하고 친근한 여성</td><td>영어 학습, 글로벌 서비스</td></tr>
+        <tr><td><strong>James</strong></td><td>영어</td><td>전문적인 남성</td><td>비즈니스, 기업 콘텐츠</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-blue">
+      <strong>&#128161; 데모 제한 초과 시</strong><br>
+      "시간당 5회 초과" 메시지가 나오면 1시간 후에 다시 이용하거나,
+      <a href="https://vg.kiam.kr/signup.php" target="_blank">무료 회원가입</a> 후 API로 직접 호출하세요.
+      무료 플랜은 월 10,000자를 제공합니다.
+    </div>
+
+    <h2>생성된 음성 다운로드</h2>
+    <p>음성 생성 완료 후 플레이어 아래 <strong>&#8659; 다운로드 (WAV)</strong> 버튼을 클릭하면<br>
+    WAV 형식으로 파일을 저장할 수 있습니다.</p>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="https://vg.kiam.kr" target="_blank" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128266; VoiceGen AI 바로가기 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

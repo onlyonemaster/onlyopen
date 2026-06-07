@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>마이챗 — 마이챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<div class="m-layout">
+  <!-- 사이드바 -->
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">마이챗 매뉴얼</div>
+      <a href="/manual/mychat/" class="sb-link active">🧠 마이챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/mychat/start.html" class="sb-link ">구독 &amp; 첫 진입</a>
+      <a href="/manual/mychat/subscribe.html" class="sb-link ">💳 구독 플랜 안내</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">나만의 AI 대화</div>
+      <a href="/manual/mychat/chat.html" class="sb-link ">💬 AI와 대화하기</a>
+      <a href="/manual/mychat/voice.html" class="sb-link ">🎙️ 음성 대화</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">학습 데이터</div>
+      <a href="/manual/mychat/learn.html" class="sb-link ">📚 데이터 입력하기</a>
+      <a href="/manual/mychat/learn.html#channels" class="sb-link">14개 채널 설명</a>
+      <a href="/manual/mychat/learn.html#scope" class="sb-link">공개 범위 설정</a>
+      <a href="/manual/mychat/phone.html" class="sb-link ">📱 폰 데이터 연동</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">아바타 스튜디오</div>
+      <a href="/manual/mychat/avatar.html" class="sb-link ">😊 얼굴 아바타 만들기</a>
+      <a href="/manual/mychat/avatar.html#voice" class="sb-link">🎙️ 목소리 설정</a>
+      <a href="/manual/mychat/avatar.html#heygen" class="sb-link">🎬 화상 아바타 (HeyGen)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">분석 &amp; 의사결정</div>
+      <a href="/manual/mychat/dashboard.html" class="sb-link ">📊 인생 분석 대시보드</a>
+      <a href="/manual/mychat/decisions.html" class="sb-link ">🧭 의사결정 추적</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">설정 &amp; 보안</div>
+      <a href="/manual/mychat/settings.html" class="sb-link ">⚙️ 설정 &amp; API키</a>
+      <a href="/manual/mychat/settings.html#vault" class="sb-link">🔒 데이터 저장 방식</a>
+      <a href="/manual/mychat/settings.html#panic" class="sb-link">🚨 긴급 차단</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a>
+      <span class="sep">›</span>
+      <a href="/manual/mychat/">마이챗</a>
+    </div>
+
+    <h1>🧠 마이챗 (MyChat)</h1>
+    <p class="page-desc">나만의 AI 아바타와 1:1로 대화하고, 내 삶의 데이터를 쌓아가는 완전 자기주도형 라이프 AI 시스템입니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">🤝</span>
+        <div class="tn">나만의 1:1 대화</div>
+        <div class="td">남에게 공개하지 않는, 오직 나와 AI 아바타만의 완전 비공개 대화</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📚</span>
+        <div class="tn">내 삶 데이터 축적</div>
+        <div class="td">일기·통화·건강·손금·사주 등 14채널로 나의 모든 정보를 학습</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🧭</span>
+        <div class="tn">의사결정 동행</div>
+        <div class="td">중요한 결정을 AI와 함께 분석하고 결과를 추적해 예측 정확도를 높임</div>
+      </div>
+    </div>
+
+    <h2 id="what">마이챗이란?</h2>
+    <p>마이챗은 <strong>나만 접근할 수 있는 개인 AI 아바타 서비스</strong>입니다. 원챗(OneChat)이 고객에게 챗봇을 제공하는 서비스라면, 마이챗은 <strong>나 자신을 위한</strong> 서비스입니다.</p>
+
+    <div class="notice">
+      💡 <strong>원챗과 마이챗의 차이</strong><br>
+      원챗: 내 AI 아바타 → 고객에게 공개, 고객 응대·영업·홍보용<br>
+      마이챗: 내 AI 아바타 ↔ 나만의 대화, 의사결정·자기이해·인생동행용
+    </div>
+
+    <h2 id="access">진입 방법</h2>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body"><strong>kiam.kr/m/ 앱 홈</strong>에서 <strong>🧠 마이챗</strong> 아이콘 클릭</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">구독 여부 자동 확인 → 미구독 시 <strong>구독 페이지</strong>로 이동</div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">구독 완료 후 <strong>2차 PIN 인증</strong> → 마이챗 대화창 진입</div>
+      </li>
+    </ol>
+    <p>또는 원챗 사이드바 <strong>💬 마이챗으로 이동 →</strong> 링크로도 접근할 수 있습니다.</p>
+
+    <h2 id="url">주소</h2>
+    <div class="code-block">https://onechat.kiam.kr/aimessage/mychat/</div>
+
+    <h2 id="features">주요 기능 목록</h2>
+    <table>
+      <tr><th>기능</th><th>설명</th><th>관련 페이지</th></tr>
+      <tr><td>💬 AI 대화</td><td>내 학습 데이터 기반 1:1 대화 (텍스트·음성·화상)</td><td><a href="/manual/mychat/chat.html">대화하기</a></td></tr>
+      <tr><td>📚 학습 데이터</td><td>14개 채널로 내 삶 정보 입력·관리</td><td><a href="/manual/mychat/learn.html">데이터 입력</a></td></tr>
+      <tr><td>😊 아바타 스튜디오</td><td>AI 생성 얼굴·목소리·HeyGen 화상 아바타</td><td><a href="/manual/mychat/avatar.html">스튜디오</a></td></tr>
+      <tr><td>📊 인생 분석</td><td>데이터 기반 성향·패턴·AI 예측 정확도 대시보드</td><td><a href="/manual/mychat/dashboard.html">대시보드</a></td></tr>
+      <tr><td>🧭 의사결정 추적</td><td>중요한 결정의 예측→결과 학습 강화 루프</td><td><a href="/manual/mychat/decisions.html">의사결정</a></td></tr>
+      <tr><td>📱 폰 연동</td><td>통화·문자·건강·캘린더 자동 수집 (iamapp)</td><td><a href="/manual/mychat/phone.html">폰 연동</a></td></tr>
+      <tr><td>💳 구독</td><td>스타터·스탠다드·BYOK 3가지 플랜</td><td><a href="/manual/mychat/subscribe.html">구독 안내</a></td></tr>
+    </table>
+
+    <h2 id="security">보안 4중 잠금</h2>
+    <p>마이챗은 민감한 개인 데이터를 다루기 때문에 4단계 보안이 적용됩니다.</p>
+    <ol class="step-list">
+      <li class="step-item"><div class="step-num">1</div><div class="step-body"><strong>kiam.kr 계정 로그인</strong> (기본)</div></li>
+      <li class="step-item"><div class="step-num">2</div><div class="step-body"><strong>마이챗 PIN 4자리</strong> 별도 인증</div></li>
+      <li class="step-item"><div class="step-num">3</div><div class="step-body">건강·금융 등 <strong>민감 채널</strong> 열람 시 재인증</div></li>
+      <li class="step-item"><div class="step-num">4</div><div class="step-body"><strong>🚨 긴급 차단(Panic Lock)</strong> — 모든 외부 공개 즉시 비공개 전환</div></li>
+    </ol>
+
+    <div class="tip">빠른 시작은 <a href="/manual/mychat/start.html">구독 &amp; 첫 진입</a> 페이지를 참고하세요.</div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

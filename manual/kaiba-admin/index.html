@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-AIBA 관리자 매뉴얼 — kaiba.kiam.kr/admin</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.hero {
+  background: linear-gradient(135deg,#1e293b 0%,#334155 40%,#7c3aed 100%);
+  padding: 64px 40px; text-align:center; color:white;
+}
+.hero h1 { font-size:38px; font-weight:800; margin-bottom:12px; letter-spacing:-1px; }
+.hero p  { font-size:17px; opacity:.85; max-width:520px; margin:0 auto 28px; }
+main { max-width:1060px; margin:0 auto; padding:48px 40px 80px; }
+.sec-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:14px; }
+.card-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:48px; }
+.doc-card {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:14px; padding:22px; text-decoration:none; display:block; transition:.2s;
+}
+.doc-card:hover { border-color:var(--brand); transform:translateY(-2px); box-shadow:0 6px 20px rgba(37,99,235,.1); }
+.doc-card .ci { font-size:28px; margin-bottom:10px; display:block; }
+.doc-card .ct { font-size:15px; font-weight:700; color:var(--text); margin-bottom:5px; }
+.doc-card .cd { font-size:13px; color:var(--text2); line-height:1.6; }
+.doc-card .cb { display:inline-block; margin-top:10px; background:var(--brand-light); color:var(--brand); border-radius:4px; padding:2px 8px; font-size:11px; font-weight:600; }
+@media(max-width:900px) { .card-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:600px) { .hero{padding:40px 20px;} .hero h1{font-size:26px;} main{padding:32px 20px 60px;} .card-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+
+<div class="hero" style="margin-top:60px;">
+  <h1>⚙️ K-AIBA 관리자 매뉴얼</h1>
+  <p>kaiba.kiam.kr/admin 관리자 패널의<br>모든 기능을 단계별로 안내합니다</p>
+</div>
+
+<main>
+  <div class="sec-label">📂 관리자 기능 매뉴얼</div>
+  <div class="card-grid">
+    <a href="/manual/kaiba-admin/dashboard.html" class="doc-card">
+      <span class="ci">📊</span>
+      <div class="ct">대시보드</div>
+      <div class="cd">KPI 패널(총 봇수, 브릿지, 레이어, 총 대화, 평점, RAG 청크), 후보 리스트, Context Bridge 상태</div>
+      <span class="cb">핵심</span>
+    </a>
+    <a href="/manual/kaiba-admin/bot-manager.html" class="doc-card">
+      <span class="ci">🤖</span>
+      <div class="ct">봇 관리</div>
+      <div class="cd">챗봇 ON/OFF, 프롬프트 모드 변경, 세부설정(톤·관계·목적), 일괄 작업</div>
+      <span class="cb">핵심</span>
+    </a>
+    <a href="/manual/kaiba-admin/subscriber.html" class="doc-card">
+      <span class="ci">👥</span>
+      <div class="ct">구독자 관리</div>
+      <div class="cd">플랜별 필터(Free~B2B), 사용량 추적, 만료일 관리, 구독자 상세 정보</div>
+      <span class="cb">핵심</span>
+    </a>
+    <a href="/manual/kaiba-admin/scenario.html" class="doc-card">
+      <span class="ci">🎯</span>
+      <div class="ct">시나리오 관리</div>
+      <div class="cd">시나리오 캠페인 KPI, 활성 시나리오, 평균 컨텍스트/전환율, 통계 분석</div>
+      <span class="cb">마케팅</span>
+    </a>
+    <a href="/manual/kaiba-admin/system-config.html" class="doc-card">
+      <span class="ci">🛠️</span>
+      <div class="ct">시스템 설정</div>
+      <div class="cd">DB 헬스체크, 테이블·큐 상태, 시스템 정보, AI 자동 해결 기능</div>
+      <span class="cb">시스템</span>
+    </a>
+    <a href="/manual/kaiba-admin/ai-analytics.html" class="doc-card">
+      <span class="ci">📈</span>
+      <div class="ct">AI 분석</div>
+      <div class="cd">대화 분석 대시보드, 사용자 행동 통계, AI 응답 품질 지표, 트렌드 차트</div>
+      <span class="cb">분석</span>
+    </a>
+    <a href="/manual/kaiba-admin/ai-insight.html" class="doc-card">
+      <span class="ci">💡</span>
+      <div class="ct">AI 인사이트</div>
+      <div class="cd">AI 기반 인사이트 리포트, 주요 발견사항, 개선 권고, 자동 알림</div>
+      <span class="cb">분석</span>
+    </a>
+    <a href="/manual/kaiba-admin/companion.html" class="doc-card">
+      <span class="ci">🧠</span>
+      <div class="ct">AI 컴패니언</div>
+      <div class="cd">AI 어시스턴트 설정, 대화 시나리오, 학습 데이터 관리, 성능 모니터링</div>
+      <span class="cb">AI</span>
+    </a>
+    <a href="/manual/kaiba-admin/messages.html" class="doc-card">
+      <span class="ci">💬</span>
+      <div class="ct">메시지 관리</div>
+      <div class="cd">발송 메시지 내역, 예약 발송, 템플릿 관리, 발송 통계</div>
+      <span class="cb">운영</span>
+    </a>
+    <a href="/manual/kaiba-admin/operator.html" class="doc-card">
+      <span class="ci">🎧</span>
+      <div class="ct">상담원 관리</div>
+      <div class="cd">실시간 상담 대기열, 상담원 배정, 상담 이력, 우선순위 설정</div>
+      <span class="cb">운영</span>
+    </a>
+    <a href="/manual/kaiba-admin/contacts.html" class="doc-card">
+      <span class="ci">📇</span>
+      <div class="ct">연락처 관리</div>
+      <div class="cd">고객 연락처 DB, 그룹 관리, 태그 분류, 가져오기/내보내기</div>
+      <span class="cb">CRM</span>
+    </a>
+    <a href="/manual/kaiba-admin/payments.html" class="doc-card">
+      <span class="ci">💳</span>
+      <div class="ct">결제 관리</div>
+      <div class="cd">결제 내역 조회, 구독 플랜 관리, 환불 처리, 매출 통계</div>
+      <span class="cb">운영</span>
+    </a>
+  </div>
+
+  <div class="sec-label">🔗 관련 매뉴얼</div>
+  <div class="card-grid">
+    <a href="/manual/kaiba/" class="doc-card">
+      <span class="ci">🌐</span>
+      <div class="ct">K-AIBA 사용자 매뉴얼</div>
+      <div class="cd">사용자 대상 kaiba.kiam.kr 웹사이트 기능 안내</div>
+      <span class="cb">사용자</span>
+    </a>
+    <a href="/manual/" class="doc-card">
+      <span class="ci">📚</span>
+      <div class="ct">전체 매뉴얼 홈</div>
+      <div class="cd">kiam.kr 전체 서비스 매뉴얼 목록</div>
+      <span class="cb">전체</span>
+    </a>
+  </div>
+</main>
+
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

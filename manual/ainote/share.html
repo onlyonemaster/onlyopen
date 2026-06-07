@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>6장: 공유하기 — 아이노트 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a></div>
+    <div class="sb-section"><div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a></div>
+    <div class="sb-section"><div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a></div>
+    <div class="sb-section"><div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a></div>
+    <div class="sb-section"><div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a></div>
+    <div class="sb-section"><div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link active">공유하기</a></div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <span>공유하기</span>
+    </div>
+
+    <h1>🔗 6장: 공유하기</h1>
+    <p class="page-desc">아이노트를 다른 사람과 나눌 수 있습니다. 공유 링크를 만들면 로그인 없이도 아름다운 인포그래픽 노트를 볼 수 있습니다.</p>
+
+    <h2 id="what-is-share">공유 기능이란?</h2>
+    <p>내 노트를 특별한 링크(URL)로 만들어서 다른 사람과 공유할 수 있습니다. 링크를 받은 사람은 로그인 없이도 노트를 볼 수 있습니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">🔒</span>
+        <div class="tn">기본: 비공개</div>
+        <div class="td">새로 만든 노트는 기본적으로 나만 볼 수 있습니다. 공유를 활성화해야 다른 사람이 볼 수 있습니다.</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔓</span>
+        <div class="tn">공유 활성화: 공개</div>
+        <div class="td">공유 버튼을 켜면 고유한 링크가 생성됩니다. 이 링크를 가진 사람 누구나 노트를 볼 수 있습니다.</div>
+      </div>
+    </div>
+
+    <h2 id="how-to-share">공유 링크 만드는 방법</h2>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">공유할 노트 열기</div>
+          <div class="step-desc">노트 목록에서 공유하고 싶은 노트를 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">상단 공유(🔗) 버튼 클릭</div>
+          <div class="step-desc">편집 화면 오른쪽 위에 있는 공유 버튼을 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">공유 켜기 토글 활성화</div>
+          <div class="step-desc">공유 설정 패널이 열립니다. "공유 링크 활성화" 토글을 켜면 고유한 공유 링크가 생성됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">링크 복사 후 공유</div>
+          <div class="step-desc">"링크 복사" 버튼을 클릭하면 클립보드에 복사됩니다. 카카오톡, 이메일, SNS 등으로 보내면 됩니다!</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      💡 <strong>공유 링크는 이렇게 생겼어요</strong><br>
+      <code>https://ainote.kiam.kr/share.html?id=abcde12345</code><br>
+      이 링크를 받은 사람은 누구나 브라우저에서 열어볼 수 있습니다.
+    </div>
+
+    <h2 id="share-view">공유 화면에서 보이는 것</h2>
+    <p>링크를 받은 사람이 접속하면 다음과 같은 화면을 보게 됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>노트 제목</strong></td><td>상단에 크게 표시됩니다.</td></tr>
+        <tr><td><strong>노트 내용</strong></td><td>텍스트 내용이 그대로 보입니다.</td></tr>
+        <tr><td><strong>아트콘 인포그래픽</strong></td><td>변환된 인포그래픽이 아름답게 표시됩니다.</td></tr>
+        <tr><td><strong>테마 전환 버튼</strong></td><td>상단에 테마 선택 버튼이 있어 링크를 받은 사람도 테마를 바꿀 수 있습니다.</td></tr>
+        <tr><td><strong>수정 시간</strong></td><td>노트가 마지막으로 수정된 시간이 표시됩니다.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="geniart-in-share">공유 화면에서 아트콘</h2>
+    <p>공유 화면의 특별한 점은 <strong>아트콘 인포그래픽이 완전히 작동</strong>한다는 것입니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">🎨</span>
+        <div class="tn">인포그래픽 표시</div>
+        <div class="td">편집 화면에서 만든 아트콘 인포그래픽이 그대로 표시됩니다.</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🌈</span>
+        <div class="tn">테마 전환 작동</div>
+        <div class="td">링크를 받은 사람이 테마 버튼을 누르면 인포그래픽도 함께 테마가 바뀝니다.</td>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📱</span>
+        <div class="tn">모바일 지원</div>
+        <div class="td">스마트폰에서도 인포그래픽이 화면에 맞게 자동으로 조절됩니다.</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔒</span>
+        <div class="tn">편집 불가</div>
+        <div class="td">공유 화면에서는 내용을 볼 수만 있고, 수정은 할 수 없습니다.</div>
+      </div>
+    </div>
+
+    <h2 id="disable-share">공유 취소하기</h2>
+    <p>더 이상 공유하고 싶지 않다면 간단히 공유를 끌 수 있습니다.</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">노트 열고 공유(🔗) 버튼 클릭</div>
+          <div class="step-desc">공유 설정 패널이 열립니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">"공유 링크 활성화" 토글 끄기</div>
+          <div class="step-desc">토글을 끄면 즉시 공유가 비활성화됩니다. 이전에 공유한 링크로 접속하면 "노트를 찾을 수 없습니다" 메시지가 나타납니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      ⚠️ <strong>공유 취소 시 주의!</strong><br>
+      공유를 끄면 이전에 보낸 링크는 모두 무효가 됩니다. 링크를 받은 사람들이 더 이상 접속할 수 없게 됩니다.
+    </div>
+
+    <h2 id="tips">공유 활용 팁</h2>
+
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>활용법</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>발표 자료 공유</td>
+          <td>아트콘으로 만든 인포그래픽 노트를 발표 전 링크로 공유. 참석자들이 스마트폰에서도 볼 수 있습니다.</td>
+        </tr>
+        <tr>
+          <td>학습 자료 공유</td>
+          <td>공부한 내용을 정리해 친구들과 링크 공유. 아트콘 인포그래픽으로 이해하기 쉽게 보입니다.</td>
+        </tr>
+        <tr>
+          <td>포트폴리오</td>
+          <td>내 작업물이나 기록을 아트콘으로 꾸며 링크로 공유. 누가 봐도 인상적입니다.</td>
+        </tr>
+        <tr>
+          <td>업무 보고</td>
+          <td>보고서 내용을 아트콘 표로 변환 후 공유 링크로 상사에게 전달.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      🎉 <strong>아이노트 매뉴얼을 모두 읽으셨습니다!</strong><br>
+      이제 아이노트의 모든 기능을 사용할 준비가 됐습니다. 특히 아트콘은 세계 어디서도 없는 기능이니, 꼭 한 번 직접 사용해 보세요! → <a href="https://ainote.kiam.kr" target="_blank">ainote.kiam.kr 바로가기</a>
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/theme.html"><span class="nav-label">← 이전</span><span class="nav-title">5장: 5가지 테마</span></a>
+      <a href="/manual/ainote/" class="next"><span class="nav-label">처음으로 →</span><span class="nav-title">아이노트 소개 홈</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what-is-share">공유 기능이란?</a></li>
+      <li><a href="#how-to-share">공유 링크 만들기</a></li>
+      <li><a href="#share-view">공유 화면</a></li>
+      <li><a href="#geniart-in-share">공유+아트콘</a></li>
+      <li><a href="#disable-share">공유 취소</a></li>
+      <li><a href="#tips">활용 팁</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

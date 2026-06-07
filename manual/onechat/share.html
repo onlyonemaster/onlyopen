@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>챗봇 링크 공유하기 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link active">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>챗봇 링크 공유하기</span>
+    </div>
+
+    <h1>챗봇 링크 공유하기</h1>
+    <p class="page-desc">내 챗봇 링크를 고객에게 보내면, 고객이 링크를 클릭하는 순간 AI 아바타와 대화가 시작됩니다. 링크 종류에 따라 대화가 기록되는 탭이 달라집니다.</p>
+
+    <h2 id="what">챗봇 링크란?</h2>
+    <p>챗봇 링크는 <strong>나만의 고유 주소</strong>로, 이 링크를 받은 사람은 별도 회원가입 없이 바로 내 AI 아바타와 대화할 수 있습니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">⚡</span>
+        <div class="tn">즉시 대화 시작</div>
+        <div class="td">링크 클릭 한 번으로 바로 AI 아바타와 대화가 시작됩니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔒</span>
+        <div class="tn">회원가입 불필요</div>
+        <div class="td">고객은 별도 가입 없이 바로 사용합니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📊</span>
+        <div class="tn">대화 기록 보관</div>
+        <div class="td">고객이 보낸 메시지가 내 원챗 대시보드에 기록됩니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">♾️</span>
+        <div class="tn">무제한 공유</div>
+        <div class="td">한 링크로 여러 명에게 동시에 공유 가능합니다</div>
+      </div>
+    </div>
+
+    <h2 id="link-types">링크 종류 — 3가지</h2>
+    <p>원챗에는 용도에 따라 <strong>3가지 챗봇 링크</strong>가 있습니다. 어떤 링크를 사용하느냐에 따라 대화가 <strong>퍼널탭</strong> 또는 <strong>수신탭</strong>에 기록됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>링크 종류</th><th>URL 형태</th><th>대화 기록 위치</th><th>주요 사용처</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>🔗 <strong>공유 링크</strong><br><small>(기본 챗봇 링크)</small></td>
+          <td><code>chatbot.kiam.kr/s/onechat1</code></td>
+          <td>📥 <strong>수신 탭</strong></td>
+          <td>카카오톡, SNS, QR코드, 명함, 홈페이지</td>
+        </tr>
+        <tr>
+          <td>📩 <strong>SMS 퍼널 링크</strong><br><small>(수신자 개별 링크)</small></td>
+          <td><code>chatbot.kiam.kr/s/onechat1?r=47922</code><br><small>또는 단축 링크 <code>chatbot.kiam.kr/s/k3apCa</code></small></td>
+          <td>📤 <strong>발신 탭 (퍼널)</strong></td>
+          <td>문자 발송 캠페인, 개인별 발송</td>
+        </tr>
+        <tr>
+          <td>👤 <strong>방문자 전용 링크</strong><br><small>(수신탭 카드에서 복사)</small></td>
+          <td><code>chatbot.kiam.kr/s/onechat1?v=WGGTOBPX</code></td>
+          <td>📥 <strong>수신 탭</strong> (해당 방문자)</td>
+          <td>특정 방문자에게 재발송, 1:1 안내</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="notice" style="margin-top:12px;">
+      📌 <strong>링크 종류에 따라 대화 기록 탭이 다릅니다</strong><br>
+      • <strong>공유 링크</strong>(<code>?r=</code> 없음) → 수신탭에 기록, 구독 방문자로 등록<br>
+      • <strong>SMS 퍼널 링크</strong>(<code>?r=수신자번호</code>) → 발신탭(퍼널)에 기록, 문자 발송 캠페인과 연결<br>
+      • <strong>방문자 링크</strong>(<code>?v=방문자ID</code>) → 수신탭의 해당 방문자 대화로 연결
+    </div>
+
+    <h2 id="find">내 챗봇 링크 찾기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">👤 아바타 버튼 → "내 프로필 설정" 클릭</div>
+          <div class="step-desc">상단 오른쪽 아바타 버튼을 눌러 드롭다운을 열고 <strong>내 프로필 설정</strong>을 선택합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">하단 "챗봇 링크" 섹션 확인</div>
+          <div class="step-desc">프로필 설정 화면 하단에 내 챗봇 링크(공유 링크)가 표시됩니다.</div>
+          <span class="step-url">https://chatbot.kiam.kr/s/나의챗봇코드</span>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="how">공유 방법</h2>
+
+    <h3 id="copy">링크 직접 복사</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">챗봇 링크 옆 "복사" 버튼을 클릭합니다</div>
+          <div class="step-desc">클릭하면 링크가 클립보드에 복사됩니다. "복사되었습니다" 메시지가 하단에 나타납니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">문자 또는 카카오톡에 붙여넣기 합니다</div>
+          <div class="step-desc">문자 앱이나 카카오톡을 열고 Ctrl+V (또는 길게 눌러 붙여넣기)로 링크를 보냅니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="qr">QR코드로 공유</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">📱</div>
+        <div class="step-body">
+          <div class="step-title">QR코드 이미지 다운로드</div>
+          <div class="step-desc"><strong>다운로드</strong> 버튼을 누르면 QR코드가 PNG 이미지로 저장됩니다. 명함, 전단지, 현수막에 인쇄하여 활용할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">📤</div>
+        <div class="step-body">
+          <div class="step-title">QR코드 직접 공유 (스마트폰)</div>
+          <div class="step-desc">스마트폰에서 <strong>공유</strong> 버튼을 누르면 카카오톡, 문자, 이메일 등으로 QR코드 이미지를 직접 공유할 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="card-chip">발신탭/수신탭 카드에서 복사</h3>
+    <p>발신탭과 수신탭의 각 카드에는 <strong>챗봇 링크</strong> 버튼(chip)이 있어 해당 사람의 전용 링크를 바로 복사할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>탭</th><th>복사되는 링크 형태</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>📤 발신탭 (퍼널 카드)</td>
+          <td><code>/s/onechat1?r=47922</code></td>
+          <td>해당 수신자의 퍼널 링크. 복사 후 재전송 가능</td>
+        </tr>
+        <tr>
+          <td>📥 수신탭 (방문자 카드)</td>
+          <td><code>/s/onechat1?v=WGGTOBPX</code></td>
+          <td>해당 방문자 전용 링크. 재발송 시 이전 대화와 연결됨</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>명함 교환 후 24시간 이내에 보내세요</strong><br>
+      명함을 받은 직후 24시간 이내에 챗봇 링크를 보내면 클릭률이 3~5배 높아집니다. 만남의 기억이 생생할 때 바로 연결하세요.
+    </div>
+
+    <h2 id="after">고객이 링크를 클릭하면?</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">고객이 링크를 클릭합니다</div>
+          <div class="step-desc">별도 설치나 가입 없이 바로 채팅 화면이 열립니다. 자동으로 닉네임이 배정되어 대화가 시작됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">AI 아바타가 자동으로 인사합니다</div>
+          <div class="step-desc">설정된 프롬프트에 따라 AI가 자동으로 첫 인사를 보냅니다. 고객이 메시지를 보내면 AI가 즉시 응답합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">내 원챗에 대화 내용이 표시됩니다</div>
+          <div class="step-desc">
+            • <strong>공유 링크</strong>로 접속한 경우 → <strong>수신탭</strong>에 방문자 카드 생성<br>
+            • <strong>SMS 퍼널 링크</strong>로 접속한 경우 → <strong>발신탭(퍼널)</strong>에 해당 수신자 대화 기록
+          </div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">(선택) PWA 설치 유도 카드가 표시됩니다</div>
+          <div class="step-desc">대화 중 일정 메시지 수가 넘으면 고객에게 "홈 화면에 추가" 안내 카드가 표시됩니다. 설치하면 앱처럼 사용할 수 있으며, 전화번호를 등록하면 운영자의 <strong>PWA 등록자</strong> 목록에 추가됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice" style="margin-top:12px;">
+      📌 <strong>SMS 문자 발송 링크는 자동 생성됩니다</strong><br>
+      kiam.kr에서 AI 메시지 발송(캠페인)을 진행하면 수신자마다 개별 단축 링크(<code>chatbot.kiam.kr/s/k3apCa</code>)가 자동 생성됩니다. 이 링크를 클릭하면 <code>chatbot.kiam.kr/s/onechat1?r=47922</code> 형태로 연결되어 발신탭에 기록됩니다.<br>
+      → <a href="/manual/onechat/funnel.html#sms" style="color:var(--brand);">SMS 퍼널 링크 상세 보기</a>
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/profile.html"><span class="nav-label">← 이전</span><span class="nav-title">내 프로필 설정</span></a>
+      <a href="/manual/onechat/funnel.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">발신(퍼널)탭 사용법</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">챗봇 링크란?</a></li>
+      <li><a href="#link-types">링크 종류 3가지</a></li>
+      <li><a href="#find">내 챗봇 링크 찾기</a></li>
+      <li><a href="#how">공유 방법</a></li>
+      <li><a href="#copy" class="h3">링크 직접 복사</a></li>
+      <li><a href="#qr" class="h3">QR코드로 공유</a></li>
+      <li><a href="#card-chip" class="h3">카드 칩에서 복사</a></li>
+      <li><a href="#after">고객이 클릭하면?</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

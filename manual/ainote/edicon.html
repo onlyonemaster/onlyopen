@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>✏️ 에디콘 (EdiCon) — 5대 자동 디스패치 · 아이노트 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.edi-hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #4338ca 100%);
+  border-radius: 16px; padding: 32px 28px; margin: 24px 0; color: white;
+  position: relative; overflow: hidden;
+}
+.edi-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 60% 50% at 80% 50%, rgba(139,92,246,.25) 0%, transparent 60%);
+}
+.edi-hero h3 { font-size: 22px; font-weight: 800; margin-bottom: 10px; position: relative; }
+.edi-hero p  { font-size: 14px; opacity: .9; line-height: 1.75; position: relative; margin-bottom: 0; }
+.edi-hero .ehb { display: inline-block; background: rgba(255,255,255,.12); color:#fff; padding:4px 12px; border-radius:50px; font-size:11px; font-weight:700; letter-spacing:1px; margin-bottom: 14px; position: relative;}
+
+/* 5대 디스패치 카드 */
+.dispatch-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 14px; margin: 22px 0 32px; }
+.disp {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+  padding: 22px; text-decoration: none; display: block; transition: .2s;
+  position: relative; overflow: hidden;
+}
+.disp::before {
+  content: ''; position: absolute; top:0; left:0; right:0; height:3px;
+}
+.disp.url::before { background: linear-gradient(90deg,#3b82f6,#06b6d4); }
+.disp.tab::before { background: linear-gradient(90deg,#10b981,#22c55e); }
+.disp.cod::before { background: linear-gradient(90deg,#f59e0b,#ef4444); }
+.disp.mat::before { background: linear-gradient(90deg,#a855f7,#ec4899); }
+.disp.mer::before { background: linear-gradient(90deg,#6366f1,#8b5cf6); }
+.disp:hover { transform: translateY(-2px); box-shadow: 0 8px 20px rgba(0,0,0,.08); }
+.disp .dn { font-size:11px; font-weight:700; color:var(--text3); letter-spacing:1.5px; text-transform:uppercase; margin-bottom:6px; }
+.disp .di { font-size:24px; display:block; margin-bottom:8px; }
+.disp .dt { font-size:16px; font-weight:800; color:var(--text); margin-bottom:6px; }
+.disp .dd { font-size:13px; color:var(--text2); line-height:1.7; margin-bottom: 12px; }
+.disp .dl { font-size:13px; font-weight:700; }
+.disp.url .dl { color:#3b82f6; } .disp.tab .dl { color:#10b981; }
+.disp.cod .dl { color:#f59e0b; } .disp.mat .dl { color:#a855f7; }
+.disp.mer .dl { color:#6366f1; }
+
+/* 플로우 다이어그램 */
+.flow-input-output {
+  display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: center;
+  margin: 20px 0; padding: 18px;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+}
+.flow-input-output .col { padding: 12px; }
+.flow-input-output .col-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase;}
+.flow-input-output pre { background: var(--bg3); border: 1px dashed var(--border); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text2); margin: 0; overflow-x: auto; line-height: 1.6; }
+.flow-input-output .arrow-col { font-size: 24px; color: var(--brand); text-align: center; }
+@media(max-width:700px) { .flow-input-output { grid-template-columns: 1fr; } .flow-input-output .arrow-col { transform: rotate(90deg); } .dispatch-grid { grid-template-columns: 1fr; } }
+
+/* 통계 박스 */
+.stats-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0 22px; }
+.stat {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;
+  padding: 16px 14px; text-align: center;
+}
+.stat .v { font-size: 22px; font-weight: 900; color: #6366f1; }
+.stat .l { font-size: 12px; color: var(--text3); margin-top: 4px; }
+@media(max-width:600px) { .stats-row { grid-template-columns: 1fr 1fr; } }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link active">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <span>에디콘 개요</span>
+    </div>
+
+    <h1>✏️ 에디콘 (EdiCon)</h1>
+    <p class="page-desc">에디콘은 아이노트의 입력 엔진입니다. AI가 만든 텍스트를 붙여넣는 <strong>그 순간</strong> 형태를 자동으로 알아채고, URL은 카드로 · 표는 표로 · 코드는 코드블록으로 · 수식은 수식으로 · 다이어그램은 다이어그램으로 <strong>5종 자동 변환</strong>합니다.</p>
+
+    <div class="edi-hero">
+      <span class="ehb">EDICON · 5-WAY AUTO DISPATCH</span>
+      <h3>🌐 클립보드의 형태를 읽어내는 엔진</h3>
+      <p>붙여넣는 텍스트의 첫 줄·중간·끝을 빠르게 스캔해 — URL 패턴 / 표 구분자 / 코드 펜스 / LaTeX 기호 / Mermaid 키워드 — 다섯 가지 신호 중 어떤 것이 가장 강한지 판정합니다. 잘못된 변환이 0건이 되도록 <strong>안전망 우선순위</strong>로 설계되었습니다.</p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat"><div class="v">5종</div><div class="l">자동 디스패치 패턴</div></div>
+      <div class="stat"><div class="v">210/210</div><div class="l">시뮬레이션 통과</div></div>
+      <div class="stat"><div class="v">19종</div><div class="l">Mermaid 다이어그램</div></div>
+    </div>
+
+    <h2 id="five">📦 5대 자동 디스패치</h2>
+    <p>아래 다섯 가지 패턴 중 하나가 감지되면 에디콘이 즉시 변환을 수행합니다. <strong>패턴이 감지되지 않으면 평범한 텍스트로 처리</strong>되므로, 일반 글쓰기에는 아무 영향이 없습니다.</p>
+
+    <div class="dispatch-grid">
+      <a class="disp url" href="/manual/ainote/edicon_url.html">
+        <div class="dn">DISPATCH 1</div>
+        <span class="di">🔗</span>
+        <div class="dt">URL → OG 카드</div>
+        <div class="dd">웹 주소를 붙여넣으면 사이트의 제목·설명·썸네일을 자동으로 가져와 미리보기 카드로 만듭니다. YouTube 링크는 영상 썸네일로 변환.</div>
+        <div class="dl">매뉴얼 보기 →</div>
+      </a>
+      <a class="disp tab" href="/manual/ainote/edicon_table.html">
+        <div class="dn">DISPATCH 2</div>
+        <span class="di">📊</span>
+        <div class="dt">표 (TSV·Pipe·CSV)</div>
+        <div class="dd">AI가 만든 표(탭·파이프·콤마 구분)를 깔끔한 HTML 테이블로 변환. <strong>v2 알고리즘</strong>으로 표 위·아래의 문장도 손상 없이 보존.</div>
+        <div class="dl">매뉴얼 보기 →</div>
+      </a>
+      <a class="disp cod" href="/manual/ainote/edicon_code.html">
+        <div class="dn">DISPATCH 3</div>
+        <span class="di">💻</span>
+        <div class="dt">코드 블록</div>
+        <div class="dd">백틱 3개로 감싸인 코드를 자동으로 코드 블록으로 변환. 언어 식별·구문 강조 지원. 단일 라인 인라인 코드도 인식.</div>
+        <div class="dl">매뉴얼 보기 →</div>
+      </a>
+      <a class="disp mat" href="/manual/ainote/edicon_math.html">
+        <div class="dn">DISPATCH 4</div>
+        <span class="di">∑</span>
+        <div class="dt">LaTeX 수식</div>
+        <div class="dd"><code>$x^2+y^2$</code>같은 인라인 수식과 <code>$$ ... $$</code> 블록 수식을 KaTeX로 자동 렌더링. 수학·물리·통계 노트에 최적.</div>
+        <div class="dl">매뉴얼 보기 →</div>
+      </a>
+      <a class="disp mer" href="/manual/ainote/edicon_mermaid.html" style="grid-column: 1 / -1;">
+        <div class="dn">DISPATCH 5 · ⭐ Phase 4 신규</div>
+        <span class="di">📐</span>
+        <div class="dt">Mermaid 다이어그램 (19종)</div>
+        <div class="dd">flowchart · sequence · class · ER · journey · gantt · pie · gitGraph · mindmap · timeline · quadrant · requirement · C4 · sankey · block · xychart — <strong>19종의 Mermaid 다이어그램</strong>을 코드 펜스 안이든 바깥이든 자동 인식해 실시간 SVG로 렌더링합니다.</div>
+        <div class="dl">매뉴얼 보기 →</div>
+      </a>
+    </div>
+
+    <h2 id="example">⚡ 한 번에 보는 예시</h2>
+    <p>아래는 AI에게 받은 텍스트를 그대로 붙여넣었을 때 에디콘이 무엇을 자동으로 해주는지 보여줍니다.</p>
+
+    <div class="flow-input-output">
+      <div class="col">
+        <div class="col-label">붙여넣은 원문</div>
+        <pre>2024년 매출 분석
+
+지역	1Q	2Q	3Q
+서울	120	135	148
+부산	88	92	101
+
+자세한 내용은
+https://kiam.kr 를 참고하세요.</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div class="col">
+        <div class="col-label">에디콘 자동 변환 결과</div>
+        <div style="font-size:13px; color:var(--text2); line-height:1.7;">
+          ✅ <strong>"2024년 매출 분석"</strong> → 단락 텍스트<br>
+          ✅ <strong>지역/1Q/2Q/3Q 표</strong> → HTML 테이블(3행 4열)<br>
+          ✅ <strong>"자세한 내용은…"</strong> → 단락 텍스트<br>
+          ✅ <strong>https://kiam.kr</strong> → OG 카드(썸네일 + 제목 + 설명)
+        </div>
+      </div>
+    </div>
+
+    <h2 id="priority">🎯 디스패치 우선순위</h2>
+    <p>에디콘은 충돌이 발생할 수 있는 경우 — 예를 들어 코드 블록 안에 URL이 있는 경우 — 다음 순서로 판정합니다. 이 순서는 <strong>"가장 명확한 신호"</strong> 우선입니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>#</th><th>판정 신호</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td>1️⃣</td><td>URL 패턴 (http://, https://)</td><td>https://kiam.kr 한 줄이 입력 전체일 때</td></tr>
+        <tr><td>2️⃣</td><td>Mermaid 키워드 (graph, flowchart, sequenceDiagram…)</td><td><code>```mermaid</code> 또는 첫 줄이 <code>flowchart TD</code></td></tr>
+        <tr><td>3️⃣</td><td>LaTeX 기호 (<code>$...$</code>, <code>$$...$$</code>)</td><td>본문 어딘가에 수식이 포함된 경우</td></tr>
+        <tr><td>4️⃣</td><td>표 구분자 (탭·파이프·콤마의 일관된 행)</td><td>3행 이상이 같은 개수의 구분자를 포함</td></tr>
+        <tr><td>5️⃣</td><td>코드 펜스 (<code>```언어</code>)</td><td>백틱 3개로 시작·끝나는 블록</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      💡 <strong>핵심: "표 v2 알고리즘"</strong><br>
+      에디콘 v2의 표 인식은 텍스트 전체를 스캔해 <strong>가장 긴 연속된 일관된 구분자 행</strong>을 찾습니다. 그래서 표 위·아래에 제목이나 설명 문장이 있어도 표만 깔끔하게 변환하고 나머지는 단락으로 보존합니다. 이전 버전(v1)은 첫 줄을 헤더로 가정해 실패하던 경우가 많았는데, 이제 모두 해결되었습니다.
+    </div>
+
+    <h2 id="safety">🛡️ 안전성 보증</h2>
+
+    <table class="m-table">
+      <thead><tr><th>위협</th><th>방어 방법</th></tr></thead>
+      <tbody>
+        <tr><td>악성 스크립트(XSS)</td><td>모든 HTML 출력은 텍스트 이스케이프 후 렌더 — <code>&lt;script&gt;</code>, <code>onerror=</code> 등 무력화</td></tr>
+        <tr><td>외부 서버 공격(SSRF)</td><td>URL 미리보기는 화이트리스트 + 사설 IP 차단 + 타임아웃</td></tr>
+        <tr><td>잘못된 변환</td><td>5종 디스패치 모두 실패 시 평범한 텍스트로 폴백 (안전망)</td></tr>
+        <tr><td>외부 CDN 변조</td><td>Mermaid·KaTeX 라이브러리는 무결성 해시(SRI) 검증</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="dev">🛠️ 개발자 도구 (콘솔 디버깅)</h2>
+    <p>개발자나 고급 사용자는 브라우저 콘솔(F12)에서 에디콘 엔진을 직접 호출해볼 수 있습니다.</p>
+
+    <pre style="background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:14px; font-size:12px; color:var(--text2); overflow-x:auto;">// 표 감지 테스트
+EdiCon._test_detectTable("이름\t나이\n홍길동\t30\n임꺽정\t40");
+// → { type: 'tsv', rows: [...], separator: '\t', lead: [], trail: [] }
+
+// Mermaid 감지 테스트
+EdiCon._test_detectMermaid("flowchart TD\nA --&gt; B");
+// → { type: 'mermaid', code: 'flowchart TD\nA --&gt; B' }
+
+// URL 카드 미리 가져오기
+EdiCon._test_fetchOg("https://kiam.kr");
+// → { title, description, image, ... }</pre>
+
+    <div class="notice" style="background:rgba(99,102,241,.08); border-left-color:#6366f1; color:var(--text);">
+      🔍 <strong>각 디스패치의 상세 매뉴얼</strong>은 좌측 사이드바 또는 위의 5대 디스패치 카드에서 선택해 진입하세요. 모든 매뉴얼은 <strong>실전 예시 + 실시간 데모 + 트러블슈팅 가이드</strong>를 포함합니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/trinity.html"><span class="nav-label">← 이전</span><span class="nav-title">🔱 콘-트리니티란?</span></a>
+      <a href="/manual/ainote/edicon_url.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🔗 URL 카드 자동 변환</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#five">5대 자동 디스패치</a></li>
+      <li><a href="#example">한 번에 보는 예시</a></li>
+      <li><a href="#priority">디스패치 우선순위</a></li>
+      <li><a href="#safety">안전성 보증</a></li>
+      <li><a href="#dev">개발자 도구</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

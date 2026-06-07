@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DM 채팅 사용법 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link active">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>DM 채팅 사용법</span>
+    </div>
+
+    <h1>💬 DM 채팅 사용법</h1>
+    <p class="page-desc">kiam.kr 회원끼리 1:1 또는 그룹으로 실시간 채팅할 수 있습니다. 답장, 이모지 반응, 파일 전송, 투표 등 다양한 기능을 사용해보세요.</p>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="overview">DM 채팅이란?</h2>
+    <p><strong>채팅 탭(💬)</strong>은 kiam.kr에 가입한 회원끼리 직접 메시지를 주고받는 공간입니다. 고객 챗봇과는 별개로, <strong>내부 구성원·파트너·지인</strong>과 빠르게 소통할 때 사용합니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">👤</span>
+        <div class="tn">1:1 개별 채팅</div>
+        <div class="td">특정 회원에게 바로 메시지를 보낼 수 있습니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">👥</span>
+        <div class="tn">그룹 채팅</div>
+        <div class="td">여러 명을 한 채팅방에 초대해 함께 대화합니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📌</span>
+        <div class="tn">메시지 고정</div>
+        <div class="td">중요한 메시지를 채팅방 상단에 고정할 수 있습니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📊</span>
+        <div class="tn">투표</div>
+        <div class="td">채팅방 안에서 바로 의견을 모을 수 있습니다</div>
+      </div>
+    </div>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="screen">채팅 목록 화면</h2>
+    <p>하단 내비게이션에서 <strong>채팅(💬) 탭</strong>을 누르면 채팅 목록이 표시됩니다.</p>
+
+    <h3 id="subtab">개별 / 그룹 서브탭</h3>
+    <p>목록 상단에 두 개의 탭이 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>탭</th><th>표시 내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>개별 채팅</strong></td><td>1:1 대화 목록. 상대방 온라인 여부(초록 점)와 안읽은 메시지 수를 보여줍니다</td></tr>
+        <tr><td><strong>그룹 채팅</strong></td><td>내가 참여 중인 그룹 채팅방 목록입니다</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="room-card">채팅방 카드 읽는 법</h3>
+    <table class="m-table">
+      <thead><tr><th>표시 요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>● 초록 점</td><td>상대방이 현재 온라인 상태입니다 (5분 이내 접속)</td></tr>
+        <tr><td>🔴 빨간 숫자</td><td>아직 읽지 않은 새 메시지 수입니다</td></tr>
+        <tr><td>📌 아이콘</td><td>내가 고정해둔 채팅방입니다 (목록 상단에 표시)</td></tr>
+        <tr><td>메시지 미리보기</td><td>가장 최근 메시지를 짧게 표시합니다</td></tr>
+        <tr><td>시간</td><td>마지막 메시지를 보낸 시각입니다</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="new-chat">새 채팅 시작하기 (1:1)</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">상단 오른쪽 <strong>새 채팅(✏️)</strong> 버튼을 누릅니다</div>
+          <div class="step-desc">채팅 탭 헤더에 있는 편집 아이콘 버튼입니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">검색창에 상대방 <strong>이름 또는 아이디를 2자 이상</strong> 입력합니다</div>
+          <div class="step-desc">회원 목록이 실시간으로 나타납니다. 온라인 중인 회원에는 초록 점이 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">대화할 회원을 누릅니다</div>
+          <div class="step-desc">기존에 대화한 적이 있으면 기존 채팅방이 열리고, 처음이라면 새 채팅방이 자동으로 생성됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="tip">
+      💡 <strong>이미 대화했던 상대라면</strong><br>
+      채팅 목록에서 바로 이름을 눌러 입장할 수 있습니다. 새 채팅 버튼을 누르지 않아도 됩니다.
+    </div>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="group">그룹 채팅 만들기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">상단 오른쪽 <strong>그룹(👥)</strong> 버튼을 누릅니다</div>
+          <div class="step-desc">새 채팅 버튼 옆에 있는 그룹 아이콘입니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>그룹 이름</strong>을 입력합니다</div>
+          <div class="step-desc">나중에 관리 메뉴에서 이름을 변경할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">초대할 회원을 검색해서 <strong>선택</strong>합니다</div>
+          <div class="step-desc">여러 명을 선택할 수 있습니다. 선택된 회원은 상단에 칩 형태로 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title"><strong>그룹 채팅 만들기</strong> 버튼을 누릅니다</div>
+          <div class="step-desc">그룹 채팅방이 생성되고 초대된 멤버에게 "님이 초대되었습니다" 시스템 메시지가 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="group-manage">그룹 관리 기능</h3>
+    <p>그룹 채팅방 헤더에서 <strong>👥 멤버 버튼</strong>을 눌러 멤버를 관리할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>기능</th><th>설명</th><th>사용 가능</th></tr></thead>
+      <tbody>
+        <tr><td>멤버 초대</td><td>새 회원을 그룹에 추가합니다</td><td>모든 멤버</td></tr>
+        <tr><td>멤버 내보내기</td><td>특정 멤버를 그룹에서 제거합니다</td><td>그룹 관리자만</td></tr>
+        <tr><td>그룹명 변경</td><td>그룹 채팅방 이름을 바꿉니다</td><td>그룹 관리자만</td></tr>
+        <tr><td>그룹 나가기</td><td>내가 그룹 채팅방에서 퇴장합니다</td><td>모든 멤버</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      📌 <strong>그룹 관리자 권한</strong><br>
+      그룹을 만든 사람이 자동으로 관리자가 됩니다. 관리자는 멤버 내보내기와 그룹 이름 변경 권한을 가집니다.
+    </div>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="chatroom">채팅방에서 대화하기</h2>
+
+    <h3 id="send">메시지 보내기</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">하단 입력창에 메시지를 입력합니다</div>
+          <div class="step-desc">입력창은 내용에 따라 자동으로 높이가 늘어납니다 (최대 3줄).</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Enter 또는 <strong>➤ 전송 버튼</strong>을 누릅니다</div>
+          <div class="step-desc">Shift+Enter는 줄바꿈입니다. Enter만 누르면 바로 전송됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="read">읽음 확인</h3>
+    <p>내가 보낸 메시지 아래에 <strong>✓✓ 파란색</strong>이 표시되면 상대방이 메시지를 읽은 것입니다.</p>
+
+    <h3 id="pin-banner">고정 메시지 배너</h3>
+    <p>채팅방에 고정된 메시지가 있으면 채팅창 상단에 파란색 배너로 표시됩니다. 배너를 누르면 해당 메시지 위치로 이동합니다.</p>
+
+    <h3 id="file">파일 &amp; 이미지 전송</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">입력창 왼쪽 <strong>📎 첨부 버튼</strong>을 누릅니다</div>
+          <div class="step-desc">파일 선택 창이 열립니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">전송할 파일을 선택합니다</div>
+          <div class="step-desc">이미지(JPG, PNG, GIF, WEBP), PDF, ZIP, Word, Excel, 동영상(MP4) 등을 지원합니다. 최대 파일 크기는 20MB입니다.</div>
+        </div>
+      </li>
+    </ul>
+    <table class="m-table">
+      <thead><tr><th>파일 종류</th><th>채팅방 표시 방식</th></tr></thead>
+      <tbody>
+        <tr><td>이미지 (JPG, PNG 등)</td><td>썸네일 미리보기로 표시됩니다. 누르면 전체화면으로 볼 수 있습니다.</td></tr>
+        <tr><td>일반 파일 (PDF, ZIP 등)</td><td>파일 아이콘과 파일명, 용량이 표시됩니다. 누르면 다운로드됩니다.</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="features">메시지 기능 모음</h2>
+    <p>메시지를 <strong>길게 누르거나 마우스 오른쪽 버튼</strong>으로 클릭하면 컨텍스트 메뉴가 열립니다.</p>
+
+    <div class="tip">
+      💡 <strong>메뉴 최상단에는 빠른 이모지 반응</strong> (👍 ❤️ 😂 😮 😢 🙏) 6개가 표시됩니다. 이모지를 누르면 바로 반응을 남길 수 있습니다.
+    </div>
+
+    <h3 id="reply">답장하기</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">메시지를 길게 눌러 메뉴를 엽니다</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>↩ 답장</strong>을 선택합니다</div>
+          <div class="step-desc">입력창 위에 인용 미리보기가 표시됩니다. 어떤 메시지에 답하는지 한눈에 확인할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">메시지를 입력하고 전송합니다</div>
+          <div class="step-desc">전송된 메시지에 인용된 원본 메시지가 함께 표시됩니다. 인용 부분을 누르면 원본 위치로 이동합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="reaction">이모지 반응</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">메시지를 길게 눌러 메뉴를 엽니다</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">원하는 이모지를 누릅니다</div>
+          <div class="step-desc">메시지 아래에 이모지 반응 칩이 표시됩니다. 같은 이모지를 한 번 더 누르면 반응이 취소됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="edit">메시지 수정</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title"><strong>내가 보낸 메시지</strong>를 길게 눌러 메뉴를 엽니다</div>
+          <div class="step-desc">수정은 내가 보낸 메시지에만 가능합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>✏️ 수정</strong>을 선택합니다</div>
+          <div class="step-desc">입력창에 기존 메시지 내용이 자동으로 채워집니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">내용을 수정하고 전송합니다</div>
+          <div class="step-desc">수정된 메시지에는 <strong>(수정됨)</strong> 표시가 붙습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="delete">메시지 삭제</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title"><strong>내가 보낸 메시지</strong>를 길게 눌러 메뉴를 엽니다</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>🗑️ 삭제</strong>를 선택합니다</div>
+          <div class="step-desc">삭제된 메시지는 "삭제된 메시지입니다"로 표시됩니다. 완전히 사라지지 않고 삭제 여부만 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="pin">메시지 고정</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">고정할 메시지를 길게 눌러 메뉴를 엽니다</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>📌 메시지 고정</strong>을 선택합니다</div>
+          <div class="step-desc">채팅방 상단에 파란색 고정 배너가 나타납니다. 채팅방에 입장할 때마다 항상 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>채팅방당 고정 메시지는 1개</strong>입니다. 새로 고정하면 이전 고정이 해제됩니다.
+    </div>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="poll">투표 만들기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">채팅방 헤더에서 <strong>📊 투표 버튼</strong>을 누릅니다</div>
+          <div class="step-desc">투표 만들기 창이 아래에서 올라옵니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>질문</strong>과 <strong>선택지</strong>를 입력합니다</div>
+          <div class="step-desc">기본으로 선택지 2개가 제공됩니다. <strong>+ 선택지 추가</strong>를 눌러 최대 10개까지 늘릴 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">필요하면 <strong>복수 선택 허용</strong>에 체크합니다</div>
+          <div class="step-desc">체크하면 참여자가 여러 선택지를 동시에 고를 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title"><strong>투표 시작</strong> 버튼을 누릅니다</div>
+          <div class="step-desc">채팅방에 투표 메시지가 전송됩니다. 멤버들이 선택지를 누르면 실시간으로 결과가 갱신됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="vote">투표에 참여하기</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">채팅방에 표시된 투표 메시지에서 원하는 선택지를 누릅니다</div>
+          <div class="step-desc">선택한 항목이 파란색으로 강조되고 득표율 막대가 즉시 업데이트됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">선택을 취소하고 싶으면 다시 같은 항목을 누릅니다</div>
+          <div class="step-desc">복수 선택이 허용된 경우 여러 항목을 선택할 수 있습니다. 단일 선택 투표는 다른 항목을 누르면 기존 선택이 자동으로 바뀝니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <!-- ───────────────────────────── -->
+    <h2 id="room-settings">채팅방 설정</h2>
+    <p>채팅방 헤더에서 <strong>⋮ 더보기 버튼</strong>을 누르면 채팅방 설정 메뉴가 열립니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>메뉴</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>📌 채팅방 고정</td><td>이 채팅방을 목록 최상단에 고정합니다. 다시 누르면 해제됩니다.</td></tr>
+        <tr><td>🔕 알림 끄기</td><td>이 채팅방의 알림을 8시간 동안 무음으로 설정합니다.</td></tr>
+        <tr><td>🚪 나가기</td><td>채팅방에서 퇴장합니다. 그룹 채팅은 나간 후 재입장이 불가합니다(초대 필요).</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>자주 대화하는 채팅방은 고정해두세요</strong><br>
+      고정된 채팅방은 목록 최상단에 보라색 배경으로 표시되어 빠르게 찾을 수 있습니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/prompt.html"><span class="nav-label">← 이전</span><span class="nav-title">프롬프팅 설정</span></a>
+      <a href="/manual/onechat/avatar.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">아바타 학습시키기</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#overview">DM 채팅이란?</a></li>
+      <li><a href="#screen">채팅 목록 화면</a></li>
+      <li><a href="#subtab" class="h3">개별 / 그룹 탭</a></li>
+      <li><a href="#new-chat">새 채팅 시작하기</a></li>
+      <li><a href="#group">그룹 채팅 만들기</a></li>
+      <li><a href="#group-manage" class="h3">그룹 관리 기능</a></li>
+      <li><a href="#chatroom">채팅방에서 대화하기</a></li>
+      <li><a href="#send" class="h3">메시지 보내기</a></li>
+      <li><a href="#file" class="h3">파일 &amp; 이미지 전송</a></li>
+      <li><a href="#features">메시지 기능 모음</a></li>
+      <li><a href="#reply" class="h3">답장하기</a></li>
+      <li><a href="#reaction" class="h3">이모지 반응</a></li>
+      <li><a href="#edit" class="h3">메시지 수정</a></li>
+      <li><a href="#delete" class="h3">메시지 삭제</a></li>
+      <li><a href="#pin" class="h3">메시지 고정</a></li>
+      <li><a href="#poll">투표 만들기</a></li>
+      <li><a href="#vote" class="h3">투표 참여하기</a></li>
+      <li><a href="#room-settings">채팅방 설정</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

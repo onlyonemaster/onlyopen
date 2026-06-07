@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>음성 프리셋 목록 &#8212; VoiceGen AI &#47; kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VoiceGen AI 매뉴얼</div>
+      <a href="/manual/voicegen/" class="sb-link ">&#128266; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/voicegen/start.html" class="sb-link ">회원가입 &amp; 로그인</a>
+      <a href="/manual/voicegen/demo.html" class="sb-link ">데모 체험하기</a>
+      <a href="/manual/voicegen/start.html#apikey" class="sb-link">API 키 발급</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">API 연동</div>
+      <a href="/manual/voicegen/api.html" class="sb-link ">API 레퍼런스</a>
+      <a href="/manual/voicegen/voices.html" class="sb-link active">음성 프리셋 목록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/voicegen/clone.html" class="sb-link ">음성 클로닝</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/voicegen/plan.html" class="sb-link ">요금제 안내</a>
+      <a href="/manual/voicegen/faq.html" class="sb-link ">자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/voicegen/">VoiceGen AI</a><span class="sep">&#8250;</span><span>음성 프리셋</span>
+    </div>
+    <h1>음성 프리셋 목록</h1>
+    <p class="lead">VoiceGen AI는 한국어 4종&#183;영어 2종의 기본 음성 프리셋을 제공합니다.<br>
+    API 호출 시 <code>voice_id</code> 파라미터로 원하는 음성을 선택할 수 있습니다.</p>
+
+    <h2>한국어 음성</h2>
+    <table>
+      <thead><tr><th>voice_id</th><th>이름</th><th>성별</th><th>특징</th><th>추천 용도</th></tr></thead>
+      <tbody>
+        <tr><td><code>ko_female_1</code></td><td><strong>수아</strong></td><td>여성</td><td>밝고 명랑한 톤. 친근하고 에너지 넘치는 느낌</td><td>앱 안내, 알림, 고객 응대</td></tr>
+        <tr><td><code>ko_male_1</code></td><td><strong>민준</strong></td><td>남성</td><td>신뢰감 있고 안정적인 목소리</td><td>뉴스 읽기, 설명 영상, 오디오북</td></tr>
+        <tr><td><code>ko_female_2</code></td><td><strong>지은</strong></td><td>여성</td><td>전문적이고 차분한 톤. 명확한 발음</td><td>기업 ARS, 프레젠테이션</td></tr>
+        <tr><td><code>ko_male_2</code></td><td><strong>준서</strong></td><td>남성</td><td>활기차고 역동적인 목소리</td><td>광고, 마케팅, 스포츠 콘텐츠</td></tr>
+      </tbody>
+    </table>
+
+    <h2>영어 음성</h2>
+    <table>
+      <thead><tr><th>voice_id</th><th>이름</th><th>성별</th><th>특징</th><th>추천 용도</th></tr></thead>
+      <tbody>
+        <tr><td><code>en_female_1</code></td><td><strong>Emma</strong></td><td>여성</td><td>따뜻하고 친근한 미국식 영어</td><td>영어 학습, 글로벌 서비스</td></tr>
+        <tr><td><code>en_male_1</code></td><td><strong>James</strong></td><td>남성</td><td>전문적이고 명확한 비즈니스 영어</td><td>기업 프레젠테이션, 해외 마케팅</td></tr>
+      </tbody>
+    </table>
+
+    <h2>기본값</h2>
+    <p>API 호출 시 <code>voice_id</code>를 생략하면 <code>ko_female_1</code>(수아)가 기본 적용됩니다.</p>
+    <div class="code-block"><pre><code>// voice_id 생략 시 ko_female_1 자동 적용
+{"text": "안녕하세요."}
+
+// 명시적으로 지정
+{"text": "안녕하세요.", "voice_id": "ko_male_1"}</code></pre></div>
+
+    <h2>음성 추가 요청</h2>
+    <p>추가 음성 프리셋이 필요하시면 <a href="https://vg.kiam.kr" target="_blank">vg.kiam.kr</a> 고객센터로 문의해 주세요.<br>
+    음성 클로닝 기능으로 직접 업로드한 목소리로 커스텀 음성을 만들 수도 있습니다.<br>
+    &#8594; <a href="/manual/voicegen/clone.html">음성 클로닝 사용법</a></p>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="https://vg.kiam.kr" target="_blank" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128266; VoiceGen AI 바로가기 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

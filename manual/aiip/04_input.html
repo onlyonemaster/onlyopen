@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자료 입력 방법 — AI변리사 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link active">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <a href="/manual/aiip/">AI변리사</a> <span>›</span> <span>자료 입력 방법</span></div>
+    <h1>📤 컨설팅 의뢰 — 자료 입력 방법</h1>
+<div class="update-notice" style="background:#eef6ff; padding:15px; margin-top:20px; border-radius:8px; border-left:4px solid #0066cc;">
+<strong>📄 자료 입력 업데이트:</strong><br><ul><li><strong>PDF 파일 지원 강화:</strong> 최대 <b>30,000자</b>까지 텍스트를 추출하여 인식합니다.</li><li><strong>생성 모드(Generation Mode) 선택:</strong><br>- <b>Single 모드</b>: 1회 호출로 신속하게 초안과 컨설팅 결과 요약<br>- <b>Split 모드</b>: 여러 단계로 분할 호출하여 상세하고 깊이 있는 특허 명세서/전략 문서 생성</li></ul>
+</div>
+    <p class="page-desc">AI 컨설팅 의뢰 페이지(/diagnosis)에서 자료를 입력하는 방법을 상세히 안내합니다.</p>
+
+    <h2 id="access">의뢰 페이지 접속</h2>
+    <p>로그인 후 상단 내비게이션의 <strong>"컨설팅 의뢰"</strong>를 클릭하거나, <a href="https://ps.kiam.kr/diagnosis" target="_blank">ps.kiam.kr/diagnosis</a>로 직접 접속합니다.</p>
+
+    <div class="tip">
+      ⚠️ <strong>로그인 필수</strong> — 컨설팅 의뢰 페이지는 로그인된 상태에서만 접근할 수 있습니다.
+    </div>
+
+    <h2 id="session-type">분석 유형 선택</h2>
+    <p>페이지 상단에서 분석할 지식재산권 유형을 선택합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>분석 유형</th><th>적합한 상황</th></tr></thead>
+      <tbody>
+        <tr><td>⚖️ <strong>특허 분석</strong></td><td>발명 아이디어의 특허 등록 가능성 검토, 선행기술 조사, 청구항 구성 분석</td></tr>
+        <tr><td>🏷️ <strong>상표 분석</strong></td><td>브랜드명·로고의 상표 등록 가능성, 유사 상표 충돌 위험 검토</td></tr>
+        <tr><td>©️ <strong>저작권 분석</strong></td><td>창작물의 저작권 보호 범위, 타인 저작물 침해 여부 검토</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="input-area">자료 입력 영역</h2>
+    <p>분석 유형 선택 후 화면 중앙에 두 개의 입력 영역이 나란히 표시됩니다.</p>
+
+    <h3 id="file-upload">📂 파일 업로드</h3>
+    <p>왼쪽 영역에서 분석할 파일을 업로드합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>업로드 방법</strong></td><td>파일을 드래그&amp;드롭하거나 영역을 클릭하여 파일 선택</td></tr>
+        <tr><td><strong>지원 형식</strong></td><td>PDF, DOCX, TXT, HWP, PNG, JPG, JPEG, GIF, WEBP</td></tr>
+        <tr><td><strong>최대 용량</strong></td><td>무료: 5MB / 스탠다드: 20MB / 프로: 50MB (파일당)</td></tr>
+        <tr><td><strong>최대 파일 수</strong></td><td>1회 의뢰당 최대 5개</td></tr>
+      </tbody>
+    </table>
+
+    <h4>파일 업로드 절차</h4>
+    <ol class="step-list">
+      <li>업로드 영역(점선 테두리 박스)에 파일을 <strong>드래그&amp;드롭</strong>합니다.</li>
+      <li>또는 영역을 <strong>클릭</strong>하여 파일 선택 창을 엽니다.</li>
+      <li>업로드된 파일은 영역 아래에 파일명과 크기가 목록으로 표시됩니다.</li>
+      <li>파일 목록에서 파일명 우측의 <strong>✕</strong> 버튼으로 개별 파일을 제거할 수 있습니다.</li>
+    </ol>
+
+    <div class="tip">
+      💡 <strong>효과적인 파일 준비</strong><br>
+      - 특허 분석: 발명 설명서(기술 내용, 도면 포함)나 기존 특허 명세서 PDF<br>
+      - 상표 분석: 브랜드명이 담긴 문서 또는 로고 이미지 파일<br>
+      - 저작권 분석: 보호 받으려는 창작물 파일 (텍스트·이미지·코드 등)
+    </div>
+
+    <h3 id="text-input">📝 텍스트 직접 입력</h3>
+    <p>오른쪽 영역에서 분석 내용을 텍스트로 직접 입력할 수 있습니다. 파일 업로드가 어려운 경우나 추가 설명이 필요할 때 활용합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>입력 방법</strong></td><td>텍스트 입력창에 직접 타이핑 또는 붙여넣기</td></tr>
+        <tr><td><strong>최대 글자 수</strong></td><td>약 10,000자 (초과 시 안내 메시지 표시)</td></tr>
+        <tr><td><strong>활용 팁</strong></td><td>발명 아이디어 요약, 기술 설명, 브랜드 스토리 등 자유 형식으로 입력</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>파일 + 텍스트 병행 가능</strong> — 파일 업로드와 텍스트 입력을 동시에 사용할 수 있습니다. AI는 두 입력을 합산하여 분석합니다.
+    </div>
+
+    <h2 id="prompt-area">요청사항 입력</h2>
+    <p>자료 입력 영역 아래에 <strong>요청사항 입력</strong> 박스가 있습니다. 여기서 AI에게 원하는 분석 방향이나 특별 요청을 작성합니다.</p>
+    <p>요청사항 입력 방법은 두 가지입니다.</p>
+    <table class="m-table">
+      <thead><tr><th>방법</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>직접 입력</strong></td><td>요청사항 텍스트 박스에 원하는 분석 내용을 직접 타이핑</td></tr>
+        <tr><td><strong>AI 도우미 활용</strong></td><td>"✨ AI로 요청사항 만들기" 버튼 클릭 → AI가 자동으로 전문 요청문 생성<br>→ 자세한 내용은 <a href="/manual/aiip/05_helper.html">5장 AI 요청사항 도우미</a> 참고</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="submit">의뢰 제출</h2>
+    <p>자료 입력과 요청사항 작성을 완료했다면 <strong>"🔍 AI 컨설팅 의뢰"</strong> 버튼을 클릭합니다.</p>
+    <ol class="step-list">
+      <li>버튼 클릭 후 AI 분석이 시작됩니다.</li>
+      <li>화면에 분석 중임을 나타내는 로딩 인디케이터가 표시됩니다.</li>
+      <li>분석 완료 후 결과가 화면 하단에 표시됩니다.</li>
+    </ol>
+
+    <div class="tip">
+      ⚠️ <strong>분석 시간</strong> — 자료 양에 따라 수 초에서 수 분이 소요됩니다. 분석이 완료될 때까지 페이지를 닫거나 새로고침하지 마세요.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aiip/03_pricing.html"><span class="nav-label">← 이전</span><span class="nav-title">💳 요금제 &amp; 결제</span></a>
+      <a href="/manual/aiip/05_helper.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">✨ AI 요청사항 도우미</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">의뢰 페이지 접속</a></li>
+      <li><a href="#session-type">분석 유형 선택</a></li>
+      <li><a href="#input-area">자료 입력 영역</a></li>
+      <li><a href="#file-upload" class="h3">파일 업로드</a></li>
+      <li><a href="#text-input" class="h3">텍스트 직접 입력</a></li>
+      <li><a href="#prompt-area">요청사항 입력</a></li>
+      <li><a href="#submit">의뢰 제출</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

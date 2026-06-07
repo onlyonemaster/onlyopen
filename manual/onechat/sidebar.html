@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>햄버거 메뉴 & 사이드바 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.menu-card {
+  display: flex; align-items: center; gap: 14px;
+  padding: 14px 16px; border-radius: 12px;
+  border: 1px solid var(--border); background: var(--bg2);
+  margin-bottom: 10px;
+}
+.menu-card-icon {
+  width: 42px; height: 42px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 18px; color: white; flex-shrink: 0;
+}
+.menu-card-body { flex: 1; }
+.menu-card-title { font-size: 15px; font-weight: 700; color: var(--text); }
+.menu-card-desc  { font-size: 12px; color: var(--text2); margin-top: 2px; }
+.menu-card-badge {
+  font-size: 10px; font-weight: 700; padding: 2px 7px;
+  border-radius: 20px; background: #ef4444; color: white;
+  flex-shrink: 0;
+}
+.sidebar-demo {
+  background: var(--bg2); border: 1px solid var(--border);
+  border-radius: 14px; overflow: hidden; max-width: 320px;
+}
+.sidebar-demo-header {
+  background: linear-gradient(135deg, #1e293b, #0f172a);
+  padding: 14px 16px; display: flex; align-items: center;
+  justify-content: space-between;
+}
+.sidebar-demo-logo { color: white; font-weight: 800; font-size: 16px; }
+.sidebar-demo-close { color: #94a3b8; font-size: 16px; }
+.sidebar-demo-profile {
+  display: flex; align-items: center; gap: 10px;
+  padding: 12px 16px; border-bottom: 1px solid #334155;
+  background: #1e293b;
+}
+.sdp-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  display: flex; align-items: center; justify-content: center;
+  color: white; font-weight: 700; font-size: 14px;
+}
+.sdp-name { color: white; font-size: 13px; font-weight: 600; }
+.sdp-role { color: #94a3b8; font-size: 11px; }
+.sidebar-demo-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 16px; border-bottom: 1px solid #1e293b;
+  background: #0f172a;
+}
+.sdi-icon {
+  width: 32px; height: 32px; border-radius: 8px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: white; flex-shrink: 0;
+}
+.sdi-text { flex: 1; }
+.sdi-title { color: #e2e8f0; font-size: 13px; font-weight: 600; }
+.sdi-desc  { color: #64748b; font-size: 11px; }
+.sdi-status {
+  font-size: 10px; font-weight: 700; padding: 2px 6px;
+  border-radius: 10px; display: flex; align-items: center; gap: 3px;
+}
+.sdi-status.on  { background: rgba(16,185,129,.2); color: #10b981; }
+.sdi-status.off { background: rgba(148,163,184,.15); color: #94a3b8; }
+.dot { width: 6px; height: 6px; border-radius: 50%; display: inline-block; }
+.dot.on  { background: #10b981; }
+.dot.off { background: #94a3b8; }
+
+.swipe-guide {
+  background: var(--blue-bg); border: 1px solid #93c5fd;
+  border-radius: 10px; padding: 12px 16px; margin: 14px 0;
+  font-size: 13px; color: var(--text2);
+}
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<div class="m-layout">
+  <!-- 사이드바 -->
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link active">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a>
+      <span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a>
+      <span class="sep">›</span>
+      <span>사이드바 메뉴</span>
+    </div>
+
+    <h1>☰ 햄버거 메뉴 & 사이드바</h1>
+    <p class="page-desc">원챗의 주요 기능 6가지가 모인 사이드바 드로어입니다. 화면 왼쪽 위 ☰ 버튼 하나로 모든 핵심 기능에 바로 접근할 수 있습니다.</p>
+
+    <!-- 사이드바 여는 방법 -->
+    <h2 id="open">사이드바 여는 방법</h2>
+    <p>화면 <strong>왼쪽 위</strong>에 있는 <strong>☰ (햄버거) 버튼</strong>을 누르면 왼쪽에서 사이드바 서랍이 슬라이드로 열립니다.</p>
+
+    <ol class="step-list" style="margin:16px 0;">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">☰ 버튼 클릭</div>
+          <div class="step-desc">헤더 맨 왼쪽의 ☰ 아이콘을 누릅니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">왼쪽에서 서랍이 열림</div>
+          <div class="step-desc">화면 왼쪽에서 메뉴 서랍이 슬라이드로 나타납니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">원하는 메뉴 선택</div>
+          <div class="step-desc">6개 메뉴 중 하나를 눌러 해당 기능으로 바로 이동합니다.</div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="swipe-guide">
+      💡 <strong>닫는 방법</strong> — ① 서랍 오른쪽 어두운 배경 클릭 &nbsp;②  <strong>×</strong> 버튼 클릭 &nbsp;③ 서랍을 왼쪽으로 스와이프
+    </div>
+
+    <!-- 사이드바 화면 구성 미리보기 -->
+    <h2 id="preview">사이드바 화면 구성</h2>
+    <p>실제 사이드바 화면은 아래와 같이 구성됩니다.</p>
+
+    <div style="margin:20px 0;">
+      <div class="sidebar-demo">
+        <div class="sidebar-demo-header">
+          <span class="sidebar-demo-logo">🤖 AIvote</span>
+          <span class="sidebar-demo-close">✕</span>
+        </div>
+        <div class="sidebar-demo-profile">
+          <div class="sdp-avatar">A</div>
+          <div>
+            <div class="sdp-name">aivote</div>
+            <div class="sdp-role">아바타 챗봇 운영자</div>
+          </div>
+        </div>
+        <div class="sidebar-demo-item">
+          <div class="sdi-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">📊</div>
+          <div class="sdi-text"><div class="sdi-title">대시보드</div><div class="sdi-desc">방문자 · 채팅 · 응답률 통계</div></div>
+        </div>
+        <div class="sidebar-demo-item">
+          <div class="sdi-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">🧠</div>
+          <div class="sdi-text"><div class="sdi-title">챗봇 학습 현황</div><div class="sdi-desc">학습 데이터 · 동기화 상태</div></div>
+          <div class="sdi-status on"><span class="dot on"></span>동기화됨</div>
+        </div>
+        <div class="sidebar-demo-item">
+          <div class="sdi-icon" style="background:linear-gradient(135deg,#06b6d4,#0284c7);">🔗</div>
+          <div class="sdi-text"><div class="sdi-title">내 챗봇 링크</div><div class="sdi-desc">QR코드 · 링크 복사 · 공유</div></div>
+        </div>
+        <div class="sidebar-demo-item">
+          <div class="sdi-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">📢</div>
+          <div class="sdi-text"><div class="sdi-title">공지 방송 발송</div><div class="sdi-desc">단체 메시지 · 발송 이력 · 통계</div></div>
+        </div>
+        <div class="sidebar-demo-item">
+          <div class="sdi-icon" style="background:linear-gradient(135deg,#f43f5e,#e11d48);">❤️</div>
+          <div class="sdi-text"><div class="sdi-title">AI 동행</div><div class="sdi-desc">평생 함께하는 AI 친구 · 자동 대화 유지</div></div>
+          <div class="sdi-status off"><span class="dot off"></span>OFF</div>
+        </div>
+        <div class="sidebar-demo-item" style="border-bottom:none;">
+          <div class="sdi-icon" style="background:linear-gradient(135deg,#10b981,#059669);">🎨</div>
+          <div class="sdi-text"><div class="sdi-title">테마 설정</div><div class="sdi-desc">다크 모드 · 라이트 모드</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6개 메뉴 상세 -->
+    <h2 id="menus">6개 메뉴 상세 설명</h2>
+
+    <!-- 메뉴 1 -->
+    <h3 id="menu-dashboard" style="margin-top:24px;">① 📊 대시보드</h3>
+    <div class="menu-card">
+      <div class="menu-card-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">📊</div>
+      <div class="menu-card-body">
+        <div class="menu-card-title">대시보드</div>
+        <div class="menu-card-desc">방문자 수 · 채팅 수 · AI 응답률 통계를 한눈에 확인</div>
+      </div>
+    </div>
+    <p>오늘 내 챗봇을 방문한 사람이 몇 명인지, AI가 몇 번 답변했는지, 응답률이 얼마나 되는지를 <strong>숫자 카드와 차트</strong>로 보여줍니다.</p>
+    <div class="tip" style="margin-top:10px;">
+      📖 자세한 사용법 → <a href="/manual/onechat/dashboard.html" style="color:var(--brand);">대시보드 & 분석 매뉴얼</a>
+    </div>
+
+    <!-- 메뉴 2 -->
+    <h3 id="menu-learn" style="margin-top:28px;">② 🧠 챗봇 학습 현황</h3>
+    <div class="menu-card">
+      <div class="menu-card-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">🧠</div>
+      <div class="menu-card-body">
+        <div class="menu-card-title">챗봇 학습 현황</div>
+        <div class="menu-card-desc">학습 데이터 건수 · 동기화 상태 확인</div>
+      </div>
+    </div>
+    <p>내 AI 아바타가 얼마나 많은 내용을 학습했는지, 지금 동기화 상태가 정상인지 확인할 수 있습니다.</p>
+
+    <table class="m-table" style="margin-top:12px;">
+      <thead><tr><th>배지 상태</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td>🟢 <strong>동기화됨</strong></td><td>AI가 최신 학습 데이터로 정상 응답 중</td></tr>
+        <tr><td>🔄 <strong>동기화 중</strong></td><td>새로운 학습 데이터를 처리하는 중 (잠시 대기)</td></tr>
+        <tr><td>🔴 <strong>오류</strong></td><td>동기화 실패 — 학습 화면에서 다시 시도 필요</td></tr>
+      </tbody>
+    </table>
+    <div class="tip" style="margin-top:10px;">
+      📖 학습 방법 → <a href="/manual/onechat/avatar.html" style="color:var(--brand);">아바타 학습시키기 매뉴얼</a>
+    </div>
+
+    <!-- 메뉴 3 -->
+    <h3 id="menu-link" style="margin-top:28px;">③ 🔗 내 챗봇 링크</h3>
+    <div class="menu-card">
+      <div class="menu-card-icon" style="background:linear-gradient(135deg,#06b6d4,#0284c7);">🔗</div>
+      <div class="menu-card-body">
+        <div class="menu-card-title">내 챗봇 링크</div>
+        <div class="menu-card-desc">QR코드 · 링크 복사 · 카카오톡 공유</div>
+      </div>
+    </div>
+    <p>고객에게 보낼 챗봇 링크를 <strong>복사</strong>하거나, <strong>QR코드</strong>로 인쇄해서 나눠줄 수 있습니다.</p>
+    <div class="tip" style="margin-top:10px;">
+      📖 공유 방법 → <a href="/manual/onechat/share.html" style="color:var(--brand);">챗봇 링크 공유하기 매뉴얼</a>
+    </div>
+
+    <!-- 메뉴 4 -->
+    <h3 id="menu-broadcast" style="margin-top:28px;">④ 📢 공지 방송 발송</h3>
+    <div class="menu-card">
+      <div class="menu-card-icon" style="background:linear-gradient(135deg,#f59e0b,#ef4444);">📢</div>
+      <div class="menu-card-body">
+        <div class="menu-card-title">공지 방송 발송</div>
+        <div class="menu-card-desc">수신자 전체에게 공지 메시지 일괄 발송</div>
+      </div>
+    </div>
+    <p>내 챗봇과 대화한 모든 수신자에게 <strong>공지사항, 이벤트, 안내 메시지</strong>를 한 번에 보낼 수 있습니다. 읽음 수, 응답률 통계도 확인 가능합니다.</p>
+    <div class="tip" style="margin-top:10px;">
+      📖 발송 방법 → <a href="/manual/onechat/broadcast.html" style="color:var(--brand);">HI 공지발송 매뉴얼</a>
+    </div>
+
+    <!-- 메뉴 5 -->
+    <h3 id="menu-companion" style="margin-top:28px;">⑤ ❤️ AI 동행 <span style="background:#ef4444;color:white;font-size:11px;padding:2px 7px;border-radius:20px;margin-left:6px;font-weight:700;">NEW</span></h3>
+    <div class="menu-card">
+      <div class="menu-card-icon" style="background:linear-gradient(135deg,#f43f5e,#e11d48);">❤️</div>
+      <div class="menu-card-body">
+        <div class="menu-card-title">AI 동행</div>
+        <div class="menu-card-desc">대화 종료 후 AI가 자동으로 고객에게 재접촉</div>
+      </div>
+      <div class="menu-card-badge">NEW</div>
+    </div>
+    <p>고객이 챗봇 대화를 끊고 떠난 뒤, <strong>AI가 자동으로 안부·정보·응원 메시지를 보내</strong> 관계를 이어갑니다. 사이드바에서 ON/OFF 상태를 한눈에 확인할 수 있습니다.</p>
+    <table class="m-table" style="margin-top:12px;">
+      <thead><tr><th>사이드바 표시</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td>🟢 <strong>ON</strong></td><td>AI 동행 활성화 — AI가 자동으로 고객에게 메시지 발송 중</td></tr>
+        <tr><td>⚫ <strong>OFF</strong></td><td>AI 동행 비활성화 — 메시지 발송 없음</td></tr>
+      </tbody>
+    </table>
+    <div class="tip" style="margin-top:10px;">
+      📖 전체 설명 → <a href="/manual/onechat/companion.html" style="color:var(--brand);">AI 동행 기능 매뉴얼</a>
+    </div>
+
+    <!-- 메뉴 6 -->
+    <h3 id="menu-theme" style="margin-top:28px;">⑥ 🎨 테마 설정</h3>
+    <div class="menu-card">
+      <div class="menu-card-icon" style="background:linear-gradient(135deg,#10b981,#059669);">🎨</div>
+      <div class="menu-card-body">
+        <div class="menu-card-title">테마 설정</div>
+        <div class="menu-card-desc">다크 모드 ↔ 라이트 모드 전환</div>
+      </div>
+    </div>
+    <p>화면 색상 테마를 <strong>다크 모드</strong>(어두운 배경)와 <strong>라이트 모드</strong>(밝은 배경) 중에서 선택할 수 있습니다. 설정은 브라우저에 자동 저장됩니다.</p>
+
+    <table class="m-table" style="margin-top:12px;">
+      <thead><tr><th>모드</th><th>특징</th><th>추천 상황</th></tr></thead>
+      <tbody>
+        <tr><td>🌙 <strong>다크 모드</strong></td><td>어두운 배경, 눈 편안함</td><td>야간 사용, 어두운 환경</td></tr>
+        <tr><td>☀️ <strong>라이트 모드</strong></td><td>밝은 배경, 선명한 글씨</td><td>주간 사용, 밝은 환경</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 사이드바 프로필 카드 -->
+    <h2 id="profile-card" style="margin-top:36px;">사이드바 프로필 카드</h2>
+    <p>사이드바 상단에는 현재 로그인한 계정 정보가 미니 카드 형태로 표시됩니다.</p>
+
+    <table class="m-table" style="margin-top:12px;">
+      <thead><tr><th>항목</th><th>내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>아바타 이미지</strong></td><td>프로필에서 설정한 사진 또는 이니셜 첫 글자</td></tr>
+        <tr><td><strong>이름</strong></td><td>내 계정 이름 (aivote 등)</td></tr>
+        <tr><td><strong>역할</strong></td><td>아바타 챗봇 운영자</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice" style="margin-top:14px;">
+      ℹ️ 프로필 사진이나 이름을 변경하려면 → 헤더 오른쪽 <strong>👤 아바타 → 내 프로필 설정</strong>에서 수정하세요.
+    </div>
+
+    <!-- 자주 묻는 질문 -->
+    <h2 id="faq" style="margin-top:36px;">자주 묻는 질문</h2>
+
+    <div class="notice" style="margin-bottom:12px;">
+      <strong>Q. ☰ 버튼이 보이지 않아요.</strong><br>
+      A. 화면을 강제 새로고침(<code>Ctrl+Shift+R</code> / <code>Cmd+Shift+R</code>)해보세요. 브라우저 캐시를 비워야 최신 화면이 표시됩니다.
+    </div>
+    <div class="notice" style="margin-bottom:12px;">
+      <strong>Q. 사이드바는 열리는데 메뉴를 눌러도 반응이 없어요.</strong><br>
+      A. 로그인 상태를 확인하세요. 로그아웃 상태이거나 세션이 만료됐을 수 있습니다.
+    </div>
+    <div class="notice">
+      <strong>Q. AI 동행 메뉴가 OFF인데 왜 메시지가 안 가나요?</strong><br>
+      A. ❤️ AI 동행 메뉴를 눌러 설정 패널을 열고, <strong>ON/OFF 스위치를 켠 뒤 저장</strong>해야 합니다.
+    </div>
+
+    <!-- 이전/다음 -->
+    <div class="page-nav">
+      <a href="/manual/onechat/start.html">
+        <span class="nav-label">← 이전</span>
+        <span class="nav-title">접속 & 화면 구성</span>
+      </a>
+      <a href="/manual/onechat/profile.html" class="next">
+        <span class="nav-label">다음 →</span>
+        <span class="nav-title">내 프로필 설정</span>
+      </a>
+    </div>
+  </main>
+
+  <!-- 우측 TOC -->
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#open">사이드바 여는 방법</a></li>
+      <li><a href="#preview">화면 구성 미리보기</a></li>
+      <li><a href="#menus">6개 메뉴 상세</a></li>
+      <li><a href="#menu-dashboard">① 대시보드</a></li>
+      <li><a href="#menu-learn">② 챗봇 학습 현황</a></li>
+      <li><a href="#menu-link">③ 내 챗봇 링크</a></li>
+      <li><a href="#menu-broadcast">④ 공지 방송 발송</a></li>
+      <li><a href="#menu-companion">⑤ AI 동행</a></li>
+      <li><a href="#menu-theme">⑥ 테마 설정</a></li>
+      <li><a href="#profile-card">프로필 카드</a></li>
+      <li><a href="#faq">자주 묻는 질문</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

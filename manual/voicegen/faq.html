@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자주 묻는 질문 &#8212; VoiceGen AI &#47; kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VoiceGen AI 매뉴얼</div>
+      <a href="/manual/voicegen/" class="sb-link ">&#128266; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/voicegen/start.html" class="sb-link ">회원가입 &amp; 로그인</a>
+      <a href="/manual/voicegen/demo.html" class="sb-link ">데모 체험하기</a>
+      <a href="/manual/voicegen/start.html#apikey" class="sb-link">API 키 발급</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">API 연동</div>
+      <a href="/manual/voicegen/api.html" class="sb-link ">API 레퍼런스</a>
+      <a href="/manual/voicegen/voices.html" class="sb-link ">음성 프리셋 목록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/voicegen/clone.html" class="sb-link ">음성 클로닝</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/voicegen/plan.html" class="sb-link ">요금제 안내</a>
+      <a href="/manual/voicegen/faq.html" class="sb-link active">자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/voicegen/">VoiceGen AI</a><span class="sep">&#8250;</span><span>FAQ</span>
+    </div>
+    <h1>자주 묻는 질문 (FAQ)</h1>
+    <p class="lead">VoiceGen AI 사용 중 자주 받는 질문들을 모았습니다.</p>
+
+    <style>
+    .faq-item{border:1px solid var(--border);border-radius:10px;margin-bottom:12px;overflow:hidden;}
+    .faq-q{font-weight:700;padding:16px 20px;background:var(--bg2);color:var(--text);font-size:14px;}
+    .faq-a{padding:16px 20px;font-size:14px;color:var(--text2);line-height:1.7;border-top:1px solid var(--border);}
+    .faq-a ul,.faq-a ol{padding-left:20px;margin:8px 0;}
+    .faq-a li{margin-bottom:4px;}
+    </style>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 생성된 음성 품질이 좋지 않아요.</div>
+      <div class="faq-a">
+        <ul>
+          <li><strong>구두점&#183;띄어쓰기</strong>가 정확할수록 자연스럽게 읽습니다</li>
+          <li>영어 텍스트에는 영어 음성(<code>en_female_1</code>&#183;<code>en_male_1</code>)을 사용하세요</li>
+          <li><code>@</code> <code>#</code> 등 특수문자는 제거하고 텍스트만 입력하세요</li>
+          <li>용도에 맞는 음성을 선택하세요 &#8594; <a href="/manual/voicegen/voices.html">음성 프리셋 목록</a></li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. API 호출 시 401 오류가 납니다.</div>
+      <div class="faq-a">
+        <ul>
+          <li>요청 헤더에 <code>Authorization: Bearer YOUR_API_KEY</code>가 포함됐는지 확인</li>
+          <li>API 키가 정확히 복사됐는지 확인 (앞뒤 공백 주의)</li>
+          <li>대시보드에서 해당 키가 활성 상태인지 확인</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 429 오류가 납니다.</div>
+      <div class="faq-a">
+        <p>월 사용량 한도를 초과했습니다.<br>
+        대시보드에서 현재 사용량을 확인하고, 계속 사용하려면 플랜을 업그레이드하세요.<br>
+        &#8594; <a href="/manual/voicegen/plan.html">요금제 안내</a></p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 음성 생성에 시간이 오래 걸려요.</div>
+      <div class="faq-a">
+        <p>텍스트 길이에 따라 처리 시간이 달라집니다:</p>
+        <ul>
+          <li>100자 이하: 약 2~4초</li>
+          <li>100~500자: 약 5~15초</li>
+          <li>500자 이상: 약 15~30초</li>
+        </ul>
+        <p>Pro 플랜은 우선 처리 큐가 적용되어 더 빠르게 처리됩니다.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 음성 클로닝 결과가 원래 목소리와 많이 달라요.</div>
+      <div class="faq-a">
+        <ul>
+          <li>조용한 환경에서 녹음한 파일 사용 (배경 소음 최소화)</li>
+          <li>30초~1분 분량이 최적입니다</li>
+          <li>WAV 형식, 44,100Hz 권장</li>
+          <li>긴 침묵 구간 없이 자연스럽게 읽은 문장 사용</li>
+        </ul>
+        &#8594; <a href="/manual/voicegen/clone.html">음성 클로닝 상세 가이드</a>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 이메일 인증 메일이 오지 않아요.</div>
+      <div class="faq-a">
+        <ol>
+          <li>스팸(정크) 메일함 확인</li>
+          <li>이메일 주소 오타 여부 확인</li>
+          <li>5분 이상 기다려도 오지 않으면 로그인 페이지에서 재발송 요청</li>
+        </ol>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 생성된 음성을 상업적으로 사용해도 되나요?</div>
+      <div class="faq-a">
+        <p>유료 플랜(Basic 이상) 가입자는 생성된 음성을 상업적 목적으로 사용할 수 있습니다.<br>
+        Free 플랜은 개인&#183;비상업적 용도에 한해 사용 가능합니다.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 한국어 이외의 언어도 지원하나요?</div>
+      <div class="faq-a">
+        <p>현재 한국어&#183;영어를 기본 지원합니다.<br>
+        OpenAI TTS&#183;Google Cloud TTS&#183;ElevenLabs 엔진을 관리자에서 선택하면 더 많은 언어를 지원합니다.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. API 키를 분실했어요.</div>
+      <div class="faq-a">
+        <p>대시보드 &#8594; API 키 관리에서 기존 키를 삭제하고 새 키를 발급받으세요.<br>
+        기존 키로 연동된 서비스가 있다면 새 키로 교체해 주세요.</p>
+      </div>
+    </div>
+
+    <div class="faq-item">
+      <div class="faq-q">Q. 서버 오류(500)가 계속 발생합니다.</div>
+      <div class="faq-a">
+        <p>일시적인 서버 부하로 발생할 수 있습니다. 잠시 후 다시 시도해 주세요.<br>
+        지속적으로 발생하면 <a href="https://vg.kiam.kr" target="_blank">고객센터</a>로 문의해 주세요.</p>
+      </div>
+    </div>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="https://vg.kiam.kr" target="_blank" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128266; VoiceGen AI 바로가기 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

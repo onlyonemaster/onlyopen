@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>영상 생성 파이프라인 &#8212; VAG 영상팩토리 / kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VAG 영상팩토리</div>
+      <a href="/manual/vag/" class="sb-link">&#127916; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/vag/quickstart.html" class="sb-link">&#9889; 빠른 시작 (5분)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">파이프라인</div>
+      <a href="/manual/vag/pipeline.html" class="sb-link active">&#9881; 영상 생성 파이프라인</a>
+      <a href="/manual/vag/engines.html" class="sb-link">&#129302; AI 엔진 비교</a>
+      <a href="/manual/vag/audio.html" class="sb-link">&#127925; 음성 &middot; 자막 &middot; 환경음</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">트렌드 분석</div>
+      <a href="/manual/vag/trend.html" class="sb-link">&#128200; YouTube 트렌드 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/vag/pricing.html" class="sb-link">&#128181; 요금제 안내</a>
+      <a href="/manual/vag/faq.html" class="sb-link">&#10067; 자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/vag/">VAG 영상팩토리</a><span class="sep">&#8250;</span>
+      영상 생성 파이프라인
+    </div>
+    <h1>&#9881; 영상 생성 파이프라인</h1>
+    <p class="lead">입력된 주제가 완성 영상(final.mp4)이 되기까지의 전체 과정을 설명합니다.</p>
+
+    <div class="callout callout-blue">
+      <strong>처리 방식</strong>: 요청은 즉시 큐에 등록되고, PHP CLI 워커 프로세스([워커스크립트])가 백그라운드에서 순차적으로 처리합니다.
+      브라우저를 닫아도 영상 생성은 계속 진행됩니다.
+    </div>
+
+    <h2>전체 흐름도</h2>
+    <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;margin:16px 0 28px;font-size:14px;line-height:2;">
+      <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;">
+        <span style="background:var(--brand);color:white;padding:4px 12px;border-radius:6px;font-weight:700;">입력</span>
+        <span>&#8594;</span>
+        <span style="background:#4f46e5;color:white;padding:4px 12px;border-radius:6px;">STEP 1<br>스크립트</span>
+        <span>&#8594;</span>
+        <span style="background:#0891b2;color:white;padding:4px 12px;border-radius:6px;">STEP 2<br>이미지</span>
+        <span>&#8594;</span>
+        <span style="background:#059669;color:white;padding:4px 12px;border-radius:6px;">STEP 3<br>TTS</span>
+        <span>&#8594;</span>
+        <span style="background:#d97706;color:white;padding:4px 12px;border-radius:6px;">STEP 3.5<br>환경음</span>
+        <span>&#8594;</span>
+        <span style="background:#dc2626;color:white;padding:4px 12px;border-radius:6px;">STEP 4<br>클립</span>
+        <span>&#8594;</span>
+        <span style="background:#7c3aed;color:white;padding:4px 12px;border-radius:6px;">STEP 5<br>합성</span>
+        <span>&#8594;</span>
+        <span style="background:#166534;color:white;padding:4px 12px;border-radius:6px;">&#127881; 완성</span>
+      </div>
+    </div>
+
+    <h2>STEP 1 — AI 스크립트 생성 (5% → 15%)</h2>
+    <p>DeepSeek AI에게 주제 · 추가 설명 · 방향 · 영상 길이를 전달하면 아래 구조의 JSON 스크립트가 생성됩니다.</p>
+    <p style="color:var(--text2);font-size:13px;margin:4px 0 12px;">한글 입력 시 자동으로 영문 번역 후 프롬프트에 적용됩니다.</p>
+    <pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;overflow-x:auto;font-size:13px;">{
+  "title": "봄철 건강 관리 5가지 방법",
+  "description": "영상 설명 (100자, 배포용)",
+  "hashtags": ["#건강관리", "#봄건강", "#헬스팁"],
+  "scenes": [
+    {
+      "no": 1,
+      "description": "Bright spring morning, person stretching outdoors",
+      "narration": "따뜻한 봄이 찾아왔습니다. 이 계절에 건강을 챙기는 방법을 알아볼까요?",
+      "subtitle": "봄 건강 관리의 시작",
+      "ambient_sound": "nature",
+      "image_keyword": "spring morning exercise outdoor",
+      "duration_sec": 10
+    }
+  ]
+}</pre>
+
+    <h2>STEP 2 — 이미지 준비 (18% → 28%)</h2>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin:12px 0 24px;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">
+        <div style="font-weight:700;margin-bottom:8px;">&#127760; Pexels API 자동 다운로드</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:16px;">
+          <li>각 장면의 <code>image_keyword</code>로 Pexels 검색</li>
+          <li>가로/세로 비율에 맞는 이미지 자동 선택</li>
+          <li><code>jobs/{jobId}/images/scene_N.jpg</code>에 저장</li>
+        </ul>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:16px;">
+        <div style="font-weight:700;margin-bottom:8px;">&#128228; 사용자 업로드 이미지</div>
+        <ul style="font-size:13px;color:var(--text2);padding-left:16px;">
+          <li>업로드된 이미지를 장면 수만큼 순환 배분</li>
+          <li>JPG · PNG 지원</li>
+          <li>Pexels 검색 없이 바로 사용</li>
+        </ul>
+      </div>
+    </div>
+
+    <h2>STEP 3 — TTS 나레이션 생성 (30% → 38%)</h2>
+    <p>OpenAI TTS API를 사용해 각 장면의 <code>narration</code> 텍스트를 음성으로 변환합니다.</p>
+    <ul style="margin:8px 0 12px;padding-left:20px;font-size:14px;">
+      <li>출력 형식: MP3 (44.1kHz)</li>
+      <li>저장 위치: <code>jobs/{jobId}/audio/scene_N.mp3</code></li>
+      <li>[OpenAI API 키]가 없을 경우 이 단계를 건너뜁니다 (무음 진행)</li>
+    </ul>
+    <p>자세한 내용은 <a href="/manual/vag/audio.html">음성 · 자막 · 환경음</a> 페이지를 참고하세요.</p>
+
+    <h2>STEP 3.5 — 환경음 트랙 생성 (40% → 45%)</h2>
+    <p>각 장면의 <code>ambient_sound</code> 필드 값에 해당하는 SFX 파일을 장면 길이만큼 loop+trim한 뒤, 전체 영상 길이의 단일 <code>ambient_track.mp3</code>로 concat합니다.</p>
+
+    <table style="margin:12px 0;">
+      <thead><tr><th>타입</th><th>설명</th><th>주요 사용 장면</th></tr></thead>
+      <tbody>
+        <tr><td><code>nature</code></td><td>자연 (새소리, 바람)</td><td>야외, 공원, 숲</td></tr>
+        <tr><td><code>ocean</code></td><td>바다 파도</td><td>해변, 수중, 여행</td></tr>
+        <tr><td><code>rain</code></td><td>빗소리</td><td>감성적, 실내, 우울</td></tr>
+        <tr><td><code>wind</code></td><td>바람소리</td><td>고원, 산, 개방 공간</td></tr>
+        <tr><td><code>city</code></td><td>도시 소음</td><td>카페, 거리, 도심</td></tr>
+        <tr><td><code>indoor</code></td><td>실내 공기음</td><td>강의, 회의, 인터뷰</td></tr>
+        <tr><td><code>dramatic</code></td><td>저음 드라마틱</td><td>오프닝, 클라이맥스</td></tr>
+        <tr><td><code>default</code></td><td>기본 배경음</td><td>범용</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout" style="background:var(--bg2);border-left:4px solid var(--brand);">
+      <strong>SFX 파일 위치</strong>: <code>[내부경로]/[SFX폴더]/</code><br>
+      SFX 파일이 하나도 없으면 환경음 단계를 건너뛰고 무음으로 진행합니다.
+    </div>
+
+    <h2>STEP 4 — AI 클립 생성 (45% → 80%)</h2>
+    <p>선택된 엔진으로 이미지 → 동영상 클립을 생성합니다.</p>
+
+    <div class="steps">
+      <div class="step"><div class="step-num">①</div><div class="step-body">
+        <strong>AI 엔진 (Kling / fal.ai)</strong>
+        <p>이미지와 장면 설명(<code>description</code>)을 전달하여 AI 동영상 클립 생성.<br>
+        API 키가 있고 엔진을 선택한 경우만 시도합니다.</p>
+      </div></div>
+      <div class="step"><div class="step-num">②</div><div class="step-body">
+        <strong>자막 소각 (burn-in)</strong>
+        <p>AI 클립 생성 성공 시, <code>subtitle</code> 텍스트를 FFmpeg drawtext 필터로 영상에 직접 소각합니다.<br>
+        한글 폰트 지원, 하단 중앙 반투명 배경 표시.</p>
+      </div></div>
+      <div class="step"><div class="step-num">③</div><div class="step-body">
+        <strong>FFmpeg 폴백</strong>
+        <p>AI 엔진 실패(API 오류, 타임아웃) 또는 FFmpeg 엔진 선택 시 Ken Burns 효과(줌+패닝) 클립 생성.<br>
+        이미지 → 10초 MP4 변환, 자막 동시 소각.</p>
+      </div></div>
+    </div>
+
+    <h2>STEP 5 — 최종 합성 (83% → 97%)</h2>
+    <p>모든 클립을 concat하고 3트랙 오디오를 믹싱하여 <code>final.mp4</code>를 생성합니다.</p>
+
+    <table>
+      <thead><tr><th>트랙</th><th>소스</th><th>볼륨</th><th>처리</th></tr></thead>
+      <tbody>
+        <tr><td>나레이션</td><td>OpenAI TTS MP3</td><td>100%</td><td>장면별 타이밍 오프셋 적용</td></tr>
+        <tr><td>환경음</td><td>SFX concat MP3</td><td>35%</td><td>영상과 동일 길이, 장면별 타입</td></tr>
+        <tr><td>배경음악</td><td>ambient_default.mp3</td><td>10%</td><td>aloop으로 전체 반복</td></tr>
+      </tbody>
+    </table>
+
+    <p style="margin-top:16px;">최종 합성 후 <code>ffmpeg -ss 0.5 -vframes 1</code>로 썸네일(<code>thumb.jpg</code>)을 자동 추출합니다.</p>
+
+    <div class="callout" style="background:var(--bg2);border-left:4px solid #059669;">
+      <strong>완료 상태 파일</strong>: <code>jobs/{jobId}/status.json</code><br>
+      <code>final.mp4</code>, <code>thumb.jpg</code>, <code>script.json</code> 모두 같은 jobDir에 저장됩니다.
+    </div>
+
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);display:flex;gap:12px;flex-wrap:wrap;">
+      <a href="/manual/vag/engines.html" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#129302; AI 엔진 비교 &#8594;</a>
+      <a href="/manual/vag/audio.html" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-weight:700;font-size:14px;">&#127925; 음성 · 자막 · 환경음</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

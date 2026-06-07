@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>웹문자·RCS 서비스 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/addressbook.html" class="sb-link">📒 주소록 관리</a>
+      <a href="/manual/sms/received.html" class="sb-link">수신 내역 확인</a>
+      <a href="/manual/sms/block.html" class="sb-link">수신거부 관리</a>
+      <a href="/manual/sms/web-send.html" class="sb-link">💬 웹문자 발송</a>
+      <a href="/manual/sms/web-intro.html" class="sb-link active">🌐 웹문자·RCS 소개</a>
+      <a href="/manual/sms/bulk20.html" class="sb-link">20건 무료문자</a>
+      <a href="/manual/sms/reservation.html" class="sb-link">⏰ 예약 발송</a>
+      <a href="/manual/sms/split.html" class="sb-link">✂️ 분할 발송</a>
+      <a href="/manual/sms/ai-copy.html" class="sb-link">AI 메시지 카피</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 웹문자·RCS 소개</nav>
+    <h1 class="page-title">🌐 웹문자·RCS 서비스 소개</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">웹문자·RCS란?</a></li>
+        <li><a href="#diff">폰문자와의 차이점</a></li>
+        <li><a href="#types">발송 채널 종류</a></li>
+        <li><a href="#charge">충전 및 요금</a></li>
+        <li><a href="#rcs">RCS 발송 안내</a></li>
+        <li><a href="#sender">발신번호 설정</a></li>
+        <li><a href="#start">시작하기</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>웹문자·RCS란?</h2>
+      <p>웹문자는 <strong>스마트폰 앱(온리원문자 앱) 없이 웹 브라우저에서 직접 문자를 발송</strong>하는 서비스입니다. 포인트를 충전하여 건당 요금을 지불하는 방식으로 운영되며, RCS(Rich Communication Services) 발송도 지원합니다.</p>
+      <div class="notice-box" style="margin-top:14px;">
+        <strong>🖥️ 웹문자로 퍼널을 발송할 경우 사전에 포인트를 충전하셔야 합니다.</strong> → <a href="https://kiam.kr/mypage_payment.php" target="_blank">⚡ 충전하기</a>
+      </div>
+    </section>
+
+    <section id="diff">
+      <h2>폰문자와의 차이점</h2>
+      <table class="m-table">
+        <thead>
+          <tr><th>구분</th><th>폰문자 (앱 발송)</th><th>웹문자 (포인트 발송)</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>발송 방식</td><td>스마트폰 → 통신사 경유</td><td>웹 서버 → 통신사 API</td></tr>
+          <tr><td>필요 조건</td><td>온리원문자 앱 설치 + 휴대폰 등록</td><td>포인트 충전만으로 즉시 가능</td></tr>
+          <tr><td>건당 비용</td><td>0.7원~ (앱 연동 시)</td><td>충전 포인트 소모</td></tr>
+          <tr><td>RCS 지원</td><td>❌</td><td>✅ (단문·장문·포토)</td></tr>
+          <tr><td>1회 최대 발송</td><td>설정에 따라 다름</td><td>20건 (기본) / 대량 별도</td></tr>
+          <tr><td>발신번호</td><td>등록된 휴대폰</td><td>등록된 웹문자 발신번호</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="types">
+      <h2>발송 채널 종류</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">💬</div>
+          <div class="fc-title">웹 SMS</div>
+          <div class="fc-desc">90자 이내 단문. 비용이 가장 저렴하며 즉시 도달률이 높습니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📝</div>
+          <div class="fc-title">웹 LMS</div>
+          <div class="fc-desc">90자 초과 시 자동 전환. 상세한 안내문이나 긴 내용에 적합합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🖼️</div>
+          <div class="fc-title">웹 MMS</div>
+          <div class="fc-desc">이미지 + 텍스트. 제품 사진, 이벤트 배너 등 시각적 홍보에 활용합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📱</div>
+          <div class="fc-title">RCS 단문</div>
+          <div class="fc-desc">채팅 앱 스타일 단문 메시지. 버튼 링크 삽입 가능.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📋</div>
+          <div class="fc-title">RCS 장문</div>
+          <div class="fc-desc">긴 내용 + 버튼 포함 리치 메시지. 고객 응대 자동화에 효과적.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🎨</div>
+          <div class="fc-title">RCS 포토</div>
+          <div class="fc-desc">이미지 카드형 RCS. 시각적으로 임팩트 있는 메시지 전달.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="charge">
+      <h2>충전 및 요금</h2>
+      <p>웹문자는 <strong>포인트 선충전 방식</strong>으로 운영됩니다.</p>
+      <ul>
+        <li><a href="https://kiam.kr/mypage_payment.php" target="_blank">마이페이지 → 포인트 충전</a>에서 캐시포인트를 충전합니다.</li>
+        <li>발송 시 채널별 단가에 따라 포인트가 자동 차감됩니다.</li>
+        <li>현재 잔액은 발송 화면 상단 <strong>💰 잔액</strong>에서 확인할 수 있습니다.</li>
+      </ul>
+      <div class="notice-box info" style="margin-top:12px;">
+        <strong>📌 무료 제공:</strong> 가입 후 일정 기간 동안 무료 건수가 제공됩니다. 잔액 조회에서 남은 무료 건수를 확인하세요.
+      </div>
+    </section>
+
+    <section id="rcs">
+      <h2>RCS 발송 안내</h2>
+      <p>RCS는 <strong>기업 전용 채널</strong>로, 사전에 RCS 발신번호를 별도 신청해야 합니다.</p>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>RCS 발신번호 신청</strong> — 통신사에 기업 RCS 채널 개설을 신청합니다.</div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body"><strong>발신번호 등록</strong> — kiam.kr 발신번호 관리에서 승인된 RCS 번호를 등록합니다.</div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>RCS 채널 선택 후 발송</strong> — 단문/장문/포토 중 형식을 선택하고 발송합니다. 버튼명(최대 15자)과 버튼 링크를 추가할 수 있습니다.</div>
+        </li>
+      </ol>
+      <div class="notice-box warning" style="margin-top:14px;">
+        <strong>⚠️ 주의:</strong> RCS 1회 최대 20건 발송 제한이 있습니다. 대량 발송이 필요하면 별도 문의하세요.
+      </div>
+    </section>
+
+    <section id="sender">
+      <h2>발신번호 설정</h2>
+      <p>웹문자 발신번호는 폰문자 발신번호와 별도로 관리됩니다.</p>
+      <ul>
+        <li>발송 화면의 <strong>⚙️ 발신번호 관리</strong>에서 웹문자용 발신번호를 등록합니다.</li>
+        <li>RCS 발신번호는 승인 후 별도로 등록해야 합니다.</li>
+        <li>발신번호가 없을 경우 발송이 불가능합니다 (<em>-- RCS 발신번호 없음 --</em> 표시).</li>
+      </ul>
+    </section>
+
+    <section id="start">
+      <h2>시작하기</h2>
+      <p>웹문자 발송을 시작하려면 아래 단계를 따르세요.</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">포인트 충전 → <a href="https://kiam.kr/mypage_payment.php" target="_blank">충전하기</a></div></li>
+        <li><div class="step-num">2</div><div class="step-body">발신번호 등록 → 발송 화면에서 ⚙️ 아이콘 클릭</div></li>
+        <li><div class="step-num">3</div><div class="step-body">채널 선택 후 발송 → <a href="/manual/sms/web-send.html">웹문자 발송 방법 →</a></div></li>
+      </ol>
+    </section>
+
+    <nav class="page-nav">
+      <a href="/manual/sms/block.html" class="btn-prev">← 수신거부 관리</a>
+      <a href="/manual/sms/web-send.html" class="btn-next">웹문자 발송 →</a>
+    </nav>
+  </main>
+</div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var h=document.documentElement;
+    var t=h.getAttribute('data-theme')==='light'?'dark':'light';
+    h.setAttribute('data-theme',t);
+    this.textContent=t==='light'?'🌙':'☀️';
+  });
+  document.getElementById('hamburgerBtn').addEventListener('click',function(){
+    document.querySelector('.m-sidebar').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

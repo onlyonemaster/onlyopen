@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔱 콘-트리니티란? — 아이노트 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.trinity-hero {
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #0f172a 100%);
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin: 24px 0;
+  color: white;
+  position: relative; overflow: hidden;
+}
+.trinity-hero::before {
+  content: ''; position: absolute; inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 50% 50%, rgba(99,102,241,.20) 0%, transparent 70%);
+}
+.trinity-hero h3 { font-size: 22px; font-weight: 800; margin-bottom: 12px; position: relative; }
+.trinity-hero p  { font-size: 14px; opacity: .85; line-height: 1.75; position: relative; margin-bottom: 0; }
+
+.cycle-svg-wrap {
+  max-width: 520px; margin: 28px auto;
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 16px; padding: 20px;
+}
+.cycle-svg-wrap svg { width: 100%; height: auto; display: block; }
+
+.flow-step-grid {
+  display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; margin: 24px 0;
+}
+.flow-step {
+  border: 1px solid var(--border); border-radius: 14px; padding: 20px;
+  background: var(--bg2); position: relative;
+}
+.flow-step.edi { border-top: 3px solid #6366f1; }
+.flow-step.art { border-top: 3px solid #f59e0b; }
+.flow-step.bri { border-top: 3px solid #10b981; }
+.flow-step .fs-no { font-size: 11px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text3); margin-bottom: 8px; }
+.flow-step .fs-icon { font-size: 26px; margin-bottom: 8px; display: block; }
+.flow-step .fs-title { font-size: 16px; font-weight: 800; margin-bottom: 4px; color: var(--text); }
+.flow-step.edi .fs-title { color: #6366f1; }
+.flow-step.art .fs-title { color: #f59e0b; }
+.flow-step.bri .fs-title { color: #10b981; }
+.flow-step .fs-sub { font-size: 12px; color: var(--text3); margin-bottom: 10px; }
+.flow-step .fs-desc { font-size: 13px; color: var(--text2); line-height: 1.7; }
+
+.scenario-box {
+  background: var(--bg2); border: 1px solid var(--border); border-radius: 14px;
+  padding: 24px; margin: 18px 0;
+}
+.scenario-box h4 { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; }
+.scenario-box .sce-stages { display: flex; gap: 10px; margin: 14px 0 10px; flex-wrap: wrap; }
+.scenario-box .sce-stage {
+  flex: 1; min-width: 140px;
+  background: var(--bg); border: 1px solid var(--border); border-radius: 8px;
+  padding: 10px 12px; font-size: 12px; color: var(--text2);
+}
+.scenario-box .sce-stage strong { color: var(--text); display: block; margin-bottom: 4px; font-size: 13px; }
+
+@media(max-width:700px) { .flow-step-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link active">🔱 콘-트리니티란?</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <span>콘-트리니티란?</span>
+    </div>
+
+    <h1>🔱 콘-트리니티 (Con-Trinity)</h1>
+    <p class="page-desc">아이노트의 심장에는 세 개의 콘(Con)이 있습니다 — <strong>에디콘(EdiCon)</strong>, <strong>아트콘(ArtCon)</strong>, <strong>브리콘(BriCon)</strong>. 셋은 따로 작동하지만 함께일 때 비로소 완벽한 노트 사이클을 만들어냅니다. 이것이 콘-트리니티입니다.</p>
+
+    <div class="trinity-hero">
+      <h3>🌍 왜 "트리니티"인가요?</h3>
+      <p>
+        대부분의 노트 앱은 입력(에디터)만 잘합니다. 일부는 변환(렌더링)을 잘하고, 또 일부는 공유(브리핑)에 강점이 있습니다. <strong>하지만 이 셋을 하나의 노트 안에서 매끄럽게 연결한 시스템은 지구상에 없었습니다.</strong><br><br>
+        아이노트는 <strong>EdiCon · ArtCon · BriCon</strong>을 세 개의 동등한 기둥으로 설계해, 하나의 노트가 입력 → 변환 → 발표 단계를 한 번도 끊기지 않고 흐르도록 만들었습니다. 그래서 "트리니티(三位一體)"입니다.
+      </p>
+    </div>
+
+    <h2 id="three-cons">🎯 세 콘(Con)의 역할</h2>
+
+    <div class="flow-step-grid">
+      <div class="flow-step edi">
+        <div class="fs-no">STEP 1 · INPUT</div>
+        <span class="fs-icon">✏️</span>
+        <div class="fs-title">에디콘 (EdiCon)</div>
+        <div class="fs-sub">Editor Engine · 입력 인식</div>
+        <div class="fs-desc">
+          AI가 쏟아낸 텍스트(URL·표·코드·수식·다이어그램)를 붙여넣는 순간 자동으로 인식해 깔끔하게 정돈된 블록으로 만듭니다.
+          <strong>5종 자동 디스패치</strong> · <strong>210/210 시뮬레이션 통과</strong>.
+        </div>
+      </div>
+      <div class="flow-step art">
+        <div class="fs-no">STEP 2 · TRANSFORM</div>
+        <span class="fs-icon">🎨</span>
+        <div class="fs-title">아트콘 (ArtCon)</div>
+        <div class="fs-sub">Art Engine · 시각화</div>
+        <div class="fs-desc">
+          정돈된 텍스트를 <strong>예술 작품 수준의 HTML 인포그래픽</strong>으로 다시 만듭니다. SuperAI + 4단계 안전망. 5가지 테마 실시간 전환. <strong>특허 출원 완료</strong>.
+        </div>
+      </div>
+      <div class="flow-step bri">
+        <div class="fs-no">STEP 3 · DELIVER</div>
+        <span class="fs-icon">📊</span>
+        <div class="fs-title">브리콘 (BriCon)</div>
+        <div class="fs-sub">Briefing Engine · 전달</div>
+        <div class="fs-desc">
+          노트 한 편을 <strong>발표 가능한 브리핑 문서</strong>로 자동 구성합니다. 투자자 자료 · 인적자원 분석 · 요약 카드. 공유 링크로 누구든 즉시 열람 가능.
+        </div>
+      </div>
+    </div>
+
+    <h2 id="cycle">🔄 트리니티 사이클</h2>
+    <p>세 콘은 일방향이 아니라 <strong>순환</strong>합니다. 브리콘으로 만든 결과를 다시 에디콘에 붙여넣으면 새로운 입력이 되고, 아트콘이 또 다른 시각화를 만들어냅니다. 노트는 끊임없이 발전합니다.</p>
+
+    <div class="cycle-svg-wrap">
+      <svg viewBox="0 0 500 380" xmlns="http://www.w3.org/2000/svg" aria-label="트리니티 사이클">
+        <defs>
+          <linearGradient id="cycEdi" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#6366f1"/><stop offset="100%" stop-color="#8b5cf6"/></linearGradient>
+          <linearGradient id="cycArt" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#f59e0b"/><stop offset="100%" stop-color="#ef4444"/></linearGradient>
+          <linearGradient id="cycBri" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#10b981"/><stop offset="100%" stop-color="#06b6d4"/></linearGradient>
+          <marker id="arrCyc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#94a3b8"/>
+          </marker>
+        </defs>
+
+        <!-- Cycle arrows -->
+        <path d="M 150 110 Q 250 60 350 110" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#arrCyc)"/>
+        <path d="M 370 160 Q 400 250 320 300" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#arrCyc)"/>
+        <path d="M 180 300 Q 100 250 130 160" stroke="#94a3b8" stroke-width="2" fill="none" marker-end="url(#arrCyc)"/>
+
+        <!-- EdiCon node -->
+        <g>
+          <circle cx="125" cy="120" r="55" fill="url(#cycEdi)" opacity="0.92"/>
+          <text x="125" y="115" text-anchor="middle" font-size="18" fill="white">✏️</text>
+          <text x="125" y="138" text-anchor="middle" font-size="13" font-weight="800" fill="white">EdiCon</text>
+          <text x="125" y="190" text-anchor="middle" font-size="13" font-weight="700" fill="#6366f1">에디콘</text>
+          <text x="125" y="208" text-anchor="middle" font-size="10" fill="#94a3b8">INPUT · 입력 인식</text>
+        </g>
+
+        <!-- ArtCon node -->
+        <g>
+          <circle cx="375" cy="120" r="55" fill="url(#cycArt)" opacity="0.92"/>
+          <text x="375" y="115" text-anchor="middle" font-size="18" fill="white">🎨</text>
+          <text x="375" y="138" text-anchor="middle" font-size="13" font-weight="800" fill="white">ArtCon</text>
+          <text x="375" y="190" text-anchor="middle" font-size="13" font-weight="700" fill="#f59e0b">아트콘</text>
+          <text x="375" y="208" text-anchor="middle" font-size="10" fill="#94a3b8">TRANSFORM · 시각화</text>
+        </g>
+
+        <!-- BriCon node -->
+        <g>
+          <circle cx="250" cy="320" r="55" fill="url(#cycBri)" opacity="0.92"/>
+          <text x="250" y="315" text-anchor="middle" font-size="18" fill="white">📊</text>
+          <text x="250" y="338" text-anchor="middle" font-size="13" font-weight="800" fill="white">BriCon</text>
+        </g>
+        <text x="250" y="370" text-anchor="middle" font-size="13" font-weight="700" fill="#10b981">브리콘</text>
+
+        <!-- Center label -->
+        <text x="250" y="220" text-anchor="middle" font-size="11" font-weight="700" fill="#94a3b8">콘-트리니티 (Con-Trinity)</text>
+        <text x="250" y="238" text-anchor="middle" font-size="10" fill="#cbd5e1">순환하는 노트 사이클</text>
+      </svg>
+    </div>
+
+    <h2 id="scenarios">🎬 실전 시나리오 — 트리니티는 이렇게 작동합니다</h2>
+
+    <div class="scenario-box">
+      <h4>시나리오 1 · 📊 "SuperAI에게 시장 분석을 받았다"</h4>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:8px;">AI가 만든 TSV 표 · 막대그래프 다이어그램 · 요약 텍스트를 한 번에 복사해 노트에 붙여넣었습니다.</p>
+      <div class="sce-stages">
+        <div class="sce-stage"><strong>1. EdiCon</strong>표를 자동 인식해 깔끔한 m-table로 변환. 다이어그램은 Mermaid 블록으로 자동 렌더링.</div>
+        <div class="sce-stage"><strong>2. ArtCon</strong>"아트콘으로 변환" 클릭 → 표·그래프가 컬러 인포그래픽으로 통합 시각화.</div>
+        <div class="sce-stage"><strong>3. BriCon</strong>"브리핑 생성" → 발표용 슬라이드 카드 자동 생성. 공유 링크로 임원진에게 전달.</div>
+      </div>
+    </div>
+
+    <div class="scenario-box">
+      <h4>시나리오 2 · ✍️ "투자자에게 보낼 사업계획 초안을 만든다"</h4>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:8px;">사업계획 텍스트와 SWOT 분석표를 ChatGPT에서 받아왔습니다.</p>
+      <div class="sce-stages">
+        <div class="sce-stage"><strong>1. EdiCon</strong>제목·소제목·표·체크리스트를 자동 식별. 마크다운 단축 입력으로 직접 작성도 가능.</div>
+        <div class="sce-stage"><strong>2. ArtCon</strong>SWOT 표를 4분면 인포그래픽으로 변환. 5가지 테마 중 "딥플로트"로 시연.</div>
+        <div class="sce-stage"><strong>3. BriCon</strong>60페이지 투자자 브리핑 자동 구성. 공유 링크 즉시 발송.</div>
+      </div>
+    </div>
+
+    <div class="scenario-box">
+      <h4>시나리오 3 · 👥 "팀에 공유할 학습 자료를 만든다"</h4>
+      <p style="font-size:13px;color:var(--text2);margin-bottom:8px;">DeepSeek에게 받은 학습 흐름도(Mermaid)와 핵심 개념 표를 노트에 정리합니다.</p>
+      <div class="sce-stages">
+        <div class="sce-stage"><strong>1. EdiCon</strong>Mermaid 코드를 자동 감지해 실제 다이어그램으로 렌더링. URL은 OG 카드로 변환.</div>
+        <div class="sce-stage"><strong>2. ArtCon</strong>전체 노트를 학습용 인포그래픽으로 변환. 다크 테마로 시각화.</div>
+        <div class="sce-stage"><strong>3. BriCon</strong>학습 카드 모음으로 자동 정렬. 공유 링크를 팀 채팅에 게시.</div>
+      </div>
+    </div>
+
+    <h2 id="why">🤔 왜 이 사이클이 중요한가요?</h2>
+
+    <table class="m-table">
+      <thead><tr><th>전통적 노트 앱</th><th>아이노트 (콘-트리니티)</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>AI가 만든 표를 <strong>그대로 텍스트</strong>로 붙임 → 읽기 어려움</td>
+          <td><strong>EdiCon</strong>이 표·코드·수식·다이어그램을 모두 자동 인식·렌더링</td>
+        </tr>
+        <tr>
+          <td>예쁘게 만들려면 <strong>외부 도구</strong>(Canva, PowerPoint)로 다시 작업</td>
+          <td><strong>ArtCon</strong>이 노트 안에서 바로 예술 인포그래픽 생성</td>
+        </tr>
+        <tr>
+          <td>발표용으로 만들려면 <strong>또 다른 도구</strong>(슬라이드)로 옮김</td>
+          <td><strong>BriCon</strong>이 발표용 브리핑을 한 클릭으로 생성</td>
+        </tr>
+        <tr>
+          <td>도구 3개 · 파일 3개 · 학습 시간 N시간</td>
+          <td><strong>노트 한 편 · 도구 하나 · 학습 시간 30분</strong></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      💡 <strong>핵심 통찰</strong><br>
+      AI가 만들어내는 콘텐츠는 그 자체로는 <strong>"덜 다듬어진 원석"</strong>입니다. 콘-트리니티는 그 원석을 <strong>EdiCon으로 깎고 · ArtCon으로 광내고 · BriCon으로 진열장에 올리는</strong> 일관된 시스템입니다.
+    </div>
+
+    <h2 id="next">🚀 트리니티 시작하기</h2>
+    <p>이제 세 개의 콘을 차례로 만나보겠습니다. 각 매뉴얼은 약 5~10분이면 충분합니다.</p>
+
+    <div class="step-list" style="list-style:none;padding:0;">
+      <div class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">✏️ <a href="/manual/ainote/edicon.html">에디콘(EdiCon) 매뉴얼</a></div>
+          <div class="step-desc">5대 자동 디스패치 — URL · 표 · 코드 · 수식 · 다이어그램이 어떻게 자동 변환되는지 확인합니다.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">🎨 <a href="/manual/ainote/geniart.html">아트콘(ArtCon) 매뉴얼</a></div>
+          <div class="step-desc">아트콘 — 텍스트를 예술 인포그래픽으로 변환하는 세계 최초 기능을 익힙니다.</div>
+        </div>
+      </div>
+      <div class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">📊 <a href="/manual/ainote/bricon.html">브리콘(BriCon) 매뉴얼</a></div>
+          <div class="step-desc">노트를 발표 가능한 브리핑·인포카드로 만드는 방법을 배웁니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/"><span class="nav-label">← 이전</span><span class="nav-title">아이노트 소개</span></a>
+      <a href="/manual/ainote/edicon.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">✏️ 에디콘 개요</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#three-cons">세 콘의 역할</a></li>
+      <li><a href="#cycle">트리니티 사이클</a></li>
+      <li><a href="#scenarios">실전 시나리오</a></li>
+      <li><a href="#why">왜 중요한가</a></li>
+      <li><a href="#next">트리니티 시작하기</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

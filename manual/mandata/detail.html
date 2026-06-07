@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인물 상세 정보 — 인적자원관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">인적자원관리</div>
+      <a href="/manual/mandata/" class="sb-link">👥 소개</a>
+      <a href="/manual/mandata/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/mandata/list.html" class="sb-link">🔍 인물 목록·검색</a>
+      <a href="/manual/mandata/detail.html" class="sb-link active">👤 인물 상세 정보</a>
+      <a href="/manual/mandata/ai-config.html" class="sb-link">🤖 AI 웹검색 설정</a>
+      <a href="/manual/mandata/ai-sites.html" class="sb-link">🌐 AI 검색 사이트 관리</a>
+      <a href="/manual/mandata/ai-log.html" class="sb-link">📋 AI 실행 로그</a>
+      <a href="/manual/mandata/ai-updated.html" class="sb-link">✨ AI 업데이트 정보</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/dashboard/" class="sb-link">대시보드 & 분석</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/mandata/">인적자원관리</a> › 인물 상세 정보</nav>
+    <h1 class="page-title">👤 인물 상세 정보</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#overview">화면 구성</a></li>
+        <li><a href="#basic">기본 정보</a></li>
+        <li><a href="#ai-memo">AI 분석 메모</a></li>
+        <li><a href="#ai-status">AI 처리 상태</a></li>
+        <li><a href="#score">점수 정보</a></li>
+      </ul>
+    </div>
+
+    <section id="overview">
+      <h2>화면 구성</h2>
+      <p>인물 상세 정보 페이지에서는 <strong>개별 인물의 모든 데이터</strong>를 확인할 수 있습니다. 인물 목록에서 이름 또는 상세 버튼을 클릭하면 이동됩니다.</p>
+      <p style="margin-top:8px;">URL 형식: <code>kiam.kr/admin/mandata/detail.php?id={인물ID}</code></p>
+    </section>
+
+    <section id="basic">
+      <h2>기본 정보</h2>
+      <table class="m-table">
+        <thead><tr><th>필드</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>ID</strong></td><td>데이터베이스 고유 번호</td></tr>
+          <tr><td><strong>이름</strong></td><td>인물 이름</td></tr>
+          <tr><td><strong>모바일</strong></td><td>휴대폰 번호</td></tr>
+          <tr><td><strong>이메일</strong></td><td>이메일 주소 (AI가 수집하기도 함)</td></tr>
+          <tr><td><strong>회사</strong></td><td>소속 회사명 (AI가 수집하기도 함)</td></tr>
+          <tr><td><strong>상태</strong></td><td>active(활성) / inactive(비활성)</td></tr>
+          <tr><td><strong>등록일</strong></td><td>데이터 최초 등록 날짜·시각</td></tr>
+          <tr><td><strong>수정일</strong></td><td>마지막 정보 수정 날짜·시각</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="ai-memo">
+      <h2>AI 분석 메모</h2>
+      <p>AI가 웹검색을 통해 수집한 인물 분석 결과가 표시됩니다. <code>ai_memo</code> 필드에 JSON 형식으로 저장되며, 화면에서는 파싱하여 보기 좋게 표시됩니다.</p>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>📌 AI 메모 내용</strong><br>
+        AI가 웹에서 찾은 인물 관련 정보, 직책, 소속, 연락처 등이 포함될 수 있습니다.<br>
+        AI 메모가 없는 경우 "<em>AI 분석 정보 없음</em>"으로 표시됩니다.
+      </div>
+    </section>
+
+    <section id="ai-status">
+      <h2>AI 처리 상태</h2>
+      <table class="m-table">
+        <thead><tr><th>상태값</th><th>의미</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>none</strong></td>
+            <td>AI 처리 요청 전 (큐에 미등록)</td>
+            <td>기본값</td>
+          </tr>
+          <tr>
+            <td><strong>pending</strong></td>
+            <td>AI 처리 대기 중</td>
+            <td>활성·이름 있는 인물 대상</td>
+          </tr>
+          <tr>
+            <td><strong>done</strong></td>
+            <td>AI 처리 완료</td>
+            <td>결과는 ai_memo에 저장</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;">AI 처리 상태와 함께 <strong>다음 실행 예정 시각</strong>(ai_next_run)도 확인할 수 있습니다.</p>
+    </section>
+
+    <section id="score">
+      <h2>점수 정보</h2>
+      <p>각 인물에게는 <strong>0~100점</strong>의 완성도 점수(score)가 부여됩니다. 이름, 이메일, 회사, AI 메모 등 필드 완성도에 따라 점수가 산정됩니다.</p>
+      <table class="m-table" style="margin-top:12px;">
+        <thead><tr><th>등급</th><th>점수 범위</th></tr></thead>
+        <tbody>
+          <tr><td>우수 🏆</td><td>80~100점</td></tr>
+          <tr><td>양호 ✅</td><td>60~79점</td></tr>
+          <tr><td>보통 📌</td><td>40~59점</td></tr>
+          <tr><td>부족 ⚠️</td><td>20~39점</td></tr>
+          <tr><td>미흡 ❌</td><td>0~19점</td></tr>
+        </tbody>
+      </table>
+    </section>
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

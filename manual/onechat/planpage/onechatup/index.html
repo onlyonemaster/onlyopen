@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>원챗 150개 비교표 데이터형 구조</title>
+  <link rel="stylesheet" href="./style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div class="wrap topbar-inner">
+      <div class="brand">
+        <div class="brand-mark">O</div>
+        <div>
+          <div class="brand-title">원챗 150개 비교표</div>
+          <div class="brand-sub">index.html / comparison-data.js / app.js / style.css</div>
+        </div>
+      </div>
+      <nav class="nav">
+        <a href="#summary">요약</a>
+        <a href="#controls">검색/필터</a>
+        <a href="#table">비교표</a>
+      </nav>
+    </div>
+  </header>
+
+  <main>
+    <section class="hero">
+      <div class="wrap">
+        <div class="hero-card">
+          <div class="eyebrow">DATA-DRIVEN MULTI FILE STRUCTURE</div>
+          <h1>원챗 비교표를 <span class="accent">데이터형 구조</span>로 재설계한<br />150개 관리 기능 비교 시스템</h1>
+          <p class="hero-sub">
+            이제 비교표는 HTML 안에 직접 150줄을 박는 구조가 아니라,
+            <strong>데이터 파일과 렌더링 파일을 분리</strong>해서 더 길게, 더 안정적으로, 더 쉽게 수정할 수 있게 바꿨습니다.
+          </p>
+          <div class="badge-row">
+            <span class="badge">관리 기능 150개</span>
+            <span class="badge">섹션 3개</span>
+            <span class="badge">검색</span>
+            <span class="badge">우선순위 필터</span>
+            <span class="badge">브랜드 컬럼 비교</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="summary">
+      <div class="wrap">
+        <div class="summary-grid" id="summaryCards"></div>
+      </div>
+    </section>
+
+    <section id="controls">
+      <div class="wrap">
+        <div class="controls-card">
+          <div class="section-title-wrap">
+            <div class="pill">FILTER & SEARCH</div>
+            <h2>카테고리별로 보고, 검색하고, 우선순위별로 좁혀보세요</h2>
+          </div>
+
+          <div class="controls-grid">
+            <div class="control-block">
+              <label for="searchInput">기능 검색</label>
+              <input type="text" id="searchInput" placeholder="예: 승인, 감정, QA, 대시보드, AI 동행" />
+            </div>
+            <div class="control-block">
+              <label for="priorityFilter">AI제안 우선순위</label>
+              <select id="priorityFilter">
+                <option value="all">전체</option>
+                <option value="필수">필수</option>
+                <option value="차별">차별</option>
+                <option value="후순위">후순위</option>
+              </select>
+            </div>
+            <div class="control-block">
+              <label for="onechatFilter">원챗 상태</label>
+              <select id="onechatFilter">
+                <option value="all">전체</option>
+                <option value="강">강</option>
+                <option value="중">중</option>
+                <option value="약">약</option>
+                <option value="갭">갭</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="tab-row" id="sectionTabs"></div>
+          <div class="meta-row">
+            <div class="meta-pill" id="resultCount">총 0개</div>
+            <div class="meta-pill" id="currentSectionLabel">전체 보기</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="table">
+      <div class="wrap">
+        <div class="table-wrap">
+          <div class="table-scroll">
+            <table>
+              <thead>
+                <tr>
+                  <th>관리 기능</th>
+                  <th>Salesforce</th>
+                  <th>Zendesk</th>
+                  <th>Intercom</th>
+                  <th class="th-onechat">원챗</th>
+                  <th class="th-ai">AI제안</th>
+                </tr>
+              </thead>
+              <tbody id="comparisonBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="./comparison-data.js"></script>
+  <script src="./app.js"></script>
+</body>
+</html>

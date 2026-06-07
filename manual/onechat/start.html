@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>접속 & 화면 구성 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link active">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>접속 & 화면 구성</span>
+    </div>
+
+    <h1>접속 & 화면 구성</h1>
+    <p class="page-desc">원챗에 처음 접속하는 방법과 각 화면의 구성 요소를 설명합니다.</p>
+
+    <h2 id="login">1단계: kiam.kr 로그인</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">kiam.kr에 접속합니다</div>
+          <div class="step-desc">웹 브라우저 주소창에 아래 주소를 입력하세요.</div>
+          <span class="step-url">https://kiam.kr</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">아이디와 비밀번호로 로그인합니다</div>
+          <div class="step-desc">아이엠 회원 계정으로 로그인하세요. 아직 회원이 아니라면 <a href="/manual/account/signup.html" style="color:var(--brand);">회원가입 매뉴얼</a>을 먼저 확인하세요.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>로그인 없이 접속하면?</strong><br>
+      "로그인이 필요합니다" 메시지가 표시됩니다. 반드시 kiam.kr에서 먼저 로그인 후 접속하세요.
+    </div>
+
+    <h2 id="access">2단계: 원챗 접속</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">원챗 주소로 이동합니다</div>
+          <div class="step-desc">로그인 후 아래 주소를 주소창에 직접 입력하거나, kiam.kr 메뉴에서 <strong>원챗</strong>을 선택하세요.</div>
+          <span class="step-url">https://kiam.kr/aimessage/onechat/</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">스마트폰 앱 형태의 화면이 열립니다</div>
+          <div class="step-desc">PC에서 접속하면 화면 중앙에 앱 형태로 표시됩니다. 스마트폰에서는 전체 화면으로 보입니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="header">상단 헤더 구성</h2>
+    <p>화면 맨 위에 항상 표시되는 헤더에는 <strong>4가지 버튼</strong>이 있습니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>버튼</th><th>위치</th><th>역할</th></tr></thead>
+      <tbody>
+        <tr><td>☰ 메뉴</td><td>왼쪽</td><td>사이드바 서랍을 열어 6개 주요 메뉴에 접근합니다 → <a href="/manual/onechat/sidebar.html" style="color:var(--brand);">사이드바 매뉴얼</a></td></tr>
+        <tr><td>🔍 검색</td><td>오른쪽</td><td>채팅 목록 또는 연락처를 이름으로 검색합니다 (현재 탭에 따라 검색 대상이 바뀜)</td></tr>
+        <tr><td>🔔 알림</td><td>오른쪽</td><td>새 메시지·연결 요청 알림을 확인합니다. 새 알림이 있으면 빨간 점이 표시됩니다</td></tr>
+        <tr><td>👤 아바타</td><td>오른쪽</td><td>클릭 시 드롭다운 메뉴 오픈 → 아바타 학습·챗봇 설정·프로필·공지발송·PWA등록자·로그아웃 접근</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="avatar-dropdown" style="margin-top:20px;">👤 아바타 드롭다운 메뉴</h3>
+    <p>오른쪽 위 <strong>아바타(이니셜 원)</strong>를 클릭하면 아래 메뉴가 나타납니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>🔄 <strong>동기화 아이콘</strong></td><td>AI 아바타 학습 데이터의 동기화 상태를 실시간 표시 (동기화됨 / 동기화 중 / 오류)</td></tr>
+        <tr><td>🧠 <strong>아바타 학습시키기</strong></td><td>PDF·텍스트·음성·일기로 AI를 학습시키는 화면으로 이동</td></tr>
+        <tr><td>⚙️ <strong>챗봇 설정</strong></td><td>응답 스타일·톤·언어 등 챗봇 동작 방식 설정</td></tr>
+        <tr><td>👤 <strong>내 프로필 설정</strong></td><td>사진·이름·챗봇 링크·QR코드 관리</td></tr>
+        <tr><td>📢 <strong>HI 공지발송</strong></td><td>수신자 전체에게 공지 메시지 일괄 발송</td></tr>
+        <tr><td>📱 <strong>PWA 등록자</strong></td><td>앱 설치 후 전화번호를 등록한 방문자 목록 확인</td></tr>
+        <tr><td>🚪 <strong>로그아웃</strong></td><td>계정에서 안전하게 로그아웃</td></tr>
+      </tbody>
+    </table>
+    <div class="notice" style="margin-top:10px;">
+      🔄 <strong>동기화 아이콘이란?</strong><br>
+      AI 아바타에게 새로운 내용을 학습시킨 후 그 데이터가 챗봇에 적용되는 상태를 아이콘으로 보여줍니다.<br>
+      • <strong>🔄 회전 중</strong> = 지금 동기화가 진행 중입니다 (잠시 기다리세요)<br>
+      • <strong>✅ 체크</strong> = 동기화 완료, AI가 최신 내용으로 응답 중<br>
+      • <strong>⚠️ 느낌표</strong> = 동기화 오류 — 학습 화면에서 다시 시도 필요
+    </div>
+
+    <h2 id="tabs">하단 탭 구성</h2>
+    <p>화면 아래에 <strong>4개 탭</strong>이 있습니다. 탭을 눌러 화면을 전환합니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">🏠</span>
+        <div class="tn">홈</div>
+        <div class="td">kiam.kr 메인 페이지로 이동합니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📤</span>
+        <div class="tn">발신</div>
+        <div class="td">내가 SMS로 챗봇 링크를 보낸 상대(퍼널) + 공유 링크 방문자를 함께 관리합니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">채팅 (기본)</div>
+        <div class="td">kiam.kr 회원 간 1:1·그룹 DM 대화 목록입니다. 앱을 열면 이 탭이 먼저 보입니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📥</span>
+        <div class="tn">수신</div>
+        <div class="td">카카오·SNS·QR코드 등 공유 링크를 통해 먼저 접속한 방문자 목록입니다. 구독 중인 챗봇을 관리합니다</div>
+      </div>
+    </div>
+
+    <table class="m-table" style="margin-top:16px;">
+      <thead><tr><th>탭</th><th>아이콘</th><th>주요 사용 상황</th></tr></thead>
+      <tbody>
+        <tr><td><strong>홈</strong></td><td>🏠</td><td>kiam.kr 메인으로 이동할 때</td></tr>
+        <tr><td><strong>발신</strong></td><td>📤 (깔때기)</td><td>SMS로 보낸 퍼널 수신자 응답 현황 확인 + 공유 링크 방문자 보기</td></tr>
+        <tr><td><strong>채팅</strong></td><td>💬</td><td>회원 간 DM 대화 목록 — 1:1 / 그룹 채팅</td></tr>
+        <tr><td><strong>수신</strong></td><td>📥 (받은편지함)</td><td>내 챗봇 공유 링크로 접속한 신규 방문자 — DM 전환·PWA 설치 유도</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="tab-send-detail" style="margin-top:28px;">📤 발신 탭 — 퍼널 / 공유 전환</h3>
+    <p>발신 탭 상단에는 <strong>퍼널</strong>과 <strong>공유</strong> 두 개의 전환 버튼이 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>버튼</th><th>표시 대상</th><th>데이터 출처</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>🔽 <strong>퍼널</strong> (기본)</td>
+          <td>내가 SMS·문자로 챗봇 링크를 발송한 수신자 목록</td>
+          <td>문자 발송 캠페인 DB (Gn_aievent_request)</td>
+        </tr>
+        <tr>
+          <td>🔗 <strong>공유</strong></td>
+          <td>카카오·SNS·QR 등 공유 링크를 클릭하여 방문한 방문자 목록</td>
+          <td>링크 방문 구독 DB (Gn_visitor_subscriptions)</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="tip" style="margin-top:10px;">
+      💡 <strong>퍼널 모드</strong>에서는 전체·대화중·미사용 필터를 사용합니다.<br>
+      <strong>공유 모드</strong>로 전환하면 전체·대화중·미대화 필터가 나타나고, 방문자 ID와 마지막 메시지가 표시됩니다.<br>
+      → <a href="/manual/onechat/funnel.html" style="color:var(--brand);">발신탭 상세 매뉴얼 보기</a>
+    </div>
+
+    <h3 id="tab-received-detail" style="margin-top:28px;">📥 수신 탭 — 필터 &amp; 기능</h3>
+    <p>수신 탭에는 <strong>4개의 필터 칩</strong>이 있어 방문자를 분류해 볼 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>필터</th><th>표시 내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>전체</strong></td><td>구독 중인 모든 방문자</td></tr>
+        <tr><td><strong>대화중</strong></td><td>AI 챗봇과 한 번 이상 대화한 방문자</td></tr>
+        <tr><td><strong>미대화</strong></td><td>구독만 하고 아직 대화하지 않은 방문자</td></tr>
+        <tr><td><strong>DM전환됨</strong></td><td>운영자가 직접 DM 대화로 전환한 방문자</td></tr>
+      </tbody>
+    </table>
+    <div class="tip" style="margin-top:10px;">
+      💡 각 방문자 카드에는 <strong>챗봇 링크 복사</strong> 버튼이 있어 해당 방문자 전용 링크(<code>?v=방문자ID</code>)를 클릭 한 번에 복사할 수 있습니다.<br>
+      → <a href="/manual/onechat/received.html" style="color:var(--brand);">수신탭 상세 매뉴얼 보기</a>
+    </div>
+
+    <div class="tip" style="margin-top:16px;">
+      💡 <strong>처음 사용할 때는</strong><br>
+      <strong>채팅</strong> 탭(회원 DM 대화)과 <strong>수신</strong> 탭(신규 방문자)을 가장 많이 사용하게 됩니다.
+    </div>
+
+    <h2 id="state">내 계정 상태 확인</h2>
+    <p>원챗은 회원 상태에 따라 사용 가능한 기능이 다릅니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>상태</th><th>설명</th><th>챗봇 기능</th></tr></thead>
+      <tbody>
+        <tr><td><strong>회원 + 챗봇 보유</strong></td><td>아이엠 회원이며 챗봇 링크를 발급받은 상태</td><td>✅ 모든 기능 사용 가능</td></tr>
+        <tr><td><strong>회원 (챗봇 없음)</strong></td><td>아이엠 회원이지만 챗봇 미발급 상태</td><td>⚠️ 챗봇 만들기 필요</td></tr>
+        <tr><td><strong>비회원 (초대)</strong></td><td>챗봇 링크로 초대받아 입장한 방문자</td><td>🔒 제한적 사용</td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/"><span class="nav-label">← 이전</span><span class="nav-title">원챗 소개</span></a>
+      <a href="/manual/onechat/sidebar.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">☰ 사이드바 메뉴</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#login">kiam.kr 로그인</a></li>
+      <li><a href="#access">원챗 접속</a></li>
+      <li><a href="#header">상단 헤더 구성</a></li>
+      <li><a href="#avatar-dropdown" class="h3">아바타 드롭다운</a></li>
+      <li><a href="#tabs">하단 탭 구성</a></li>
+      <li><a href="#tab-send-detail" class="h3">발신탭 퍼널/공유 전환</a></li>
+      <li><a href="#tab-received-detail" class="h3">수신탭 필터 &amp; 기능</a></li>
+      <li><a href="#state">내 계정 상태 확인</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

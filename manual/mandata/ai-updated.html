@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 업데이트 정보 — 인적자원관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">인적자원관리</div>
+      <a href="/manual/mandata/" class="sb-link">👥 소개</a>
+      <a href="/manual/mandata/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/mandata/list.html" class="sb-link">🔍 인물 목록·검색</a>
+      <a href="/manual/mandata/detail.html" class="sb-link">👤 인물 상세 정보</a>
+      <a href="/manual/mandata/ai-config.html" class="sb-link">🤖 AI 웹검색 설정</a>
+      <a href="/manual/mandata/ai-sites.html" class="sb-link">🌐 AI 검색 사이트 관리</a>
+      <a href="/manual/mandata/ai-log.html" class="sb-link">📋 AI 실행 로그</a>
+      <a href="/manual/mandata/ai-updated.html" class="sb-link active">✨ AI 업데이트 정보</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/dashboard/" class="sb-link">대시보드 & 분석</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/mandata/">인적자원관리</a> › AI 업데이트 정보</nav>
+    <h1 class="page-title">✨ AI 업데이트 정보</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#overview">화면 구성</a></li>
+        <li><a href="#updated-list">업데이트된 인물 목록</a></li>
+        <li><a href="#columns">컬럼 설명</a></li>
+        <li><a href="#diff">변경 내용 확인</a></li>
+        <li><a href="#filter">필터 사용법</a></li>
+      </ul>
+    </div>
+
+    <section id="overview">
+      <h2>화면 구성</h2>
+      <p>AI 업데이트 정보 페이지에서는 <strong>Claude AI가 웹검색으로 실제로 정보를 채운 인물 목록</strong>을 확인합니다. AI가 처리했지만 새 정보를 찾지 못한 경우는 제외하고, 실제로 필드가 업데이트된 인물만 표시됩니다.</p>
+      <p style="margin-top:8px;">접속 경로: <a href="https://kiam.kr/admin/mandata/ai_updated.php" target="_blank">관리자 → 인적자원관리 → AI 업데이트 정보</a></p>
+    </section>
+
+    <section id="updated-list">
+      <h2>업데이트된 인물 목록</h2>
+      <p><code>fields_updated > 0</code>인 인물, 즉 AI가 새 정보를 실제로 채운 인물만 목록에 표시됩니다. 이 목록을 통해 AI 작업의 실질적인 성과를 확인할 수 있습니다.</p>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>💡 업데이트 vs 처리</strong><br>
+        • <strong>처리 완료(done)</strong>: AI가 검색을 실행했음 (결과 없음 포함)<br>
+        • <strong>업데이트됨</strong>: AI가 새 정보를 찾아 실제로 필드를 채웠음<br>
+        전체 처리 대비 업데이트 비율이 AI 성과 지표가 됩니다.
+      </div>
+    </section>
+
+    <section id="columns">
+      <h2>컬럼 설명</h2>
+      <table class="m-table">
+        <thead><tr><th>컬럼</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>인물명</strong></td><td>AI가 정보를 업데이트한 인물 이름</td></tr>
+          <tr><td><strong>모바일</strong></td><td>해당 인물의 휴대폰 번호</td></tr>
+          <tr><td><strong>업데이트 필드</strong></td><td>AI가 새로 채운 필드 수 (fields_updated)</td></tr>
+          <tr><td><strong>처리 일시</strong></td><td>AI가 이 인물을 처리한 날짜·시각</td></tr>
+          <tr><td><strong>상세 링크</strong></td><td>인물 상세 페이지로 이동하여 업데이트된 내용 확인</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="diff">
+      <h2>변경 내용 확인</h2>
+      <p>특정 인물의 AI 업데이트 결과를 상세히 확인하려면 목록에서 해당 인물의 <strong>상세 링크</strong>를 클릭하세요. <a href="/manual/mandata/detail.html">인물 상세 정보</a> 페이지에서 AI가 채운 이메일, 회사, AI 메모 내용을 확인할 수 있습니다.</p>
+    </section>
+
+    <section id="filter">
+      <h2>필터 사용법</h2>
+      <p>화면 상단에서 날짜 범위를 설정하여 특정 기간의 AI 업데이트 이력만 조회할 수 있습니다.</p>
+      <table class="m-table" style="margin-top:12px;">
+        <thead><tr><th>필터 항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>시작일</strong></td><td>조회 시작 날짜 (기본: 7일 전)</td></tr>
+          <tr><td><strong>종료일</strong></td><td>조회 종료 날짜 (기본: 오늘)</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;">전체 이력이 많을 경우 기간을 좁혀서 최근 업데이트된 인물을 빠르게 확인하세요.</p>
+    </section>
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

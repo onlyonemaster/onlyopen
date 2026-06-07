@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 분석 결과 읽는 법 — AI변리사 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link active">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <a href="/manual/aiip/">AI변리사</a> <span>›</span> <span>AI 분석 결과 읽기</span></div>
+    <h1>📊 AI 분석 결과 읽는 법</h1>
+    <p class="page-desc">AI 컨설팅 분석이 완료된 후 화면에 표시되는 결과 리포트의 구조와 각 항목의 의미를 안내합니다.</p>
+
+    <h2 id="result-location">결과 위치</h2>
+    <p>분석이 완료되면 의뢰 페이지(/diagnosis) 하단에 결과 섹션이 나타납니다. 또는 <strong>의뢰 목록(/result)</strong>에서 해당 의뢰를 클릭해도 동일한 결과를 확인할 수 있습니다.</p>
+
+    <h2 id="result-structure">결과 리포트 구조</h2>
+    <p>AI 분석 결과는 분석 유형(특허/상표/저작권)에 따라 내용이 다르지만, 공통적인 구조를 가집니다.</p>
+
+    <h3 id="summary">① 분석 요약 (Summary)</h3>
+    <p>결과의 맨 위에 위치하며 분석의 핵심 결론을 한눈에 보여줍니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>분석 유형</strong></td><td>특허 / 상표 / 저작권 중 해당 유형</td></tr>
+        <tr><td><strong>분석 일시</strong></td><td>AI 분석이 완료된 날짜와 시간</td></tr>
+        <tr><td><strong>핵심 의견</strong></td><td>등록 가능성, 위험도 등 핵심 판단을 1~2문장으로 요약</td></tr>
+        <tr><td><strong>신뢰도 지표</strong></td><td>AI 분석의 신뢰 수준 (참고용)</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="detail-patent">② 특허 분석 결과 세부 항목</h3>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>신규성 분석</strong></td><td>유사한 선행기술 존재 여부 및 차별점</td></tr>
+        <tr><td><strong>진보성 분석</strong></td><td>기존 기술 대비 기술적 진보 여부</td></tr>
+        <tr><td><strong>선행기술 목록</strong></td><td>AI가 찾아낸 관련 선행특허 또는 기술 자료 목록</td></tr>
+        <tr><td><strong>청구항 제안</strong></td><td>독립항 및 종속항 구성 제안</td></tr>
+        <tr><td><strong>출원 전략</strong></td><td>출원 시 고려사항 및 권리 범위 최대화 방안</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="detail-trademark">③ 상표 분석 결과 세부 항목</h3>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>등록 가능성 평가</strong></td><td>상표 식별력, 기술적 표장 여부 등 등록 가능성 평가</td></tr>
+        <tr><td><strong>유사 상표 목록</strong></td><td>등록된 유사 상표 목록과 유사도 수준</td></tr>
+        <tr><td><strong>상품/서비스 분류 제안</strong></td><td>니스 분류 기준 적합한 지정 상품/서비스 제안</td></tr>
+        <tr><td><strong>리스크 평가</strong></td><td>거절 또는 이의신청 가능성과 대응 방안</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="detail-copyright">④ 저작권 분석 결과 세부 항목</h3>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>보호 가능성 평가</strong></td><td>창작성 요건 충족 여부, 보호 범위</td></tr>
+        <tr><td><strong>침해 분석</strong></td><td>유사 저작물과의 실질적 유사성 분석</td></tr>
+        <tr><td><strong>권리 관계</strong></td><td>저작권 귀속 및 라이선스 관계 정리</td></tr>
+        <tr><td><strong>조치 방안</strong></td><td>침해 발생 시 대응 절차 안내</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="disclaimer">결과 활용 시 주의사항</h2>
+    <div class="tip" style="border-color:#f59e0b;background:rgba(245,158,11,0.08);">
+      ⚠️ <strong>법적 효력 없음</strong><br>
+      AI변리사의 분석 결과는 <strong>참고용 정보</strong>로만 활용하시기 바랍니다. 실제 특허 출원, 상표 등록, 법적 대응 등을 위해서는 반드시 자격을 갖춘 <strong>변리사 또는 변호사와 상담</strong>하시기 바랍니다.<br>
+      AI 분석 결과를 법적 근거로 사용하거나 이에 의존하여 발생하는 결과에 대해 서비스 제공자는 책임을 지지 않습니다.
+    </div>
+
+    <h2 id="generated-docs">생성 문서</h2>
+    <p>분석 결과 하단에 <strong>생성된 문서 목록</strong>이 표시됩니다. 문서를 클릭하면 내용을 미리 보거나 다운로드할 수 있습니다. 자세한 내용은 <a href="/manual/aiip/07_download.html">7장 생성 문서 다운로드</a>를 참고하세요.</p>
+
+    <div class="page-nav">
+      <a href="/manual/aiip/05_helper.html"><span class="nav-label">← 이전</span><span class="nav-title">✨ AI 요청사항 도우미</span></a>
+      <a href="/manual/aiip/07_download.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📥 생성 문서 다운로드</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#result-location">결과 위치</a></li>
+      <li><a href="#result-structure">결과 리포트 구조</a></li>
+      <li><a href="#summary" class="h3">분석 요약</a></li>
+      <li><a href="#detail-patent" class="h3">특허 분석 세부</a></li>
+      <li><a href="#detail-trademark" class="h3">상표 분석 세부</a></li>
+      <li><a href="#detail-copyright" class="h3">저작권 분석 세부</a></li>
+      <li><a href="#disclaimer">결과 활용 주의사항</a></li>
+      <li><a href="#generated-docs">생성 문서</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

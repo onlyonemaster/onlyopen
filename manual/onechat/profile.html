@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 프로필 설정 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link active">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>내 프로필 설정</span>
+    </div>
+
+    <h1>내 프로필 설정</h1>
+    <p class="page-desc">원챗을 처음 시작하기 전에 반드시 내 프로필을 설정해야 합니다. AI 아바타가 내 이름과 정보로 고객에게 인사합니다.</p>
+
+    <h2 id="enter">프로필 설정 진입</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">상단 오른쪽 👤 아바타 버튼을 누릅니다</div>
+          <div class="step-desc">화면 상단 오른쪽에 있는 아바타(사람 모양) 버튼을 클릭하면 드롭다운 메뉴가 열립니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">"내 프로필 설정"을 선택합니다</div>
+          <div class="step-desc">드롭다운 메뉴에서 <strong>내 프로필 설정</strong>을 클릭하면 설정 패널이 오른쪽에서 슬라이드되어 열립니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="fields">입력 항목</h2>
+
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th><th>구분</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>프로필 사진</strong></td>
+          <td>내 사진을 올려주세요. AI 아바타의 얼굴 이미지로 표시됩니다. 사진 삭제도 가능합니다.</td>
+          <td><span class="badge-opt">선택</span></td>
+        </tr>
+        <tr>
+          <td><strong>이름</strong></td>
+          <td>실명 또는 활동명을 입력하세요. 고객에게 그대로 보입니다. 입력 즉시 헤더 아바타 이니셜에 반영됩니다.</td>
+          <td><span class="badge-req">필수</span></td>
+        </tr>
+        <tr>
+          <td><strong>직함/직책</strong></td>
+          <td>예: 대표, 팀장, 컨설턴트, 원장 등 내 직책을 입력합니다.</td>
+          <td><span class="badge-req">필수</span></td>
+        </tr>
+        <tr>
+          <td><strong>상태 메시지</strong></td>
+          <td>짧은 소개글. 예: "항상 여러분의 성공을 응원합니다"</td>
+          <td><span class="badge-opt">선택</span></td>
+        </tr>
+        <tr>
+          <td><strong>전화번호</strong></td>
+          <td>연락처를 저장합니다.</td>
+          <td><span class="badge-opt">선택</span></td>
+        </tr>
+        <tr>
+          <td><strong>이메일</strong></td>
+          <td>이메일 주소를 저장합니다.</td>
+          <td><span class="badge-opt">선택</span></td>
+        </tr>
+        <tr>
+          <td><strong>소속/회사</strong></td>
+          <td>회사명 또는 소속 기관을 입력합니다.</td>
+          <td><span class="badge-opt">선택</span></td>
+        </tr>
+        <tr>
+          <td><strong>챗봇 기본 프롬프트</strong></td>
+          <td>AI가 모든 고객에게 공통으로 적용할 응답 지침입니다. 예: "항상 존댓말로 답변하고, 전문적이면서 친근하게 응대하세요."</td>
+          <td><span class="badge-opt">선택</span></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>이름과 직함은 반드시 입력하세요</strong><br>
+      AI 아바타가 고객에게 "안녕하세요! 저는 <strong>[이름]</strong>님의 AI 아바타입니다"라고 인사합니다. 정확한 이름과 직함을 입력해야 자연스러운 대화가 됩니다.
+    </div>
+
+    <h2 id="chatlink">챗봇 링크 & QR코드</h2>
+    <p>프로필 설정 화면 하단에서 <strong>내 챗봇 링크</strong>와 <strong>QR코드</strong>를 확인할 수 있습니다.</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">🔗</div>
+        <div class="step-body">
+          <div class="step-title">챗봇 링크 복사</div>
+          <div class="step-desc"><strong>복사</strong> 버튼을 누르면 내 챗봇 링크가 클립보드에 복사됩니다. 문자나 카카오톡으로 고객에게 바로 붙여넣기 하세요.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">📱</div>
+        <div class="step-body">
+          <div class="step-title">QR코드 다운로드</div>
+          <div class="step-desc">QR코드를 이미지(PNG)로 다운로드할 수 있습니다. 명함, 현수막, 전단지에 인쇄해서 활용하세요.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">📤</div>
+        <div class="step-body">
+          <div class="step-title">QR코드 공유</div>
+          <div class="step-desc">스마트폰에서 <strong>공유</strong> 버튼을 누르면 카카오톡, 문자 등으로 바로 공유할 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="save">저장하기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">✓</div>
+        <div class="step-body">
+          <div class="step-title">하단 "저장하기" 버튼을 누릅니다</div>
+          <div class="step-desc">모든 입력이 끝나면 하단의 <strong>저장하기</strong> 버튼을 클릭하세요. 저장이 완료되면 하단에 "저장되었습니다" 토스트 메시지가 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>설정이 저장되는 위치</strong><br>
+      프로필 정보는 현재 기기의 브라우저(localStorage)에 저장됩니다. 다른 기기에서 접속하면 다시 입력해야 합니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/start.html"><span class="nav-label">← 이전</span><span class="nav-title">접속 & 화면 구성</span></a>
+      <a href="/manual/onechat/share.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">챗봇 링크 공유하기</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#enter">프로필 설정 진입</a></li>
+      <li><a href="#fields">입력 항목</a></li>
+      <li><a href="#chatlink">챗봇 링크 & QR코드</a></li>
+      <li><a href="#save">저장하기</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

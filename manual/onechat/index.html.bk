@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>원챗(OneChat) 매뉴얼 — kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<div class="m-layout">
+
+  <!-- 사이드바 -->
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link active">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 & 화면 구성</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 & 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px; padding-top:16px; border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a>
+      <span class="sep">›</span>
+      <span>원챗</span>
+    </div>
+
+    <h1>💬 원챗 (OneChat)</h1>
+    <p class="page-desc">AI 아바타 챗봇이 나 대신 고객과 24시간 대화합니다. 챗봇 링크 하나로 고객 응대를 자동화하세요.</p>
+
+    <h2 id="what">원챗이란?</h2>
+    <p>원챗은 <strong>내 AI 아바타가 고객에게 자동으로 응답</strong>해 주는 챗봇 관리 앱입니다. 고객이 내 챗봇 링크를 클릭하면, AI가 나 대신 24시간 대화를 이어갑니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">AI 자동 응답</div>
+        <div class="td">내가 없어도 AI가 대신 고객 질문에 답변합니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📊</span>
+        <div class="tn">대화 통합 관리</div>
+        <div class="td">수백 명과의 대화를 한 화면에서 관리합니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🔗</span>
+        <div class="tn">내 챗봇 링크</div>
+        <div class="td">링크 하나로 누구나 회원가입 없이 대화 시작</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🤖</span>
+        <div class="tn">AI 아바타 학습</div>
+        <div class="td">나의 말투, 전문지식을 AI에게 가르칠 수 있습니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">DM 채팅</div>
+        <div class="td">kiam.kr 회원끼리 1:1·그룹 채팅을 주고받습니다</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📊</span>
+        <div class="tn">채팅 투표</div>
+        <div class="td">채팅방 안에서 바로 투표를 만들어 의견을 모읍니다</div>
+      </div>
+    </div>
+
+    <h2 id="menu">매뉴얼 목차</h2>
+    <p>아래 순서대로 따라하면 원챗을 바로 사용할 수 있습니다.</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/start.html" style="color:var(--brand);text-decoration:none;">접속 & 화면 구성 →</a></div>
+          <div class="step-desc">kiam.kr 로그인 후 원챗에 접속하는 방법과 각 화면 구성 설명</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/profile.html" style="color:var(--brand);text-decoration:none;">내 프로필 설정 →</a></div>
+          <div class="step-desc">이름, 사진, 챗봇 링크 등 기본 정보 입력 (반드시 먼저 완료)</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/share.html" style="color:var(--brand);text-decoration:none;">챗봇 링크 공유하기 →</a></div>
+          <div class="step-desc">내 챗봇 링크를 문자, 카카오톡, QR코드로 고객에게 보내기</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/chat.html" style="color:var(--brand);text-decoration:none;">채팅 화면 사용법 →</a></div>
+          <div class="step-desc">고객과의 대화 확인, AI/직접 대화 전환, 파일 첨부 방법</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/dm.html" style="color:var(--brand);text-decoration:none;">DM 채팅 사용법 →</a></div>
+          <div class="step-desc">kiam.kr 회원 간 1:1·그룹 채팅, 답장·이모지·투표 등 다양한 기능 활용</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">6</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/avatar.html" style="color:var(--brand);text-decoration:none;">AI 아바타 학습시키기 →</a></div>
+          <div class="step-desc">일기, 텍스트, 음성, 파일로 AI를 더 똑똑하게 만드는 방법</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">7</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/broadcast.html" style="color:var(--brand);text-decoration:none;">HI 공지발송 &rarr;</a></div>
+          <div class="step-desc">퍼널·공유 수신자 전체에게 챗봇 공지 메시지를 일괄 발송하고 읽음·응답 통계를 확인하는 방법</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">8</div>
+        <div class="step-body">
+          <div class="step-title"><a href="/manual/onechat/notification.html" style="color:var(--brand);text-decoration:none;">알림 수신 설정 &rarr;</a></div>
+          <div class="step-desc">수신자가 챗봇으로 대화를 시작할 때 운영자에게 알림이 오는 조건과 설정 방법</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="tip">
+      <strong>💡 처음 사용하신다면</strong><br>
+      1단계(접속)부터 순서대로 따라하시면 30분 안에 원챗을 완전히 설정할 수 있습니다.
+    </div>
+
+    <!-- 이전/다음 -->
+    <div class="page-nav">
+      <a href="/manual/">
+        <span class="nav-label">← 이전</span>
+        <span class="nav-title">매뉴얼 홈</span>
+      </a>
+      <a href="/manual/onechat/start.html" class="next">
+        <span class="nav-label">다음 →</span>
+        <span class="nav-title">접속 & 화면 구성</span>
+      </a>
+    </div>
+  </main>
+
+  <!-- 우측 TOC -->
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">원챗이란?</a></li>
+      <li><a href="#menu">매뉴얼 목차</a></li>
+      <li><a href="/manual/onechat/dm.html">DM 채팅 →</a></li>
+    </ul>
+  </aside>
+
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

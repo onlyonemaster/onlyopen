@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>공지사항 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">고객센터</div>
+      <a href="/manual/support/" class="sb-link">🏠 고객센터 홈</a>
+      <a href="/manual/support/faq.html" class="sb-link">❓ FAQ</a>
+      <a href="/manual/support/notice.html" class="sb-link active">📢 공지사항</a>
+      <a href="/manual/support/contact.html" class="sb-link">✉️ 1:1 문의</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/account/" class="sb-link">계정 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/support/">고객센터</a> › 공지사항</nav>
+    <h1 class="page-title">📢 공지사항</h1>
+    <p>kiam.kr 서비스 업데이트, 점검 안내, 정책 변경 등 중요 소식을 공지합니다.</p>
+
+    <div class="notice-box" style="margin:20px 0;">
+      <strong>📌 최신 공지:</strong> 실시간 공지사항은 <a href="https://kiam.kr/cliente_list.php?status=1" target="_blank">kiam.kr 공지사항 페이지</a>에서 확인하세요.
+    </div>
+
+    <section style="margin-top:24px;">
+      <h2>공지 유형 안내</h2>
+      <table class="m-table">
+        <thead>
+          <tr><th>유형</th><th>내용</th><th>확인 위치</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>🛠️ 서비스 점검</td>
+            <td>정기·비정기 서비스 점검 시간 안내</td>
+            <td>공지사항 / 문자 알림</td>
+          </tr>
+          <tr>
+            <td>✨ 기능 업데이트</td>
+            <td>신규 기능 추가, 기존 기능 개선 사항</td>
+            <td>공지사항 / 매뉴얼 업데이트</td>
+          </tr>
+          <tr>
+            <td>📋 정책 변경</td>
+            <td>이용 정책, 요금 정책 변경 사항</td>
+            <td>공지사항 / 이메일 알림</td>
+          </tr>
+          <tr>
+            <td>🚨 긴급 안내</td>
+            <td>서비스 장애, 보안 패치 등 긴급 사항</td>
+            <td>공지사항 / SMS 알림</td>
+          </tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section style="margin-top:32px;">
+      <h2>공지사항 확인 방법</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <a href="https://kiam.kr/cliente_list.php?status=1" target="_blank">kiam.kr 로그인</a> 후 공지사항 메뉴를 클릭합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            목록에서 확인하고 싶은 공지를 클릭하여 상세 내용을 읽습니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            중요 공지는 <strong>팝업</strong>이나 <strong>상단 알림</strong>으로 자동 표시됩니다.
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section style="margin-top:32px;">
+      <h2>사용후기</h2>
+      <p>다른 회원들의 사용 후기도 공지사항 페이지에서 함께 확인할 수 있습니다.</p>
+      <a href="https://kiam.kr/cliente_list.php?status=1" target="_blank" class="btn-next" style="display:inline-block;margin-top:8px;">kiam.kr 공지사항 보기 →</a>
+    </section>
+
+    <nav class="page-nav">
+      <a href="/manual/support/faq.html" class="btn-prev">← FAQ</a>
+      <a href="/manual/support/contact.html" class="btn-next">1:1 문의 →</a>
+    </nav>
+  </main>
+</div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var h=document.documentElement;
+    var t=h.getAttribute('data-theme')==='light'?'dark':'light';
+    h.setAttribute('data-theme',t);
+    this.textContent=t==='light'?'🌙':'☀️';
+  });
+  document.getElementById('hamburgerBtn').addEventListener('click',function(){
+    document.querySelector('.m-sidebar').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

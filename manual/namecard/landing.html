@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>인포랜딩 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">명함 관리</div>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 소개</a>
+      <a href="/manual/namecard/add.html" class="sb-link">명함 등록하기</a>
+      <a href="/manual/namecard/edit.html" class="sb-link">명함 수정 & 관리</a>
+      <a href="/manual/namecard/share.html" class="sb-link">명함 공유하기</a>
+      <a href="/manual/namecard/iammall.html" class="sb-link">🛒 IAM몰 연동</a>
+      <a href="/manual/namecard/westory.html" class="sb-link">📸 위스토리</a>
+      <a href="/manual/namecard/landing.html" class="sb-link active">🎯 인포랜딩</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/namecard/">명함 관리</a> › 인포랜딩</nav>
+    <h1 class="page-title">🎯 인포랜딩 (Info Landing)</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">인포랜딩이란?</a></li>
+        <li><a href="#create">랜딩페이지 만들기</a></li>
+        <li><a href="#sections">구성 요소</a></li>
+        <li><a href="#list">랜딩 목록 관리</a></li>
+        <li><a href="#connect">명함 & 챗봇 연동</a></li>
+      </ul>
+    </div>
+    <section id="what">
+      <h2>인포랜딩이란?</h2>
+      <p><strong>인포랜딩</strong>은 이벤트 상품이나 서비스를 소개하는 <strong>랜딩페이지(상세 페이지)를 직접 만들고 리스트로 관리</strong>하는 기능입니다. 코딩 없이 드래그&드롭으로 전문적인 랜딩페이지를 제작할 수 있습니다.</p>
+      <div class="info-box">
+        <strong>활용 예시</strong>: 부동산 매물 상세 페이지, 신상품 론칭 페이지, 세미나·강연 신청 페이지, 이벤트 쿠폰 페이지
+      </div>
+    </section>
+    <section id="create">
+      <h2>랜딩페이지 만들기</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><a href="https://kiam.kr/mypage_landing_list.php" target="_blank">마이페이지 → 인포랜딩 목록</a> 접속</div></li>
+        <li><div class="step-num">2</div><div class="step-body">[+ 새 랜딩페이지 만들기] 클릭</div></li>
+        <li><div class="step-num">3</div><div class="step-body">템플릿 선택 (빈 페이지 또는 업종별 템플릿)</div></li>
+        <li><div class="step-num">4</div><div class="step-body">섹션 추가 및 내용 편집</div></li>
+        <li><div class="step-num">5</div><div class="step-body">제목 입력 → [공개] 설정 → [저장]</div></li>
+        <li><div class="step-num">6</div><div class="step-body">생성된 URL을 명함이나 문자에 삽입</div></li>
+      </ol>
+    </section>
+    <section id="sections">
+      <h2>구성 요소</h2>
+      <table class="m-table">
+        <thead><tr><th>요소</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>📸 이미지 배너</td><td>상단 메인 이미지 또는 슬라이드</td></tr>
+          <tr><td>📝 텍스트 블록</td><td>제목, 부제목, 본문 내용</td></tr>
+          <tr><td>📋 신청 폼</td><td>이름, 전화번호, 이메일 수집 폼</td></tr>
+          <tr><td>🖼️ 갤러리</td><td>다중 이미지 그리드</td></tr>
+          <tr><td>📹 동영상</td><td>YouTube 또는 직접 업로드</td></tr>
+          <tr><td>🔘 CTA 버튼</td><td>챗봇 링크, 전화 연결, 외부 URL</td></tr>
+          <tr><td>💬 댓글</td><td>방문자 댓글 기능 (ON/OFF)</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="list">
+      <h2>랜딩 목록 관리</h2>
+      <p>인포랜딩 목록 페이지에서 아래 정보를 확인할 수 있습니다:</p>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>제목</td><td>랜딩페이지 이름</td></tr>
+          <tr><td>조회수</td><td>총 페이지 방문 횟수</td></tr>
+          <tr><td>댓글수</td><td>누적 댓글 개수</td></tr>
+          <tr><td>신청수</td><td>폼 제출 횟수</td></tr>
+          <tr><td>노출/중지</td><td>공개 상태 ON/OFF 토글</td></tr>
+          <tr><td>수정/삭제</td><td>편집 및 삭제 버튼</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="connect">
+      <h2>명함 & 챗봇 연동</h2>
+      <ul class="m-list">
+        <li><strong>명함 연동</strong>: 명함 편집 → [콘텐츠 추가] → 인포랜딩 블록 선택 → 게시 중인 랜딩 목록에서 선택</li>
+        <li><strong>AI 챗봇 연동</strong>: 신청 폼 제출 시 고객 정보가 원챗에 자동 등록됩니다.</li>
+        <li><strong>문자 발송 연동</strong>: 랜딩 URL을 폰문자·AI메시지 본문에 삽입하여 직접 공유하세요.</li>
+        <li><strong>공유 URL 형식</strong>: <code>https://kiam.kr/landing/내아이디/랜딩ID</code></li>
+      </ul>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/namecard/westory.html" class="btn-prev">← 위스토리</a>
+      <a href="/manual/" class="btn-next">매뉴얼 홈 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">인포랜딩이란?</a></li>
+      <li><a href="#create">랜딩페이지 만들기</a></li>
+      <li><a href="#sections">구성 요소</a></li>
+      <li><a href="#list">랜딩 목록 관리</a></li>
+      <li><a href="#connect">명함 & 챗봇 연동</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

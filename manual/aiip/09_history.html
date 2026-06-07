@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>의뢰 결과 목록 — AI변리사 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link active">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <a href="/manual/aiip/">AI변리사</a> <span>›</span> <span>의뢰 결과 목록</span></div>
+    <h1>📜 의뢰 결과 목록</h1>
+    <p class="page-desc">지금까지 제출한 모든 AI 컨설팅 의뢰 내역과 결과를 조회하는 방법을 안내합니다.</p>
+
+    <h2 id="access">의뢰 목록 접속</h2>
+    <p>상단 내비게이션의 <strong>"의뢰 목록"</strong>을 클릭하거나, <a href="https://ps.kiam.kr/result" target="_blank">ps.kiam.kr/result</a>로 접속합니다.</p>
+
+    <h2 id="list-structure">목록 구성</h2>
+    <p>의뢰 목록 페이지에는 제출한 모든 의뢰가 최신 순으로 표시됩니다.</p>
+
+    <h3 id="list-columns">목록 표시 항목</h3>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>의뢰 번호</strong></td><td>각 의뢰의 고유 식별 번호</td></tr>
+        <tr><td><strong>분석 유형</strong></td><td>특허 / 상표 / 저작권 아이콘과 텍스트로 표시</td></tr>
+        <tr><td><strong>의뢰 일시</strong></td><td>의뢰 제출 날짜와 시간</td></tr>
+        <tr><td><strong>상태</strong></td><td>분석 중 / 완료 / 실패로 표시 (색상 배지)</td></tr>
+        <tr><td><strong>요약</strong></td><td>AI 분석 결과의 핵심 한 줄 요약</td></tr>
+        <tr><td><strong>상세 보기</strong></td><td>전체 분석 결과 페이지로 이동하는 버튼</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="status-badge">상태 배지 의미</h3>
+    <table class="m-table">
+      <thead><tr><th>상태</th><th>색상</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td><strong>분석 중</strong></td><td>🟡 노란색</td><td>AI가 현재 분석을 진행 중입니다. 잠시 기다려주세요.</td></tr>
+        <tr><td><strong>완료</strong></td><td>🟢 초록색</td><td>분석이 완료되어 결과를 확인할 수 있습니다.</td></tr>
+        <tr><td><strong>실패</strong></td><td>🔴 빨간색</td><td>분석 중 오류가 발생했습니다. 다시 의뢰해 주세요.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="filter-search">필터 &amp; 검색</h2>
+    <p>목록 상단의 필터와 검색 기능을 활용하면 원하는 의뢰를 빠르게 찾을 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>기능</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>유형 필터</strong></td><td>전체 / 특허 / 상표 / 저작권 중 선택하여 해당 유형만 표시</td></tr>
+        <tr><td><strong>상태 필터</strong></td><td>전체 / 분석 중 / 완료 / 실패 중 선택</td></tr>
+        <tr><td><strong>날짜 필터</strong></td><td>특정 기간의 의뢰만 표시</td></tr>
+        <tr><td><strong>텍스트 검색</strong></td><td>요청사항 내용으로 의뢰 검색</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="detail-view">상세 결과 보기</h2>
+    <p>목록에서 의뢰 항목 또는 <strong>"상세 보기"</strong> 버튼을 클릭하면 해당 의뢰의 전체 분석 결과 페이지로 이동합니다. 분석 결과 내용은 <a href="/manual/aiip/06_result.html">6장 AI 분석 결과 읽기</a>를 참고하세요.</p>
+
+    <h2 id="resubmit">재의뢰</h2>
+    <p>이전 의뢰와 동일한 자료로 다시 분석을 받으려면 상세 결과 페이지의 <strong>"다시 의뢰하기"</strong> 버튼을 클릭합니다. 이전 입력 내용이 미리 채워진 의뢰 페이지로 이동합니다.</p>
+
+    <div class="tip">
+      💡 <strong>실패한 의뢰가 있다면</strong> 해당 의뢰의 상세 페이지에서 오류 내용을 확인하고 재의뢰하세요. 파일 형식이 지원되지 않거나 파일 크기가 초과된 경우 실패할 수 있습니다.
+    </div>
+
+    <h2 id="delete">의뢰 삭제</h2>
+    <p>목록에서 불필요한 의뢰를 삭제할 수 있습니다. 상세 결과 페이지 하단의 <strong>"의뢰 삭제"</strong> 버튼을 클릭합니다.</p>
+    <div class="tip">
+      ⚠️ 삭제된 의뢰와 생성 문서는 복구할 수 없습니다. 신중하게 삭제하세요.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aiip/08_dashboard.html"><span class="nav-label">← 이전</span><span class="nav-title">📋 대시보드</span></a>
+      <a href="/manual/aiip/10_mypage.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">⚙️ 내 계정 설정</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">의뢰 목록 접속</a></li>
+      <li><a href="#list-structure">목록 구성</a></li>
+      <li><a href="#list-columns" class="h3">표시 항목</a></li>
+      <li><a href="#status-badge" class="h3">상태 배지 의미</a></li>
+      <li><a href="#filter-search">필터 &amp; 검색</a></li>
+      <li><a href="#detail-view">상세 결과 보기</a></li>
+      <li><a href="#resubmit">재의뢰</a></li>
+      <li><a href="#delete">의뢰 삭제</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

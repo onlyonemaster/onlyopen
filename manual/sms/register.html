@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>발신번호 등록 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link active">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 발신번호 등록</nav>
+    <h1 class="page-title">📞 발신번호 등록</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#why">발신번호 등록이 필요한 이유</a></li>
+        <li><a href="#how">등록 방법</a></li>
+        <li><a href="#verify">인증 절차</a></li>
+        <li><a href="#manage">등록 번호 관리</a></li>
+        <li><a href="#faq">자주 묻는 질문</a></li>
+      </ul>
+    </div>
+    <section id="why">
+      <h2>발신번호 등록이 필요한 이유</h2>
+      <p>2015년 발신번호 변작 방지법 시행 이후, <strong>사전 인증된 발신번호</strong>로만 문자를 발송할 수 있습니다. 미등록 번호로 발송 시 스팸으로 분류되거나 발송이 차단됩니다.</p>
+      <div class="notice-box">
+        <strong>⚠️ 중요</strong>: 문자 발송 전 반드시 발신번호를 등록하세요. 등록에는 실명 인증과 통신사 확인이 필요합니다.
+      </div>
+    </section>
+    <section id="how">
+      <h2>등록 방법</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>발신번호 등록 페이지 접속</strong><br>
+            <a href="https://kiam.kr/sub_5.php" target="_blank">https://kiam.kr/sub_5.php</a> 로 이동하거나<br>
+            상단 메뉴 → <strong>문자발송</strong> → <strong>휴대폰등록</strong>을 클릭합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>[+ 발신번호 추가] 버튼 클릭</strong><br>
+            등록된 번호 목록 화면에서 우측 상단 버튼을 클릭합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>번호 입력 및 인증 선택</strong><br>
+            등록할 휴대폰 번호를 입력하고, 인증 방법(문자 인증 / 전화 인증)을 선택합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>인증 완료</strong><br>
+            인증번호를 입력하면 해당 번호가 발신번호로 등록됩니다.
+          </div>
+        </li>
+      </ol>
+    </section>
+    <section id="verify">
+      <h2>인증 절차</h2>
+      <table class="m-table">
+        <thead><tr><th>인증 방법</th><th>절차</th><th>소요 시간</th></tr></thead>
+        <tbody>
+          <tr><td>📱 문자(SMS) 인증</td><td>해당 번호로 인증번호 문자 수신 → 입력</td><td>즉시</td></tr>
+          <tr><td>📞 전화 인증</td><td>ARS 전화 수신 → 안내 번호 입력</td><td>1~2분</td></tr>
+          <tr><td>🏢 사업자 인증</td><td>사업자등록증 업로드 (법인 번호)</td><td>1~3 영업일</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="manage">
+      <h2>등록 번호 관리</h2>
+      <ul class="m-list">
+        <li>등록된 발신번호는 <a href="https://kiam.kr/sub_5.php" target="_blank">발신번호 관리 페이지</a>에서 확인·삭제할 수 있습니다.</li>
+        <li>여러 개의 번호를 등록해 두고 발송 시 선택할 수 있습니다.</li>
+        <li>대표 번호를 지정하면 매번 선택하지 않아도 됩니다.</li>
+        <li>번호 삭제 후 재등록 시 인증 절차를 다시 진행해야 합니다.</li>
+      </ul>
+    </section>
+    <section id="faq">
+      <h2>자주 묻는 질문</h2>
+      <div class="faq-item">
+        <div class="faq-q">Q. 타인 명의 번호도 등록할 수 있나요?</div>
+        <div class="faq-a">A. 불가합니다. 실제 본인 소유 번호만 등록 가능합니다. 타인 번호로 발송하면 법적 처벌을 받을 수 있습니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 발신번호 등록 개수 제한이 있나요?</div>
+        <div class="faq-a">A. 최대 10개까지 등록할 수 있습니다.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-q">Q. 050 가상번호도 등록 가능한가요?</div>
+        <div class="faq-a">A. 가능합니다. 다만 일부 통신사 수신자에게는 차단될 수 있으니 실제 번호 사용을 권장합니다.</div>
+      </div>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/sms/" class="btn-prev">← 폰문자 소개</a>
+      <a href="/manual/sms/send.html" class="btn-next">문자 발송하기 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#why">발신번호 등록이 필요한 이유</a></li>
+      <li><a href="#how">등록 방법</a></li>
+      <li><a href="#verify">인증 절차</a></li>
+      <li><a href="#manage">등록 번호 관리</a></li>
+      <li><a href="#faq">자주 묻는 질문</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>포인트·결제 관리 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">계정 관리</div>
+      <a href="/manual/account/" class="sb-link">👤 계정 개요</a>
+      <a href="/manual/account/signup.html" class="sb-link">회원가입</a>
+      <a href="/manual/account/settings.html" class="sb-link">회원정보 수정</a>
+      <a href="/manual/account/payment.html" class="sb-link active">💳 포인트·결제</a>
+      <a href="/manual/account/business.html" class="sb-link">사업체 정보</a>
+      <a href="/manual/account/referral.html" class="sb-link">추천·리셀러</a>
+      <a href="/manual/account/lecture.html" class="sb-link">강연·교육 관리</a>
+      <a href="/manual/account/coaching.html" class="sb-link">코칭 신청</a>
+      <a href="/manual/account/policy.html" class="sb-link">이용 정책</a>
+      <a href="/manual/account/pwa.html" class="sb-link">앱 설치(PWA)</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/account/">계정 관리</a> › 포인트·결제</nav>
+    <h1 class="page-title">💳 포인트·결제 관리</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#overview">결제 방식 개요</a></li>
+        <li><a href="#charge">포인트 충전</a></li>
+        <li><a href="#regular">정기결제</a></li>
+        <li><a href="#cancel-regular">정기결제 해지</a></li>
+        <li><a href="#history">결제 내역 확인</a></li>
+        <li><a href="#reseller">리셀러 정산</a></li>
+      </ul>
+    </div>
+
+    <section id="overview">
+      <h2>결제 방식 개요</h2>
+      <p>kiam.kr은 두 가지 결제 방식을 지원합니다.</p>
+      <table class="m-table">
+        <thead>
+          <tr><th>방식</th><th>설명</th><th>적합 대상</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><strong>포인트 충전</strong></td><td>필요한 만큼 충전하여 사용하는 선불 방식</td><td>소량·비정기 발송</td></tr>
+          <tr><td><strong>정기결제</strong></td><td>매월 자동 결제로 서비스 이용권 유지</td><td>대량·정기 발송</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="charge">
+      <h2>포인트 충전</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>마이페이지 → 포인트·결제</strong> 메뉴로 이동합니다. → <a href="https://kiam.kr/mypage_payment.php" target="_blank">바로가기</a></div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">충전할 <strong>금액을 선택</strong>하거나 직접 입력합니다.</div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body"><strong>결제 수단</strong>(카드, 계좌이체, 가상계좌)을 선택합니다.</div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">결제 완료 후 즉시 포인트가 충전되며, 발송 시 자동 차감됩니다.</div>
+        </li>
+      </ol>
+      <div class="notice-box info" style="margin-top:14px;">
+        <strong>💡 현금 충전:</strong> 계좌이체(무통장 입금) 방식도 지원합니다. 입금 확인 후 수동으로 포인트가 지급됩니다.
+      </div>
+    </section>
+
+    <section id="regular">
+      <h2>정기결제</h2>
+      <p>정기결제는 <strong>매월 특정 날짜에 자동으로 결제</strong>되어 서비스 이용권이 갱신되는 방식입니다.</p>
+      <table class="m-table" style="margin-top:14px;">
+        <thead>
+          <tr><th>항목</th><th>설명</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>정기결제일</td><td>최초 결제 기준일로부터 매월 동일 날짜</td></tr>
+          <tr><td>결제 수단</td><td>등록된 카드 자동 청구</td></tr>
+          <tr><td>이용 혜택</td><td>월 발송 한도 증가, 추가 기능 이용 가능</td></tr>
+          <tr><td>갱신 알림</td><td>결제일 1주일 전 문자/이메일 발송</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="cancel-regular">
+      <h2>정기결제 해지</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body"><strong>마이페이지 → 포인트·결제</strong>에서 <strong>[정기결제해지]</strong> 버튼을 클릭합니다.</div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">해지 사유를 선택하고 확인을 클릭합니다.</div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">해지 완료 후 <strong>현재 결제 기간 만료일까지는 계속 이용</strong>할 수 있습니다.</div>
+        </li>
+      </ol>
+      <div class="notice-box warning" style="margin-top:14px;">
+        <strong>⚠️ 주의:</strong> 정기결제를 해지하면 다음 결제일에 갱신되지 않으며, 이용 등급이 기본으로 변경됩니다.
+      </div>
+    </section>
+
+    <section id="history">
+      <h2>결제 내역 확인</h2>
+      <p><a href="https://kiam.kr/mypage_payment.php" target="_blank">마이페이지 → 포인트·결제</a>에서 충전 및 사용 내역을 조회할 수 있습니다.</p>
+      <ul>
+        <li>충전 일자, 금액, 결제 수단별 내역이 표시됩니다.</li>
+        <li>포인트 사용 내역은 <strong>발송 채널별</strong>(SMS/LMS/MMS/RCS)로 구분됩니다.</li>
+        <li>세금계산서가 필요한 경우 고객센터로 문의하세요.</li>
+      </ul>
+    </section>
+
+    <section id="reseller">
+      <h2>리셀러 정산</h2>
+      <p>리셀러 자격을 보유한 경우 추천을 통한 수당 정산이 가능합니다.</p>
+      <ul>
+        <li>정산 내역은 <a href="https://kiam.kr/mypage_payment_reseller.php" target="_blank">마이페이지 → 리셀러 정산</a>에서 확인합니다.</li>
+        <li>리셀러 관련 자세한 내용은 <a href="/manual/account/referral.html">추천·리셀러 안내</a>를 참조하세요.</li>
+      </ul>
+    </section>
+
+    <nav class="page-nav">
+      <a href="/manual/account/settings.html" class="btn-prev">← 회원정보 수정</a>
+      <a href="/manual/account/business.html" class="btn-next">사업체 정보 →</a>
+    </nav>
+  </main>
+</div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var h=document.documentElement;
+    var t=h.getAttribute('data-theme')==='light'?'dark':'light';
+    h.setAttribute('data-theme',t);
+    this.textContent=t==='light'?'🌙':'☀️';
+  });
+  document.getElementById('hamburgerBtn').addEventListener('click',function(){
+    document.querySelector('.m-sidebar').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>프롬프팅 설정 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+      <a href="/manual/onechat/prompt.html" class="sb-link active">프롬프팅 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/onechat/">원챗</a><span class="sep">›</span><span>프롬프팅 설정</span></div>
+
+    <h1>프롬프팅 설정</h1>
+    <p class="page-desc">AI 아바타가 어떤 방식으로 대화할지 지침을 설정합니다. 상대방별로 말투, 관계, 목적을 다르게 설정할 수 있습니다.</p>
+
+    <h2 id="enter">프롬프팅 설정 진입</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">채팅방에서 오른쪽 상단 ℹ️ 버튼을 클릭합니다</div>
+          <div class="step-desc">각 채팅방마다 개별 프롬프팅을 설정할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">프롬프팅 설정 패널이 열립니다</div>
+          <div class="step-desc">3가지 모드 중 하나를 선택하고 세부 설정을 입력합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="modes">3가지 프롬프팅 모드</h2>
+
+    <h3 id="mode1">① 기본 프롬프팅 모드</h3>
+    <p>프로필 설정에서 입력한 <strong>기본 프롬프트</strong>만 적용합니다. 모든 고객에게 동일한 방식으로 응답합니다.</p>
+    <div class="notice">📌 기본 프롬프트는 프로필 설정 화면에서 변경합니다. 이 패널에서 "기본 프롬프트 편집" 버튼을 눌러도 수정 가능합니다.</div>
+
+    <h3 id="mode2">② 맞춤 프롬프팅 모드</h3>
+    <p>이 상대방에게만 적용할 <strong>개별 설정</strong>을 입력합니다. 기본 프롬프트는 무시됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>설정 항목</th><th>선택지</th></tr></thead>
+      <tbody>
+        <tr><td><strong>말투/톤</strong></td><td>격식체 / 친근체 / 전문가 / 캐주얼 / 공감형 / 간결형</td></tr>
+        <tr><td><strong>상대와의 관계</strong></td><td>고객 / 파트너 / VIP / 동료 / 언론 / 정계 / 투자자</td></tr>
+        <tr><td><strong>대화 목적</strong></td><td>서비스소개 / 상담응대 / 팔로업 / 미팅조율 / 고객지원 / 네트워킹</td></tr>
+        <tr><td><strong>직접 작성</strong></td><td>자유 형식으로 AI에게 지시사항을 직접 입력</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="mode3">③ 기본 + 맞춤 모드</h3>
+    <p>기본 프롬프트를 유지하면서 <strong>추가 지시사항</strong>을 덧붙입니다. 가장 세밀한 설정이 가능합니다.</p>
+
+    <div class="tip">
+      💡 <strong>미리보기로 확인하세요</strong><br>
+      👁️ 미리보기 버튼을 누르면 최종적으로 AI에게 전달되는 프롬프트 전문을 확인할 수 있습니다. 적용 전 반드시 확인해 보세요.
+    </div>
+
+    <h2 id="apply">적용하기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">✓</div>
+        <div class="step-body">
+          <div class="step-title">"적용하기" 버튼을 클릭합니다</div>
+          <div class="step-desc">설정이 저장되고 채팅창에 "⚙️ 프롬프팅 적용: [모드]" 시스템 메시지가 삽입됩니다. 이후 AI 아바타는 새 설정대로 응답합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/ai-toggle.html"><span class="nav-label">← 이전</span><span class="nav-title">AI 아바타 ON/OFF</span></a>
+      <a href="/manual/onechat/avatar.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">아바타 학습시키기</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#enter">프롬프팅 설정 진입</a></li>
+      <li><a href="#modes">3가지 모드</a></li>
+      <li><a href="#mode1" class="h3">① 기본 모드</a></li>
+      <li><a href="#mode2" class="h3">② 맞춤 모드</a></li>
+      <li><a href="#mode3" class="h3">③ 기본+맞춤 모드</a></li>
+      <li><a href="#apply">적용하기</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

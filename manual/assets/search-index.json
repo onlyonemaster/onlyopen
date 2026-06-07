@@ -1,11 +1,983 @@
 [
-  {"title":"원챗 (OneChat)","url":"/manual/onechat/","h1":"원챗 (OneChat)","category":"원챗","desc":"AI 아바타 챗봇으로 고객과 자동 대화","keywords":"챗봇,AI,대화,자동응답,아바타","sections":"시작하기,대화관리,발신탭,수신탭,DM채팅,AI아바타,AI동행,시나리오캠페인"},
-  {"title":"AI 메시지","url":"/manual/aimessage/","h1":"AI 메시지","category":"AI 메시지","desc":"AI가 고객 데이터를 분석해 개인화된 문자를 자동 생성하고 발송","keywords":"문자,SMS,AI메시지,퍼널,자동발송","sections":"AI메시지,퍼널,발송채널,폰문자,웹문자"},
-  {"title":"AI 아바타 학습","url":"/manual/avatar/","h1":"AI 아바타 학습","category":"AI 아바타","desc":"일기,텍스트,음성,파일로 나만의 AI 아바타를 학습시키는 방법","keywords":"아바타,학습,AI,음성,텍스트","sections":"학습방법,일기,텍스트,음성,파일업로드"},
-  {"title":"명함 관리","url":"/manual/namecard/","h1":"명함 관리","category":"명함 관리","desc":"디지털 명함 등록,연락처 관리,챗봇 링크 공유까지","keywords":"명함,디지털명함,연락처,등록","sections":"명함등록,명함수정,연락처관리"},
-  {"title":"명함 프로필","url":"/manual/papercard/","h1":"명함 프로필 (종이명함)","category":"명함 관리","desc":"종이명함 등록/수정/삭제, 명함이미지 OCR 인식, AI 명함퍼널 발신자 설정, 콘텐츠 연락처 관리 등 모든 명함 프로필 기능 총정리","keywords":"종이명함,paper_card,OCR,명함이미지,AI명함퍼널,발신자정보","sections":"종이명함소개,시작하기,명함등록,명함수정,명함삭제,명함이미지,AIOOCR,AI명함퍼널,발신자정보,프롬프트설정,퍼널발송채널,연락처관리,검색,정렬,체크박스,결제시스템,모바일앱,데이터흐름,소스코드분석"},
-  {"title":"대시보드 & 분석","url":"/manual/dashboard/","h1":"대시보드 & 분석","category":"대시보드","desc":"대화 통계,클릭률,응답 패턴 등 데이터 기반 분석 활용법","keywords":"대시보드,통계,분석,데이터,클릭률","sections":"통계,분석,데이터"},
-  {"title":"계정 & 설정","url":"/manual/account/","h1":"계정 & 설정","category":"계정 관리","desc":"회원가입,로그인,프로필 설정,요금제 관리","keywords":"회원가입,로그인,프로필,설정,요금제","sections":"회원가입,로그인,프로필,요금제"},
-  {"title":"VoiceGen AI","url":"/manual/voicegen/","h1":"VoiceGen AI","category":"음성AI","desc":"AI 음성 합성 API,음성 클로닝,요금제 및 사용량 관리","keywords":"음성,합성,클로닝,API,TTS","sections":"시작하기,API키,클로닝,요금제"},
-  {"title":"VAG 영상팩토리","url":"/manual/vag/","h1":"VAG 영상팩토리","category":"영상제작","desc":"AI가 스크립트·이미지·음성·영상을 자동 생성","keywords":"영상,비디오,AI,자동생성,TTS","sections":"영상제작,스크립트,AI엔진,TTS"}
+  {
+    "title": "사업체 정보 등록 — kiam.kr 매뉴얼",
+    "url": "/manual/account/business.html",
+    "h1": "🏢 사업체 정보 등록",
+    "category": "계정 관리",
+    "desc": "사업체 정보는 다음 용도로 활용됩니다.",
+    "keywords": "",
+    "sections": "사업체 정보 등록이 필요한 이유,등록 방법,입력 항목 안내,수정 방법,주소 자동완성"
+  },
+  {
+    "title": "코칭 & 강연 — kiam.kr 매뉴얼",
+    "url": "/manual/account/coaching.html",
+    "h1": "🎓 코칭 & 강연",
+    "category": "계정 관리",
+    "desc": "kiam.kr 플랫폼은 지식 판매와 수강을 위한 코칭·강연 시스템을 내장하고 있습니다. 자신의 전문 지식을 강의로 개설하거나 다른 전문가의 강의를 수강할 수 있습니다.",
+    "keywords": "",
+    "sections": "코칭 & 강연이란?,수강 신청 (배우기),강연 개설 (가르치기),코칭 정보 등록,코칭 관리"
+  },
+  {
+    "title": "계정 & 설정 매뉴얼 — kiam.kr",
+    "url": "/manual/account/",
+    "h1": "⚙️ 계정 &amp; 설정",
+    "category": "계정 관리",
+    "desc": "kiam.kr 회원가입부터 계정 관리, PWA 앱 설치, 코칭 서비스 이용 방법까지 모든 계정 관련 설정을 안내합니다.",
+    "keywords": "",
+    "sections": "계정 시스템 개요,매뉴얼 목차,자주 묻는 질문"
+  },
+  {
+    "title": "강연·교육 관리 — kiam.kr 매뉴얼",
+    "url": "/manual/account/lecture.html",
+    "h1": "🎓 강연·교육 관리",
+    "category": "계정 관리",
+    "desc": "kiam.kr 강연·교육 관리는 코치(강사) 자격을 보유한 회원이 강연을 등록하고, 수강 신청자를 관리하는 기능입니다. 메시지카피, 셀링솔루션 관련 교육을 제공하는 강사가 활용합니다.",
+    "keywords": "",
+    "sections": "강연·교육 관리 개요,강연 목록 조회,강연 등록,강연 관리,코칭과의 차이"
+  },
+  {
+    "title": "포인트·결제 관리 — kiam.kr 매뉴얼",
+    "url": "/manual/account/payment.html",
+    "h1": "💳 포인트·결제 관리",
+    "category": "계정 관리",
+    "desc": "kiam.kr은 두 가지 결제 방식을 지원합니다.",
+    "keywords": "",
+    "sections": "결제 방식 개요,포인트 충전,정기결제,정기결제 해지,결제 내역 확인,리셀러 정산"
+  },
+  {
+    "title": "이용 정책 — kiam.kr 매뉴얼",
+    "url": "/manual/account/policy.html",
+    "h1": "📋 이용 정책 (필독)",
+    "category": "계정 관리",
+    "desc": "kiam.kr(IAMPRO) 이용 정책은 모든 회원이 상담 없이도 스스로 서비스를 활용할 수 있도록 지원하는 방향을 기반으로 합니다. 본 정책을 이해하고 동의한 후 서비스를 이용해 주세요.",
+    "keywords": "",
+    "sections": "정책 개요,상담제로화 정책,공익적 가격 정책,리셀러 수당 정책,셀프학습 지원,약관 및 개인정보"
+  },
+  {
+    "title": "PWA 앱 설치 가이드 — kiam.kr 매뉴얼",
+    "url": "/manual/account/pwa.html",
+    "h1": "📲 PWA 앱 설치 가이드",
+    "category": "계정 관리",
+    "desc": "PWA(Progressive Web App)는 웹사이트를 스마트폰·PC 앱처럼 설치하는 기술입니다. 별도의 앱 스토어 없이 브라우저에서 바로 설치하고, 홈 화면에 아이콘이 추가됩니다.",
+    "keywords": "",
+    "sections": "PWA란?,Android에서 설치,Chrome 브라우저 (권장),iPhone(iOS)에서 설치,PC에서 설치,알림 설정,앱 삭제"
+  },
+  {
+    "title": "추천·리셀러 안내 — kiam.kr 매뉴얼",
+    "url": "/manual/account/referral.html",
+    "h1": "🤝 추천·리셀러 안내",
+    "category": "계정 관리",
+    "desc": "추천 제도는 기존 회원이 신규 회원을 추천하면 양측 모두 혜택을 받는 제도입니다. 추천인 코드 또는 추천 링크를 통해 신규 가입이 이루어지면 추천 수당이 지급됩니다.",
+    "keywords": "",
+    "sections": "추천 제도란?,추천 방법,리셀러 제도,리셀러 혜택,정산 확인,수당 지급 정책"
+  },
+  {
+    "title": "계정 설정 & 요금제 — kiam.kr 매뉴얼",
+    "url": "/manual/account/settings.html",
+    "h1": "계정 설정 &amp; 요금제",
+    "category": "계정 관리",
+    "desc": "내 프로필 수정, 사업체 정보 등록, 포인트 충전, 요금제 관리 방법을 안내합니다.",
+    "keywords": "",
+    "sections": "마이페이지 접속,회원정보 수정,사업체 정보 등록,포인트 & 결제,포인트 종류,포인트 충전,요금제 관리,회원 탈퇴"
+  },
+  {
+    "title": "회원가입 & 로그인 — kiam.kr 매뉴얼",
+    "url": "/manual/account/signup.html",
+    "h1": "회원가입 &amp; 로그인",
+    "category": "계정 관리",
+    "desc": "kiam.kr의 모든 서비스를 이용하려면 먼저 회원가입이 필요합니다. 가입 방법과 로그인 절차를 단계별로 안내합니다.",
+    "keywords": "",
+    "sections": "회원가입,로그인,아이디 · 비밀번호 찾기,구글 계정 연동 로그인,로그아웃"
+  },
+  {
+    "title": "AI 메시지 발송 내역 — kiam.kr 매뉴얼",
+    "url": "/manual/aimessage/history.html",
+    "h1": "📋 AI 메시지 발송 내역",
+    "category": "AI 메시지",
+    "desc": "마이페이지 → 발송 내역에서 모든 AI 메시지 발송 결과를 확인할 수 있습니다.",
+    "keywords": "",
+    "sections": "내역 화면 접속,발송 목록 확인,상세 통계 보기,퍼널 전환 분석,재발송 & 복사"
+  },
+  {
+    "title": "AI 메시지 소개 — kiam.kr 매뉴얼",
+    "url": "/manual/aimessage/",
+    "h1": "✉️ AI 메시지 (AI Message)",
+    "category": "AI 메시지",
+    "desc": "고객 데이터를 분석해 AI가 개인화된 문자를 자동 생성하고 발송하는 서비스입니다. 대량 발송이지만 각 수신자에게 맞춤형 메시지를 보냅니다.",
+    "keywords": "",
+    "sections": "AI 메시지란?,6단계 퍼널 메시지,발송 채널,전체 흐름"
+  },
+  {
+    "title": "프롬프트 설정 — kiam.kr 매뉴얼",
+    "url": "/manual/aimessage/prompt.html",
+    "h1": "프롬프트 설정",
+    "category": "AI 메시지",
+    "desc": "AI가 어떤 방향으로 메시지를 생성할지 지시하는 핵심 설정입니다. 프롬프트 품질이 곧 메시지 품질을 결정합니다.",
+    "keywords": "",
+    "sections": "프롬프트란?,AI 자동 프롬프트 생성,프롬프트 직접 작성,효과적인 프롬프트 구조,업종별 프롬프트 예시,6단계 퍼널별 프롬프트,메시지 생성 실행"
+  },
+  {
+    "title": "웹문자(RCS) — kiam.kr 매뉴얼",
+    "url": "/manual/aimessage/rcs.html",
+    "h1": "🌐 웹문자(RCS)",
+    "category": "AI 메시지",
+    "desc": "RCS(Rich Communication Services)는 기존 SMS/LMS를 대체하는 차세대 문자 서비스입니다. 이미지, 동영상, 버튼, 카드 등 풍부한 콘텐츠를 문자처럼 발송할 수 있어 브랜드 마케팅에 최적화되어 있습니다.",
+    "keywords": "",
+    "sections": "RCS란?,SMS vs RCS 차이,RCS 신청 방법,RCS 발송하기,RCS 템플릿 종류"
+  },
+  {
+    "title": "메시지 발송하기 — kiam.kr 매뉴얼",
+    "url": "/manual/aimessage/send.html",
+    "h1": "메시지 발송하기",
+    "category": "AI 메시지",
+    "desc": "수신자 목록을 업로드하고 채널을 선택해 AI 메시지를 발송합니다. 즉시 발송과 예약 발송을 모두 지원합니다.",
+    "keywords": "",
+    "sections": "퍼널 발송 채널 탭,수신자 목록 업로드,파일 형식,업로드 방법,발송 옵션 설정,발송 미리보기 & 확인,발송 결과 확인,발송 후 관리"
+  },
+  {
+    "title": "발신자 정보 설정 — kiam.kr 매뉴얼",
+    "url": "/manual/aimessage/sender-info.html",
+    "h1": "발신자 정보 설정",
+    "category": "AI 메시지",
+    "desc": "AI가 나를 대신해 메시지를 생성하려면 먼저 발신자(나·우리 사업체)에 대한 정보를 입력해야 합니다. 이 정보가 AI 메시지 품질에 직접 영향을 줍니다.",
+    "keywords": "",
+    "sections": "기본정보 탭 접속,발신자 기본 정보 입력,사업체 소개 정보,소개 텍스트,소개 파일 업로드,발송 기본 설정,설정 저장"
+  },
+  {
+    "title": "AI 메시지 시작하기 — kiam.kr 매뉴얼",
+    "url": "/manual/aimessage/start.html",
+    "h1": "AI 메시지 시작하기",
+    "category": "AI 메시지",
+    "desc": "AI 메시지 서비스에 처음 접속하고 기본 설정을 완료하는 방법을 안내합니다.",
+    "keywords": "",
+    "sections": "AI 메시지 접속,화면 구성,시작 전 준비사항,발신 번호 등록,첫 설정 순서"
+  },
+  {
+    "title": "AI 아바타 학습 소개 — kiam.kr 매뉴얼",
+    "url": "/manual/avatar/",
+    "h1": "🤖 AI 아바타 학습",
+    "category": "AI 아바타",
+    "desc": "나만의 AI 아바타를 만드는 핵심 기능입니다. 내 경험·지식·말투를 AI에게 학습시켜 24시간 나를 대신해 대화하는 AI를 완성하세요.",
+    "keywords": "",
+    "sections": "AI 아바타란?,동작 원리,동기화 상태 확인,학습 데이터 종류,빠른 시작"
+  },
+  {
+    "title": "아바타 학습 방법 — kiam.kr 매뉴얼",
+    "url": "/manual/avatar/learn.html",
+    "h1": "아바타 학습 방법",
+    "category": "AI 아바타",
+    "desc": "텍스트, 파일, 음성, 일기 4가지 방법으로 AI 아바타를 학습시키는 상세한 방법을 안내합니다.",
+    "keywords": "",
+    "sections": "학습 화면 접속,① 텍스트 직접 입력,② 파일 업로드,③ 음성 입력,④ 일기 (Daily) 학습,학습 데이터 관리"
+  },
+  {
+    "title": "MY 챗봇 만들기 — kiam.kr 매뉴얼",
+    "url": "/manual/avatar/makebot.html",
+    "h1": "🤖 MY 챗봇 만들기",
+    "category": "AI 아바타",
+    "desc": "MY 챗봇 만들기는 나만의 AI 챗봇을 생성하고 커스터마이징하는 기능입니다. 학습시킨 AI 아바타를 기반으로 챗봇의 이름, 아이콘, 환영 메시지, 응답 스타일을 설정하여 고객에게 배포할 수 있습니다.",
+    "keywords": "",
+    "sections": "MY 챗봇이란?,진입 방법,STEP 1 — 기본 정보 설정,STEP 2 — AI 아바타 연결,STEP 3 — 챗봇 외형 설정,STEP 4 — 공개 & 배포,챗봇 관리"
+  },
+  {
+    "title": "챗봇 동작 설정 — kiam.kr 매뉴얼",
+    "url": "/manual/avatar/settings.html",
+    "h1": "챗봇 동작 설정",
+    "category": "AI 아바타",
+    "desc": "AI 아바타가 방문자에게 어떻게 응답할지 세부 동작 방식을 설정하는 방법을 안내합니다. 말투·응답 스타일·언어·ON/OFF 제어까지 상세히 설명합니다.",
+    "keywords": "",
+    "sections": "챗봇 설정 접속,AI 아바타 ON / OFF,프롬프트 설정,시스템 프롬프트,유저 프롬프트,응답 스타일 설정,시나리오 캠페인 연동,챗봇 테스트"
+  },
+  {
+    "title": "대시보드 & 통계 — kiam.kr 매뉴얼",
+    "url": "/manual/dashboard/",
+    "h1": "📊 대시보드 &amp; 통계",
+    "category": "대시보드",
+    "desc": "kiam.kr 플랫폼 전체의 활동 현황을 한눈에 파악합니다. 챗봇 방문·대화·메시지 발송·퍼널 전환 데이터를 실시간으로 확인하세요.",
+    "keywords": "",
+    "sections": "대시보드 개요,챗봇 방문 통계,메시지 발송 통계,퍼널 전환 통계,명함 방문 통계,포인트 이용 내역,데이터 활용 팁"
+  },
+  {
+    "title": "DB 수집(온리원디버) — kiam.kr 매뉴얼",
+    "url": "/manual/diver/",
+    "h1": "🔍 DB 수집 — 온리원디버",
+    "category": "DB 수집",
+    "desc": "온라인 공개 데이터를 타겟별로 빠르게 수집하여 SMS·AI 메시지 발송 대상으로 활용하는 방법을 안내합니다.",
+    "keywords": "",
+    "sections": "온리원디버란?,합법적 수집 원칙,설치 방법,수집 방법,수집 DB 활용"
+  },
+  {
+    "title": "AI 퍼널 메시지 설계 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/ai-design.html",
+    "h1": "🤖 AI 퍼널 메시지 설계",
+    "category": "원퍼널문자",
+    "desc": "AI 퍼널 메시지 설계는 고객이 이벤트신청페이지에 정보를 입력하는 순간부터 N일차에 어떤 메시지를 보낼지 시퀀스를 미리 설계하는 기능입니다.",
+    "keywords": "",
+    "sections": "AI 퍼널 설계란?,접속 방법,설계 등록하기,설정 항목 설명,작동 방식,활용 팁"
+  },
+  {
+    "title": "이벤트신청페이지 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/apply-page.html",
+    "h1": "📋 이벤트신청페이지",
+    "category": "원퍼널문자",
+    "desc": "이벤트신청페이지는 고객의 이름·연락처 등 정보를 수집하기 위한 신청 폼(Form) 페이지입니다. 코딩 없이 클릭만으로 만들 수 있으며, 생성된 코드를 인포랜딩페이지나 외부 사이트에 삽입합니다.",
+    "keywords": "",
+    "sections": "이벤트신청페이지란?,접속 방법,신청페이지 만들기,코드 삽입 방법,목록 관리,활용 팁"
+  },
+  {
+    "title": "신청 고객 관리 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/customer.html",
+    "h1": "👥 신청 고객 관리",
+    "category": "원퍼널문자",
+    "desc": "이벤트신청페이지를 통해 신규로 신청한 고객의 DB를 확인하고 관리하는 기능입니다. 고객이 신청 폼을 제출하면 이 리스트에 자동으로 추가됩니다.",
+    "keywords": "",
+    "sections": "신청 고객 관리란?,접속 방법,고객 리스트 확인,고객 관리 기능,데이터 내보내기"
+  },
+  {
+    "title": "데일리문자 소개 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/daily-intro.html",
+    "h1": "📅 데일리문자 소개",
+    "category": "원퍼널문자",
+    "desc": "데일리문자는 주소록(DB)을 일정 분량으로 나누어 매일 자동 발송하는 IAM의 문자 자동화 솔루션입니다.",
+    "keywords": "",
+    "sections": "데일리문자란?,활용 이유,활용 구조,주요 기능,사용 방법"
+  },
+  {
+    "title": "원퍼널문자 소개 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/",
+    "h1": "🔀 원퍼널문자 소개",
+    "category": "원퍼널문자",
+    "desc": "원퍼널문자는 고객 정보 수집 → 자동 문자 발송 → AI 챗봇 연결을 하나의 흐름으로 자동화한 마케팅 문자 솔루션입니다.",
+    "keywords": "",
+    "sections": "원퍼널문자란?,작동 흐름,핵심 기능,구성 요소,빠른 시작"
+  },
+  {
+    "title": "인포랜딩페이지 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/landing.html",
+    "h1": "🖼️ 인포랜딩페이지 제작",
+    "category": "원퍼널문자",
+    "desc": "인포랜딩페이지는 자신의 이벤트·상품·서비스를 소개하거나 상세페이지로 보여주는 전용 랜딩페이지입니다. 문자에 링크를 넣어 고객을 유도하고, 하단에 신청창을 연결해 DB를 수집합니다.",
+    "keywords": "",
+    "sections": "인포랜딩페이지란?,접속 방법,랜딩페이지 만들기,목록 관리,신청페이지와 연결"
+  },
+  {
+    "title": "기존 고객 관리 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/old-customer.html",
+    "h1": "📁 기존 고객 관리",
+    "category": "원퍼널문자",
+    "desc": "기존 고객 관리는 이벤트신청페이지가 아닌 기존에 보유하던 DB(주소록) 고객을 대상으로 예약 발송을 설정하고 관리하는 기능입니다.",
+    "keywords": "",
+    "sections": "기존 고객 관리란?,신청 고객 vs 기존 고객 차이,접속 방법,리스트 항목 설명,활용 방법"
+  },
+  {
+    "title": "발송 결과 내역 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/result.html",
+    "h1": "📊 발송 결과 내역",
+    "category": "원퍼널문자",
+    "desc": "발송 결과 내역은 AI 퍼널 메시지 또는 예약 발송이 실제로 완료된 후의 결과를 조회하는 화면입니다.",
+    "keywords": "",
+    "sections": "발송 결과 내역이란?,접속 방법,항목 설명,결과 상태 코드,활용 방법"
+  },
+  {
+    "title": "발송 예정 내역 — kiam.kr 매뉴얼",
+    "url": "/manual/funnel/schedule.html",
+    "h1": "📆 발송 예정 내역",
+    "category": "원퍼널문자",
+    "desc": "발송 예정 내역은 AI 퍼널 메시지 설계 또는 기존 고객 예약에 따라 아직 발송되지 않고 대기 중인 문자 목록을 보여줍니다.",
+    "keywords": "",
+    "sections": "발송 예정 내역이란?,접속 방법,항목 설명,관리 기능"
+  },
+  {
+    "title": "명함 등록하는 방법 — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/add.html",
+    "h1": "명함 등록하는 방법",
+    "category": "명함 관리",
+    "desc": "kiam.kr에 처음 접속하면 나만의 IAM 멀티명함을 만들 수 있습니다. 단계별로 따라해 보세요.",
+    "keywords": "",
+    "sections": "명함 관리 화면 접속,기본 정보 입력,프로필 사진 등록,이름 · 직책 · 소개,연락처 정보,AI 챗봇 링크 연결,IAM 콘텐츠 (위스토리),저장 & 확인"
+  },
+  {
+    "title": "명함 수정 & 관리 — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/edit.html",
+    "h1": "명함 수정 &amp; 관리",
+    "category": "명함 관리",
+    "desc": "등록한 명함 내용을 수정하고, 여러 장의 명함을 관리하는 방법을 설명합니다.",
+    "keywords": "",
+    "sections": "명함 수정,멀티 명함 관리,명함 추가,대표 명함 전환,명함 드롭다운 메뉴,그룹 명함"
+  },
+  {
+    "title": "IAM몰 연동 — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/iammall.html",
+    "h1": "🛒 IAM몰 연동",
+    "category": "명함 관리",
+    "desc": "IAM몰은 kiam.kr 명함 페이지에 직접 쇼핑몰을 내장할 수 있는 기능입니다. 별도의 쇼핑몰 구축 없이 디지털 명함 안에서 상품을 전시하고 주문을 받을 수 있습니다.",
+    "keywords": "",
+    "sections": "IAM몰이란?,명함에 IAM몰 연결,상품 등록,주문 관리"
+  },
+  {
+    "title": "명함 관리 소개 — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/",
+    "h1": "📇 명함 관리",
+    "category": "명함 관리",
+    "desc": "kiam.kr의 디지털 멀티명함 시스템을 소개합니다. 종이명함을 넘어 AI 챗봇 링크·퍼널 마케팅·콘텐츠 공유까지 한 번에 관리합니다.",
+    "keywords": "",
+    "sections": "IAM 멀티명함이란?,명함 종류,명함 화면 구성,빠른 시작 가이드"
+  },
+  {
+    "title": "인포랜딩 — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/landing.html",
+    "h1": "🎯 인포랜딩 (Info Landing)",
+    "category": "명함 관리",
+    "desc": "인포랜딩은 이벤트 상품이나 서비스를 소개하는 랜딩페이지(상세 페이지)를 직접 만들고 리스트로 관리하는 기능입니다. 코딩 없이 드래그&드롭으로 전문적인 랜딩페이지를 제작할 수 있습니다.",
+    "keywords": "",
+    "sections": "인포랜딩이란?,랜딩페이지 만들기,구성 요소,랜딩 목록 관리,명함 & 챗봇 연동"
+  },
+  {
+    "title": "링크 신청 — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/linkapply.html",
+    "h1": "🔗 링크 신청",
+    "category": "명함 관리",
+    "desc": "kiam.kr 명함에 외부 서비스 링크, 신청 폼, 예약 버튼 등을 추가하는 방법을 안내합니다. 명함 방문자가 원클릭으로 신청·예약·구매 등을 바로 할 수 있습니다.",
+    "keywords": "",
+    "sections": "링크 신청이란?,추가 가능한 링크 종류,링크 추가 방법,신청 폼 연동,활용 팁"
+  },
+  {
+    "title": "명함 공유하기 — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/share.html",
+    "h1": "명함 공유하기",
+    "category": "명함 관리",
+    "desc": "만들어진 명함을 다양한 방법으로 상대방에게 전달하는 방법을 설명합니다.",
+    "keywords": "",
+    "sections": "공유 방법 종류,URL 링크로 공유,QR코드 공유,카카오톡으로 공유,SMS 문자로 대량 발송,공유 후 방문자 관리"
+  },
+  {
+    "title": "위스토리(We Story) — kiam.kr 매뉴얼",
+    "url": "/manual/namecard/westory.html",
+    "h1": "📸 위스토리 (We Story)",
+    "category": "명함 관리",
+    "desc": "위스토리는 kiam.kr 명함 페이지에 SNS 스토리처럼 사진, 동영상, 텍스트 콘텐츠를 게시할 수 있는 기능입니다. 고객이 명함 링크를 방문했을 때 최신 소식이나 프로모션을 바로 보여줄 수 있습니다.",
+    "keywords": "",
+    "sections": "위스토리란?,스토리 작성,콘텐츠 유형,명함에 표시,활용 팁"
+  },
+  {
+    "title": "AI 아바타 ON/OFF — 원챗 매뉴얼",
+    "url": "/manual/onechat/ai-toggle.html",
+    "h1": "AI 아바타 ON/OFF",
+    "category": "원챗",
+    "desc": "AI 아바타 모드와 직접 대화 모드를 상황에 맞게 전환하는 방법을 설명합니다.",
+    "keywords": "",
+    "sections": "두 가지 대화 모드,모드 전환 방법,상태 표시 확인,언제 어떻게 쓸까요?"
+  },
+  {
+    "title": "아바타 학습시키기 — 원챗 매뉴얼",
+    "url": "/manual/onechat/avatar.html",
+    "h1": "아바타 학습시키기",
+    "category": "원챗",
+    "desc": "나의 말투, 전문 지식, 경험을 AI 아바타에게 학습시킬수록 더 자연스럽고 똑똑한 응답을 할 수 있습니다.",
+    "keywords": "",
+    "sections": "학습 화면 진입,4가지 학습 방법,📔 일기 · 대화 탭,📝 텍스트 탭,🎙️ 음성 탭,📁 파일 탭"
+  },
+  {
+    "title": "HI 공지발송 — 원챗 매뉴얼",
+    "url": "/manual/onechat/broadcast.html",
+    "h1": "📢 HI 공지발송",
+    "category": "원챗",
+    "desc": "챗봇을 통해 퍼널·공유 수신자 전체에게 운영자 공지 메시지를 일괄 발송합니다. SMS 비용 없이 무제한으로 발송할 수 있는 강력한 마케팅 도구입니다.",
+    "keywords": "",
+    "sections": "HI 공지발송이란?,발송 대상 구분,사용 방법,공지발송 패널 열기,메시지 작성 및 발송,발송 이력 확인,공지 상세 통계,전체 발송 흐름"
+  },
+  {
+    "title": "채팅 화면 사용법 — 원챗 매뉴얼",
+    "url": "/manual/onechat/chat.html",
+    "h1": "채팅 화면 사용법",
+    "category": "원챗",
+    "desc": "고객과의 대화를 확인하고 관리하는 방법을 설명합니다. AI 아바타와 직접 대화를 자유롭게 전환할 수 있습니다.",
+    "keywords": "",
+    "sections": "채팅 목록 확인,채팅방 입장,채팅방 구성,상단 헤더,메시지 종류,🤝 AI 동행 메시지 카드,메시지 보내기,파일 & 이미지 첨부"
+  },
+  {
+    "title": "AI 동행 기능 — 원챗 매뉴얼",
+    "url": "/manual/onechat/companion.html",
+    "h1": "❤️ AI 동행 기능",
+    "category": "원챗",
+    "desc": "고객이 챗봇 대화를 마치고 떠난 뒤에도, AI가 자동으로 안부·정보·응원 메시지를 보내 관계를 오래 유지시켜 줍니다.",
+    "keywords": "",
+    "sections": "접근 방법,전체 동작 흐름,설정 패널 구성,① AI 동행 ON / OFF,② 동행 현황 (통계 카드),③ 재접촉 간격,④ 발송 가능 시간,⑤ AI 역할 프롬프트,⑥ 주제 키워드 태그,⑦ 메시지 유형 4가지,⑧ 테스트 발송,채팅창의 AI 동행 카드,🛡️ 자동 안전 규칙,설정 저장 & 활성화,자주 묻는 질문"
+  },
+  {
+    "title": "대시보드 & 분석 — kiam.kr 매뉴얼",
+    "url": "/manual/onechat/dashboard.html",
+    "h1": "📊 대시보드 &amp; 분석",
+    "category": "원챗",
+    "desc": "원챗 대시보드는 챗봇 운영 현황을 실시간으로 파악하고, AI가 분석한 대화 데이터를 기반으로 운영 의사결정을 지원하는 종합 관제 화면입니다.",
+    "keywords": "",
+    "sections": "대시보드 접속 방법,대시보드 구성 — 5개 패널,① KPI 요약 패널,② AI 승인 대기 패널,승인 대기 항목 처리 방법,③ 대화 분석 패널,의도(Intent) 분류,감정(Sentiment) 분포,④ 공지 발송 현황,⑤ 경영 요약 (AI 리포트),실시간 갱신,대시보드 활용 팁"
+  },
+  {
+    "title": "AI 일기 쓰기 — 원챗 매뉴얼",
+    "url": "/manual/onechat/diary.html",
+    "h1": "📓 AI 일기 쓰기",
+    "category": "원챗",
+    "desc": "매일 일기를 쓰면 AI 아바타가 나의 경험·생각·말투를 더 깊이 학습합니다. 일기는 AI가 나처럼 대화하는 데 가장 강력한 학습 재료입니다.",
+    "keywords": "",
+    "sections": "AI 일기란?,일기 작성 화면 접속,일기 작성 방법,일기 유형,잘 쓰는 방법 (AI 학습 효과 높이기),✅ 이렇게 쓰면 좋아요,❌ 이런 내용은 피하세요,일기 관리"
+  },
+  {
+    "title": "DM 채팅 사용법 — 원챗 매뉴얼",
+    "url": "/manual/onechat/dm.html",
+    "h1": "💬 DM 채팅 사용법",
+    "category": "원챗",
+    "desc": "kiam.kr 회원끼리 1:1 또는 그룹으로 실시간 채팅할 수 있습니다. 답장, 이모지 반응, 파일 전송, 투표 등 다양한 기능을 사용해보세요.",
+    "keywords": "",
+    "sections": "DM 채팅이란?,채팅 목록 화면,개별 / 그룹 서브탭,채팅방 카드 읽는 법,새 채팅 시작하기 (1:1),그룹 채팅 만들기,그룹 관리 기능,채팅방에서 대화하기,메시지 보내기,읽음 확인,고정 메시지 배너,파일 &amp; 이미지 전송,메시지 기능 모음,답장하기,이모지 반응,메시지 수정,메시지 삭제,메시지 고정,투표 만들기,투표에 참여하기"
+  },
+  {
+    "title": "발신(퍼널)탭 사용법 — 원챗 매뉴얼",
+    "url": "/manual/onechat/funnel.html",
+    "h1": "📤 발신(퍼널)탭 사용법",
+    "category": "원챗",
+    "desc": "SMS 문자로 챗봇 링크를 보낸 수신자의 응답 현황을 확인하고, 공유 링크 방문자를 함께 관리하는 탭입니다.",
+    "keywords": "",
+    "sections": "발신탭이란?,화면 구성,통계 바,퍼널 / 공유 전환 버튼,SMS 퍼널 링크,SMS 링크 흐름,퍼널 카드 구성,공유 모드 — 방문자 목록,공유 모드 필터,방문자 카드 구성,방문자 이름 직접 지정,챗봇 칩 필터,검색 기능"
+  },
+  {
+    "title": "원챗(OneChat) 매뉴얼 — kiam.kr",
+    "url": "/manual/onechat/",
+    "h1": "💬 원챗 (OneChat)",
+    "category": "원챗",
+    "desc": "AI 아바타 챗봇이 나 대신 고객과 24시간 대화합니다. 챗봇 링크 하나로 고객 응대를 자동화하세요.",
+    "keywords": "",
+    "sections": "원챗이란?,매뉴얼 목차"
+  },
+  {
+    "title": "알림 수신 설정 — 원챗 매뉴얼",
+    "url": "/manual/onechat/notification.html",
+    "h1": "🔔 알림 수신 설정",
+    "category": "원챗",
+    "desc": "수신자가 내 챗봇으로 대화를 시작하면 운영자(나)에게 알림이 전달됩니다. 알림을 받으려면 먼저 원챗에서 알림을 허용해야 합니다.",
+    "keywords": "",
+    "sections": "알림이 오는 조건,알림 허용 방법,최초 알림 허용 (브라우저),모바일에서 알림 받기,알림 종류,연결 요청 알림,알림 수신 후 대응 방법,자주 묻는 질문"
+  },
+  {
+    "title": "내 프로필 설정 — 원챗 매뉴얼",
+    "url": "/manual/onechat/profile.html",
+    "h1": "내 프로필 설정",
+    "category": "원챗",
+    "desc": "원챗을 처음 시작하기 전에 반드시 내 프로필을 설정해야 합니다. AI 아바타가 내 이름과 정보로 고객에게 인사합니다.",
+    "keywords": "",
+    "sections": "프로필 설정 진입,입력 항목,챗봇 링크 & QR코드,저장하기"
+  },
+  {
+    "title": "프롬프팅 설정 — 원챗 매뉴얼",
+    "url": "/manual/onechat/prompt.html",
+    "h1": "프롬프팅 설정",
+    "category": "원챗",
+    "desc": "AI 아바타가 어떤 방식으로 대화할지 지침을 설정합니다. 상대방별로 말투, 관계, 목적을 다르게 설정할 수 있습니다.",
+    "keywords": "",
+    "sections": "프롬프팅 설정 진입,3가지 프롬프팅 모드,① 기본 프롬프팅 모드,② 맞춤 프롬프팅 모드,③ 기본 + 맞춤 모드,적용하기"
+  },
+  {
+    "title": "수신(공유)탭 사용법 — 원챗 매뉴얼",
+    "url": "/manual/onechat/received.html",
+    "h1": "📥 수신(공유)탭 사용법",
+    "category": "원챗",
+    "desc": "카카오톡·SNS·QR코드 등 공유 링크를 통해 직접 접속한 방문자를 관리하는 탭입니다. DM 전환, PWA 설치 유도 등 다양한 기능을 제공합니다.",
+    "keywords": "",
+    "sections": "수신탭이란?,화면 구성,통계 바,필터 칩 (4가지),방문자 카드 구성,대화중 / 미대화 그룹 구분,PWA 앱 설치 유도,PWA 설치 흐름,PWA 등록자 관리 패널,DM 채팅으로 전환,DM 전환 방법,방문자 전용 링크 복사,방문자 이름 지정,검색 기능"
+  },
+  {
+    "title": "시나리오 캠페인 설정 — 원챗 매뉴얼",
+    "url": "/manual/onechat/scenario.html",
+    "h1": "🎯 시나리오 캠페인 설정",
+    "category": "원챗",
+    "desc": "운영자가 하나의 목적을 입력하면, AI가 유입 메시지부터 챗봇 대화 · 후속 관리 · AI 동행 · 상품 소개까지 전 과정을 자동으로 설계해주는 기능입니다.",
+    "keywords": "",
+    "sections": "시나리오 시스템이란?,기존 원챗 vs 시나리오 시스템,진입 방법,시나리오 상태,5단계 설계 흐름,STEP 1 — 유입 메시지 설계,입력 항목,AI 생성 결과,STEP 2 — 챗봇 캠페인 설계,대화 4단계 구조,STEP 3 — 후속 관리 설계,후속 대상 유형 (3가지),STEP 4 — AI 동행 설계,설정 항목,STEP 5 — AI 상품 소개 설계,입력 항목,AI 생성 결과,시나리오 활성화,핵심 설계 원칙"
+  },
+  {
+    "title": "챗봇 링크 공유하기 — 원챗 매뉴얼",
+    "url": "/manual/onechat/share.html",
+    "h1": "챗봇 링크 공유하기",
+    "category": "원챗",
+    "desc": "내 챗봇 링크를 고객에게 보내면, 고객이 링크를 클릭하는 순간 AI 아바타와 대화가 시작됩니다. 링크 종류에 따라 대화가 기록되는 탭이 달라집니다.",
+    "keywords": "",
+    "sections": "챗봇 링크란?,링크 종류 — 3가지,내 챗봇 링크 찾기,공유 방법,링크 직접 복사,QR코드로 공유,발신탭/수신탭 카드에서 복사,고객이 링크를 클릭하면?"
+  },
+  {
+    "title": "햄버거 메뉴 & 사이드바 — 원챗 매뉴얼",
+    "url": "/manual/onechat/sidebar.html",
+    "h1": "☰ 햄버거 메뉴 & 사이드바",
+    "category": "원챗",
+    "desc": "원챗의 주요 기능 6가지가 모인 사이드바 드로어입니다. 화면 왼쪽 위 ☰ 버튼 하나로 모든 핵심 기능에 바로 접근할 수 있습니다.",
+    "keywords": "",
+    "sections": "사이드바 여는 방법,사이드바 화면 구성,6개 메뉴 상세 설명,① 📊 대시보드,② 🧠 챗봇 학습 현황,③ 🔗 내 챗봇 링크,④ 📢 공지 방송 발송,⑤ ❤️ AI 동행 NEW,⑥ 🎨 테마 설정,사이드바 프로필 카드,자주 묻는 질문"
+  },
+  {
+    "title": "접속 & 화면 구성 — 원챗 매뉴얼",
+    "url": "/manual/onechat/start.html",
+    "h1": "접속 & 화면 구성",
+    "category": "원챗",
+    "desc": "원챗에 처음 접속하는 방법과 각 화면의 구성 요소를 설명합니다.",
+    "keywords": "",
+    "sections": "1단계: kiam.kr 로그인,2단계: 원챗 접속,상단 헤더 구성,👤 아바타 드롭다운 메뉴,하단 탭 구성,📤 발신 탭 — 퍼널 / 공유 전환,📥 수신 탭 — 필터 &amp; 기능,내 계정 상태 확인"
+  },
+  {
+    "title": "퍼널발송채널 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/ai-channel.html",
+    "h1": "📡 퍼널발송채널 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "AI가 생성한 메시지를 어떤 경로(채널)로 발송하는지, 모든 채널과 작동 방식을 분석합니다.",
+    "keywords": "",
+    "sections": "📡 발송 채널 종류,⚙️ card_con_send.php — 발송 엔진의 심장,🔄 발송 흐름 전체 과정,💰 정산(settlement)과 발송의 관계,settlement(val, frm, auto_up) 함수 분석,📤 발송모드: clone vs share,🎓 초등학생도 따라하는 발송 설정법,📊 관련 AJAX 엔드포인트 요약"
+  },
+  {
+    "title": "AI명함퍼널 발신자 설정 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/ai-funnel.html",
+    "h1": "🤖 AI명함퍼널 발신자정보 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "AI가 맞춤 메시지를 생성할 때 사용하는 발신자 정보 설정 시스템의 모든 로직을 분석합니다.",
+    "keywords": "",
+    "sections": "AI명함퍼널이란?,발신자정보 모달 (#paper_sender_edit_modal),edit_papersender() 상세 분석,save_aipaper_sender() — 저장 함수,주요 필드 설명"
+  },
+  {
+    "title": "프롬프트 설정 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/ai-prompt.html",
+    "h1": "✍️ 프롬프트 설정 & 자동생성 완전 분석",
+    "category": "명함 관리",
+    "desc": "AI가 메시지를 생성할 때 사용하는 프롬프트(지시문) 시스템의 모든 로직을 분석합니다. 자동 생성기부터 직접 입력, 예약/실시간 생성 모드까지.",
+    "keywords": "",
+    "sections": "두 가지 프롬프트 종류,🤖 프롬프트 자동 생성기,✏️ 직접 입력 모드,📅 메시지 생성 방식,toggle_generation_mode(),메시지 미리보기,프롬프트 탭 뱃지 시스템"
+  },
+  {
+    "title": "연락처·검색·정렬·체크박스 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/contact.html",
+    "h1": "🔍 연락처·검색·정렬·체크박스 완전 분석",
+    "category": "명함 관리",
+    "desc": "종이명함 리스트에서 검색, 정렬, 체크박스 선택, 연락처 관리가 어떻게 동작하는지 분석합니다.",
+    "keywords": "",
+    "sections": "1. 검색 — paper_submit(),enterkey() — 엔터키 통합 감지기,2. 정렬 — paper_range(),3. 체크박스 시스템,개별 선택 시 개수 업데이트 — paper_chk_count(),전체 선택/해제 — groupCheckClick_paper(),4. 연락처 관리 함수,초등학생을 위한 설명"
+  },
+  {
+    "title": "등록·수정·삭제 (CRUD) — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/crud.html",
+    "h1": "📇 종이명함 등록·수정·삭제 (CRUD) 완전 분석",
+    "category": "명함 관리",
+    "desc": "종이명함을 등록(Create), 수정(Update), 삭제(Delete)하는 모든 함수와 데이터 흐름을 상세히 분석합니다.",
+    "keywords": "",
+    "sections": "전체 CRUD 개요,1. 등록 (Create),방법 A: 앱 카메라 등록 — add_paper_card(),방법 B: 직접 입력 등록 — create_paper() → save_paper(),save_paper() — 실제 저장 함수,2. 수정 (Update),3. 삭제 (Delete),개별 삭제 — delete_paper(id),일괄 삭제 — paper_del(),초등학생을 위한 CRUD 설명"
+  },
+  {
+    "title": "CSS 스타일 분석 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/css-analysis.html",
+    "h1": "🎨 CSS 스타일 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "명함 프로필 페이지를 꾸미는 모든 CSS 파일과 핵심 스타일 규칙을 분석합니다.",
+    "keywords": "",
+    "sections": "📁 CSS 파일 구성,🎯 iam.css — 핵심 스타일 완전 분석,기본 레이아웃,명함 카드 스타일,버튼 & 인터랙션,📱 반응형 디자인 — 모바일 대응,🃏 종이명함 카드 — 시각적 디자인,📐 전체 레이아웃 구조도,🎓 초등학생도 따라하는 CSS 분석법"
+  },
+  {
+    "title": "전체 알고리즘 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/full-algorithm.html",
+    "h1": "🧠 전체 알고리즘 — 엔드투엔드 분석",
+    "category": "명함 관리",
+    "desc": "명함 프로필 페이지의 시작부터 끝까지, 모든 알고리즘을 하나로 연결한 거대한 흐름도를 분석합니다.",
+    "keywords": "",
+    "sections": "🗺️ 마스터 알고리즘 — 전체 개요,🔌 Phase 1: 페이지 진입 & 초기화,📡 Phase 2: 데이터 수집 & 렌더링,🖱️ Phase 3: 사용자 인터랙션,🌐 Phase 4: 네트워크 통신 패턴,💳 Phase 5: 결제 & 발송,⏱️ 시간 복잡도 분석,🔒 보안 알고리즘"
+  },
+  {
+    "title": "명함 이미지 & OCR 인식 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/image-ocr.html",
+    "h1": "📸 명함 이미지 & OCR 인식 완전 분석",
+    "category": "명함 관리",
+    "desc": "명함 사진을 찍어서 AI가 글자를 읽어내는(OCR) 과정의 모든 단계와 소스코드를 분석합니다.",
+    "keywords": "",
+    "sections": "전체 흐름도,이미지 관련 모달 요소,이미지 토글 — togglePaperImg(),OCR 응답 처리 로직,AI 알림 (누락 정보 경고),이미지 크기 조정 — resize(),앱 카메라 흐름 상세"
+  },
+  {
+    "title": "명함 프로필 매뉴얼 — kiam.kr",
+    "url": "/manual/papercard/",
+    "h1": "🃏 명함 프로필 (종이명함) — 완전 분석 매뉴얼",
+    "category": "명함 관리",
+    "desc": "URL: [서비스URL]/?cur_win=paper_card\n      이 페이지의 모든 JavaScript 소스, 알고리즘, 데이터 흐름, CSS 스타일까지\n      한 글자도 빠짐없이 분석하여 초등학생도 이해할 수 있도록 정리했습니다.",
+    "keywords": "",
+    "sections": "📋 명함 프로필이란?,🔗 접속 URL 구조,📦 로딩되는 파일 목록,CSS 파일 (스타일시트) — 총 10개,JavaScript 파일 — 총 11개,🏗️ 전체 아키텍처 구조도,🔄 데이터 흐름도,📊 함수 분류 체계,1️⃣ 페이지 초기화 함수 (6개),2️⃣ 데이터 로딩 함수 (8개),3️⃣ 종이명함 CRUD 함수 (7개),4️⃣ 검색·정렬·필터 함수 (6개),5️⃣ 결제·포인트 함수 (8개),6️⃣ 네비게이션 함수 (5개),7️⃣ SNS·공유 함수 (4개),8️⃣ 유틸리티 함수 (10+),🧮 핵심 알고리즘 요약,알고리즘 #1: 디바이스 감지 (checkMobile),알고리즘 #2: 이미지 크기 조정 (resize),알고리즘 #3: 쿠키 읽기 (getCookie)"
+  },
+  {
+    "title": "페이지 생명주기 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/lifecycle.html",
+    "h1": "⏱️ 페이지 생명주기 (Lifecycle) 완전 분석",
+    "category": "명함 관리",
+    "desc": "페이지가 로드되고, 실행되고, 소멸될 때까지 어떤 순서로 코드가 실행되는지 초 단위로 분석합니다.",
+    "keywords": "",
+    "sections": "전체 실행 타임라인,생명주기 5단계,1단계: 요청 & 인증 (0~80ms),2단계: 리소스 로딩 (80~250ms),3단계: 초기화 (250~350ms),4단계: 데이터 로딩 (350~600ms),5단계: 상호작용 (600ms ~ 페이지 이탈),주요 포인트"
+  },
+  {
+    "title": "페이지 구조 & 레이아웃 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/overview.html",
+    "h1": "🏗️ 페이지 구조 & 레이아웃 완전 분석",
+    "category": "명함 관리",
+    "desc": "명함 프로필 페이지의 HTML DOM 구조, 각 요소의 ID/Class, 역할을 완전히 분석합니다.",
+    "keywords": "",
+    "sections": "전체 DOM 트리 구조,핵심 DOM 요소 상세,헤더 (header),푸터 메뉴 (footer_menu),레이아웃 모드,모드 1: 일반 모드 (key1_gwc_show ≠ '4'),모드 2: 와이드 모드 (key1_gwc_show == '4'),반응형 동작,주요 CSS 클래스"
+  },
+  {
+    "title": "AJAX 통신 분석 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/source-ajax.html",
+    "h1": "🔌 AJAX 통신 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "페이지와 서버 간의 모든 데이터 통신을 분석합니다. 어떤 주소로, 어떤 데이터를 보내고, 어떤 응답을 받는지 완전 정리.",
+    "keywords": "",
+    "sections": "📡 AJAX 개요,🗺️ 전체 엔드포인트 맵,📇 종이명함 관련 (핵심),👥 연락처 & 친구,🛒 IAM 몰 & 결제,🤖 AI & 발송,🔐 인증 & 기타,🔍 통신 패턴 분석,패턴 1: 목록 조회 (GET),패턴 2: 데이터 변경 (POST),🌊 데이터 흐름도,🎓 초등학생도 따라하는 AJAX 분석"
+  },
+  {
+    "title": "메인 초기화 소스 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/source-main.html",
+    "h1": "🚀 메인 초기화 로직 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "페이지가 열리는 순간부터 모든 준비가 끝날 때까지, 어떤 코드가 어떤 순서로 실행되는지 분석합니다.",
+    "keywords": "",
+    "sections": "⏱️ 시작 시퀀스 — 시간 순서대로,📦 핵심 전역변수 — 페이지의 두뇌,⚡ $(function()) 초기화 블록 — 진짜 시작점,🔒 숨은 input 값들 — 페이지의 비밀 메모,📜 스크롤 이벤트 — UI 동적 제어,🎓 초등학생도 따라하는 분석법,📁 관련 파일 목록"
+  },
+  {
+    "title": "모바일 연동 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/source-mobile.html",
+    "h1": "📱 모바일 앱 연동 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "웹 페이지가 네이티브 앱(Android/iOS)과 어떻게 통신하는지, 앱 브릿지와 딥링크 시스템을 분석합니다.",
+    "keywords": "",
+    "sections": "🌉 callAppBridge() — 웹과 앱을 잇는 다리,🔍 앱 환경 감지 — 웹인가 앱인가?,🔗 딥링크 시스템,📸 카메라 연동 — 명함 사진 촬영,📞 전화 상태 & GPS 연동,🎓 초등학생도 따라하는 모바일 분석법,📱 모바일 관련 주요 상수"
+  },
+  {
+    "title": "결제 시스템 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/source-payment.html",
+    "h1": "💰 결제 시스템 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "명함 발송에 필요한 결제 시스템의 모든 로직을 분석합니다. 포인트 충전부터 실제 결제 처리까지.",
+    "keywords": "",
+    "sections": "⚙️ settlement(val, frm, auto_up) — 결제의 중심,💳 결제 수단별 처리,🪙 포인트 시스템,🌊 전체 결제 흐름도,🎓 초등학생도 따라하는 결제 분석"
+  },
+  {
+    "title": "유틸리티 함수 — 명함 프로필 매뉴얼",
+    "url": "/manual/papercard/source-utils.html",
+    "h1": "🧰 유틸리티 함수 — 완전 분석",
+    "category": "명함 관리",
+    "desc": "페이지 곳곳에서 재사용되는 공통 함수들을 분석합니다. 이 함수들이 명함 프로필의 기반 인프라입니다.",
+    "keywords": "",
+    "sections": "🖼️ resizeImg() — 이미지 크기 자동 조정,📝 addslashes() — 특수문자 이스케이프,🔄 refresh_page() — 만능 새로고침,🍪 쿠키 관리 함수들,🔢 숫자/문자 포맷 함수,↕️ 드래그 & 드롭 — 명함 순서 변경,🌐 브라우저 & 디바이스 감지,🎓 초등학생도 따라하는 함수 추적법"
+  },
+  {
+    "title": "주소록 관리 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/addressbook.html",
+    "h1": "📒 주소록 관리",
+    "category": "폰문자 SMS",
+    "desc": "폰문자 발송 화면(sub_4.php)의 주소록 관리 탭에서는 발신 휴대폰별로 수신처(고객 번호) 목록을 등록·관리합니다.",
+    "keywords": "",
+    "sections": "주소록 관리란?,휴대폰 등록 정보,그룹 주소록,엑셀 업로드,개별 번호 관리,활용 팁"
+  },
+  {
+    "title": "AI 메시지 카피 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/ai-copy.html",
+    "h1": "🤖 AI 메시지 카피(알지)",
+    "category": "폰문자 SMS",
+    "desc": "AI 메시지 카피(알지)는 kiam.kr 발송 화면에서 AI와 대화하며 최적의 문자 메시지 문구를 자동 생성하는 기능입니다. 고객 맞춤형 카피라이팅을 AI가 도와주므로, 홍보 문구 작성에 어려움을 느끼는 분도 손쉽게 효과적인 문자를 만들 수 있습니다.",
+    "keywords": "",
+    "sections": "AI 메시지 카피란?,사용 방법,프롬프트 작성 팁,메시지카피 교육 안내,바로 발송에 적용하기"
+  },
+  {
+    "title": "수신거부 관리 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/block.html",
+    "h1": "🚫 수신거부 관리",
+    "category": "폰문자 SMS",
+    "desc": "수신거부 관리는 광고 문자 수신을 원하지 않는 고객의 번호를 등록하여, 이후 해당 번호에는 광고 문자가 발송되지 않도록 차단하는 기능입니다.",
+    "keywords": "",
+    "sections": "수신거부란?,법적 의무,수신거부 등록,목록 관리,자동 처리"
+  },
+  {
+    "title": "20건 무료문자 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/bulk20.html",
+    "h1": "📧 20건 무료문자",
+    "category": "폰문자 SMS",
+    "desc": "20건 무료문자는 폰문자 앱 없이 웹에서 직접 발송하는 무료 문자 서비스입니다. 회원가입 후 매월 최대 20건의 문자를 무료로 발송할 수 있습니다.",
+    "keywords": "",
+    "sections": "20건 무료문자란?,제공 조건 및 제한,사용 방법,활용 팁"
+  },
+  {
+    "title": "콜백문자 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/callback.html",
+    "h1": "📞 콜백문자",
+    "category": "폰문자 SMS",
+    "desc": "콜백문자는 내 발신번호로 걸려온 전화를 받지 못했을 때, 자동으로 문자를 발송하는 서비스입니다. 부재중 전화를 놓친 잠재 고객에게 즉시 응답하여 기회를 놓치지 않을 수 있습니다.",
+    "keywords": "",
+    "sections": "콜백문자란?,동작 방식,설정 방법,메시지 템플릿 예시,온리원콜백 앱 설치"
+  },
+  {
+    "title": "일별 자동발송 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/daily.html",
+    "h1": "🔄 일별 자동발송",
+    "category": "폰문자 SMS",
+    "desc": "일별 자동발송은 대용량 수신자 DB를 날짜별로 자동 분할하여 매일 일정량씩 발송하는 스케줄 발송 솔루션입니다.",
+    "keywords": "",
+    "sections": "일별 자동발송이란?,설정 방법,DB 분할 방식,발송 현황 관리,활용 팁"
+  },
+  {
+    "title": "발송 내역 확인 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/history.html",
+    "h1": "📊 발송 내역 확인",
+    "category": "폰문자 SMS",
+    "desc": "발송한 문자의 결과를 확인하려면 발신내역 페이지로 이동하세요.",
+    "keywords": "",
+    "sections": "발신 내역,수신 내역,발송 상태 이해,통계 활용"
+  },
+  {
+    "title": "폰문자(SMS) 소개 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/",
+    "h1": "📱 폰문자(SMS) 소개",
+    "category": "폰문자 SMS",
+    "desc": "폰문자는 kiam.kr 플랫폼에서 제공하는 SMS/LMS/MMS 대량 문자 발송 서비스입니다. 웹 대시보드 또는 온리원문자 앱과 연동하여 수천 건의 문자를 한 번에 발송하고, 수신 여부와 발송 내역을 실시간으로 확인할 수 있습니다.",
+    "keywords": "",
+    "sections": "폰문자란?,주요 기능,발송 채널 종류,요금 안내,빠른 시작"
+  },
+  {
+    "title": "수신 내역 확인 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/received.html",
+    "h1": "📨 수신 내역 확인",
+    "category": "폰문자 SMS",
+    "desc": "폰문자 수신 내역 화면(sub_4.php?status=5&status2=3)에서는 발신 폰이 실제로 수신한 문자 메시지를 확인할 수 있습니다.",
+    "keywords": "",
+    "sections": "수신 내역이란?,화면 접속,화면 구성,회신 문자,활용 팁"
+  },
+  {
+    "title": "발신번호 등록 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/register.html",
+    "h1": "📞 발신번호 등록",
+    "category": "폰문자 SMS",
+    "desc": "2015년 발신번호 변작 방지법 시행 이후, 사전 인증된 발신번호로만 문자를 발송할 수 있습니다. 미등록 번호로 발송 시 스팸으로 분류되거나 발송이 차단됩니다.",
+    "keywords": "",
+    "sections": "발신번호 등록이 필요한 이유,등록 방법,인증 절차,등록 번호 관리,자주 묻는 질문"
+  },
+  {
+    "title": "예약 발송 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/reservation.html",
+    "h1": "⏰ 예약 발송",
+    "category": "폰문자 SMS",
+    "desc": "예약 발송은 원하는 날짜와 시간에 문자를 자동으로 발송하는 기능입니다. 이벤트 알림, 할인 쿠폰, 생일 축하 메시지 등 특정 시점에 대량 문자를 보내야 할 때 활용합니다.",
+    "keywords": "",
+    "sections": "예약 발송이란?,예약 등록 방법,예약 발송 예정 내역,발송 결과 확인,예약 취소,이용 시 주의사항"
+  },
+  {
+    "title": "문자 발송하기 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/send.html",
+    "h1": "📤 문자 발송하기",
+    "category": "폰문자 SMS",
+    "desc": "https://kiam.kr/sub_6.php 로 접속하거나 상단 메뉴 → 문자발송을 클릭합니다.",
+    "keywords": "",
+    "sections": "발송 화면 접속,수신자 입력,방법 1 — 직접 입력,방법 2 — 파일 업로드 (대량 발송),메시지 작성,발송 채널 선택,예약 발송,발송 실행,챗봇 링크 삽입 (퍼널 마케팅 연동)"
+  },
+  {
+    "title": "분할 발송 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/split.html",
+    "h1": "✂️ 분할 발송",
+    "category": "폰문자 SMS",
+    "desc": "분할 발송은 대량의 수신자 DB를 여러 구간(시작 건수 ~ 종료 건수)으로 나누어 순차적으로 발송하는 기능입니다. 하루 발송 한도 내에서 DB 전체를 여러 날에 나누어 보낼 때 사용합니다.",
+    "keywords": "",
+    "sections": "분할 발송이란?,활용 이유,설정 방법,기존 고객 DB 분할 발송,일별 자동발송(데일리)과의 차이,주의사항"
+  },
+  {
+    "title": "웹문자·RCS 서비스 소개 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/web-intro.html",
+    "h1": "🌐 웹문자·RCS 서비스 소개",
+    "category": "폰문자 SMS",
+    "desc": "웹문자는 스마트폰 앱(온리원문자 앱) 없이 웹 브라우저에서 직접 문자를 발송하는 서비스입니다. 포인트를 충전하여 건당 요금을 지불하는 방식으로 운영되며, RCS(Rich Communication Services) 발송도 지원합니다.",
+    "keywords": "",
+    "sections": "웹문자·RCS란?,폰문자와의 차이점,발송 채널 종류,충전 및 요금,RCS 발송 안내,발신번호 설정,시작하기"
+  },
+  {
+    "title": "웹문자 발송 — kiam.kr 매뉴얼",
+    "url": "/manual/sms/web-send.html",
+    "h1": "💬 웹문자 발송",
+    "category": "폰문자 SMS",
+    "desc": "웹문자는 스마트폰 앱 없이 웹 서버를 통해 직접 발송하는 문자 서비스입니다. 별도의 발신 잔액을 충전하여 사용하며, 폰 상태에 관계없이 안정적으로 대량 발송이 가능합니다.",
+    "keywords": "",
+    "sections": "웹문자란?,폰문자 vs 웹문자,잔액 확인,발신번호 조회,발송 방법,RCS 발송"
+  },
+  {
+    "title": "1:1 문의 — kiam.kr 매뉴얼",
+    "url": "/manual/support/contact.html",
+    "h1": "✉️ 1:1 문의",
+    "category": "고객센터",
+    "desc": "매뉴얼과 FAQ로 해결되지 않는 문제는 1:1 문의로 접수하세요. 담당자가 확인 후 답변 드립니다.",
+    "keywords": "",
+    "sections": "문의 채널,효과적인 문의 작성 방법,문의 유형별 안내,1:1 문의 접수하기"
+  },
+  {
+    "title": "FAQ — kiam.kr 매뉴얼",
+    "url": "/manual/support/faq.html",
+    "h1": "❓ 자주 묻는 질문 (FAQ)",
+    "category": "고객센터",
+    "desc": "kiam.kr 서비스 이용 중 자주 묻는 질문을 모았습니다. 공식 FAQ 페이지도 함께 참조하세요. → 공식 FAQ 바로가기",
+    "keywords": "",
+    "sections": "🔑 회원 가입 / 로그인,📱 폰문자 SMS,💬 웹문자·RCS,🔀 원퍼널문자,💳 결제·포인트,📚 더 많은 FAQ"
+  },
+  {
+    "title": "고객센터 — kiam.kr 매뉴얼",
+    "url": "/manual/support/",
+    "h1": "🆘 고객센터",
+    "category": "고객센터",
+    "desc": "kiam.kr 이용 중 궁금한 점이나 불편한 사항을 해결하는 공간입니다.",
+    "keywords": "",
+    "sections": "문제 해결 순서,주요 링크"
+  },
+  {
+    "title": "공지사항 — kiam.kr 매뉴얼",
+    "url": "/manual/support/notice.html",
+    "h1": "📢 공지사항",
+    "category": "고객센터",
+    "desc": "kiam.kr 서비스 업데이트, 점검 안내, 정책 변경 등 중요 소식을 공지합니다.",
+    "keywords": "",
+    "sections": "공지 유형 안내,공지사항 확인 방법,사용후기"
+  },
+  {
+    "title": "음성 · 자막 · 환경음 &#8212; VAG 영상팩토리 / kiam.kr",
+    "url": "/manual/vag/audio.html",
+    "h1": "&#127925; 음성 · 자막 · 환경음",
+    "category": "영상제작",
+    "desc": "VAG는 TTS 나레이션 · 자막 burn-in · 장면별 환경음의 3가지 오디오/자막 기능을 제공합니다.\n    3가지를 동시에 사용할 수 있으며, 각각 독립적으로 작동합니다.",
+    "keywords": "",
+    "sections": "&#127908; TTS 나레이션 (OpenAI TTS),동작 방식,사용 모델,&#128483; 자막 (Subtitle Burn-in),자막 스타일,&#127766; 장면별 환경음 (Ambient Sound),8가지 환경음 타입,환경음 생성 원리,&#127922; 3트랙 최종 믹싱,&#128191; SFX 파일 관리"
+  },
+  {
+    "title": "AI 엔진 비교 &#8212; VAG 영상팩토리 / kiam.kr",
+    "url": "/manual/vag/engines.html",
+    "h1": "&#129302; AI 엔진 비교",
+    "category": "영상제작",
+    "desc": "VAG는 7가지 엔진 중 하나를 선택하여 영상을 생성합니다.\n    목적과 예산에 맞는 엔진을 선택하세요.",
+    "keywords": "",
+    "sections": "엔진 비교표,엔진별 상세 설명,&#9881; FFmpeg (로컬),&#127916; Kling 3.0 / PiAPI,&#127916; Kling 2.1 Standard / Pro — fal.ai,&#127916; WAN 2.1 / fal.ai,&#127916; MiniMax Video / fal.ai,&#127916; Luma Dream Machine / fal.ai,엔진 선택 가이드"
+  },
+  {
+    "title": "자주 묻는 질문 &#8212; VAG 영상팩토리 / kiam.kr",
+    "url": "/manual/vag/faq.html",
+    "h1": "&#10067; 자주 묻는 질문",
+    "category": "영상제작",
+    "desc": "VAG 영상팩토리 사용 중 자주 묻는 질문과 답변입니다.",
+    "keywords": "",
+    "sections": "기본 사용법,오디오 관련,AI 엔진 관련,이미지 관련,영상 활용"
+  },
+  {
+    "title": "VAG 영상팩토리 소개 &#8212; VAG / kiam.kr",
+    "url": "/manual/vag/",
+    "h1": "&#127916; VAG 영상팩토리",
+    "category": "영상제작",
+    "desc": "주제 한 줄만 입력하면 AI가 스크립트 &#183; 이미지 &#183; 음성 &#183; 영상 클립을 모두 자동 생성합니다.\n    최대 8개 AI 엔진을 선택해 5분 만에 SNS 완성 영상을 제작하세요.",
+    "keywords": "",
+    "sections": "왜 VAG 영상팩토리인가?,전체 영상 생성 파이프라인,지원 AI 엔진,지원 화면 비율"
+  },
+  {
+    "title": "영상 생성 파이프라인 &#8212; VAG 영상팩토리 / kiam.kr",
+    "url": "/manual/vag/pipeline.html",
+    "h1": "&#9881; 영상 생성 파이프라인",
+    "category": "영상제작",
+    "desc": "입력된 주제가 완성 영상(final.mp4)이 되기까지의 전체 과정을 설명합니다.",
+    "keywords": "",
+    "sections": "전체 흐름도,STEP 1 — AI 스크립트 생성 (5% → 15%),STEP 2 — 이미지 준비 (18% → 28%),STEP 3 — TTS 나레이션 생성 (30% → 38%),STEP 3.5 — 환경음 트랙 생성 (40% → 45%),STEP 4 — AI 클립 생성 (45% → 80%),STEP 5 — 최종 합성 (83% → 97%)"
+  },
+  {
+    "title": "요금제 안내 &#8212; VAG 영상팩토리 / kiam.kr",
+    "url": "/manual/vag/pricing.html",
+    "h1": "&#128181; 요금제 안내",
+    "category": "영상제작",
+    "desc": "VAG 영상팩토리의 비용 구조는 크게 두 부분으로 나뉩니다.\n    플랫폼 이용료(구독) + AI 엔진 API 비용(종량제)",
+    "keywords": "",
+    "sections": "플랫폼 이용 요금,AI 엔진 API 비용 (종량제),기타 API 비용,비용 예시 계산"
+  },
+  {
+    "title": "빠른 시작 &#8212; VAG 영상팩토리 / kiam.kr",
+    "url": "/manual/vag/quickstart.html",
+    "h1": "&#9889; 빠른 시작 — 5분 만에 첫 영상 만들기",
+    "category": "영상제작",
+    "desc": "VAG 영상팩토리로 처음 영상을 만드는 가장 빠른 길입니다.\n    FFmpeg 엔진으로 비용 없이 즉시 체험해보세요.",
+    "keywords": "",
+    "sections": "STEP 1 — 서비스 접속,STEP 2 — 영상 정보 입력,STEP 3 — 이미지 옵션,STEP 4 — 영상 생성 시작,STEP 5 — 완성 영상 확인 &amp; 다운로드"
+  },
+  {
+    "title": "YouTube 트렌드 분석 &#8212; VAG 영상팩토리 / kiam.kr",
+    "url": "/manual/vag/trend.html",
+    "h1": "&#128200; YouTube 트렌드 분석 솔루션",
+    "category": "영상제작",
+    "desc": "YouTube 인기 영상 데이터를 수집하고 Claude AI가 패턴을 분석하여\n    최적의 콘텐츠 전략과 영상 제작 아이디어를 자동으로 도출합니다.",
+    "keywords": "",
+    "sections": "핵심 기능,분석 프로세스 (6단계),분석 결과 구성,필요 API 키"
+  },
+  {
+    "title": "API 레퍼런스 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/api.html",
+    "h1": "API 레퍼런스",
+    "category": "음성AI",
+    "desc": "VoiceGen AI REST API로 텍스트를 음성 WAV 파일로 변환할 수 있습니다.",
+    "keywords": "",
+    "sections": "기본 정보,인증 헤더,POST /api/v1/generate,요청 파라미터,HTTP 상태 코드,코드 예제,curl,JavaScript (fetch),PHP"
+  },
+  {
+    "title": "음성 클로닝 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/clone.html",
+    "h1": "음성 클로닝",
+    "category": "음성AI",
+    "desc": "본인 목소리가 담긴 WAV 파일을 업로드하면 AI가 그 음색을 학습해\n    비슷한 목소리로 음성을 합성합니다. Basic 플랜 이상에서 사용 가능합니다.",
+    "keywords": "",
+    "sections": "참조 음성 파일 조건,사용 방법,API로 클로닝 호출하기"
+  },
+  {
+    "title": "데모 체험하기 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/demo.html",
+    "h1": "데모 체험하기",
+    "category": "음성AI",
+    "desc": "회원가입 없이도 VoiceGen AI의 음성 합성 품질을 바로 체험할 수 있습니다.\n    데모는 IP당 1시간에 5회, 최대 200자까지 무료로 제공됩니다.",
+    "keywords": "",
+    "sections": "데모 사용 방법,음성 프리셋 미리보기,생성된 음성 다운로드"
+  },
+  {
+    "title": "자주 묻는 질문 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/faq.html",
+    "h1": "자주 묻는 질문 (FAQ)",
+    "category": "음성AI",
+    "desc": "VoiceGen AI 사용 중 자주 받는 질문들을 모았습니다.",
+    "keywords": "",
+    "sections": ""
+  },
+  {
+    "title": "VoiceGen AI 소개 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/",
+    "h1": "&#128266; VoiceGen AI",
+    "category": "음성AI",
+    "desc": "REST API 한 줄로 텍스트를 자연스러운 한국어&#183;영어 음성으로 변환합니다.\n    음성 클로닝으로 내 목소리를 AI에게 학습시키는 것도 가능합니다.",
+    "keywords": "",
+    "sections": "주요 특징,퀵스타트 &#8212; 4단계로 시작,요금제 한눈에 보기"
+  },
+  {
+    "title": "요금제 안내 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/plan.html",
+    "h1": "요금제 안내",
+    "category": "음성AI",
+    "desc": "사용량에 따라 4가지 요금제를 제공합니다. 무료 플랜으로 시작해 보세요.",
+    "keywords": "",
+    "sections": "요금제 비교,플랜 업그레이드 방법,사용량 확인 방법,결제 취소 &amp; 환불"
+  },
+  {
+    "title": "회원가입 &amp; 로그인 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/start.html",
+    "h1": "회원가입 &amp; 로그인",
+    "category": "음성AI",
+    "desc": "VoiceGen AI를 사용하려면 vg.kiam.kr에 회원가입이 필요합니다.\n    가입 즉시 무료 플랜이 활성화되며 API 키를 발급받을 수 있습니다.",
+    "keywords": "",
+    "sections": "1. 회원가입,API 키 발급,사용량 &amp; 플랜 확인"
+  },
+  {
+    "title": "음성 프리셋 목록 &#8212; VoiceGen AI &#47; kiam.kr",
+    "url": "/manual/voicegen/voices.html",
+    "h1": "음성 프리셋 목록",
+    "category": "음성AI",
+    "desc": "VoiceGen AI는 한국어 4종&#183;영어 2종의 기본 음성 프리셋을 제공합니다.\n    API 호출 시 voice_id 파라미터로 원하는 음성을 선택할 수 있습니다.",
+    "keywords": "",
+    "sections": "한국어 음성,영어 음성,기본값,음성 추가 요청"
+  }
 ]

@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>폰 데이터 연동 — 마이챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<div class="m-layout">
+  <!-- 사이드바 -->
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">마이챗 매뉴얼</div>
+      <a href="/manual/mychat/" class="sb-link ">🧠 마이챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/mychat/start.html" class="sb-link ">구독 &amp; 첫 진입</a>
+      <a href="/manual/mychat/subscribe.html" class="sb-link ">💳 구독 플랜 안내</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">나만의 AI 대화</div>
+      <a href="/manual/mychat/chat.html" class="sb-link ">💬 AI와 대화하기</a>
+      <a href="/manual/mychat/voice.html" class="sb-link ">🎙️ 음성 대화</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">학습 데이터</div>
+      <a href="/manual/mychat/learn.html" class="sb-link ">📚 데이터 입력하기</a>
+      <a href="/manual/mychat/learn.html#channels" class="sb-link">14개 채널 설명</a>
+      <a href="/manual/mychat/learn.html#scope" class="sb-link">공개 범위 설정</a>
+      <a href="/manual/mychat/phone.html" class="sb-link active">📱 폰 데이터 연동</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">아바타 스튜디오</div>
+      <a href="/manual/mychat/avatar.html" class="sb-link ">😊 얼굴 아바타 만들기</a>
+      <a href="/manual/mychat/avatar.html#voice" class="sb-link">🎙️ 목소리 설정</a>
+      <a href="/manual/mychat/avatar.html#heygen" class="sb-link">🎬 화상 아바타 (HeyGen)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">분석 &amp; 의사결정</div>
+      <a href="/manual/mychat/dashboard.html" class="sb-link ">📊 인생 분석 대시보드</a>
+      <a href="/manual/mychat/decisions.html" class="sb-link ">🧭 의사결정 추적</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">설정 &amp; 보안</div>
+      <a href="/manual/mychat/settings.html" class="sb-link ">⚙️ 설정 &amp; API키</a>
+      <a href="/manual/mychat/settings.html#vault" class="sb-link">🔒 데이터 저장 방식</a>
+      <a href="/manual/mychat/settings.html#panic" class="sb-link">🚨 긴급 차단</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a>
+      <span class="sep">›</span>
+      <a href="/manual/mychat/">마이챗</a>
+      <span class="sep">›</span>
+      <span>폰 데이터 연동</span>
+    </div>
+
+    <h1>📱 폰 데이터 연동</h1>
+    <p class="page-desc">아이엠 앱(iamapp)을 통해 통화·문자·건강·캘린더 데이터를 마이챗에 자동 동기화합니다.</p>
+
+    <div class="notice">⚠️ 폰 데이터 연동은 <strong>스탠다드 이상 플랜</strong>에서만 사용 가능합니다.</div>
+
+    <h2 id="data">수집 데이터</h2>
+    <table>
+      <tr><th>종류</th><th>내용</th><th>처리 방식</th></tr>
+      <tr><td>📞 통화 기록</td><td>발수신 기록, 통화 시간</td><td>번호 마스킹(010-****-5678) 후 저장</td></tr>
+      <tr><td>💬 문자/SMS</td><td>주요 내용 요약</td><td>원문 미저장, 계좌·카드번호 자동 마스킹</td></tr>
+      <tr><td>📅 캘린더</td><td>일정·약속 (향후 30일)</td><td>제목·시간·장소</td></tr>
+      <tr><td>🏃 건강/헬스</td><td>걸음수·심박·수면·체중·칼로리</td><td>당일 기준 집계</td></tr>
+    </table>
+
+    <h2 id="how">연동 방법</h2>
+    <ol class="step-list">
+      <li class="step-item"><div class="step-num">1</div><div class="step-body">아이엠 앱(iamapp) 실행</div></li>
+      <li class="step-item"><div class="step-num">2</div><div class="step-body">설정 → <strong>마이챗 연동</strong> → 데이터 동기화 켜기</div></li>
+      <li class="step-item"><div class="step-num">3</div><div class="step-body">필요한 권한(통화·문자·캘린더·건강) 허용</div></li>
+      <li class="step-item"><div class="step-num">4</div><td>데이터 자동 수집 시작 → 마이챗 learn.html에서 확인</td></li>
+    </ol>
+
+    <h2 id="sync">동기화 주기</h2>
+    <table>
+      <tr><th>플랜</th><th>동기화 주기</th></tr>
+      <tr><td>스탠다드</td><td>주 1회 자동 동기화</td></tr>
+      <tr><td>프로</td><td>실시간 동기화</td></tr>
+      <tr><td>BYOK</td><td>실시간 동기화</td></tr>
+    </table>
+
+    <h2 id="privacy">개인정보 보호</h2>
+    <ul>
+      <li>전화번호는 <strong>마스킹 처리</strong> 후 저장 (010-****-5678)</li>
+      <li>문자 원문은 <strong>절대 저장하지 않음</strong> — AI 요약만 저장</li>
+      <li>계좌번호·카드번호는 자동 마스킹</li>
+      <li>데이터 공개 범위 기본값: <strong>🔒 나만 보기</strong></li>
+      <li>긴급 차단 시 모든 폰 데이터도 즉시 비공개 전환</li>
+    </ul>
+
+    <div class="tip">💡 learn.html의 <strong>폰 데이터 연동 현황</strong> 섹션에서 채널별 수집 건수를 확인할 수 있습니다.</div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>
