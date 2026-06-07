@@ -940,6 +940,68 @@ html, body {
 }
 .empty-title { font-size: 15px; font-weight: 700; color: var(--text); }
 .empty-desc { font-size: 13px; line-height: 1.7; }
+
+/* 통화 모드 오버레이 */
+#callModeOverlay {
+  position: fixed; inset: 0; z-index: 9999;
+  display: none;
+  flex-direction: column; align-items: center; justify-content: space-between;
+  background: radial-gradient(ellipse at 50% 30%, #1e293b 0%, #0b1220 55%, #060a14 100%);
+  color: #e6edf6; padding: env(safe-area-inset-top) 0 calc(env(safe-area-inset-bottom) + 24px);
+}
+#callModeOverlay.open { display: flex; }
+.cm-top { text-align: center; padding-top: 36px; }
+.cm-title { font-size: 18px; font-weight: 800; letter-spacing: .5px; }
+.cm-sub { font-size: 13px; opacity: .65; margin-top: 6px; }
+.cm-center {
+  flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 22px; width: 100%; padding: 0 24px;
+}
+.cm-orb {
+  width: 180px; height: 180px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 35% 30%, #3b82f6, #1d4ed8 60%, #1e3a8a);
+  box-shadow: 0 0 0 0 rgba(59,130,246,0.45);
+  transition: transform .25s ease, box-shadow .25s ease, background .3s ease;
+}
+.cm-orb-core { font-size: 64px; filter: drop-shadow(0 2px 6px rgba(0,0,0,.4)); }
+.cm-orb.listening {
+  background: radial-gradient(circle at 35% 30%, #34d399, #059669 60%, #065f46);
+  animation: cmPulseGreen 1.4s ease-in-out infinite;
+}
+.cm-orb.speaking {
+  background: radial-gradient(circle at 35% 30%, #60a5fa, #2563eb 60%, #1e40af);
+  animation: cmPulseBlue .9s ease-in-out infinite;
+}
+.cm-orb.thinking {
+  background: radial-gradient(circle at 35% 30%, #fbbf24, #d97706 60%, #92400e);
+  animation: cmSpin 1.1s linear infinite;
+}
+.cm-orb.muted { background: radial-gradient(circle at 35% 30%, #64748b, #334155 60%, #1e293b); animation: none; }
+@keyframes cmPulseGreen {
+  0%,100% { box-shadow: 0 0 0 0 rgba(52,211,153,0.5); transform: scale(1); }
+  50%     { box-shadow: 0 0 0 26px rgba(52,211,153,0); transform: scale(1.05); }
+}
+@keyframes cmPulseBlue {
+  0%,100% { box-shadow: 0 0 0 0 rgba(96,165,250,0.5); transform: scale(1); }
+  50%     { box-shadow: 0 0 0 22px rgba(96,165,250,0); transform: scale(1.04); }
+}
+@keyframes cmSpin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+.cm-status { font-size: 16px; font-weight: 700; min-height: 22px; }
+.cm-transcript {
+  font-size: 14px; opacity: .8; line-height: 1.6; text-align: center;
+  max-width: 90%; max-height: 96px; overflow-y: auto; min-height: 22px;
+}
+.cm-controls { display: flex; gap: 28px; align-items: center; justify-content: center; }
+.cm-btn {
+  width: 64px; height: 64px; border-radius: 50%; border: none; cursor: pointer;
+  font-size: 26px; display: flex; align-items: center; justify-content: center;
+  transition: transform .12s ease, background .2s ease; color: #fff;
+}
+.cm-btn:active { transform: scale(0.92); }
+.cm-mute { background: rgba(255,255,255,0.12); }
+.cm-mute.muted { background: #64748b; }
+.cm-end { background: #ef4444; box-shadow: 0 6px 18px rgba(239,68,68,0.4); }
 </style>
 </head>
 <body>
@@ -1019,6 +1081,25 @@ html, body {
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
     </button>
     <button class="send-btn" id="sendBtn" disabled>&#10148;</button>
+  </div>
+
+  <!-- ─── 통화 모드 오버레이 (AI 음성대화 핸즈프리) ─── -->
+  <div id="callModeOverlay">
+    <div class="cm-top">
+      <div class="cm-title">🤖 통화 모드</div>
+      <div class="cm-sub" id="cmSub">AI와 음성으로 대화하세요</div>
+    </div>
+    <div class="cm-center">
+      <div class="cm-orb" id="cmOrb">
+        <div class="cm-orb-core">🤖</div>
+      </div>
+      <div class="cm-status" id="cmStatus">연결 중…</div>
+      <div class="cm-transcript" id="cmTranscript"></div>
+    </div>
+    <div class="cm-controls">
+      <button class="cm-btn cm-mute" id="cmMuteBtn" title="음소거">🎤</button>
+      <button class="cm-btn cm-end" id="cmEndBtn" title="통화 종료">✕</button>
+    </div>
   </div>
 
   <!-- iOS 홈 화면 추가 가이드 -->
@@ -1177,6 +1258,7 @@ html, body {
 <div id="moreMenuDropdown">
   <button class="menu-item hidden" id="menuVideoCall" onclick="startVideoCall();closeMoreMenu()">📹 화상통화</button>
   <button class="menu-item hidden" id="menuVoiceCall" onclick="startVoiceCall();closeMoreMenu()">🎙️ 음성통화</button>
+  <button class="menu-item" id="menuCallMode" onclick="toggleCallMode();closeMoreMenu()">🤖 통화 모드 (AI 음성대화)</button>
   <button class="menu-item hidden" id="menuPwaInstall" onclick="triggerPwaInstall();closeMoreMenu()">📲 앱 설치</button>
   <div class="menu-divider"></div>
   <button class="menu-item" id="menuThemeToggle" onclick="toggleThemeFromMenu()">🌙 다크/라이트 전환</button>
@@ -3001,6 +3083,314 @@ document.addEventListener('DOMContentLoaded', function() {
   window.visualViewport.addEventListener('resize', syncHeight);
   // 초기 호출 제거: 페이지 로드 시점에는 CSS의 100dvh를 그대로 두고,
   // resize 이벤트가 발생할 때만 키보드 여부 판정 후 조정
+})();
+
+
+/* ═══════════════════════════════════════════════════════
+   통화 모드 (AI 음성대화 핸즈프리) — Method B
+   STT(SpeechRecognition) → VAD 자동전송 → AI응답 → TTS자동재생 → 마이크 자동재개
+   독립 상태머신: 입력바 마이크와 분리. tts_openai.php 사용.
+   ═══════════════════════════════════════════════════════ */
+(function() {
+  var SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition || null;
+  var isIos     = /iPhone|iPad|iPod/.test(navigator.userAgent);
+
+  // 상태머신: 'idle' | 'listening' | 'thinking' | 'speaking'
+  var CM = {
+    active:     false,   // 통화 모드 ON 여부
+    state:      'idle',
+    muted:      false,
+    rec:        null,    // SpeechRecognition 인스턴스
+    audio:      null,    // 현재 재생 중인 TTS Audio
+    finalText:  '',      // 이번 발화의 확정 텍스트
+    interimText:'',
+    silenceTimer: null,  // VAD 무음 타이머
+    restartGuard: false, // onend 자동 재시작 가드
+    SILENCE_MS: 1400     // 발화 후 무음 → 자동전송 시간(ms)
+  };
+  window.__CM = CM; // 디버그용
+
+  // DOM
+  var ov       = document.getElementById('callModeOverlay');
+  var orbEl    = document.getElementById('cmOrb');
+  var statusEl = document.getElementById('cmStatus');
+  var transEl  = document.getElementById('cmTranscript');
+  var subEl    = document.getElementById('cmSub');
+  var muteBtn  = document.getElementById('cmMuteBtn');
+  var endBtn   = document.getElementById('cmEndBtn');
+
+  function setOrb(cls) {
+    if (!orbEl) return;
+    orbEl.className = 'cm-orb' + (cls ? ' ' + cls : '');
+  }
+  function setStatus(txt) { if (statusEl) statusEl.textContent = txt; }
+  function setTranscript(txt) { if (transEl) transEl.textContent = txt || ''; }
+
+  /* ── 오디오 unlock (모바일 자동재생) ── */
+  function unlockAudio() {
+    try {
+      var Ctx = window.AudioContext || window.webkitAudioContext;
+      if (Ctx) {
+        if (!window.__cmAudioCtx) window.__cmAudioCtx = new Ctx();
+        if (window.__cmAudioCtx.state === 'suspended') window.__cmAudioCtx.resume().catch(function(){});
+      }
+    } catch(e) {}
+  }
+
+  /* ── TTS 재생 ── */
+  function speak(text, onDone) {
+    if (!text || !CM.active) { if (onDone) onDone(); return; }
+    setState('speaking');
+    // 마이크는 speaking 동안 정지 (자기 목소리 인식 방지)
+    stopRecognition();
+    fetch('/aimessage/onechat/api/tts_openai.php', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: text, voice: 'nova', sms_idx: SMS_IDX })
+    })
+    .then(function(r) {
+      if (!r.ok) {
+        // 429(쿼터)/503(키미설정) 등 → 텍스트 답변은 화면에 이미 표시됨, 음성만 생략
+        if (r.status === 429) { try { setStatus('음성 합성 한도 초과 — 텍스트로 표시됩니다'); } catch(e){} }
+        throw new Error('tts ' + r.status);
+      }
+      return r.blob();
+    })
+    .then(function(blob) {
+      if (!CM.active) return;
+      var url = URL.createObjectURL(blob);
+      var a = new Audio(url);
+      CM.audio = a;
+      a.onended = function() {
+        URL.revokeObjectURL(url); CM.audio = null;
+        if (onDone) onDone();
+      };
+      a.onerror = function() {
+        URL.revokeObjectURL(url); CM.audio = null;
+        if (onDone) onDone();
+      };
+      var p = a.play();
+      if (p && p.catch) p.catch(function() {
+        // 자동재생 차단 → 안내 후 마이크 재개
+        setStatus('소리를 켜려면 화면을 한번 탭하세요');
+        CM.audio = null;
+        if (onDone) onDone();
+      });
+    })
+    .catch(function() {
+      // TTS 실패해도 대화 계속 (마이크 재개)
+      CM.audio = null;
+      if (onDone) onDone();
+    });
+  }
+
+  function stopSpeaking() {
+    if (CM.audio) {
+      try { CM.audio.pause(); CM.audio.currentTime = 0; } catch(e) {}
+      CM.audio = null;
+    }
+  }
+
+  /* ── 상태 전환 ── */
+  function setState(s) {
+    CM.state = s;
+    if (s === 'listening') { setOrb(CM.muted ? 'muted' : 'listening'); setStatus(CM.muted ? '음소거됨' : '듣고 있어요…'); }
+    else if (s === 'thinking') { setOrb('thinking'); setStatus('생각 중…'); }
+    else if (s === 'speaking') { setOrb('speaking'); setStatus('답변 중…'); }
+    else { setOrb(''); }
+  }
+
+  /* ── VAD: 무음 감지 → 자동 전송 ── */
+  function armSilenceTimer() {
+    clearTimeout(CM.silenceTimer);
+    CM.silenceTimer = setTimeout(function() {
+      var txt = (CM.finalText + ' ' + CM.interimText).trim();
+      if (txt) { submitTurn(txt); }
+    }, CM.SILENCE_MS);
+  }
+
+  /* ── 한 턴 전송: 사용자 발화 → AI → TTS ── */
+  function submitTurn(text) {
+    if (!CM.active || !text) return;
+    clearTimeout(CM.silenceTimer);
+    CM.finalText = ''; CM.interimText = '';
+    stopRecognition();
+    setState('thinking');
+    setTranscript('나: ' + text);
+
+    // 채팅 화면에도 동일하게 표시 (대화 기록 보존)
+    try { if (typeof appendMessage === 'function') appendMessage('user', text); } catch(e) {}
+    try {
+      var typingEl2 = document.getElementById('typingIndicator');
+      var msgs2 = document.getElementById('messages');
+      if (typingEl2) typingEl2.classList.add('visible');
+      if (msgs2) msgs2.scrollTop = msgs2.scrollHeight;
+    } catch(e) {}
+
+    fetch(CHAT_API, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ visitor_id: (typeof VISITOR_ID !== 'undefined' ? VISITOR_ID : ''), sms_idx: SMS_IDX, message: text })
+    })
+    .then(function(r) { return r.json(); })
+    .then(function(data) {
+      try { var t = document.getElementById('typingIndicator'); if (t) t.classList.remove('visible'); } catch(e) {}
+      var reply = (data && data.success && data.response) ? data.response : '죄송합니다. 잠시 후 다시 시도해 주세요.';
+      try {
+        if (typeof appendMessage === 'function') appendMessage('bot', reply);
+        if (data && data.bot_log_id && typeof lastBotMsgId !== 'undefined') {
+          lastBotMsgId = Math.max(lastBotMsgId, parseInt(data.bot_log_id, 10));
+        }
+      } catch(e) {}
+      if (!CM.active) return;
+      setTranscript('AI: ' + reply);
+      // TTS용으로 마크다운/이모지 약식 정리
+      var spoken = reply.replace(/[*_`#>\-]/g, ' ').replace(/\s+/g, ' ').trim();
+      speak(spoken, function() { resumeListening(); });
+    })
+    .catch(function() {
+      try { var t = document.getElementById('typingIndicator'); if (t) t.classList.remove('visible'); } catch(e) {}
+      if (!CM.active) return;
+      setTranscript('연결 오류가 발생했어요. 다시 말씀해 주세요.');
+      resumeListening();
+    });
+  }
+
+  /* ── 듣기 재개 ── */
+  function resumeListening() {
+    if (!CM.active) return;
+    if (CM.muted) { setState('listening'); return; }
+    setState('listening');
+    setTranscript('');
+    startRecognition();
+  }
+
+  /* ── SpeechRecognition 시작 ── */
+  function startRecognition() {
+    if (!CM.active || CM.muted || !SpeechRec) return;
+    stopRecognition();
+    var rec = new SpeechRec();
+    rec.lang = 'ko-KR';
+    rec.interimResults = true;
+    rec.continuous = !isIos;
+    rec.maxAlternatives = 1;
+    CM.rec = rec;
+    CM.restartGuard = true;
+
+    rec.onresult = function(e) {
+      if (!CM.active || CM.muted) return;
+      var interim = '', fin = '';
+      for (var i = e.resultIndex; i < e.results.length; i++) {
+        if (e.results[i].isFinal) fin += e.results[i][0].transcript;
+        else interim += e.results[i][0].transcript;
+      }
+      if (fin)     CM.finalText = (CM.finalText ? CM.finalText + ' ' : '') + fin;
+      CM.interimText = interim;
+      var show = (CM.finalText + ' ' + interim).trim();
+      if (show) setTranscript('나: ' + show);
+      armSilenceTimer(); // 발화 감지 시마다 무음 타이머 리셋
+    };
+
+    rec.onerror = function(ev) {
+      if (ev.error === 'not-allowed' || ev.error === 'service-not-allowed') {
+        setStatus('마이크 권한을 허용해주세요');
+        CM.muted = true;
+        if (muteBtn) { muteBtn.classList.add('muted'); muteBtn.textContent = '🔇'; }
+        setOrb('muted');
+      }
+      // no-speech/aborted 등은 onend에서 재시작
+    };
+
+    rec.onend = function() {
+      CM.rec = null;
+      // 통화 중 + 듣기 상태 + 무음 타이머 안 걸린 경우 → 자동 재시작
+      if (CM.active && !CM.muted && CM.state === 'listening' && CM.restartGuard) {
+        setTimeout(function() { if (CM.active && !CM.muted && CM.state === 'listening') startRecognition(); }, 250);
+      }
+    };
+
+    try { rec.start(); }
+    catch(e) { /* 이미 시작됨 등 무시 */ }
+  }
+
+  function stopRecognition() {
+    CM.restartGuard = false;
+    clearTimeout(CM.silenceTimer);
+    if (CM.rec) { try { CM.rec.stop(); } catch(e) {} CM.rec = null; }
+  }
+
+  function setMenuLabel() {
+    var mi = document.getElementById('menuCallMode');
+    if (mi) mi.textContent = CM.active ? '🔴 통화 모드 종료' : '🤖 통화 모드 (AI 음성대화)';
+  }
+
+  /* ── 통화 모드 시작 ── */
+  function openCallMode() {
+    if (!SpeechRec) {
+      alert('이 브라우저는 음성 인식을 지원하지 않습니다.\nChrome 또는 Safari 최신 버전을 사용해주세요.');
+      return;
+    }
+    CM.active = true;
+    CM.muted = false;
+    CM.finalText = ''; CM.interimText = '';
+    if (muteBtn) { muteBtn.classList.remove('muted'); muteBtn.textContent = '🎤'; }
+    if (ov) ov.classList.add('open');
+    setMenuLabel();
+    unlockAudio();
+    setState('listening');
+    setStatus('말씀해 주세요…');
+    setTranscript('');
+    if (subEl) subEl.textContent = '말이 끝나면 잠시 후 자동으로 전송됩니다';
+    // 첫 인사 TTS (옵션) → 바로 듣기 시작
+    startRecognition();
+  }
+
+  /* ── 통화 모드 종료 ── */
+  function closeCallMode() {
+    CM.active = false;
+    CM.state = 'idle';
+    stopRecognition();
+    stopSpeaking();
+    clearTimeout(CM.silenceTimer);
+    if (ov) ov.classList.remove('open');
+    setMenuLabel();
+  }
+
+  /* ── 음소거 토글 ── */
+  function toggleMute() {
+    CM.muted = !CM.muted;
+    if (muteBtn) {
+      muteBtn.classList.toggle('muted', CM.muted);
+      muteBtn.textContent = CM.muted ? '🔇' : '🎤';
+    }
+    if (CM.muted) {
+      stopRecognition();
+      setOrb('muted'); setStatus('음소거됨');
+    } else {
+      if (CM.state === 'listening') { setOrb('listening'); setStatus('듣고 있어요…'); startRecognition(); }
+    }
+  }
+
+  /* ── 외부 노출: 메뉴에서 호출 ── */
+  window.toggleCallMode = function() {
+    unlockAudio();
+    if (CM.active) closeCallMode();
+    else openCallMode();
+  };
+
+  if (muteBtn) muteBtn.addEventListener('click', toggleMute);
+  if (endBtn)  endBtn.addEventListener('click', closeCallMode);
+
+  // 오버레이/오브 탭: 오디오 unlock + (AI 답변 중이면) 끼어들기(barge-in)
+  if (ov) ov.addEventListener('click', function(e) {
+    if (e.target === muteBtn || e.target === endBtn) return;
+    unlockAudio();
+    if (CM.active && CM.state === 'speaking') {
+      // AI 말 끊고 바로 듣기로 전환
+      stopSpeaking();
+      resumeListening();
+    }
+  });
 })();
 
 </script>

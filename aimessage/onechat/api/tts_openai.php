@@ -64,41 +64,40 @@ if ($code === 200 && str_contains($ctype, 'audio')) {
 }
 
 function getOpenAIKey(int $sms_idx): string {
-    // vt.kiam.kr API로 설정 조회
-    $url = 'https://vt.kiam.kr/api/v1/voice/config.php?sms_idx=' . $sms_idx;
-    $ch  = curl_init($url);
-    curl_setopt_array($ch, [
-        CURLOPT_HTTPHEADER     => ['X-API-Key: vt_onechat_9afdc815132cae0174f5b5109a658db3'],
-        CURLOPT_RETURNTRANSFER => true,
-        CURLOPT_TIMEOUT        => 5,
-        CURLOPT_SSL_VERIFYPEER => false,
-    ]);
-    $res  = curl_exec($ch);
-    curl_close($ch);
-    $data = json_decode($res, true);
-    // 공개 API는 키를 마스킹해서 반환하므로 — 내부 전용 키 사용
-    // [SECURITY 2026-06-04] 하드코딩 제거 — /home/secure/openai_key.enc 자동 로드
-    if (defined('OPENAI_API_KEY_OVERRIDE')) return OPENAI_API_KEY_OVERRIDE;
-    return onechat_load_platform_openai_key();
-}
+    // 1순위: 외부 비공개 설정 파일(깃 추적 제외) → OPENAI_API_KEY_OVERRIDE 상수
+    if (!defined('OPENAI_API_KEY_OVERRIDE')) {
+        $keyFile = __DIR__ . '/openai_key.php';
+        if (is_file($keyFile)) { include $keyFile; }
+    }
 
-/**
- * 플랫폼 공용 OpenAI 키 로더 (/home/secure/openai_key.enc, base64)
- */
-function onechat_load_platform_openai_key(): string {
-    static $cached = null;
-    if ($cached !== null) return $cached;
-    $f = '/home/secure/openai_key.enc';
-    if (!is_readable($f)) {
-        error_log('[onechat tts_openai] /home/secure/openai_key.enc 읽기 불가');
-        return $cached = '';
+    // 2순위: sms_idx별 DB 키 (챗봇과 동일 소스: Gn_aievent_ms_info.apikey)
+    if ($sms_idx > 0) {
+        try {
+            $dbFile = __DIR__ . '/../../config/database.php';
+            if (is_file($dbFile)) {
+                require_once $dbFile;
+                if (function_exists('getDatabaseConnection')) {
+                    $db = getDatabaseConnection();
+                    if ($db) {
+                        $stmt = $db->prepare('SELECT apikey FROM Gn_aievent_ms_info WHERE sms_idx = ?');
+                        if ($stmt) {
+                            $stmt->bind_param('i', $sms_idx);
+                            $stmt->execute();
+                            $res = $stmt->get_result();
+                            $row = $res ? $res->fetch_assoc() : null;
+                            $stmt->close();
+                            if ($row && !empty($row['apikey'])) {
+                                return $row['apikey'];
+                            }
+                        }
+                    }
+                }
+            }
+        } catch (\Throwable $e) {
+            error_log('[tts_openai] key lookup failed: ' . $e->getMessage());
+        }
     }
-    $raw = trim((string)@file_get_contents($f));
-    if ($raw === '') return $cached = '';
-    $dec = base64_decode($raw, true);
-    if ($dec === false || $dec === '') {
-        error_log('[onechat tts_openai] base64 디코딩 실패');
-        return $cached = '';
-    }
-    return $cached = trim($dec);
+
+    // 3순위: 외부 설정 파일이 제공한 공용 기본 키
+    return defined('OPENAI_API_KEY_OVERRIDE') ? OPENAI_API_KEY_OVERRIDE : '';
 }
