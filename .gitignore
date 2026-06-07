@@ -114,3 +114,14 @@ tmp_*.php
 dbg_*.php
 probe_*.php
 sim_*.php
+
+# === [AUTO-PROTECT] git clean 방어용 디렉터리 자동 등록 (수정 금지) ===
+/.gitignore.bak_20260608_030340
+/aimessage/mychat/css/
+/aimessage/mychat/uploads/
+/aimessage/onechat/js/dm.js
+/dev-pages/_remote_edit/
+_remote_fetch/
+deploy_reserve_fix/
+docs/
+ops/

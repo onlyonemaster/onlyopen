@@ -1,0 +1,16 @@
+[Unit]
+Description=webapp .gitignore auto-protect watcher (Layer 4 - git clean 방어)
+Documentation=https://ainote.kiam.kr/share.html?id=1557
+After=network.target
+
+[Service]
+Type=simple
+ExecStart=/usr/local/lib/git-guard/watcher.sh /home/webapp
+Restart=always
+RestartSec=3
+User=root
+StandardOutput=append:/var/log/webapp-gitignore-watcher.log
+StandardError=append:/var/log/webapp-gitignore-watcher.log
+
+[Install]
+WantedBy=multi-user.target
