@@ -76,6 +76,46 @@ gh pr list --state open  # 또는 GitHub API 로 PR 상태 조회
 
 ---
 
+## 🌉 외부 서버 통로 — **이걸 절대 잊지 마라**
+
+이 샌드박스는 **iamserver (iam-main)** 위에 있다. 하지만 조은의 자산은 두 서버에 걸쳐있다.
+**다른 서버 자산이 안 보인다고 "접근 불가"라고 단정하지 마라. 통로가 있다.**
+
+### iamserver (이 샌드박스 = `/home/`)
+- `/home/kiam/` — prod (디스크: `/dev/nvme0n1p1`)
+- `/disk/daily/home/kiam/` — dev (디스크: `/dev/sdb3`)
+- `/home//webapp` — Git 작업 디렉토리
+
+### bigserver (별도 머신, `/var/www/webapp/` 마운트)
+- IP: `175.126.232.229` · 포트 22 · 호스트명 `qm211-0297` · Ubuntu 22.04
+- SSH 키: **이미 깔려있다** → `~/.ssh/id_ed25519_bigserver`
+- 접속 명령:
+  ```bash
+  ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519_bigserver root@175.126.232.229
+  ```
+- 그곳에 있는 것:
+  - `/var/www/webapp/onebot/` — onebot 봇 소스 + `doc/` (설계서 80+개) + `mongodb/` (DB 파일) + `docker-compose.yml`
+  - `/var/www/webapp/ainote/` — ainote 웹앱 소스 (HTTP API: `ainote.kiam.kr/api/get_note.php?id=N`)
+  - 기타 50+개 프로젝트 (aibot, kaibiz, ps, ...)
+
+### 로컬 캐시
+- `/home/kiam/_onebot_doc_for_ari/` — onebot/doc 의 rsync 미러 (mp4 제외, ~1.5MB, 82개 파일)
+- 갱신 명령:
+  ```bash
+  rsync -avz --exclude='*.mp4' \
+    -e "ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_ed25519_bigserver" \
+    root@175.126.232.229:/var/www/webapp/onebot/doc/ \
+    /home/kiam/_onebot_doc_for_ari/
+  ```
+
+### 규칙
+1. bigserver 파일을 봐야 하면 **먼저 SSH로 들어가서 확인**한다. "안 보인다"고 끝내지 마라.
+2. 반복 참조할 파일은 **rsync로 iamserver에 캐싱**한다 (대형 mp4·바이너리 제외).
+3. ainote/onebot 등 **공개 HTTP API**가 있는 경우는 그것을 우선 사용 (인증 불필요).
+4. 이 통로는 **2026-06-07 세션에 발견·영구화**되었다. atom #100 참고.
+
+---
+
 ## 🛡 정직성 규칙 — 어제의 약속 (절대 금기)
 
 2026-06-07 SSH 환각 사건 (atom #93) 이후 결의된 6개 규칙. 위반 시 즉시 시인하고 ss_sanctum_log 에 기록 제안.
@@ -105,6 +145,9 @@ gh pr list --state open  # 또는 GitHub API 로 PR 상태 조회
 | DeepSeek 키 파일 | `/home/secure/deepseek_key.enc` (base64 인코딩) |
 | Git 브랜치 | `genspark_ai_developer` |
 | GitHub PR base | `onlyonemaster/onlyopen` |
+| **bigserver SSH** | `ssh -i ~/.ssh/id_ed25519_bigserver root@175.126.232.229` |
+| **onebot doc 캐시** | `/home/kiam/_onebot_doc_for_ari/` |
+| **ainote HTTP API** | `https://ainote.kiam.kr/api/get_note.php?id=N` (공개) |
 
 ### 자주 보는 테이블
 - `ss_atoms` — PK `atom_id`. 8종: PERSON/PLACE/EVENT/IDEA/TASK/DECISION/EMOTION/VALUE
