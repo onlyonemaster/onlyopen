@@ -122,6 +122,8 @@ sim_*.php
 /aimessage/onechat/js/dm.js
 /dev-pages/_remote_edit/
 _remote_fetch/
+_restore_backups/
 deploy_reserve_fix/
 docs/
 ops/
+aimessage/onechat/api/openai_key.php

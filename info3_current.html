@@ -535,13 +535,17 @@ body{
    ============================================================ */
 #step6-bubble{
   position:absolute;
-  /* left-panel(42%) 끝 + gap 절반 지점에 배치 */
-  left:calc(42% + 16px);
+  /* #step6 section 기준: 오른쪽 패널 중앙 위쪽 */
+  right:calc(25% - 100px);
   top:50%;
   transform:translateY(-50%);
   z-index:20;
   pointer-events:none;
   display:none;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  width:200px;
 }
 #step6-bubble .bubble-box{
   position:relative;
@@ -549,7 +553,12 @@ body{
   border:2px solid #00d4ff;
   border-radius:18px;
   padding:14px 18px;
-  max-width:200px;
+  width:200px;
+  box-sizing:border-box;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  overflow:hidden;
   box-shadow:0 0 24px rgba(0,212,255,0.35),0 4px 20px rgba(0,0,0,0.5);
   animation:bubblePulse 1.6s ease-in-out infinite;
 }
@@ -558,6 +567,7 @@ body{
   display:block;
   text-align:center;
   margin-bottom:6px;
+  flex-shrink:0;
 }
 #step6-bubble .bubble-box .b-text{
   font-size:13px;
@@ -565,6 +575,10 @@ body{
   color:#fff;
   line-height:1.6;
   text-align:center;
+  display:block;
+  width:100%;
+  word-break:keep-all;
+  white-space:normal;
 }
 #step6-bubble .bubble-box .b-sub{
   font-size:11px;
@@ -572,25 +586,29 @@ body{
   text-align:center;
   margin-top:5px;
   font-weight:600;
+  display:block;
+  width:100%;
+  word-break:keep-all;
+  white-space:normal;
 }
-/* 말풍선 꼬리 — 오른쪽(챗봇 방향) */
+/* 말풍선 꼬리 — 아래쪽(섹션 안쪽 방향) */
 #step6-bubble .bubble-box::after{
   content:'';
   position:absolute;
-  right:-13px;
-  top:50%;
-  transform:translateY(-50%);
+  bottom:-13px;
+  left:50%;
+  transform:translateX(-50%);
   border:7px solid transparent;
-  border-left-color:#00d4ff;
+  border-top-color:#00d4ff;
 }
 #step6-bubble .bubble-box::before{
   content:'';
   position:absolute;
-  right:-10px;
-  top:50%;
-  transform:translateY(-50%);
+  bottom:-10px;
+  left:50%;
+  transform:translateX(-50%);
   border:6px solid transparent;
-  border-left-color:#0d1b3e;
+  border-top-color:#0d1b3e;
   z-index:1;
 }
 /* 팬 등록 완료 시 → 성공 상태 */
@@ -600,7 +618,7 @@ body{
   box-shadow:0 0 28px rgba(74,222,128,0.4),0 4px 20px rgba(0,0,0,0.5);
   animation:bubbleSuccess 0.5s ease-out forwards;
 }
-#step6-bubble.success .bubble-box::after{border-left-color:#4ade80}
+#step6-bubble.success .bubble-box::after{border-top-color:#4ade80}
 @keyframes bubblePulse{
   0%,100%{transform:scale(1);box-shadow:0 0 18px rgba(0,212,255,0.3),0 4px 20px rgba(0,0,0,0.5)}
   50%{transform:scale(1.04);box-shadow:0 0 32px rgba(0,212,255,0.6),0 4px 20px rgba(0,0,0,0.5)}
@@ -611,11 +629,14 @@ body{
   100%{transform:scale(1)}
 }
 @keyframes bubbleFadeIn{
-  from{opacity:0;transform:translateX(-12px) translateY(-50%)}
-  to{opacity:1;transform:translateX(0) translateY(-50%)}
+  from{opacity:0;transform:translateY(-60%)}
+  to{opacity:1;transform:translateY(-50%)}
 }
 #step6-bubble.show{
-  display:block;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:10px;
   animation:bubbleFadeIn 0.5s ease-out forwards;
 }
 /* 모바일: 말풍선 숨기고 섹션 위에 배너로 */
@@ -1111,7 +1132,7 @@ body{
 <!-- ============================================================
      STEP 6: 유권자 첫 접속 & 3회 대화 → 팬 등록
      ============================================================ -->
-<div class="section fade-section" id="step6" data-phase="2">
+<div class="section fade-section" id="step6" data-phase="2" style="position:relative;">
   <div class="section-inner">
     <div class="left-panel">
       <div class="step-num">STEP 06 / 13</div>
@@ -1127,14 +1148,6 @@ body{
       <div class="hl-box">
         <div class="hl-title">⚡ 3회 대화 = 팬 전환 트리거</div>
         <p>시스템 알고리즘상, 유권자가 3번째 메시지를 보내는 순간 "대화를 저장하시겠습니까?" 다이얼로그가 표시됩니다. 수락 시 영구 팬으로 등록되어 지속적 소통이 가능해집니다.</p>
-      </div>
-    </div>
-    <!-- 말풍선: left-panel 과 phone 사이 절대 위치 -->
-    <div id="step6-bubble">
-      <div class="bubble-box">
-        <span class="b-icon">👀</span>
-        <div class="b-text">잠깐! 조금만<br>기다려 보세요</div>
-        <div class="b-sub">곧 팬 등록이 나타납니다 ✨</div>
       </div>
     </div>
     <div class="right-panel">
@@ -1154,6 +1167,14 @@ body{
           <button>▶</button>
         </div>
       </div>
+    </div>
+  </div>
+  <!-- 말풍선: #step6 기준 절대 위치 (section-inner 밖) -->
+  <div id="step6-bubble">
+    <div class="bubble-box">
+      <span class="b-icon">👀</span>
+      <div class="b-text">잠깐! 조금만<br>기다려 보세요</div>
+      <div class="b-sub">곧 팬 등록이 나타납니다 ✨</div>
     </div>
   </div>
 </div>
