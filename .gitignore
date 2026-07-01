@@ -121,9 +121,17 @@ sim_*.php
 /aimessage/mychat/uploads/
 /aimessage/onechat/js/dm.js
 /dev-pages/_remote_edit/
+_bigserver_safety_ref/
 _remote_fetch/
 _restore_backups/
+# _safety: 방어 스크립트(bin/·hooks/)와 README 는 추적, 런타임 산출물만 제외
+_safety/logs/
+_safety/snapshots/
+_safety/ALERT_*.txt
+_safety/site_index_manifest.txt
+_safety_test*/
+aimessage/onechat/api/openai_key.php
 deploy_reserve_fix/
 docs/
 ops/
-aimessage/onechat/api/openai_key.php
+pdf_work/

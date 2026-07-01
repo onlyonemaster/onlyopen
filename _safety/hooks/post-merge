@@ -1,0 +1,3 @@
+#!/bin/bash
+# 자동설치: 사이트 진입점 무결성 조기경보 (방어막2)
+/home/webapp/_safety/bin/integrity-check.sh 2>/dev/null || true
