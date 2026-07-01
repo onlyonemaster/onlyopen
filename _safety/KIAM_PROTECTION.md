@@ -9,10 +9,13 @@
 |---|---|---|---|
 | **① git shim v4 BLOCK** | 파괴 명령 실행 자체 거부 | `/usr/local/bin/git` (chattr +i) | ✅ |
 | **② 미추적 소스 편입** | git 밖 소스 792개 커밋 | HEAD `4510528` | ✅ |
-| **③ `.git` 물리 분리** | 저장소 본체를 서비스 폴더 밖으로 | `/home/git-repos/kiam.git` | ✅ |
-| **④ 오프트리 미러** | 다른 물리디스크에 bare 미러 | `/var/git-mirrors/kiam.git` | ✅ |
+| **③ `.git` 물리 분리(메인)** | 메인 저장소 본체를 서비스 폴더 밖으로 | `/home/git-repos/kiam.git` | ✅ |
+| **③-b 중첩 저장소 분리** | 하위사이트·라이브러리 11개 `.git` 전부 밖으로 | `/home/git-repos/nested_*.git` | ✅ |
+| **④ 오프트리 미러** | 다른 물리디스크에 bare 미러 (메인+중첩 12개) | `/var/git-mirrors/*.git` | ✅ |
 | **⑤ 원격 백업** | GitHub 오프사이트 | `github.com/onlyonemaster/kiammain.git` | ✅ |
 | **⑥ 기존 일일백업** | 소스/DB/설정 (건드리지 않음) | `/disk/backup` (cron.d/kiam_backup) | ✅ |
+
+> 🎯 **서비스 폴더(`/home/kiam`) 안 git 본체 = 0개** (메인 1 + 중첩 11 전부 밖으로 물리분리). bigserver와 동일 구조.
 
 ## ① git shim v4 (파괴명령 BLOCK)
 - `PROTECTED_REPOS="/home/kiam"` — kiam 안에서만 방어 발동
@@ -42,11 +45,25 @@
 - 분리 전 백업: `/home/backups/git_split/kiam_dotgit_pre_split_*.tar.gz` (771M)
 - **무손실 검증**: HEAD 동일(`4510528`), 추적파일 42437=42437, HEAD 객체 유효, shim BLOCK 유지
 
+## ③-b 중첩(nested) 저장소 물리 분리
+서비스 폴더 안에 각자 `.git` 을 갖고 있던 하위사이트/라이브러리 **11개**를 전부 밖으로 이동.
+`git ls-files -s | awk '$1==160000'`(gitlink) + `find -type d -name .git` 로 식별.
+- **진짜 하위사이트 3개**: `iam/landing/landing_main`(master, HEAD c223a87), `iam/landing/iamprofile`(master, HEAD 13d2342), `aimessage/superchatbot`(feature/chatbot-invitation-system, HEAD 8b92fcf)
+- **vendor 라이브러리 8개**: `excel_down/vendor/*`(phpspreadsheet 68M 등, composer 재현 가능하나 bigserver 일관성 위해 동일 분리)
+- 이동: 각 `.git` 본체 → `/home/git-repos/nested_<상대경로>.git`, 원위치엔 포인터(`gitdir:`)만
+- `core.worktree`=원위치, `core.bare=false` 설정
+- 분리 전 각 `.git` **tar 백업**: `/home/backups/git_split/nested/`
+- **무손실 검증**: 11개 전부 이동 전후 HEAD 동일, HEAD 불일치 시 자동 롤백(0건 발생)
+- 스크립트: `_safety/bin/split-nested-kiam.sh` (`--dry-run` 지원)
+- 결과: **서비스 폴더 안 git 본체 0개** (`find /home/kiam -type d -name .git` → 0)
+
 ## ④ 오프트리 미러 (다른 물리디스크)
-- 미러: `/var/git-mirrors/kiam.git` (787M, `/var`=sda3 — `/home`(nvme)와 독립)
-- 동기화: `_safety/bin/mirror-sync-kiam.sh` (fetch 방식, 서빙 명령/훅 미트리거)
-- **크론**: `5,35 * * * *` (매시 5·35분, webapp 미러와 오프셋)
-- 무결성: `mirror-sync-kiam.sh --verify`
+- 메인 미러: `/var/git-mirrors/kiam.git` (787M, `/var`=sda3 — `/home`(nvme)와 독립)
+- 중첩 미러: `/var/git-mirrors/nested_*.git` (11개, 동일 sda3)
+- 동기화(메인): `_safety/bin/mirror-sync-kiam.sh` (fetch 방식, 서빙 명령/훅 미트리거)
+- 동기화(중첩): `_safety/bin/mirror-sync-nested-kiam.sh` (`nested_*.git` 전체 순회)
+- **크론**: 메인 `5,35 * * * *` · 중첩 `10,40 * * * *` (webapp 미러 `*/30` 과 오프셋)
+- 무결성: `mirror-sync-kiam.sh --verify` / `mirror-sync-nested-kiam.sh --verify`
 - 복구: `mirror-restore-kiam.sh --list` → `mirror-restore-kiam.sh <복구위치>`
   (라이브 직접 덮어쓰기 금지 — 별도 폴더로 꺼내 관리자 확인 후 반영)
 
@@ -58,7 +75,10 @@
 5. **저장소 손상** → `/home/backups/git_split/kiam_dotgit_pre_split_*.tar.gz` 복원
 
 ## 유지보수 주의
-- `/home/kiam/.git` 은 포인터 파일이므로 **삭제/덮어쓰기 금지**. 본체는 `/home/git-repos/kiam.git`.
+- `/home/kiam/.git` **및 모든 하위 `.git`(11개)** 은 포인터 파일이므로 **삭제/덮어쓰기 금지**.
+  본체는 `/home/git-repos/kiam.git` 및 `/home/git-repos/nested_*.git`.
+- 새 하위사이트를 추가해 `.git` 이 생기면: `_safety/bin/split-nested-kiam.sh` 를 다시 돌리면
+  신규 중첩 저장소도 자동으로 밖으로 분리됨(`--dry-run` 먼저 권장).
 - 신규 서비스 소스 추가 시: 정상적으로 `git add` → `git commit`(shim이 add/commit은 허용)
 - 시크릿·런타임은 `.gitignore [ARI-SAFETY]` 블록으로 자동 제외됨. 새 시크릿 유형은 이 블록에 추가.
 - 이 문서/스크립트는 `/home/webapp`(아리 작업 리포)에서 버전관리됨.
