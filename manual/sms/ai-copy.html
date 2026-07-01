@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 메시지 카피 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/addressbook.html" class="sb-link">📒 주소록 관리</a>
+      <a href="/manual/sms/received.html" class="sb-link">수신 내역 확인</a>
+      <a href="/manual/sms/block.html" class="sb-link">수신거부 관리</a>
+      <a href="/manual/sms/web-send.html" class="sb-link">💬 웹문자 발송</a>
+      <a href="/manual/sms/bulk20.html" class="sb-link">20건 무료문자</a>
+      <a href="/manual/sms/reservation.html" class="sb-link">⏰ 예약 발송</a>
+      <a href="/manual/sms/split.html" class="sb-link">✂️ 분할 발송</a>
+      <a href="/manual/sms/ai-copy.html" class="sb-link active">🤖 AI 메시지 카피</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › AI 메시지 카피</nav>
+    <h1 class="page-title">🤖 AI 메시지 카피(알지)</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">AI 메시지 카피란?</a></li>
+        <li><a href="#how">사용 방법</a></li>
+        <li><a href="#prompt-tips">프롬프트 작성 팁</a></li>
+        <li><a href="#copy-edu">메시지카피 교육 안내</a></li>
+        <li><a href="#apply">바로 발송에 적용하기</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>AI 메시지 카피란?</h2>
+      <p>AI 메시지 카피(알지)는 <strong>kiam.kr 발송 화면에서 AI와 대화하며 최적의 문자 메시지 문구를 자동 생성</strong>하는 기능입니다. 고객 맞춤형 카피라이팅을 AI가 도와주므로, 홍보 문구 작성에 어려움을 느끼는 분도 손쉽게 효과적인 문자를 만들 수 있습니다.</p>
+      <div class="notice-box" style="margin-top:14px;">
+        <strong>📌 메시지카피 철학:</strong> kiam.kr의 메시지카피 기법은 단순 광고 문구가 아닌 <strong>고객 공감 기반 카피라이팅</strong>을 지향합니다. AI는 이 기법을 학습하여 고객의 마음을 움직이는 문구를 생성합니다.
+      </div>
+    </section>
+
+    <section id="how">
+      <h2>사용 방법</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>문자 발송 화면</strong>(sub_6.php 또는 폰문자 발송)에서 <strong>[🤖 AI와 대화하기]</strong> 버튼을 클릭합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            AI 채팅창이 열리면 <strong>상품/서비스 내용, 타겟 고객, 원하는 톤</strong>을 설명합니다.
+            <br><em>예: "50대 여성 대상 건강기능식품 할인 이벤트 문자를 써줘. 친근한 말투로."</em>
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            AI가 생성한 문구를 검토하고, 마음에 들면 <strong>[적용]</strong> 버튼으로 발송 메시지 입력란에 자동 삽입합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">4</div>
+          <div class="step-body">
+            필요하면 <strong>추가 요청(수정, 다른 버전 생성 등)</strong>으로 문구를 다듬습니다.
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="prompt-tips">
+      <h2>프롬프트 작성 팁</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">🎯</div>
+          <div class="fc-title">타겟 명확히</div>
+          <div class="fc-desc">나이, 성별, 관심사 등 수신 대상을 구체적으로 설명할수록 정확한 문구가 나옵니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🏷️</div>
+          <div class="fc-title">핵심 혜택 포함</div>
+          <div class="fc-desc">할인율, 무료 제공 내용, 기한 등 고객이 관심 가질 혜택을 함께 전달하세요.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📏</div>
+          <div class="fc-title">길이 지정</div>
+          <div class="fc-desc">SMS(90자 이하), LMS(장문) 등 발송 채널에 맞는 길이를 지정합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🔄</div>
+          <div class="fc-title">여러 버전 요청</div>
+          <div class="fc-desc">"3가지 버전으로 써줘"처럼 복수 버전을 요청해 최선의 문구를 선택하세요.</div>
+        </div>
+      </div>
+      <div class="notice-box info" style="margin-top:16px;">
+        <strong>💡 좋은 프롬프트 예시:</strong><br>
+        "30대 직장인 남성 대상으로, 우리 헬스장 1개월 무료 체험 이벤트 문자 써줘. SMS 90자 이내로, 부드럽고 신뢰감 있는 말투로. 마지막에 전화번호 포함."
+      </div>
+    </section>
+
+    <section id="copy-edu">
+      <h2>메시지카피 교육 안내</h2>
+      <p>AI 기능 외에도 kiam.kr은 <strong>메시지카피라이팅 전문 교육</strong>을 제공합니다.</p>
+      <ul>
+        <li><strong>영상 교육</strong>: 메시지카피 기법을 단계별로 설명하는 동영상 강의</li>
+        <li><strong>코칭 신청</strong>: 1:1 전문 코칭으로 나만의 카피 기술 습득</li>
+      </ul>
+      <p style="margin-top:12px;">
+        → <a href="https://kiam.kr/sub_9.php" target="_blank">메시지카피 소개 및 교육 안내 바로가기</a>
+      </p>
+    </section>
+
+    <section id="apply">
+      <h2>바로 발송에 적용하기</h2>
+      <p>AI가 생성한 메시지는 발송 화면 메시지 입력란에 자동으로 적용되므로, 바로 수신자 선택 후 발송을 진행할 수 있습니다.</p>
+      <ul>
+        <li>메시지 길이가 90바이트를 초과하면 자동으로 LMS로 전환됩니다.</li>
+        <li>이미지를 함께 첨부하면 MMS로 전환됩니다.</li>
+        <li>생성된 메시지를 <strong>[문자발송 후 저장하기]</strong>로 저장해 두면 나중에 재사용할 수 있습니다.</li>
+      </ul>
+    </section>
+
+    <nav class="page-nav">
+      <a href="/manual/sms/split.html" class="btn-prev">← 분할 발송</a>
+      <a href="/manual/sms/history.html" class="btn-next">발송 내역 확인 →</a>
+    </nav>
+  </main>
+</div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var h=document.documentElement;
+    var t=h.getAttribute('data-theme')==='light'?'dark':'light';
+    h.setAttribute('data-theme',t);
+    this.textContent=t==='light'?'🌙':'☀️';
+  });
+  document.getElementById('hamburgerBtn').addEventListener('click',function(){
+    document.querySelector('.m-sidebar').classList.toggle('open');
+  });
+</script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 분석 — K-AIBA 관리자 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">관리자 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 홈</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/kaiba-admin/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/kaiba-admin/bot-manager.html" class="sb-link">🤖 봇 관리</a>
+      <a href="/manual/kaiba-admin/subscriber.html" class="sb-link">👥 구독자 관리</a>
+      <a href="/manual/kaiba-admin/scenario.html" class="sb-link">🎯 시나리오 관리</a>
+      <a href="/manual/kaiba-admin/system-config.html" class="sb-link">🛠️ 시스템 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI · 분석</div>
+      <a href="/manual/kaiba-admin/ai-analytics.html" class="sb-link active">📈 AI 분석</a>
+      <a href="/manual/kaiba-admin/ai-insight.html" class="sb-link">💡 AI 인사이트</a>
+      <a href="/manual/kaiba-admin/companion.html" class="sb-link">🧠 AI 컴패니언</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">운영 관리</div>
+      <a href="/manual/kaiba-admin/messages.html" class="sb-link">💬 메시지 관리</a>
+      <a href="/manual/kaiba-admin/operator.html" class="sb-link">🎧 상담원 관리</a>
+      <a href="/manual/kaiba-admin/contacts.html" class="sb-link">📇 연락처 관리</a>
+      <a href="/manual/kaiba-admin/payments.html" class="sb-link">💳 결제 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 사용자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba-admin/">K-AIBA 관리자</a><span class="sep">›</span>
+      <span>AI 분석</span>
+    </div>
+
+    <h1>AI 분석 (AI Analytics)</h1>
+    <p class="page-desc">대화 데이터를 기반으로 사용자 행동 패턴, AI 응답 품질, 트렌드를 분석하는 대시보드입니다.</p>
+
+    <div class="notice">
+      📌 <strong>접속 경로:</strong> 좌측 메뉴 → <strong>"AI 분석"</strong> 클릭합니다.
+    </div>
+
+    <h2 id="overview">분석 대시보드 개요</h2>
+    <p>AI 분석 페이지는 크게 4개 영역으로 구성되어 전체 시스템 성과를 한눈에 파악할 수 있습니다.</p>
+    <table class="info-table">
+      <tr><th style="width:160px;">영역</th><th>설명</th></tr>
+      <tr><td>요약 KPI</td><td>주요 수치 카드 (총 대화, 응답 시간, 만족도, 해결률)</td></tr>
+      <tr><td>트렌드 차트</td><td>일별/주별/월별 대화량 및 품질 추이 그래프</td></tr>
+      <tr><td>봇별 성과</td><td>각 봇의 개별 성과 비교 테이블</td></tr>
+      <tr><td>사용자 행동</td><td>사용 패턴, 피크 시간대, 재방문율 분석</td></tr>
+    </table>
+
+    <h2 id="kpi">핵심 KPI 카드</h2>
+    <table class="info-table">
+      <tr><th style="width:180px;">지표</th><th>설명</th><th style="width:100px;">목표값</th></tr>
+      <tr><td><strong>총 대화 수</strong></td><td>선택 기간 내 전체 대화 건수</td><td>-</td></tr>
+      <tr><td><strong>평균 응답 시간</strong></td><td>AI 봇의 첫 응답까지 평균 소요 시간</td><td>&lt; 3초</td></tr>
+      <tr><td><strong>사용자 만족도</strong></td><td>대화 후 평가 점수 평균 (5점 만점)</td><td>&gt; 4.0</td></tr>
+      <tr><td><strong>1차 해결률</strong></td><td>상담원 전환 없이 AI가 해결한 비율</td><td>&gt; 70%</td></tr>
+      <tr><td><strong>이탈률</strong></td><td>대화 도중 사용자가 떠난 비율</td><td>&lt; 15%</td></tr>
+      <tr><td><strong>재방문율</strong></td><td>24시간 내 다시 대화를 시작한 비율</td><td>&gt; 30%</td></tr>
+    </table>
+
+    <h2 id="trend">트렌드 차트</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">기간 선택</div>
+          <div class="step-desc">우측 상단 날짜 피커에서 분석 기간을 설정합니다. 프리셋: 오늘, 7일, 30일, 90일, 커스텀</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">차트 유형 전환</div>
+          <div class="step-desc">라인 차트 / 바 차트 / 영역 차트 간 전환 가능. 비교 모드에서 기간 대비 증감 확인</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">지표 필터</div>
+          <div class="step-desc">차트 하단 범례에서 표시할 지표를 선택/해제하여 원하는 데이터만 시각화</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">데이터 내보내기</div>
+          <div class="step-desc">"내보내기" 버튼으로 CSV 또는 이미지(PNG)로 차트 데이터를 다운로드</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="bot-perf">봇별 성과 비교</h2>
+    <table class="info-table">
+      <tr><th style="width:140px;">컬럼</th><th>설명</th></tr>
+      <tr><td>봇 이름</td><td>등록된 활성 봇 이름</td></tr>
+      <tr><td>대화 수</td><td>해당 봇의 기간 내 대화 건수</td></tr>
+      <tr><td>평균 응답시간</td><td>첫 응답까지 소요 시간</td></tr>
+      <tr><td>만족도</td><td>해당 봇의 평균 사용자 평점</td></tr>
+      <tr><td>해결률</td><td>AI 단독 해결 비율</td></tr>
+      <tr><td>평균 턴</td><td>대화당 평균 턴(주고받기) 수</td></tr>
+      <tr><td>추세</td><td>전 기간 대비 증감 화살표 (↑↓)</td></tr>
+    </table>
+
+    <h2 id="user-behavior">사용자 행동 분석</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">분석 항목</th><th>설명</th></tr>
+      <tr><td>피크 시간대</td><td>시간별 대화량 히트맵 (가장 바쁜 시간 하이라이트)</td></tr>
+      <tr><td>요일별 패턴</td><td>요일별 평균 대화 건수 비교</td></tr>
+      <tr><td>자주 묻는 질문</td><td>사용자 질문 키워드 랭킹 (워드클라우드)</td></tr>
+      <tr><td>대화 길이 분포</td><td>짧은(1~3턴) / 보통(4~10턴) / 긴(11+턴) 비율</td></tr>
+      <tr><td>채널별 분포</td><td>웹 / 카카오 / 네이버톡톡 등 채널 점유율</td></tr>
+    </table>
+
+    <h2 id="export">리포트 생성</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">리포트 생성</div>
+          <div class="step-desc">"리포트 생성" 버튼 클릭 → 기간 및 포함 항목 선택 → PDF/Excel 형식 선택 → 생성</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">자동 리포트 스케줄</div>
+          <div class="step-desc">"스케줄 설정"에서 일간/주간/월간 자동 리포트 생성 및 이메일 발송 설정</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> 평균 응답 시간이 3초를 초과하면 RAG 청크 수를 최적화하거나, 프롬프트 길이를 줄여보세요. "봇별 성과 비교"에서 느린 봇을 식별할 수 있습니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

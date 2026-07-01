@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회원가입 &amp; 로그인 &#8212; VoiceGen AI &#47; kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VoiceGen AI 매뉴얼</div>
+      <a href="/manual/voicegen/" class="sb-link ">&#128266; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/voicegen/start.html" class="sb-link active">회원가입 &amp; 로그인</a>
+      <a href="/manual/voicegen/demo.html" class="sb-link ">데모 체험하기</a>
+      <a href="/manual/voicegen/start.html#apikey" class="sb-link">API 키 발급</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">API 연동</div>
+      <a href="/manual/voicegen/api.html" class="sb-link ">API 레퍼런스</a>
+      <a href="/manual/voicegen/voices.html" class="sb-link ">음성 프리셋 목록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/voicegen/clone.html" class="sb-link ">음성 클로닝</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/voicegen/plan.html" class="sb-link ">요금제 안내</a>
+      <a href="/manual/voicegen/faq.html" class="sb-link ">자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/voicegen/">VoiceGen AI</a><span class="sep">&#8250;</span><span>회원가입 &amp; 로그인</span>
+    </div>
+    <h1>회원가입 &amp; 로그인</h1>
+    <p class="lead">VoiceGen AI를 사용하려면 vg.kiam.kr에 회원가입이 필요합니다.<br>
+    가입 즉시 무료 플랜이 활성화되며 API 키를 발급받을 수 있습니다.</p>
+
+    <h2>1. 회원가입</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>사이트 접속</strong>
+        <p><a href="https://vg.kiam.kr/signup.php" target="_blank">https://vg.kiam.kr/signup.php</a> 접속 또는<br>
+        메인 화면 오른쪽 상단 <strong>무료 시작</strong> 버튼 클릭</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>정보 입력</strong>
+        <p>이름, 이메일 주소, 비밀번호 입력 후 <strong>회원가입</strong> 클릭<br>
+        이메일은 실제 사용 중인 주소여야 합니다 (인증 메일 발송)</p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>이메일 인증</strong>
+        <p>가입한 이메일로 발송된 인증 메일에서 <strong>이메일 인증하기</strong> 링크 클릭<br>
+        스팸함도 확인해 주세요</p>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <strong>로그인 완료</strong>
+        <p><a href="https://vg.kiam.kr/login.php" target="_blank">로그인 페이지</a>에서 이메일&#183;비밀번호 입력 &#8594; 대시보드로 이동</p>
+      </div></div>
+    </div>
+
+    <div class="callout callout-blue">
+      <strong>&#128161; 이미 kiam.kr 회원이신가요?</strong><br>
+      VoiceGen AI(vg.kiam.kr)는 kiam.kr과 별도 계정 시스템입니다. 신규 가입이 필요합니다.
+    </div>
+
+    <h2 id="apikey">API 키 발급</h2>
+    <p>음성 생성 API를 호출하려면 API 키가 필요합니다.</p>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>대시보드 접속</strong>
+        <p>로그인 후 <a href="https://vg.kiam.kr/dashboard.php" target="_blank">대시보드</a>로 이동</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>API 키 생성</strong>
+        <p>하단 <strong>API 키 관리</strong> 섹션 &#8594; <strong>+ 새 키 생성</strong> 버튼 클릭<br>
+        키 이름을 입력하면 즉시 발급됩니다</p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>키 보관</strong>
+        <p><strong>&#9888; 중요</strong> API 키는 한 번만 전체가 표시됩니다.<br>
+        복사 버튼으로 즉시 복사하여 안전한 곳에 보관하세요</p>
+      </div></div>
+    </div>
+
+    <div class="callout callout-yellow">
+      <strong>&#9888; API 키 보안 주의</strong><br>
+      API 키는 외부에 노출되면 무단 사용될 수 있습니다. 클라이언트 사이드 JS 코드에 직접 넣지 마세요.
+      서버 사이드(PHP, Node.js 등)에서만 사용하거나 환경변수로 관리하세요.
+    </div>
+
+    <h2>사용량 &amp; 플랜 확인</h2>
+    <p>대시보드 상단에서 이번 달 사용량과 남은 잔여 글자 수를 실시간으로 확인할 수 있습니다.<br>
+    월 사용 한도 도달 시 API 호출이 <code>429 Too Many Requests</code>로 응답됩니다.<br>
+    &#8594; <a href="/manual/voicegen/plan.html">요금제 업그레이드 방법</a></p>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="https://vg.kiam.kr" target="_blank" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128266; VoiceGen AI 바로가기 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

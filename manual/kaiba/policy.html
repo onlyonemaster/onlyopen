@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>정책사업 — K-AIBA 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr" class="btn-site" target="_blank">K-AIBA →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">K-AIBA 매뉴얼</div><a href="/manual/kaiba/" class="sb-link">🌐 K-AIBA 소개</a></div>
+    <div class="sb-section">
+      <div class="sb-section-title">사이트 안내</div>
+      <a href="/manual/kaiba/about.html" class="sb-link">🏢 협회 소개</a>
+      <a href="/manual/kaiba/news.html" class="sb-link">📰 AI 뉴스</a>
+      <a href="/manual/kaiba/policy.html" class="sb-link active">📋 정책사업</a>
+      <a href="/manual/kaiba/business.html" class="sb-link">💼 비즈니스</a>
+      <a href="/manual/kaiba/ceoclub.html" class="sb-link">👔 CEO 클럽</a>
+      <a href="/manual/kaiba/battle.html" class="sb-link">⚔️ AI vs CEO</a>
+      <a href="/manual/kaiba/community.html" class="sb-link">👥 커뮤니티</a>
+      <a href="/manual/kaiba/support.html" class="sb-link">🎧 회원지원</a>
+      <a href="/manual/kaiba/member.html" class="sb-link">👤 회원 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba/">K-AIBA</a><span class="sep">›</span>
+      <span>정책사업</span>
+    </div>
+
+    <h1>정책사업</h1>
+    <p class="page-desc">정부 및 공공기관의 AI 관련 정책사업 공고를 조회하고 신청할 수 있는 기능입니다.</p>
+
+    <h2 id="access">접속 방법</h2>
+    <div class="notice">
+      📌 상단 메뉴에서 <strong>"정책사업"</strong>을 클릭하거나 <code>https://kaiba.kiam.kr/policy/list</code>로 직접 접속합니다.
+    </div>
+
+    <h2 id="list">공고 목록</h2>
+    <p>정책사업 목록 페이지에서는 현재 모집 중인 사업 공고를 확인할 수 있습니다.</p>
+    <h3>각 공고 카드에 표시되는 정보</h3>
+    <table class="info-table">
+      <tr><th style="width:140px;">항목</th><th>설명</th></tr>
+      <tr><td>모집 상태 배지</td><td>"모집중", "마감임박", "마감" 등 현재 상태 표시</td></tr>
+      <tr><td>D-day 표시</td><td>마감일까지 남은 일수 (예: D-45)</td></tr>
+      <tr><td>공고명</td><td>정책사업의 정식 명칭</td></tr>
+      <tr><td>공고 요약</td><td>사업 내용 요약 설명</td></tr>
+      <tr><td>기간</td><td>모집 시작일 ~ 마감일</td></tr>
+      <tr><td>공고일</td><td>최초 공고 게시 날짜</td></tr>
+      <tr><td>주관 기관</td><td>사업을 주관하는 기관명 (예: 기업마당, 구미전자정보기술원 등)</td></tr>
+      <tr><td>사업 유형 태그</td><td>R&D/기술개발, 인력양성, 컨설팅/멘토링, 창업지원, 시설/공간 등</td></tr>
+    </table>
+
+    <h2 id="detail">공고 상세 보기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">공고 카드 클릭</div>
+          <div class="step-desc">목록에서 관심 있는 공고를 클릭하면 상세 페이지로 이동합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">상세 내용 확인</div>
+          <div class="step-desc">사업 배경, 지원 내용, 신청 자격, 접수 방법, 첨부파일 등 세부 정보를 확인합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">원문 바로가기</div>
+          <div class="step-desc">원문 공고 사이트(기업마당 등)로 바로 이동하여 직접 신청할 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="matching">AI 정책 매칭 (CEO 클럽 회원 전용)</h2>
+    <p>CEO 클럽 회원은 AI 기반 6차원 매칭 알고리즘을 통해 기업에 최적화된 정책사업을 자동으로 추천받을 수 있습니다.</p>
+    <ul>
+      <li><strong>업종</strong> — 기업의 주요 산업 분야</li>
+      <li><strong>기업 규모</strong> — 매출, 인력 기준</li>
+      <li><strong>AI 준비도</strong> — AI 도입 수준 평가</li>
+      <li><strong>정책 유형</strong> — 선호 사업 유형</li>
+      <li><strong>예산 규모</strong> — 지원 가능 예산 범위</li>
+      <li><strong>시급성</strong> — 사업 추진 시급도</li>
+    </ul>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> CEO 클럽 가입 후 마이페이지에서 사업자 정보를 등록하면 자동으로 매칭이 시작됩니다. <a href="/manual/kaiba/ceoclub.html" style="color:var(--brand);">CEO 클럽 매뉴얼 →</a>
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,249 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>화상/음성 통화 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+    <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">챗봇 설정</div>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+      <a href="/manual/onechat/prompt.html#llm" class="sb-link">LLM 기본지식 활용 모드</a>
+      <a href="/manual/onechat/wizard.html" class="sb-link">🤖 챗봇 자동 설정 위저드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📞 화상/음성 통화</div>
+      <a href="/manual/onechat/call.html" class="sb-link active">통화 시작 &amp; 컨트롤</a>
+      <a href="/manual/onechat/call.html#multi" class="sb-link">다자통화 &amp; SFU</a>
+      <a href="/manual/onechat/call.html#ringtone" class="sb-link">벨소리 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타 &amp; 학습</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/avatar.html#rag" class="sb-link">RAG 벡터 검색 활용</a>
+      <a href="/manual/onechat/avatar.html#source" class="sb-link">AI 소스 자동 추천</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📅 예약 관리</div>
+      <a href="/manual/onechat/reserve.html" class="sb-link">예약 설정 &amp; 운영</a>
+      <a href="/manual/onechat/reserve.html#flow" class="sb-link">고객 예약 흐름</a>
+      <a href="/manual/onechat/reserve.html#notify" class="sb-link">3-Way 알림</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">💳 구독 &amp; 플랜</div>
+      <a href="/manual/onechat/subscribe.html" class="sb-link">구독 플랜 &amp; 사용량</a>
+      <a href="/manual/onechat/subscribe.html#quota" class="sb-link">사용량 한도 안내</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/onechat/">원챗</a><span class="sep">›</span><span>화상/음성 통화</span></div>
+
+    <h1>📞 화상/음성 통화</h1>
+    <p class="page-desc">원챗의 화상/음성 통화 기능을 사용하면 텍스트 채팅에서 바로 영상 또는 음성 통화로 전환할 수 있습니다. 1:1 통화부터 5인 이상의 다자 통화까지 지원합니다.</p>
+
+    <h2 id="start">통화 시작하기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">채팅방 상단 📞 또는 📹 버튼을 누릅니다</div>
+          <div class="step-desc">채팅방 헤더 오른쪽에 음성통화(📞)와 화상통화(📹) 아이콘이 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">상대방에게 통화 요청이 전송됩니다</div>
+          <div class="step-desc">상대방의 화면에 수신 벨이 울리고 수락/거절 버튼이 나타납니다. 수락하면 통화가 시작됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">화상통화 중 음성통화로 전환 가능</div>
+          <div class="step-desc">통화 중 카메라 버튼을 눌러 카메라를 끄면 음성통화 모드로 전환됩니다. 언제든지 다시 켤 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="controls">통화 중 컨트롤 바</h2>
+    <p>통화 화면 하단에 컨트롤 바가 표시됩니다. 각 버튼의 기능은 다음과 같습니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>버튼</th><th>기능</th></tr></thead>
+      <tbody>
+        <tr><td>🎤 마이크</td><td>내 마이크를 켜거나 끕니다. 음소거 시 상대방에게 내 음성이 전달되지 않습니다.</td></tr>
+        <tr><td>📷 카메라</td><td>내 카메라를 켜거나 끕니다. 카메라를 끄면 프로필 이미지로 대체됩니다.</td></tr>
+        <tr><td>🖥️ 화면 공유</td><td>내 화면 전체 또는 특정 탭을 상대방과 공유합니다. 프레젠테이션이나 문서 설명 시 유용합니다.</td></tr>
+        <tr><td>🎨 가상 배경</td><td>가상 배경 6종 중 선택하거나 배경 흐림(블러) 효과를 적용합니다.</td></tr>
+        <tr><td>🔊 스피커</td><td>스피커를 켜거나 끕니다. 헤드셋 사용 시 음질이 더 좋습니다.</td></tr>
+        <tr><td>📌 화면 고정</td><td>특정 참가자의 화면을 메인 화면에 고정합니다.</td></tr>
+        <tr><td>📞 종료</td><td>통화를 종료합니다. 상대방의 통화도 함께 종료됩니다.</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="virtual-bg">가상 배경 설정</h2>
+    <p>통화 중 또는 통화 시작 전에 가상 배경을 선택할 수 있습니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">컨트롤 바의 🎨 배경 버튼을 누릅니다</div>
+          <div class="step-desc">배경 선택 패널이 나타납니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">6가지 배경 중 하나를 선택합니다</div>
+          <div class="step-desc">사무실, 카페, 서재 등 다양한 배경과 배경 흐림(블러) 옵션을 제공합니다. 선택 즉시 적용됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">📌 가상 배경은 AI가 실시간으로 배경을 분리하는 기술을 사용합니다. 조명이 밝을수록 더 정확하게 작동합니다.</div>
+
+    <h2 id="speaker-detect">발화자 자동 감지</h2>
+    <p>다자 통화 중 현재 말하고 있는 참가자의 화면 테두리가 <strong>초록색</strong>으로 표시됩니다. 누가 말하는지 한눈에 파악할 수 있습니다.</p>
+
+    <h2 id="multi">다자통화 (SFU 서버)</h2>
+    <p>3인 이상 통화부터는 SFU(Selective Forwarding Unit) 서버를 통해 안정적인 다자통화가 가능합니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>인원</th><th>통화 방식</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr><td>1:1 통화</td><td>P2P (직접 연결)</td><td>가장 낮은 지연, 별도 서버 불필요</td></tr>
+        <tr><td>3~4인</td><td>Mesh (P2P 격자)</td><td>각자가 모든 참가자와 직접 연결</td></tr>
+        <tr><td>5인 이상</td><td>SFU 서버 중계</td><td>서버가 중개 → 네트워크 부담 감소, 안정적</td></tr>
+      </tbody>
+    </table>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">그룹 채팅방에서 통화를 시작합니다</div>
+          <div class="step-desc">그룹 채팅방에서 📞/📹 버튼을 누르면 모든 멤버에게 통화 초대 알림이 발송됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">멤버들이 순차적으로 참여합니다</div>
+          <div class="step-desc">초대된 멤버가 수락하면 통화에 합류합니다. 통화 도중에도 새 멤버가 합류할 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="tip">💡 <strong>원활한 다자통화를 위한 팁</strong><br>
+    말하지 않을 때는 마이크를 음소거하면 통화 품질이 향상됩니다. 배경 소음이 많은 환경에서 특히 중요합니다.</div>
+
+    <h2 id="ringtone">벨소리 설정</h2>
+    <p>통화 수신 시 울리는 벨소리를 원하는 음악으로 바꿀 수 있습니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">사이드바 메뉴(☰) → 알림음 설정을 클릭합니다</div>
+          <div class="step-desc">벨소리 선택 화면이 열립니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">원하는 벨소리를 선택하고 ▶ 미리듣기로 확인합니다</div>
+          <div class="step-desc">기본 제공 벨소리 중 하나를 선택합니다. 저장 버튼을 누르면 즉시 적용됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/chat.html"><span class="nav-label">← 이전</span><span class="nav-title">채팅 화면 사용법</span></a>
+      <a href="/manual/onechat/wizard.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">챗봇 자동 설정 위저드</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#start">통화 시작하기</a></li>
+      <li><a href="#controls">컨트롤 바</a></li>
+      <li><a href="#virtual-bg">가상 배경</a></li>
+      <li><a href="#speaker-detect">발화자 감지</a></li>
+      <li><a href="#multi">다자통화 SFU</a></li>
+      <li><a href="#ringtone">벨소리 설정</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

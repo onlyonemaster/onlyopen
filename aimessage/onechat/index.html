@@ -39,6 +39,29 @@
 
     <div class="sidebar-divider"></div>
 
+    <!-- ============================================================
+         [ME-B1] 운영 모드 전환 토글 (2026-05-23, 라이프 아바타 도입)
+         외부 아바타(공개·고객용) ↔ 나의 아바타(내부·개인용) 전환
+         localStorage: oneMeMode = 'public' | 'private'
+         하위 메뉴들이 이 값을 읽어 데이터 소스를 자동 전환
+    ============================================================ -->
+    
+
+    <div class="sidebar-divider"></div>
+
+    
+    <!-- 마이챗 (나의 라이프 아바타) -->
+    <button class="sidebar-menu-item" id="sbMychatBtn" onclick="window.location.href='/aimessage/mychat/'">
+      <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#7e22ce,#b45309);">
+        <i class="fas fa-brain"></i>
+      </div>
+      <div class="sidebar-menu-text">
+        <span class="sidebar-menu-title">마이챗 <span style="font-size:10px;background:#7e22ce;color:#fff;padding:1px 5px;border-radius:8px;margin-left:4px;">나의 아바타</span></span>
+        <span class="sidebar-menu-desc">나만의 AI와 1:1 대화</span>
+      </div>
+      <i class="fas fa-chevron-right sidebar-menu-arrow"></i>
+    </button>
+
     <!-- 메뉴 1: 대시보드 -->
     <button class="sidebar-menu-item" id="sbDashboardBtn">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">
@@ -90,7 +113,6 @@
       </div>
     </button>
 
-    <!-- 메뉴 5-2: 예약관리설정 (v_rs · STEP C-5) -->
     <button class="sidebar-menu-item" id="sbReserveBtn">
       <div class="sidebar-menu-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">
         <i class="fas fa-calendar-check"></i>
@@ -186,10 +208,6 @@
     </div>
   </div>
 
-  <!-- ════════════════════════════════════════════════════════════════
-       예약관리설정 패널 (v_rs · STEP C-6)
-       구조: 좌측 6항목 메뉴 + 우측 중앙 캔버스 (캘린더 핵심)
-       ════════════════════════════════════════════════════════════════ -->
   <div class="companion-overlay" id="reserveOverlay"></div>
   <div class="companion-panel" id="reservePanel">
     <div class="companion-panel-header">
@@ -200,6 +218,9 @@
       </div>
       <button class="companion-save-btn" id="reserveSaveBtn">
         <i class="fas fa-check"></i> 저장
+      </button>
+      <button class="companion-apply-btn" id="reserveApplyBtn" title="저장 후 챗봇에 예약 기능 적용">
+        <i class="fas fa-robot"></i> 챗봇에 적용
       </button>
     </div>
 
@@ -214,6 +235,24 @@
   <style>
     /* 패널 폭: 항상 전체 화면 (좌측메뉴 + 중앙캔버스) */
     #reservePanel { max-width: 100% !important; width: 100% !important; }
+    .companion-apply-btn {
+      background: linear-gradient(135deg,#7c3aed,#4f46e5);
+      color: white; border: none; padding: 7px 14px;
+      border-radius: 8px; font-size: 13px; font-weight: 700;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: opacity 0.2s;
+    }
+    .companion-apply-btn:hover { opacity: 0.85; }
+    .companion-apply-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .companion-apply-btn.applied {
+      background: linear-gradient(135deg,#059669,#047857);
+    }
+    #rsApplyStatus {
+      font-size:11px; padding:4px 10px; border-radius:99px; font-weight:700;
+      display:none;
+    }
+    #rsApplyStatus.on { display:inline-flex; align-items:center; gap:4px; background:rgba(5,150,105,0.18); color:#34d399; }
+    #rsApplyStatus.off { display:inline-flex; align-items:center; gap:4px; background:rgba(239,68,68,0.15); color:#f87171; }
     #reservePanel .rs-layout { display:grid; grid-template-columns: 180px 1fr; min-height: calc(100vh - 60px); }
     @media (max-width: 700px) { #reservePanel .rs-layout { grid-template-columns: 1fr; } #reservePanel .rs-side { display:none; } }
 
@@ -288,15 +327,112 @@
       background:rgba(255,255,255,0.05); border:none; color:#cbd5e1; padding:6px 10px; border-radius:7px; cursor:pointer; font-size:13px;
     }
     #reservePanel .rs-cal-grid { display:grid; grid-template-columns:repeat(7, 1fr); gap:4px; }
+    /* ── 캘린더 툴바 & 뷰 전환 ── */
+    #reservePanel .rs-cal-toolbar{display:flex;align-items:center;justify-content:space-between;padding:0 0 12px;flex-wrap:wrap;gap:8px;}
+    #reservePanel .rs-cal-period-title{font-size:15px;font-weight:800;color:#e2e8f0;}
+    #reservePanel .rs-view-switcher{display:flex;gap:2px;background:rgba(255,255,255,.06);border-radius:8px;padding:2px;}
+    #reservePanel .rvs-btn{background:none;border:none;padding:4px 12px;border-radius:6px;font-size:12px;color:#94a3b8;cursor:pointer;font-weight:600;transition:all .15s;}
+    #reservePanel .rvs-btn.active{background:#3b82f6;color:#fff;}
+    #reservePanel .rvs-btn:hover:not(.active){color:#e2e8f0;background:rgba(255,255,255,.08);}
+    /* 월간 셀 개선 */
+    #reservePanel .rs-cal-cell{cursor:pointer;transition:background .15s;}
+    #reservePanel .rs-cal-cell:hover{background:rgba(59,130,246,.2);border-radius:4px;}
+    #reservePanel .rs-cal-dow{text-align:center;font-size:10px;color:#64748b;padding:4px 0;font-weight:700;}
+    #reservePanel .rs-cal-dots{display:flex;gap:2px;margin-top:2px;flex-wrap:wrap;}
+    #reservePanel .rs-cal-dots span{width:5px;height:5px;border-radius:50%;display:inline-block;}
+    #reservePanel .rs-cal-dots .more{font-size:8px;color:#94a3b8;}
+    /* ── 월간뷰 이벤트 바 (구글 캘린더 스타일) ── */
+    #reservePanel .rs-cal-bar{
+      display:flex;align-items:center;gap:3px;padding:1px 4px;border-radius:3px;
+      font-size:10px;font-weight:600;color:#fff;cursor:pointer;
+      white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+      min-height:16px;line-height:1.4;
+      transition:opacity .12s,filter .12s;flex-shrink:0;
+    }
+    #reservePanel .rs-cal-bar:hover{opacity:.85;filter:brightness(1.1);}
+    #reservePanel .rs-cal-bar .rs-bar-dot{width:5px;height:5px;border-radius:50%;background:rgba(255,255,255,.7);flex-shrink:0;}
+    #reservePanel .rs-cal-bar .rs-bar-lbl{overflow:hidden;text-overflow:ellipsis;}
+    #reservePanel .rs-cal-more{font-size:9px;color:#94a3b8;padding:1px 4px;cursor:pointer;}
+    #reservePanel .rs-cal-more:hover{color:#e2e8f0;}
+    #reservePanel .rs-cal-cell .rs-cal-bars{display:flex;flex-direction:column;gap:2px;flex:1;min-height:0;overflow:hidden;}
+    /* 일간 뷰 */
+    #reservePanel .rs-day-wrap{padding:0;}
+    #reservePanel .rs-day-summary{padding:8px 14px;font-size:12px;color:#94a3b8;border-bottom:1px solid rgba(255,255,255,.06);}
+    #reservePanel .rs-day-timeline{overflow-y:auto;max-height:calc(100vh - 220px);}
+    #reservePanel .rs-day-row{display:flex;border-bottom:1px solid rgba(255,255,255,.04);min-height:44px;}
+    #reservePanel .rs-day-row.has-bk{background:rgba(59,130,246,.04);}
+    #reservePanel .rs-day-time{width:48px;flex-shrink:0;font-size:10px;color:#475569;padding:6px 8px;border-right:1px solid rgba(255,255,255,.06);display:flex;align-items:center;}
+    #reservePanel .rs-day-slot{flex:1;padding:4px 8px;display:flex;flex-direction:column;gap:4px;}
+    #reservePanel .rs-day-bk{display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.04);border-radius:4px;padding:4px 8px;font-size:11px;}
+    #reservePanel .rs-day-bk-time{font-weight:700;color:#93c5fd;min-width:38px;}
+    #reservePanel .rs-day-bk-name{flex:1;color:#e2e8f0;}
+    #reservePanel .rs-day-bk-cnt{color:#94a3b8;}
+    /* 주간 뷰 */
+    #reservePanel .rs-week-wrap{padding:0;overflow:hidden;}
+    #reservePanel .rs-week-hdr{display:grid;grid-template-columns:48px repeat(7,1fr);border-bottom:1px solid rgba(255,255,255,.08);background:#1e2535;position:sticky;top:0;z-index:2;}
+    #reservePanel .rs-week-day-col{text-align:center;padding:6px 2px;}
+    #reservePanel .rs-week-day-col.today .rs-week-day-num{background:#3b82f6;color:#fff;border-radius:50%;width:24px;height:24px;display:flex;align-items:center;justify-content:center;margin:0 auto;}
+    #reservePanel .rs-week-day-lbl{font-size:10px;color:#64748b;font-weight:700;}
+    #reservePanel .rs-week-day-num{font-size:13px;color:#e2e8f0;margin-top:2px;}
+    #reservePanel .rs-week-grid{overflow-y:auto;max-height:calc(100vh - 240px);}
+    #reservePanel .rs-week-row{display:grid;grid-template-columns:48px repeat(7,1fr);border-bottom:1px solid rgba(255,255,255,.04);min-height:40px;}
+    #reservePanel .rs-week-time-col{font-size:10px;color:#475569;padding:4px 6px;border-right:1px solid rgba(255,255,255,.06);display:flex;align-items:center;}
+    #reservePanel .rs-week-cell{border-right:1px solid rgba(255,255,255,.04);padding:2px;display:flex;flex-direction:column;gap:2px;cursor:pointer;}
+    #reservePanel .rs-week-cell:hover{background:rgba(59,130,246,.08);}
+    #reservePanel .rs-week-bk{border-radius:3px;padding:2px 4px;margin:1px 0;}
+    /* 연간 뷰 */
+    #reservePanel .rs-yr-wrap{padding:0;}
+    #reservePanel .rs-yr-legend{display:flex;gap:8px;align-items:center;font-size:10px;color:#94a3b8;padding:6px 12px;}
+    #reservePanel .rs-yr-grid-outer{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;padding:12px;}
+    @media(max-width:700px){#reservePanel .rs-yr-grid-outer{grid-template-columns:repeat(2,1fr);}}
+    #reservePanel .rs-yr-month{cursor:pointer;}
+    #reservePanel .rs-yr-month-title{font-size:11px;font-weight:800;color:#94a3b8;margin-bottom:4px;text-align:center;}
+    #reservePanel .rs-yr-month:hover .rs-yr-month-title{color:#3b82f6;}
+    #reservePanel .rs-yr-grid{display:grid;grid-template-columns:repeat(7,1fr);gap:1px;}
+    #reservePanel .rs-yr-dow{font-size:8px;color:#475569;text-align:center;padding:1px 0;}
+    #reservePanel .rs-yr-cell{font-size:9px;text-align:center;padding:2px 0;border-radius:2px;cursor:pointer;color:#cbd5e1;}
+    #reservePanel .rs-yr-cell.today{outline:1px solid #3b82f6;}
+    #reservePanel .rs-yr-cell.dim{opacity:0;pointer-events:none;}
+    #reservePanel .rs-yr-cell:hover{background:rgba(59,130,246,.3)!important;color:#fff!important;}
+    /* 날짜 팝업 */
+    #rsCalPopup{position:fixed;inset:0;z-index:9999;pointer-events:none;}
+    #rsCalPopup .rs-popup-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:9999;pointer-events:auto;}
+    #rsCalPopup .rs-popup-card{z-index:10000;pointer-events:auto;}
+    .rs-popup-overlay{position:absolute;inset:0;background:rgba(0,0,0,.5);}
+    .rs-popup-card{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);background:#1e2535;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,.5);width:320px;max-width:90%;border:1px solid rgba(255,255,255,.1);z-index:1;}
+    .rs-popup-hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid rgba(255,255,255,.08);font-size:14px;font-weight:700;color:#e2e8f0;}
+    .rs-popup-close{background:none;border:none;color:#64748b;cursor:pointer;font-size:16px;width:28px;height:28px;display:flex;align-items:center;justify-content:center;border-radius:50%;}
+    .rs-popup-close:hover{background:rgba(255,255,255,.08);color:#e2e8f0;}
+    .rs-popup-body{padding:12px 16px;max-height:280px;overflow-y:auto;}
+    .rs-popup-bk{display:flex;align-items:center;gap:8px;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.05);font-size:12px;}
+    .rs-popup-bk:last-child{border-bottom:none;}
+    .rs-popup-bk-time{font-weight:700;color:#93c5fd;min-width:38px;}
+    .rs-popup-bk-name{flex:1;color:#e2e8f0;}
+    .rs-popup-bk-cnt{color:#94a3b8;}
+    .rs-popup-foot{padding:10px 16px;border-top:1px solid rgba(255,255,255,.08);display:flex;gap:8px;}
+    .rs-popup-btn-day{background:#3b82f6;border:none;color:#fff;border-radius:6px;padding:6px 14px;font-size:12px;cursor:pointer;font-weight:600;}
+    .rs-popup-btn-day:hover{background:#2563eb;}
     #reservePanel .rs-cal-cell {
-      aspect-ratio: 1.0; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.05); border-radius:7px;
-      padding:6px; font-size:11px; color:#cbd5e1; display:flex; flex-direction:column; gap:3px;
+      min-height:80px; background:rgba(255,255,255,0.025); border:1px solid rgba(255,255,255,0.05); border-radius:7px;
+      padding:5px 4px 4px; font-size:11px; color:#cbd5e1; display:flex; flex-direction:column; gap:2px;
+      overflow:hidden;
     }
     #reservePanel .rs-cal-cell.dim { opacity:0.3; }
     #reservePanel .rs-cal-cell.today { border-color:#3b82f6; box-shadow: inset 0 0 0 1px #3b82f6; }
     #reservePanel .rs-cal-cell .d { font-weight:800; font-size:13px; color:#e2e8f0; }
     #reservePanel .rs-cal-cell .stat { font-size:9px; color:#60a5fa; }
     #reservePanel .rs-cal-cell .stat.full { color:#fca5a5; }
+    /* 날짜 숫자 클릭 → 일간뷰 */
+    #reservePanel .rs-cal-cell .d { border-radius:50%; width:22px; height:22px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition:background .15s,color .15s; }
+    #reservePanel .rs-cal-cell .d:hover { background:#3b82f6; color:#fff !important; }
+    /* 드래그앤드롭 */
+    #reservePanel .rs-cal-bar { cursor:grab; }
+    #reservePanel .rs-cal-bar:active { cursor:grabbing; }
+    #reservePanel [draggable="true"] { cursor:grab; }
+    #reservePanel [draggable="true"]:active { cursor:grabbing; }
+    #reservePanel .rs-cal-cell.dnd-over { background:rgba(59,130,246,.22) !important; border-color:#3b82f6 !important; outline:2px dashed #3b82f6; }
+    #reservePanel .rs-week-cell.dnd-over { background:rgba(59,130,246,.18) !important; }
+    #reservePanel .rs-day-slot.dnd-over { background:rgba(59,130,246,.12); border-radius:4px; }
 
     /* 트리거 */
     #reservePanel .rs-trig {
@@ -343,7 +479,122 @@
 
     /* 푸터 정보 */
     #reservePanel .rs-foot { padding: 14px; border-top:1px solid rgba(255,255,255,0.06); font-size:10px; color:#64748b; text-align:center; }
+
+    /* 제외시간 인라인 폼 */
+    #reservePanel .rs-bo-form {
+      background:rgba(59,130,246,0.06); border:1px solid rgba(59,130,246,0.25);
+      border-radius:10px; padding:14px; margin-bottom:8px;
+    }
+    #reservePanel .rs-bf-row {
+      margin-bottom:12px;
+    }
+    #reservePanel .rs-bf-lbl {
+      display:block; font-size:11px; font-weight:700; color:#60a5fa;
+      margin-bottom:7px; letter-spacing:0.3px;
+    }
+    #reservePanel .rs-bf-presets {
+      display:flex; gap:6px; flex-wrap:wrap;
+    }
+    #reservePanel .rs-bf-preset {
+      padding:5px 13px; font-size:12px; font-weight:600; border-radius:20px;
+      background:rgba(255,255,255,0.06); color:#94a3b8;
+      border:1px solid rgba(255,255,255,0.12); cursor:pointer; transition:all .15s;
+    }
+    #reservePanel .rs-bf-preset:hover { background:rgba(255,255,255,0.10); color:#e2e8f0; }
+    #reservePanel .rs-bf-preset.active {
+      background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:white;
+      border-color:#3b82f6;
+    }
+    #reservePanel .rs-bf-custom-inp {
+      margin-top:8px; width:100%; display:none;
+    }
+    #reservePanel .rs-bf-btns {
+      display:flex; gap:8px; justify-content:flex-end; margin-top:14px;
+    }
+    #reservePanel .rs-bf-cancel {
+      padding:7px 16px; border-radius:7px; font-size:12px; font-weight:600;
+      background:rgba(255,255,255,0.06); color:#94a3b8;
+      border:1px solid rgba(255,255,255,0.12); cursor:pointer;
+    }
+    #reservePanel .rs-bf-submit {
+      padding:7px 16px; border-radius:7px; font-size:12px; font-weight:600;
+      background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:white;
+      border:none; cursor:pointer; display:flex; align-items:center; gap:6px;
+    }
+    #reservePanel .rs-bf-submit:hover { opacity:0.9; }
+
+    /* 트리거 도구 패널 */
+    #reservePanel .rs-trig-tools {
+      background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.07);
+      border-radius:12px; padding:16px; margin-bottom:14px;
+    }
+    #reservePanel .rs-tt-section { padding: 4px 0 10px; }
+    #reservePanel .rs-tt-section.rs-tt-c { padding-bottom:0; }
+    #reservePanel .rs-tt-label {
+      font-size:12px; font-weight:700; color:#e2e8f0;
+      margin-bottom:5px; display:flex; align-items:center; gap:6px;
+    }
+    #reservePanel .rs-tt-desc { font-size:11px; color:#64748b; margin-bottom:10px; line-height:1.5; }
+    #reservePanel .rs-tt-divider { border-top:1px solid rgba(255,255,255,0.06); margin:10px 0; }
+
+    /* 업종 프리셋 버튼 */
+    #reservePanel .rs-preset-genres { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px; }
+    #reservePanel .rs-genre-btn {
+      padding:5px 11px; font-size:11px; font-weight:600; border-radius:20px;
+      background:rgba(255,255,255,0.05); color:#94a3b8;
+      border:1px solid rgba(255,255,255,0.1); cursor:pointer; transition:all .15s;
+    }
+    #reservePanel .rs-genre-btn:hover { background:rgba(255,255,255,0.09); color:#e2e8f0; }
+    #reservePanel .rs-genre-btn.active {
+      background:linear-gradient(135deg,rgba(59,130,246,0.3),rgba(168,85,247,0.2));
+      color:#e2e8f0; border-color:#3b82f6;
+    }
+    #reservePanel .rs-genre-apply {
+      padding:7px 16px; border-radius:7px; font-size:12px; font-weight:600;
+      background:linear-gradient(135deg,#3b82f6,#1d4ed8); color:white;
+      border:none; cursor:pointer; display:inline-flex; align-items:center; gap:6px;
+    }
+    #reservePanel .rs-genre-apply:disabled { opacity:0.4; cursor:not-allowed; }
+
+    /* AI 자동 생성 */
+    #reservePanel .rs-ai-gen-btn {
+      padding:8px 18px; border-radius:8px; font-size:12px; font-weight:700;
+      background:linear-gradient(135deg,#7c3aed,#4f46e5); color:white;
+      border:none; cursor:pointer; display:inline-flex; align-items:center; gap:7px;
+      transition:opacity .15s;
+    }
+    #reservePanel .rs-ai-gen-btn:disabled { opacity:0.6; cursor:not-allowed; }
+    #reservePanel .rs-ai-result {
+      margin-top:12px; background:rgba(124,58,237,0.08);
+      border:1px solid rgba(124,58,237,0.25); border-radius:10px; padding:12px;
+    }
+    #reservePanel .rs-air-head {
+      font-size:12px; font-weight:700; color:#c4b5fd; margin-bottom:10px;
+      display:flex; align-items:center; gap:6px;
+    }
+    #reservePanel .rs-air-row {
+      display:flex; align-items:center; gap:8px; margin-bottom:7px;
+      flex-wrap:wrap;
+    }
+    #reservePanel .rs-air-lbl {
+      font-size:10px; font-weight:700; color:#94a3b8; min-width:70px;
+    }
+    #reservePanel .rs-air-val {
+      flex:1; font-size:11px; color:#e2e8f0; min-width:120px;
+    }
+    #reservePanel .rs-air-apply {
+      padding:3px 10px; font-size:10px; font-weight:700; border-radius:5px;
+      background:rgba(124,58,237,0.25); color:#c4b5fd;
+      border:1px solid rgba(124,58,237,0.4); cursor:pointer;
+    }
+    #reservePanel .rs-air-all-btn {
+      width:100%; margin-top:10px; padding:8px; border-radius:7px;
+      font-size:12px; font-weight:700;
+      background:linear-gradient(135deg,#7c3aed,#4f46e5); color:white;
+      border:none; cursor:pointer;
+    }
   </style>
+
 
   <!-- 모바일 앱 래퍼 -->
   <div class="app-wrapper">
@@ -1604,7 +1855,7 @@
       <button class="learn-tab" data-ltab="text"><i class="fas fa-file-alt"></i> 텍스트</button>
       <button class="learn-tab" data-ltab="voice"><i class="fas fa-microphone"></i> 음성</button>
       <button class="learn-tab" data-ltab="file"><i class="fas fa-file-pdf"></i> 파일</button>
-      <button class="learn-tab" data-ltab="news"><i class="fas fa-newspaper"></i> 뉴스/자동수집</button>
+      <button class="learn-tab" data-ltab="news"><i class="fas fa-globe"></i> 웹 콘텐츠 자동수집</button>
     </div>
 
     <div class="learn-body">
@@ -1747,11 +1998,11 @@
         <div class="learn-panel-top">
           <div class="learn-intro">
             <div class="learn-intro-icon" style="background:rgba(99,102,241,0.12)">
-              <i class="fas fa-newspaper" style="color:#6366f1"></i>
+              <i class="fas fa-globe" style="color:#6366f1"></i>
             </div>
             <div>
-              <p class="learn-intro-title">자동 수집 학습 데이터</p>
-              <p class="learn-intro-desc">뉴스·유튜브·블로그에서 자동으로 수집된<br>나의 학습 데이터 현황입니다.</p>
+              <p class="learn-intro-title">웹 콘텐츠 자동수집 현황</p>
+              <p class="learn-intro-desc">뉴스·블로그·웹문서·유튜브에서 자동으로 수집된<br>학습 데이터 현황입니다.</p>
             </div>
           </div>
         </div>
@@ -1770,6 +2021,11 @@
             <span class="ns-icon"><i class="fas fa-blog"></i></span>
             <span class="ns-count" id="nsCount-blog">0</span>
             <span class="ns-label">블로그</span>
+          </div>
+          <div class="news-stat-card" id="nsCard-text">
+            <span class="ns-icon"><i class="fas fa-globe"></i></span>
+            <span class="ns-count" id="nsCount-text">0</span>
+            <span class="ns-label">웹문서</span>
           </div>
         </div>
         <div class="news-last-update">
@@ -1991,10 +2247,12 @@
   <script src="js/dm.js?v=0514b"></script>
   <script src="js/quota.js?v=0506a"></script>
   <!-- data.js 제거: mock 데이터 완전 삭제, 모든 데이터 서버 API로 전환 -->
-  <script src="js/main.js?v=rs1c14"></script>
+  <script src="js/main.js?v=0603dnd"></script>
   <script src="js/learn.js?v=0428i"></script>
-  <script src="js/api.js?v=rs1c14"></script>
+  <script src="js/api.js?v=0505c"></script>
   <script src="js/voice.js?v=0505i"></script>
+  <!-- [ME-B1] 운영 모드 전환 토글 (2026-05-23, 라이프 아바타) -->
+  <!-- [ME-B2] 채팅 리스트 최상단 '나의 아바타' 핀 카드 (2026-05-23, 라이프 아바타) -->
 
   <!-- ========== 알림 패널 ========== -->
   <div class="notif-overlay" id="notifOverlay" onclick="closeNotifPanel()"></div>

@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>아바타 학습시키기 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">챗봇 설정</div>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+      <a href="/manual/onechat/prompt.html#llm" class="sb-link">LLM 기본지식 활용 모드</a>
+      <a href="/manual/onechat/wizard.html" class="sb-link">🤖 챗봇 자동 설정 위저드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📞 화상/음성 통화</div>
+      <a href="/manual/onechat/call.html" class="sb-link">통화 시작 &amp; 컨트롤</a>
+      <a href="/manual/onechat/call.html#multi" class="sb-link">다자통화 &amp; SFU</a>
+      <a href="/manual/onechat/call.html#ringtone" class="sb-link">벨소리 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타 &amp; 학습</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link active">아바타 학습시키기</a>
+      <a href="/manual/onechat/avatar.html#rag" class="sb-link">RAG 벡터 검색 활용</a>
+      <a href="/manual/onechat/avatar.html#source" class="sb-link">AI 소스 자동 추천</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📅 예약 관리</div>
+      <a href="/manual/onechat/reserve.html" class="sb-link">예약 설정 &amp; 운영</a>
+      <a href="/manual/onechat/reserve.html#flow" class="sb-link">고객 예약 흐름</a>
+      <a href="/manual/onechat/reserve.html#notify" class="sb-link">3-Way 알림</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">💳 구독 &amp; 플랜</div>
+      <a href="/manual/onechat/subscribe.html" class="sb-link">구독 플랜 &amp; 사용량</a>
+      <a href="/manual/onechat/subscribe.html#quota" class="sb-link">사용량 한도 안내</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/onechat/">원챗</a><span class="sep">›</span><span>아바타 학습시키기</span></div>
+
+    <h1>아바타 학습시키기</h1>
+    <p class="page-desc">나의 말투, 전문 지식, 경험을 AI 아바타에게 학습시킬수록 더 자연스럽고 똑똑한 응답을 할 수 있습니다.</p>
+
+    <h2 id="enter">학습 화면 진입</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">상단 오른쪽 👤 아바타 버튼을 클릭합니다</div>
+          <div class="step-desc">드롭다운 메뉴가 열립니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">"아바타 학습시키기"를 선택합니다</div>
+          <div class="step-desc">전체 화면 학습 패널이 아래에서 슬라이드업되어 열립니다. 상단에 <strong>총 학습 수</strong>와 <strong>마지막 학습 시간</strong>이 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="tabs">4가지 학습 방법</h2>
+
+    <h3 id="diary">📔 일기 · 대화 탭</h3>
+    <p>하루의 경험, 미팅 내용, 감정 등을 일기 형식으로 입력합니다. AI가 나의 일상과 관심사를 학습합니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>설정 항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>날짜 선택</td><td>어느 날의 일기인지 날짜를 선택합니다</td></tr>
+        <tr><td>템플릿 선택</td><td>식사 / 미팅 / 감정 / 일상 / 성과 중 선택하면 형식이 자동 완성됩니다</td></tr>
+        <tr><td>카테고리</td><td>가족 / 일 / 취미 / 여행 / 건강 / 관계 중 선택합니다</td></tr>
+        <tr><td>내용 입력</td><td>자유롭게 그날의 경험을 기록합니다</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="text">📝 텍스트 탭</h3>
+    <p>전문 지식, 업무 노하우, 자주 하는 말 등 자유 형식의 텍스트를 입력합니다.</p>
+    <p>예시: "저는 부동산 투자 전문가로, 항상 리스크 관리를 우선시합니다. 고객에게는..."</p>
+
+    <h3 id="voice">🎙️ 음성 탭</h3>
+    <p>직접 말로 녹음하여 학습 데이터를 만듭니다. 말투와 어조까지 AI가 학습합니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">🎙️ 녹음 시작 버튼을 누릅니다</div>
+          <div class="step-desc">마이크 사용 권한을 허용하면 녹음이 시작됩니다. 타이머와 파형 애니메이션이 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">말하고 싶은 내용을 말합니다</div>
+          <div class="step-desc">업무 소개, 전문 지식, 고객 응대 방식 등을 자연스럽게 말하세요.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">정지 버튼을 누르고 저장합니다</div>
+          <div class="step-desc">녹음 완료 후 업로드/저장 버튼을 누르면 학습 데이터로 등록됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h3 id="file">📁 파일 탭</h3>
+    <p>문서 파일을 업로드하여 AI가 그 내용을 학습하게 합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>지원 형식</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td>PDF</td><td>회사 소개서, 제안서, 보고서</td></tr>
+        <tr><td>DOC / DOCX</td><td>업무 매뉴얼, 상품 설명서</td></tr>
+        <tr><td>TXT</td><td>자주 하는 말, Q&A 목록</td></tr>
+        <tr><td>PPT / PPTX</td><td>프레젠테이션 자료</td></tr>
+        <tr><td>XLS / XLSX</td><td>데이터 표, 가격표</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>많이 학습할수록 더 똑똑해집니다</strong><br>
+      학습 데이터가 쌓일수록 AI가 나의 전문 분야를 더 정확하게 파악합니다. 주 1~2회 꾸준히 학습시키는 것을 추천합니다.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/prompt.html"><span class="nav-label">← 이전</span><span class="nav-title">프롬프팅 설정</span></a>
+      <a href="/manual/onechat/dashboard.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">대시보드 & 분석</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#enter">학습 화면 진입</a></li>
+      <li><a href="#tabs">4가지 학습 방법</a></li>
+      <li><a href="#diary" class="h3">📔 일기·대화</a></li>
+      <li><a href="#text" class="h3">📝 텍스트</a></li>
+      <li><a href="#voice" class="h3">🎙️ 음성</a></li>
+      <li><a href="#file" class="h3">📁 파일</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

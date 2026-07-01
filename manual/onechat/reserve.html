@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>예약 관리 설정 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+    <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">챗봇 설정</div>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+      <a href="/manual/onechat/prompt.html#llm" class="sb-link">LLM 기본지식 활용 모드</a>
+      <a href="/manual/onechat/wizard.html" class="sb-link">🤖 챗봇 자동 설정 위저드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📞 화상/음성 통화</div>
+      <a href="/manual/onechat/call.html" class="sb-link">통화 시작 &amp; 컨트롤</a>
+      <a href="/manual/onechat/call.html#multi" class="sb-link">다자통화 &amp; SFU</a>
+      <a href="/manual/onechat/call.html#ringtone" class="sb-link">벨소리 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타 &amp; 학습</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/avatar.html#rag" class="sb-link">RAG 벡터 검색 활용</a>
+      <a href="/manual/onechat/avatar.html#source" class="sb-link">AI 소스 자동 추천</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📅 예약 관리</div>
+      <a href="/manual/onechat/reserve.html" class="sb-link active">예약 설정 &amp; 운영</a>
+      <a href="/manual/onechat/reserve.html#flow" class="sb-link">고객 예약 흐름</a>
+      <a href="/manual/onechat/reserve.html#notify" class="sb-link">3-Way 알림</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">💳 구독 &amp; 플랜</div>
+      <a href="/manual/onechat/subscribe.html" class="sb-link">구독 플랜 &amp; 사용량</a>
+      <a href="/manual/onechat/subscribe.html#quota" class="sb-link">사용량 한도 안내</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/onechat/">원챗</a><span class="sep">›</span><span>예약 관리 설정</span></div>
+
+    <h1>📅 예약 관리 설정</h1>
+    <p class="page-desc">원챗 내장 예약 시스템을 사용하면 고객이 챗봇 대화 중 바로 예약을 신청할 수 있습니다. 네이버 예약 등 외부 시스템 없이 완전 자체 운영됩니다.</p>
+
+    <div class="notice">🔑 예약 기능을 사용하려면 먼저 예약 설정을 완료하고 <strong>챗봇에 적용</strong> 버튼을 눌러야 합니다.</div>
+
+    <h2 id="enter">예약 관리 진입</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">사이드바(☰) → 예약관리설정을 클릭합니다</div>
+          <div class="step-desc">예약 관리 패널이 열립니다. 왼쪽 메뉴에서 기본설정, 캘린더, 트리거, 알림, AI 동행 연결, 예약현황을 선택할 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="basic">기본 설정</h2>
+    <p>예약 운영의 기본 조건을 설정합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>설정 항목</th><th>설명</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td><strong>업무 시간</strong></td><td>예약 가능한 요일별 시작·종료 시간</td><td>월~금 10:00~19:00</td></tr>
+        <tr><td><strong>예약 단위</strong></td><td>1회 예약 소요 시간 (슬롯 크기)</td><td>30분 / 1시간</td></tr>
+        <tr><td><strong>최대 예약 인원</strong></td><td>슬롯당 수용 인원</td><td>1명 (1:1 상담)</td></tr>
+        <tr><td><strong>리드타임</strong></td><td>예약 가능한 최소 사전 시간</td><td>1시간 전까지</td></tr>
+        <tr><td><strong>최대 예약 기간</strong></td><td>오늘부터 몇 일 후까지 예약 가능</td><td>30일 이내</td></tr>
+        <tr><td><strong>취소 가능 기한</strong></td><td>예약 시간 몇 시간 전까지 취소 허용</td><td>24시간 전까지</td></tr>
+        <tr><td><strong>업소명/주소/전화</strong></td><td>예약 확정 메시지에 자동 포함</td><td>청담한의원 / 서울...</td></tr>
+        <tr><td><strong>챗봇 안내 멘트</strong></td><td>예약 안내 시 챗봇이 먼저 하는 말</td><td>안녕하세요! 예약 도와드릴게요...</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="blackout">예약 불가 시간 설정</h2>
+    <p>특정 날짜 또는 시간대를 예약 불가로 지정합니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">기본설정 탭에서 "예약 불가 시간 추가" 버튼을 클릭합니다</div>
+          <div class="step-desc">날짜 범위, 요일, 시간대를 조합하여 설정합니다. 예: 매주 수요일 점심시간(12:00~13:00) 예약 불가</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="flow">고객 예약 흐름</h2>
+    <p>고객이 챗봇과 대화하면서 예약하는 전체 흐름입니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">고객이 예약 의사를 표현합니다</div>
+          <div class="step-desc">"예약하고 싶어요", "방문하고 싶은데요" 등의 말을 감지하면 챗봇이 자동으로 예약 흐름을 시작합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">챗봇이 가능한 날짜를 제안합니다</div>
+          <div class="step-desc">설정된 운영 시간 기준으로 예약 가능한 날짜 목록을 버튼 형태로 보여줍니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">날짜 선택 후 가능한 시간대를 보여줍니다</div>
+          <div class="step-desc">선택한 날짜에서 아직 예약되지 않은 시간 슬롯을 버튼으로 표시합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">고객 정보를 입력받습니다</div>
+          <div class="step-desc">이름, 전화번호, 지역 정보를 입력받습니다. 기존 등록 고객은 추가 정보(지역)만 확인합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">예약 확정 메시지가 전송됩니다</div>
+          <div class="step-desc">날짜, 시간, 고객 정보, 예약번호가 포함된 확정 메시지가 표시됩니다. 동시에 3-Way 알림이 발송됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="notify">3-Way 알림</h2>
+    <p>예약 확정 시 고객·운영자·관리자에게 동시에 알림이 발송됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>수신자</th><th>알림 내용</th></tr></thead>
+      <tbody>
+        <tr><td><strong>고객</strong></td><td>예약 확정 내용 (날짜/시간/장소/예약번호) + 취소 방법 안내</td></tr>
+        <tr><td><strong>운영자</strong></td><td>신규 예약 알림 + 고객 정보 (이름/전화/지역)</td></tr>
+        <tr><td><strong>관리자</strong></td><td>감사 로그 + 시스템 모니터링용 요약</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="trigger">예약 트리거 설정</h2>
+    <p>고객이 어떤 말을 했을 때 예약 흐름을 시작할지 설정합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>트리거 유형</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>수동 트리거</strong></td><td>특정 키워드를 입력하면 즉시 예약 흐름 시작 (예: "예약", "방문하고싶어")</td></tr>
+        <tr><td><strong>분위기 감지</strong></td><td>관심 신호 감지 시 자연스럽게 예약 제안 (예: "한번 가보고싶다")</td></tr>
+        <tr><td><strong>AI 동행 주기</strong></td><td>주기적으로 AI가 자발적으로 예약을 제안</td></tr>
+        <tr><td><strong>관심사 매칭</strong></td><td>고객 관심사와 서비스가 매칭될 때 예약 제안</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="calendar">예약 캘린더</h2>
+    <p>수집된 예약을 일간/주간/월간/연간 4가지 뷰로 확인할 수 있습니다.</p>
+    <ul>
+      <li><strong>월간 뷰</strong>: 한달 예약 밀도 한눈에 파악, 날짜 클릭 시 당일 예약 팝업</li>
+      <li><strong>주간 뷰</strong>: 요일별 시간대 예약 현황, 셀 클릭 시 일간 보기로 전환</li>
+      <li><strong>일간 뷰</strong>: 08:00~21:00 타임라인, 예약 블록 상세 표시</li>
+      <li><strong>연간 뷰</strong>: 예약 밀도 히트맵, 성수기/비수기 파악에 유용</li>
+    </ul>
+
+    <h2 id="apply">챗봇에 적용하기</h2>
+    <div class="notice">⚠️ 예약 설정을 저장한 후 <strong>반드시 "챗봇에 적용" 버튼</strong>을 눌러야 실제 챗봇에서 예약 기능이 작동합니다.</div>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">기본설정을 완료하고 저장합니다</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">상단의 "챗봇에 적용" 버튼을 클릭합니다</div>
+          <div class="step-desc">챗봇 시스템 프롬프트에 자체 예약 시스템 안내가 자동으로 추가되고, 네이버 예약 등 외부 예약 관련 문구가 제거됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/avatar.html"><span class="nav-label">← 이전</span><span class="nav-title">아바타 학습시키기</span></a>
+      <a href="/manual/onechat/companion.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">AI 동행 기능</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#enter">예약 관리 진입</a></li>
+      <li><a href="#basic">기본 설정</a></li>
+      <li><a href="#blackout">예약 불가 시간</a></li>
+      <li><a href="#flow">고객 예약 흐름</a></li>
+      <li><a href="#notify">3-Way 알림</a></li>
+      <li><a href="#trigger">예약 트리거</a></li>
+      <li><a href="#calendar">예약 캘린더</a></li>
+      <li><a href="#apply">챗봇에 적용</a></li>
+    </ul>
+  </aside>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 뉴스 — K-AIBA 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr" class="btn-site" target="_blank">K-AIBA →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">K-AIBA 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 K-AIBA 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">사이트 안내</div>
+      <a href="/manual/kaiba/about.html" class="sb-link">🏢 협회 소개</a>
+      <a href="/manual/kaiba/news.html" class="sb-link active">📰 AI 뉴스</a>
+      <a href="/manual/kaiba/policy.html" class="sb-link">📋 정책사업</a>
+      <a href="/manual/kaiba/business.html" class="sb-link">💼 비즈니스</a>
+      <a href="/manual/kaiba/ceoclub.html" class="sb-link">👔 CEO 클럽</a>
+      <a href="/manual/kaiba/battle.html" class="sb-link">⚔️ AI vs CEO</a>
+      <a href="/manual/kaiba/community.html" class="sb-link">👥 커뮤니티</a>
+      <a href="/manual/kaiba/support.html" class="sb-link">🎧 회원지원</a>
+      <a href="/manual/kaiba/member.html" class="sb-link">👤 회원 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba/">K-AIBA</a><span class="sep">›</span>
+      <span>AI 뉴스</span>
+    </div>
+
+    <h1>AI 뉴스 (메인 페이지)</h1>
+    <p class="page-desc">kaiba.kiam.kr 메인 화면은 최신 AI 뉴스를 MSN 스타일 타일 레이아웃으로 보여줍니다.</p>
+
+    <h2 id="overview">화면 구성</h2>
+    <p>메인 페이지(<code>https://kaiba.kiam.kr/</code>)에 접속하면 AI 관련 최신 뉴스가 카드(타일) 형태로 표시됩니다.</p>
+    <ul>
+      <li><strong>상단 네비게이션</strong> — 로고, 메뉴(협회소개·정책사업·비즈니스·CEO클럽·커뮤니티·AI vs CEO·회원지원), 로그인/회원가입 버튼</li>
+      <li><strong>검색창</strong> — 뉴스 키워드 검색 (실시간 필터링)</li>
+      <li><strong>카테고리 필터 버튼</strong> — 카테고리별 뉴스 분류</li>
+      <li><strong>뉴스 그리드</strong> — 3열(데스크톱) / 2열(태블릿) / 1열(모바일) 반응형 카드 레이아웃</li>
+      <li><strong>푸터</strong> — 협회 정보, 서비스 링크, 문의처</li>
+    </ul>
+
+    <h2 id="categories">뉴스 카테고리</h2>
+    <table class="info-table">
+      <tr><th style="width:50px;">색상</th><th style="width:150px;">카테고리</th><th>설명</th></tr>
+      <tr><td style="color:#3b82f6;">●</td><td>인공지능</td><td>AI 기술, 서비스, 제품 관련 뉴스</td></tr>
+      <tr><td style="color:#10b981;">●</td><td>기술</td><td>소프트웨어, 하드웨어, 인프라 기술 뉴스</td></tr>
+      <tr><td style="color:#f59e0b;">●</td><td>비즈니스</td><td>투자, M&A, 파트너십, 매출 등 사업 뉴스</td></tr>
+      <tr><td style="color:#8b5cf6;">●</td><td>연구·학술</td><td>논문, 연구성과, 학회 관련 뉴스</td></tr>
+      <tr><td style="color:#ec4899;">●</td><td>헬스케어</td><td>의료 AI, 디지털 헬스 뉴스</td></tr>
+      <tr><td style="color:#14b8a6;">●</td><td>금융·핀테크</td><td>금융 AI, 핀테크 서비스 뉴스</td></tr>
+      <tr><td style="color:#6366f1;">●</td><td>모빌리티</td><td>자율주행, 스마트 이동수단 뉴스</td></tr>
+      <tr><td style="color:#ef4444;">●</td><td>정책·규제</td><td>정부 정책, 규제, 법률 관련 뉴스</td></tr>
+      <tr><td style="color:#78716c;">●</td><td>기타</td><td>기타 산업 관련 뉴스</td></tr>
+    </table>
+
+    <h2 id="search">검색 기능</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">검색창에 키워드 입력</div>
+          <div class="step-desc">페이지 상단 검색창에 찾고 싶은 키워드를 입력합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Enter 또는 검색 버튼 클릭</div>
+          <div class="step-desc">검색 결과가 뉴스 그리드에 즉시 반영됩니다. 일치하는 키워드는 하이라이트 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="filter">카테고리 필터 사용법</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">필터 버튼 클릭</div>
+          <div class="step-desc">검색창 아래의 카테고리 버튼(전체, 인공지능, 기술, 비즈니스 등)을 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">선택한 카테고리의 뉴스만 표시</div>
+          <div class="step-desc">활성화된 필터 버튼은 파란색으로 표시되며, 해당 카테고리 뉴스만 그리드에 나타납니다. "전체" 클릭 시 모든 뉴스가 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="card-structure">뉴스 카드 구조</h2>
+    <p>각 뉴스 카드에는 다음 정보가 포함됩니다:</p>
+    <ul>
+      <li><strong>대표 이미지</strong> — 뉴스 썸네일 (없으면 그라데이션 배경)</li>
+      <li><strong>카테고리 배지</strong> — 색상별 분류 표시</li>
+      <li><strong>제목</strong> — 뉴스 헤드라인 (최대 3줄)</li>
+      <li><strong>요약</strong> — 기사 내용 요약 (최대 3줄)</li>
+      <li><strong>출처</strong> — 언론사 이름 (예: AI타임스, 디일렉)</li>
+      <li><strong>날짜</strong> — 게시 날짜</li>
+    </ul>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> 뉴스 카드를 클릭하면 원본 기사 페이지로 이동합니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

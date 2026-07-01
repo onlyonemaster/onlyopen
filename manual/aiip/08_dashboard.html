@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 — AI변리사 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link active">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <a href="/manual/aiip/">AI변리사</a> <span>›</span> <span>대시보드</span></div>
+    <h1>📋 대시보드</h1>
+    <p class="page-desc">로그인 후 대시보드(/dashboard)에서 전체 컨설팅 현황을 한눈에 확인하는 방법을 안내합니다.</p>
+
+    <h2 id="access">대시보드 접속</h2>
+    <p>로그인 후 상단 내비게이션의 <strong>"대시보드"</strong>를 클릭하거나, <a href="https://ps.kiam.kr/dashboard" target="_blank">ps.kiam.kr/dashboard</a>로 접속합니다.</p>
+
+    <h2 id="overview">대시보드 구성</h2>
+    <p>대시보드는 다음 섹션으로 구성됩니다.</p>
+
+    <h3 id="stats-cards">① 통계 카드</h3>
+    <p>상단에 주요 수치를 요약한 카드가 배치됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>카드</th><th>표시 내용</th></tr></thead>
+      <tbody>
+        <tr><td>📊 <strong>총 의뢰 수</strong></td><td>지금까지 제출한 AI 컨설팅 의뢰 총 건수</td></tr>
+        <tr><td>✅ <strong>완료된 의뢰</strong></td><td>분석이 완료된 의뢰 건수</td></tr>
+        <tr><td>⏳ <strong>진행 중</strong></td><td>현재 AI가 분석 중인 의뢰 건수</td></tr>
+        <tr><td>💳 <strong>남은 크레딧</strong></td><td>현재 플랜에서 사용 가능한 남은 분석 횟수</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="recent-list">② 최근 의뢰 목록</h3>
+    <p>가장 최근에 제출한 의뢰 5~10건이 간략하게 표시됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>표시 항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>의뢰 번호</strong></td><td>각 의뢰의 고유 번호</td></tr>
+        <tr><td><strong>분석 유형</strong></td><td>특허 / 상표 / 저작권</td></tr>
+        <tr><td><strong>의뢰 일시</strong></td><td>의뢰를 제출한 날짜와 시간</td></tr>
+        <tr><td><strong>상태</strong></td><td>분석 중 / 완료 / 실패</td></tr>
+        <tr><td><strong>바로가기</strong></td><td>해당 의뢰의 상세 결과 페이지로 이동</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="subscription-info">③ 구독 정보</h3>
+    <p>현재 이용 중인 플랜과 만료일, 남은 크레딧 정보를 확인할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>현재 플랜</strong></td><td>Free / Standard / Pro</td></tr>
+        <tr><td><strong>구독 만료일</strong></td><td>현재 구독 기간의 만료 날짜</td></tr>
+        <tr><td><strong>사용 크레딧</strong></td><td>이번 달 사용한 분석 횟수</td></tr>
+        <tr><td><strong>플랜 업그레이드</strong></td><td>요금제 페이지로 이동하는 버튼</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="quick-actions">빠른 작업</h2>
+    <p>대시보드에서 아래 작업을 빠르게 실행할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>버튼/링크</th><th>동작</th></tr></thead>
+      <tbody>
+        <tr><td>🔍 새 컨설팅 의뢰</td><td>컨설팅 의뢰 페이지(/diagnosis)로 이동</td></tr>
+        <tr><td>📜 전체 의뢰 보기</td><td>의뢰 목록 페이지(/result)로 이동</td></tr>
+        <tr><td>⚙️ 계정 설정</td><td>마이페이지(/mypage)로 이동</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>크레딧 부족 시</strong> 대시보드에 경고 알림이 표시됩니다. 플랜 업그레이드 링크를 클릭하여 더 많은 크레딧을 사용하세요.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aiip/07_download.html"><span class="nav-label">← 이전</span><span class="nav-title">📥 생성 문서 다운로드</span></a>
+      <a href="/manual/aiip/09_history.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📜 의뢰 결과 목록</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">대시보드 접속</a></li>
+      <li><a href="#overview">대시보드 구성</a></li>
+      <li><a href="#stats-cards" class="h3">통계 카드</a></li>
+      <li><a href="#recent-list" class="h3">최근 의뢰 목록</a></li>
+      <li><a href="#subscription-info" class="h3">구독 정보</a></li>
+      <li><a href="#quick-actions">빠른 작업</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

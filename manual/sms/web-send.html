@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>웹문자 발송 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/addressbook.html" class="sb-link">📒 주소록 관리</a>
+      <a href="/manual/sms/received.html" class="sb-link">수신 내역 확인</a>
+      <a href="/manual/sms/block.html" class="sb-link">수신거부 관리</a>
+      <a href="/manual/sms/web-send.html" class="sb-link active">💬 웹문자 발송</a>
+      <a href="/manual/sms/bulk20.html" class="sb-link">20건 무료문자</a>
+      <a href="/manual/sms/reservation.html" class="sb-link">예약 발송</a>
+      <a href="/manual/sms/split.html" class="sb-link">분할 발송</a>
+      <a href="/manual/sms/ai-copy.html" class="sb-link">AI 메시지 카피</a>
+      <a href="/manual/sms/history.html" class="sb-link">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 웹문자 발송</nav>
+    <h1 class="page-title">💬 웹문자 발송</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">웹문자란?</a></li>
+        <li><a href="#diff">폰문자 vs 웹문자</a></li>
+        <li><a href="#balance">잔액 확인</a></li>
+        <li><a href="#sender">발신번호 조회</a></li>
+        <li><a href="#send">발송 방법</a></li>
+        <li><a href="#rcs">RCS 발송</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>웹문자란?</h2>
+      <p><strong>웹문자</strong>는 스마트폰 앱 없이 <strong>웹 서버를 통해 직접 발송</strong>하는 문자 서비스입니다. 별도의 발신 잔액을 충전하여 사용하며, 폰 상태에 관계없이 안정적으로 대량 발송이 가능합니다.</p>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📌 웹문자 발송 화면</strong>: 발송 화면(<code>sub_6.php</code>) 상단 탭에서 <strong>💬 웹문자</strong> 탭을 선택합니다.
+      </div>
+    </section>
+
+    <section id="diff">
+      <h2>폰문자 vs 웹문자</h2>
+      <table>
+        <thead><tr><th>구분</th><th>폰문자(앱)</th><th>웹문자</th></tr></thead>
+        <tbody>
+          <tr><td>발송 방식</td><td>스마트폰 앱 경유</td><td>웹 서버 직접 발송</td></tr>
+          <tr><td>요금</td><td>건당 0.7원~</td><td>별도 충전 잔액 차감</td></tr>
+          <tr><td>폰 필요 여부</td><td>발신 폰 필요</td><td>불필요</td></tr>
+          <tr><td>발신번호</td><td>등록된 휴대폰 번호</td><td>인증된 발신번호</td></tr>
+          <tr><td>RCS 지원</td><td>미지원</td><td>지원 (단문/장문/포토)</td></tr>
+          <tr><td>대량 발송</td><td>일별 제한 있음</td><td>잔액 내 무제한</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="balance">
+      <h2>잔액 확인</h2>
+      <p>웹문자 탭 상단에서 <strong>현재 웹문자 잔액</strong>을 확인할 수 있습니다.</p>
+      <div class="card-grid" style="margin-top:12px;">
+        <div class="feature-card">
+          <div class="fc-icon">💰</div>
+          <div class="fc-title">잔액 확인</div>
+          <div class="fc-desc">발송 전 현재 잔액을 확인하여 발송 가능 여부를 점검합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">⚡</div>
+          <div class="fc-title">잔액 충전</div>
+          <div class="fc-desc">잔액이 부족한 경우 [충전하기] 버튼으로 바로 충전 페이지로 이동합니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sender">
+      <h2>발신번호 조회</h2>
+      <p>웹문자 발신에 사용할 번호를 먼저 등록해야 합니다. 발신번호는 실명 인증된 번호만 사용 가능합니다.</p>
+      <div class="step-list" style="margin-top:12px;">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>⚙️ 발신번호 관리 탭 선택</strong>
+            <p>발송 화면 상단 탭에서 <strong>발신번호 관리</strong>를 클릭합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>발신번호 등록 신청</strong>
+            <p>사용할 전화번호를 입력하고 인증 절차를 완료합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>승인 후 발송 가능</strong>
+            <p>관리자 승인 후 해당 번호로 웹문자 발송이 가능합니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="send">
+      <h2>발송 방법</h2>
+      <div class="step-list">
+        <div class="step-item">
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <strong>웹문자 탭 선택 후 발신번호 설정</strong>
+            <p>발송 화면에서 💬 웹문자 탭을 선택하고, 등록된 발신번호를 선택합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">2</div>
+          <div class="step-body">
+            <strong>수신처 입력</strong>
+            <p>개별번호 입력 또는 주소록 그룹을 선택합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>메시지 작성</strong>
+            <p>단문(SMS), 장문(LMS), 이미지(MMS) 중 선택 후 내용을 작성합니다.</p>
+          </div>
+        </div>
+        <div class="step-item">
+          <div class="step-num">4</div>
+          <div class="step-body">
+            <strong>발송 실행</strong>
+            <p>내용 확인 후 [발송] 버튼을 클릭합니다. 잔액이 차감됩니다.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="rcs">
+      <h2>RCS 발송</h2>
+      <p><strong>RCS(Rich Communication Services)</strong>는 이미지, 버튼, 카드형 레이아웃을 지원하는 차세대 문자 규격입니다.</p>
+      <table style="margin-top:12px;">
+        <thead><tr><th>종류</th><th>특징</th></tr></thead>
+        <tbody>
+          <tr><td>RCS 단문</td><td>최대 100자 텍스트, 버튼 포함 가능</td></tr>
+          <tr><td>RCS 장문</td><td>최대 1,300자 텍스트, 버튼 포함 가능</td></tr>
+          <tr><td>RCS 포토</td><td>이미지 + 텍스트 + 버튼 카드형 레이아웃</td></tr>
+        </tbody>
+      </table>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📌 RCS 주의사항</strong>: 수신자 단말기가 RCS를 지원하지 않는 경우 일반 SMS로 대체 발송됩니다. RCS 발송은 별도 요금이 적용됩니다.
+      </div>
+    </section>
+
+    <div class="page-nav">
+      <a href="/manual/sms/block.html" class="btn-prev">← 수신거부 관리</a>
+      <a href="/manual/sms/bulk20.html" class="btn-next">20건 무료문자 →</a>
+    </div>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul>
+      <li><a href="#what">웹문자란?</a></li>
+      <li><a href="#diff">폰문자 vs 웹문자</a></li>
+      <li><a href="#balance">잔액 확인</a></li>
+      <li><a href="#sender">발신번호 조회</a></li>
+      <li><a href="#send">발송 방법</a></li>
+      <li><a href="#rcs">RCS 발송</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

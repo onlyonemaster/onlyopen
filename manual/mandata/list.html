@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인물 목록·검색 — 인적자원관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">인적자원관리</div>
+      <a href="/manual/mandata/" class="sb-link">👥 소개</a>
+      <a href="/manual/mandata/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/mandata/list.html" class="sb-link active">🔍 인물 목록·검색</a>
+      <a href="/manual/mandata/detail.html" class="sb-link">👤 인물 상세 정보</a>
+      <a href="/manual/mandata/ai-config.html" class="sb-link">🤖 AI 웹검색 설정</a>
+      <a href="/manual/mandata/ai-sites.html" class="sb-link">🌐 AI 검색 사이트 관리</a>
+      <a href="/manual/mandata/ai-log.html" class="sb-link">📋 AI 실행 로그</a>
+      <a href="/manual/mandata/ai-updated.html" class="sb-link">✨ AI 업데이트 정보</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/dashboard/" class="sb-link">대시보드 & 분석</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/mandata/">인적자원관리</a> › 인물 목록·검색</nav>
+    <h1 class="page-title">🔍 인물 목록·검색</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#overview">화면 구성</a></li>
+        <li><a href="#search">검색 방법</a></li>
+        <li><a href="#columns">목록 컬럼 설명</a></li>
+        <li><a href="#pagination">페이지 이동</a></li>
+        <li><a href="#detail-link">상세 보기</a></li>
+      </ul>
+    </div>
+
+    <section id="overview">
+      <h2>화면 구성</h2>
+      <p>인물 목록 페이지는 <strong>약 370만 명의 인물 데이터를 검색하고 탐색</strong>하는 화면입니다. 한 페이지에 50명씩 표시되며, 검색 조건을 입력하면 즉시 필터링됩니다.</p>
+      <p style="margin-top:8px;">접속 경로: <a href="https://kiam.kr/admin/mandata/list.php" target="_blank">관리자 → 인적자원관리 → 인물 목록</a></p>
+    </section>
+
+    <section id="search">
+      <h2>검색 방법</h2>
+      <p>화면 상단의 검색 폼에서 4가지 조건으로 검색할 수 있습니다.</p>
+      <table class="m-table" style="margin-top:12px;">
+        <thead><tr><th>검색 필드</th><th>설명</th><th>예시</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>이름</strong></td>
+            <td>이름(name) 필드 부분 일치 검색</td>
+            <td>홍길동, 홍</td>
+          </tr>
+          <tr>
+            <td><strong>모바일</strong></td>
+            <td>휴대폰 번호 부분 일치 검색</td>
+            <td>010-1234, 01012</td>
+          </tr>
+          <tr>
+            <td><strong>이메일</strong></td>
+            <td>이메일 주소 부분 일치 검색</td>
+            <td>hong@, gmail.com</td>
+          </tr>
+          <tr>
+            <td><strong>회사</strong></td>
+            <td>회사명(company) 부분 일치 검색</td>
+            <td>삼성, 현대</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>💡 검색 팁</strong><br>
+        • 여러 조건을 동시에 입력하면 AND 조건으로 검색됩니다.<br>
+        • 검색 조건 없이 조회하면 전체 목록이 최신 등록 순으로 표시됩니다.<br>
+        • 모바일 번호는 하이픈(-) 유무에 관계없이 검색됩니다.
+      </div>
+    </section>
+
+    <section id="columns">
+      <h2>목록 컬럼 설명</h2>
+      <table class="m-table">
+        <thead><tr><th>컬럼</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td><strong>번호</strong></td><td>데이터베이스 고유 ID</td></tr>
+          <tr><td><strong>이름</strong></td><td>인물 이름 (없으면 공란)</td></tr>
+          <tr><td><strong>모바일</strong></td><td>휴대폰 번호</td></tr>
+          <tr><td><strong>이메일</strong></td><td>이메일 주소 (없으면 공란)</td></tr>
+          <tr><td><strong>회사</strong></td><td>소속 회사명 (없으면 공란)</td></tr>
+          <tr><td><strong>점수</strong></td><td>0~100점 완성도 점수</td></tr>
+          <tr><td><strong>AI 상태</strong></td><td>pending(대기) / done(완료) / none(미처리)</td></tr>
+          <tr><td><strong>등록일</strong></td><td>데이터 최초 등록 날짜</td></tr>
+          <tr><td><strong>상세</strong></td><td>인물 상세 정보 링크</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="pagination">
+      <h2>페이지 이동</h2>
+      <p>한 페이지에 <strong>50명</strong>씩 표시됩니다. 하단의 페이지 번호를 클릭하거나 이전/다음 버튼으로 이동할 수 있습니다.</p>
+      <p style="margin-top:8px;">전체 데이터가 약 370만 명이므로, 검색 조건 없이 전체 탐색하는 것보다 검색 조건을 활용하는 것을 권장합니다.</p>
+    </section>
+
+    <section id="detail-link">
+      <h2>상세 보기</h2>
+      <p>목록에서 인물의 이름 또는 <strong>상세 버튼</strong>을 클릭하면 해당 인물의 상세 정보 페이지로 이동합니다.</p>
+      <p style="margin-top:8px;">→ <a href="/manual/mandata/detail.html">인물 상세 정보 매뉴얼</a> 참고</p>
+    </section>
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

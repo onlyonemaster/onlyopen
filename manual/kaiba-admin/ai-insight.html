@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 인사이트 — K-AIBA 관리자 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">관리자 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 홈</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/kaiba-admin/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/kaiba-admin/bot-manager.html" class="sb-link">🤖 봇 관리</a>
+      <a href="/manual/kaiba-admin/subscriber.html" class="sb-link">👥 구독자 관리</a>
+      <a href="/manual/kaiba-admin/scenario.html" class="sb-link">🎯 시나리오 관리</a>
+      <a href="/manual/kaiba-admin/system-config.html" class="sb-link">🛠️ 시스템 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI · 분석</div>
+      <a href="/manual/kaiba-admin/ai-analytics.html" class="sb-link">📈 AI 분석</a>
+      <a href="/manual/kaiba-admin/ai-insight.html" class="sb-link active">💡 AI 인사이트</a>
+      <a href="/manual/kaiba-admin/companion.html" class="sb-link">🧠 AI 컴패니언</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">운영 관리</div>
+      <a href="/manual/kaiba-admin/messages.html" class="sb-link">💬 메시지 관리</a>
+      <a href="/manual/kaiba-admin/operator.html" class="sb-link">🎧 상담원 관리</a>
+      <a href="/manual/kaiba-admin/contacts.html" class="sb-link">📇 연락처 관리</a>
+      <a href="/manual/kaiba-admin/payments.html" class="sb-link">💳 결제 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 사용자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba-admin/">K-AIBA 관리자</a><span class="sep">›</span>
+      <span>AI 인사이트</span>
+    </div>
+
+    <h1>AI 인사이트 (AI Insight)</h1>
+    <p class="page-desc">AI가 자동으로 대화 데이터를 분석하여 핵심 발견사항, 개선 권고, 이상 징후를 리포트로 제공하는 지능형 분석 기능입니다.</p>
+
+    <div class="notice">
+      📌 <strong>접속 경로:</strong> 좌측 메뉴 → <strong>"AI 인사이트"</strong> 클릭합니다.
+    </div>
+
+    <h2 id="overview">인사이트 개요</h2>
+    <p>AI 인사이트는 수동 분석이 어려운 대량 대화 데이터에서 의미 있는 패턴과 개선점을 AI가 자동으로 도출합니다. 일간/주간 단위로 리포트가 생성됩니다.</p>
+
+    <h2 id="report-types">리포트 유형</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">유형</th><th>설명</th><th style="width:100px;">주기</th></tr>
+      <tr><td><strong>일간 요약</strong></td><td>전일 대화의 주요 트렌드, 이상 징후, 핵심 통계</td><td>매일 09:00</td></tr>
+      <tr><td><strong>주간 인사이트</strong></td><td>주간 패턴 분석, 성과 변화, 개선 권고사항</td><td>매주 월요일</td></tr>
+      <tr><td><strong>이상 감지 알림</strong></td><td>비정상 패턴 감지 시 즉시 알림 (이탈률 급증, 부정 감성 폭증 등)</td><td>실시간</td></tr>
+      <tr><td><strong>맞춤 분석</strong></td><td>관리자가 특정 주제/기간을 지정하여 요청하는 분석</td><td>온디맨드</td></tr>
+    </table>
+
+    <h2 id="findings">주요 발견사항 섹션</h2>
+    <p>각 리포트는 아래 카테고리로 분류된 발견사항을 포함합니다.</p>
+    <table class="info-table">
+      <tr><th style="width:140px;">카테고리</th><th>예시</th></tr>
+      <tr><td>감성 트렌드</td><td>"화요일 오후 부정 감성 비율이 평소 대비 40% 증가"</td></tr>
+      <tr><td>자주 실패하는 질문</td><td>"'환불 절차' 관련 질문에서 AI 해결률 30% — 지식베이스 업데이트 필요"</td></tr>
+      <tr><td>신규 토픽 출현</td><td>"'신규 API 연동' 관련 문의 급증 — 새 FAQ 항목 추가 권장"</td></tr>
+      <tr><td>성과 이상치</td><td>"봇 A의 응답시간 급증 (8초) — RAG 인덱스 재구축 권장"</td></tr>
+      <tr><td>사용자 패턴</td><td>"재방문 사용자 중 72%가 동일 질문 반복 — 자동 후속 메시지 도입 권장"</td></tr>
+    </table>
+
+    <h2 id="recommendations">개선 권고</h2>
+    <p>발견사항을 바탕으로 AI가 구체적인 개선 액션을 제안합니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">권고사항 확인</div>
+          <div class="step-desc">각 권고는 우선도(높음/중간/낮음), 예상 효과, 구체적 실행 방법을 포함합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">원클릭 적용</div>
+          <div class="step-desc">일부 권고는 "적용" 버튼으로 즉시 반영 가능 (예: FAQ 추가, 프롬프트 수정 제안)</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">효과 추적</div>
+          <div class="step-desc">적용된 권고의 효과를 자동 추적하여 다음 리포트에 Before/After 비교 제공</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="alerts">자동 알림 설정</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">알림 조건</th><th>설명</th><th style="width:100px;">기본 상태</th></tr>
+      <tr><td>이탈률 급증</td><td>이탈률이 평균 대비 50% 이상 증가</td><td>ON</td></tr>
+      <tr><td>부정 감성 급증</td><td>부정적 감성 비율이 30% 초과</td><td>ON</td></tr>
+      <tr><td>응답시간 초과</td><td>평균 응답시간이 5초 초과</td><td>ON</td></tr>
+      <tr><td>해결률 하락</td><td>1차 해결률이 50% 미만으로 하락</td><td>ON</td></tr>
+      <tr><td>신규 토픽 감지</td><td>이전에 없던 새로운 질문 유형 출현</td><td>OFF</td></tr>
+    </table>
+
+    <h2 id="history">리포트 히스토리</h2>
+    <p>과거 생성된 모든 인사이트 리포트는 히스토리 탭에서 조회할 수 있습니다.</p>
+    <table class="info-table">
+      <tr><th style="width:140px;">기능</th><th>설명</th></tr>
+      <tr><td>검색</td><td>키워드, 날짜 범위, 유형별 리포트 검색</td></tr>
+      <tr><td>비교</td><td>두 시점의 리포트를 나란히 비교</td></tr>
+      <tr><td>북마크</td><td>중요 리포트 즐겨찾기 등록</td></tr>
+      <tr><td>공유</td><td>리포트 링크 생성 또는 이메일 발송</td></tr>
+    </table>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> 주간 인사이트의 권고사항을 꾸준히 적용하면 1~2개월 내 만족도와 해결률이 유의미하게 개선됩니다. "효과 추적" 기능으로 개선 효과를 정량적으로 확인하세요.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

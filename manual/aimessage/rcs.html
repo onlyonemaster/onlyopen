@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>웹문자(RCS) — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI 메시지</div>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지 소개</a>
+      <a href="/manual/aimessage/start.html" class="sb-link">시작하기</a>
+      <a href="/manual/aimessage/sender-info.html" class="sb-link">발신자 정보 설정</a>
+      <a href="/manual/aimessage/prompt.html" class="sb-link">프롬프트 설정</a>
+      <a href="/manual/aimessage/send.html" class="sb-link">발송하기</a>
+      <a href="/manual/aimessage/rcs.html" class="sb-link active">🌐 웹문자(RCS)</a>
+      <a href="/manual/aimessage/history.html" class="sb-link">발송 내역</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/aimessage/">AI 메시지</a> › 웹문자(RCS)</nav>
+    <h1 class="page-title">🌐 웹문자(RCS)</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">RCS란?</a></li>
+        <li><a href="#diff">SMS vs RCS 차이</a></li>
+        <li><a href="#apply">RCS 신청 방법</a></li>
+        <li><a href="#send">RCS 발송하기</a></li>
+        <li><a href="#template">RCS 템플릿 종류</a></li>
+      </ul>
+    </div>
+    <section id="what">
+      <h2>RCS란?</h2>
+      <p><strong>RCS(Rich Communication Services)</strong>는 기존 SMS/LMS를 대체하는 차세대 문자 서비스입니다. 이미지, 동영상, 버튼, 카드 등 <strong>풍부한 콘텐츠를 문자처럼 발송</strong>할 수 있어 브랜드 마케팅에 최적화되어 있습니다.</p>
+      <div class="info-box">
+        <strong>특징</strong>: 별도 앱 설치 없이 기본 문자 앱에서 수신 가능 (Android 8.0 이상, 통신 3사 지원)
+      </div>
+    </section>
+    <section id="diff">
+      <h2>SMS vs RCS 차이</h2>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>SMS/LMS</th><th>RCS</th></tr></thead>
+        <tbody>
+          <tr><td>글자 수</td><td>최대 2,000바이트</td><td>제한 없음</td></tr>
+          <tr><td>이미지</td><td>MMS만 가능</td><td>기본 지원</td></tr>
+          <tr><td>버튼</td><td>불가</td><td>최대 3개 버튼</td></tr>
+          <tr><td>브랜딩</td><td>발신번호만</td><td>로고 + 브랜드명</td></tr>
+          <tr><td>카드 형식</td><td>불가</td><td>가로/세로 카드</td></tr>
+          <tr><td>건당 비용</td><td>0.7원~</td><td>별도 단가 (통신사 계약)</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="apply">
+      <h2>RCS 신청 방법</h2>
+      <div class="notice-box">
+        <strong>⚠️ 사전 등록 필요</strong>: RCS는 사업자 등록과 통신사 브랜드 승인 절차가 필요합니다. 개인 사용은 불가합니다.
+      </div>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><a href="https://rcs.kiam.kr" target="_blank">https://rcs.kiam.kr</a> 접속</div></li>
+        <li><div class="step-num">2</div><div class="step-body">브랜드 등록 신청서 작성 (사업자등록증, 브랜드명, 로고 첨부)</div></li>
+        <li><div class="step-num">3</div><div class="step-body">통신 3사 심사 진행 (5~10 영업일)</div></li>
+        <li><div class="step-num">4</div><div class="step-body">승인 완료 후 RCS 발송 기능 활성화</div></li>
+      </ol>
+    </section>
+    <section id="send">
+      <h2>RCS 발송하기</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">AI 메시지 → [발송 채널] 탭에서 <strong>RCS</strong> 선택</div></li>
+        <li><div class="step-num">2</div><div class="step-body">템플릿 종류 선택 (기본형 / 카드형 / 버튼형)</div></li>
+        <li><div class="step-num">3</div><div class="step-body">내용 입력 — AI 자동 생성 또는 직접 입력</div></li>
+        <li><div class="step-num">4</div><div class="step-body">수신자 목록 업로드 → 미리보기 확인</div></li>
+        <li><div class="step-num">5</div><div class="step-body">[발송하기] → 포인트 차감 후 즉시 또는 예약 발송</div></li>
+      </ol>
+    </section>
+    <section id="template">
+      <h2>RCS 템플릿 종류</h2>
+      <table class="m-table">
+        <thead><tr><th>템플릿</th><th>구성</th><th>적합한 용도</th></tr></thead>
+        <tbody>
+          <tr><td>기본형</td><td>브랜드명 + 텍스트</td><td>공지, 알림</td></tr>
+          <tr><td>이미지형</td><td>이미지 + 텍스트 + 버튼 1개</td><td>이벤트, 프로모션</td></tr>
+          <tr><td>세로 카드형</td><td>이미지 + 제목 + 설명 + 버튼 3개</td><td>상품 소개</td></tr>
+          <tr><td>가로 카드 슬라이드</td><td>여러 카드 가로 스크롤</td><td>카탈로그, 다중 상품</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/aimessage/send.html" class="btn-prev">← 발송하기</a>
+      <a href="/manual/aimessage/history.html" class="btn-next">발송 내역 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">RCS란?</a></li>
+      <li><a href="#diff">SMS vs RCS 차이</a></li>
+      <li><a href="#apply">RCS 신청 방법</a></li>
+      <li><a href="#send">RCS 발송하기</a></li>
+      <li><a href="#template">RCS 템플릿 종류</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

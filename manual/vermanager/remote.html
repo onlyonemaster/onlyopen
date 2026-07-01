@@ -3,123 +3,106 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>원격 서버 & 배포 — 버전 관리 매뉴얼</title>
+<title>원격 서버 연동 — 버전 관리 시스템 매뉴얼</title>
 <link rel="stylesheet" href="/manual/assets/style.css">
 </head>
 <body>
-<header class="m-header"><button class="btn-hamburger" id="hamburgerBtn">☰</button><a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a><div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div><div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div></header>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
 <div class="m-layout">
-<nav class="m-sidebar">
-  <div class="sb-section"><div class="sb-section-title">🔢 버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">개요 & 설계</a></div>
-  <div class="sb-section"><div class="sb-section-title">🏗️ 아키텍처</div><a href="/manual/vermanager/architecture.html" class="sb-link">전체 구조 & 라우터</a><a href="/manual/vermanager/config.html" class="sb-link">config.php 완전 분석</a></div>
-  <div class="sb-section"><div class="sb-section-title">🔌 API 레퍼런스</div><a href="/manual/vermanager/api-version.html" class="sb-link">버전 조회 API</a><a href="/manual/vermanager/api-release.html" class="sb-link">릴리즈 API</a><a href="/manual/vermanager/api-improvements.html" class="sb-link">개선사항 API</a><a href="/manual/vermanager/api-history.html" class="sb-link">히스토리 API</a><a href="/manual/vermanager/api-sites.html" class="sb-link">사이트 CRUD API</a><a href="/manual/vermanager/api-remote.html" class="sb-link">원격 서버 API</a><a href="/manual/vermanager/api-git.html" class="sb-link">Git 자동화 API</a></div>
-  <div class="sb-section"><div class="sb-section-title">📊 UI 페이지</div><a href="/manual/vermanager/page-dashboard.html" class="sb-link">대시보드</a><a href="/manual/vermanager/page-release.html" class="sb-link">릴리즈 실행</a><a href="/manual/vermanager/page-sites.html" class="sb-link">사이트 관리</a></div>
-  <div class="sb-section"><div class="sb-section-title">🚀 운영</div><a href="/manual/vermanager/remote.html" class="sb-link active">원격 서버 & 배포</a><a href="/manual/vermanager/git.html" class="sb-link">Git/GitHub 자동화</a></div>
-  <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);"><div class="sb-section-title">다른 매뉴얼</div><a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
-</nav>
-<main class="m-content">
-<div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a><span class="sep">›</span><a href="/manual/vermanager/">버전 관리</a><span class="sep">›</span><span>원격 서버 운영</span></div>
-<h1>🖥️ 원격 서버 관리 & 배포 운영 가이드</h1>
-<p class="page-desc">원격 서버의 상태 모니터링, 버전 배포, 사이트 간 데이터 동기화 방법을 단계별로 안내합니다.</p>
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">버전 관리 시스템</div><a href="/manual/vermanager/" class="sb-link">🔄 시스템 소개</a></div>
+    <div class="sb-section"><div class="sb-section-title">핵심 기능</div><a href="/manual/vermanager/dashboard.html" class="sb-link">📊 대시보드</a><a href="/manual/vermanager/sites.html" class="sb-link">🌐 사이트 관리</a><a href="/manual/vermanager/release.html" class="sb-link">🚀 버전 릴리즈</a><a href="/manual/vermanager/history.html" class="sb-link">📜 릴리즈 이력</a><a href="/manual/vermanager/improvements.html" class="sb-link">💡 소스 개선사항</a><a href="/manual/vermanager/changelog.html" class="sb-link">📝 체인지로그</a></div>
+    <div class="sb-section"><div class="sb-section-title">고급 기능</div><a href="/manual/vermanager/remote.html" class="sb-link active">🖥️ 원격 서버 연동</a><a href="/manual/vermanager/git.html" class="sb-link">🔧 Git/GitHub 자동화</a><a href="/manual/vermanager/settings.html" class="sb-link">⚙️ 설정 관리</a></div>
+  </nav>
+  <div class="toc-sidebar">
+    <div class="toc-title">📑 목차</div>
+    <a href="#overview" class="toc-link">원격 연동 개요</a>
+    <a href="#api" class="toc-link">Remote API (5개 액션)</a>
+    <a href="#ssh" class="toc-link">SSH 연결 구조</a>
+    <a href="#deploy" class="toc-link">원격 배포 (deploy)</a>
+    <a href="#sync" class="toc-link">운영→개발 동기화</a>
+    <a href="#ui" class="toc-link">서버 관리 UI</a>
+  </nav>
+  <main class="m-content">
+    <h1 id="overview">🖥️ 원격 서버 연동</h1>
+    <p class="lead">SSH 프로토콜을 통해 원격 서버의 버전을 확인하고, 릴리즈를 원격 배포하며, 운영 환경과 개발 환경을 동기화할 수 있습니다.</p>
 
-<h2 id="concept">개념: 서버 관리의 3가지 기능</h2>
-<table>
-  <tr style="background:var(--bg2);"><th style="padding:8px 12px;border:1px solid var(--border);">기능</th><th style="padding:8px 12px;border:1px solid var(--border);">설명</th><th style="padding:8px 12px;border:1px solid var(--border);">API</th></tr>
-  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>서버 상태 진단</b></td><td style="padding:8px 12px;border:1px solid var(--border);">SSH 연결성, 문서 루트 유효성, 디스크 용량 등 종합 체크</td><td style="padding:8px 12px;border:1px solid var(--border);">GET /api/remote?action=status</td></tr>
-  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>버전 배포</b></td><td style="padding:8px 12px;border:1px solid var(--border);">특정 버전을 서버의 문서 루트에 배포하고 version.txt 기록</td><td style="padding:8px 12px;border:1px solid var(--border);">POST /api/remote (action=deploy)</td></tr>
-  <tr><td style="padding:8px 12px;border:1px solid var(--border);"><b>데이터 동기화</b></td><td style="padding:8px 12px;border:1px solid var(--border);">운영↔개발 환경 간 JSON 데이터 파일 복사</td><td style="padding:8px 12px;border:1px solid var(--border);">POST /api/remote (action=sync)</td></tr>
-</table>
+    <h2 id="api">Remote API (api/remote.php) — 5개 액션</h2>
+    <table class="m-table">
+      <thead><tr><th>액션</th><th>HTTP</th><th>엔드포인트</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>ping</strong></td><td><code>GET</code></td><td><code>/api/remote?action=ping&site=kiam-prod</code></td><td>SSH 연결 가능 여부 확인</td></tr>
+        <tr><td><strong>status</strong></td><td><code>GET</code></td><td><code>/api/remote?action=status&site=kiam-prod</code></td><td>문서 루트 존재·버전 확인</td></tr>
+        <tr><td><strong>servers</strong></td><td><code>GET</code></td><td><code>/api/remote?action=servers</code></td><td>전체 서버 목록</td></tr>
+        <tr><td><strong>deploy</strong></td><td><code>POST</code></td><td><code>/api/remote</code> (body: action=deploy)</td><td>원격 서버에 릴리즈 배포</td></tr>
+        <tr><td><strong>sync</strong></td><td><code>POST</code></td><td><code>/api/remote</code> (body: action=sync)</td><td>운영→개발 동기화</td></tr>
+      </tbody>
+    </table>
 
-<h2 id="status-check">1. 서버 상태 확인</h2>
-<h3>UI에서 확인</h3>
-<ol style="line-height:2;">
-  <li><code>/vermanager/remote?site=kiam-prod</code> 접속</li>
-  <li>서버 상태 카드가 자동 로드됨: 연결 상태, 핑 응답시간, 현재 버전, 문서 루트 체크, 디스크 용량</li>
-  <li>새로고침 버튼으로 실시간 갱신 가능</li>
-</ol>
+    <h2 id="ssh">SSH 연결 구조</h2>
+    <p>각 사이트는 서버 정보를 site-registry.json에 보유:</p>
+    <pre class="code-block"><code>"server_hostname": "main-server",
+"server_ip": "127.0.0.1",
+"server_port": 22</code></pre>
+    <p>PHP의 <code>ssh2_connect()</code> 또는 <code>exec("ssh ...")</code> 로 연결을 시도합니다.</p>
 
-<h3>API로 확인</h3>
-<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;"># 단일 서버 상태
-curl https://kiam.kr/vermanager/api/remote?action=status&site=kiam-prod
+    <h2 id="deploy">원격 배포 (deploy)</h2>
+    <pre class="code-block"><code>POST /vermanager/api/remote
+Content-Type: application/json
 
-# 모든 서버 일괄 확인
-curl https://kiam.kr/vermanager/api/remote?action=all-servers</pre>
+{
+  "action": "deploy",
+  "site": "kiam-prod",
+  "version": "1.0.2"
+}
 
-<h3>응답 해석</h3>
-<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">{
-  "connection": "ok",        // SSH 소켓 연결 성공
-  "ping": { "reachable": true, "latency_ms": 45 },
-  "version_check": { "current": "1.0.1", "file_version": "1.0.1", "match": true },
-  "docroot_check": {         // 문서 루트 진단
-    "has_index": true,       // index.php 존재
-    "has_config": true,      // config.php 존재
-    "has_htaccess": true,    // .htaccess 존재
-    "disk_free_mb": 4520,    // 여유 공간
-    "disk_total_mb": 20480   // 전체 공간
-  }
-}</pre>
+→ 응답:
+{
+  "ok": true,
+  "message": "✅ v1.0.2 배포 완료!",
+  "server": "main-server",
+  "deployed_version": "1.0.2"
+}</code></pre>
 
-<h2 id="deploy">2. 버전 배포 실행</h2>
-<h3>UI에서 배포</h3>
-<ol style="line-height:2;">
-  <li><code>/vermanager/remote?site=kiam-prod</code> 접속</li>
-  <li>"새 버전 배포" 섹션에서 배포할 버전 입력 (예: 1.0.2)</li>
-  <li>"배포 실행" 버튼 클릭</li>
-  <li>3단계 진행 상황 실시간 확인: SSH 테스트 → 문서 루트 확인 → version.txt 기록</li>
-</ol>
+    <h2 id="sync">운영→개발 환경 동기화</h2>
+    <p><code>action=sync</code>는 parent_site_id 관계를 기반으로 동작합니다. kiam-prod의 package.json, improvements.json, changelog.json 등을 kiam-dev로 복제합니다.</p>
+    <pre class="code-block"><code>POST /vermanager/api/remote
+{"action": "sync", "source": "kiam-prod", "target": "kiam-dev"}
 
-<h3>API로 배포</h3>
-<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">curl -X POST https://kiam.kr/vermanager/api/remote \
-  -H "Content-Type: application/json" \
-  -d '{"action":"deploy","site":"kiam-prod","version":"1.0.2"}'</pre>
+→ 응답:
+{
+  "ok": true,
+  "message": "✅ [KIAM 운영환경] → [KIAM 개발환경] 동기화 완료!"
+}</code></pre>
 
-<h2 id="sync">3. 환경 간 데이터 동기화</h2>
-<h3>사용 시나리오</h3>
-<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;">// 운영 → 개발: 운영 데이터를 개발 환경에 복사
-POST /api/remote {"action":"sync","from":"kiam-prod","to":"kiam-dev"}
+    <h2 id="ui">서버 관리 UI (pages/remote.php)</h2>
+    <ul class="feature-list">
+      <li><strong>서버 카드:</strong> 서버명, IP, 포트, 연결 상태(녹색/적색)</li>
+      <li><strong>Ping 버튼:</strong> 클릭 시 서버 응답 확인</li>
+      <li><strong>배포(Deploy) 버튼:</strong> 최신 버전을 원격 서버에 전송</li>
+      <li><strong>동기화(Sync) 버튼:</strong> 운영 환경 데이터를 개발 환경으로 복제</li>
+    </ul>
 
-// 개발 → 운영: 개발 테스트 완료 후 운영에 반영
-POST /api/remote {"action":"sync","from":"kiam-dev","to":"kiam-prod"}</pre>
-<p>동기화 대상 파일: <code>package.json</code>, <code>version_history.json</code>, <code>changelog.json</code>, <code>improvements.json</code></p>
-
-<div class="notice"><strong>⚠️ 주의:</strong> 동기화는 대상 사이트의 데이터를 덮어씁니다. 운영→개발 동기화 시 개발 환경의 미발행 개선사항이 유실될 수 있으니 주의하세요.</div>
-
-<h2 id="deploy-log">4. 배포 로그 확인</h2>
-<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:13px;line-height:1.7;overflow-x:auto;"># 배포 이력 조회
-curl https://kiam.kr/vermanager/api/remote?action=deploy-log&site=kiam-prod
-
-# 응답: 최근 100건의 배포 기록 (타임스탬프, 버전, 단계별 결과)</pre>
-
-<h2 id="architecture-pages">5. 원격 관리 페이지 (pages/remote.php)</h2>
-<p>UI 페이지 접속: <code>https://kiam.kr/vermanager/remote?site=kiam-prod</code></p>
-<pre style="background:var(--bg2);border:1px solid var(--border);border-radius:8px;padding:16px;font-size:12px;line-height:1.7;overflow-x:auto;">vm-main
-├── 서버 상태 카드 (자동 로드)
-│   ├── 연결 상태: 🟢 접속 가능 / 🔴 접속 불가
-│   ├── 응답 시간: 45ms
-│   ├── 현재 버전: v1.0.1 (서버파일 일치여부 표시)
-│   └── 문서 루트: /home/kiam (핵심파일 존재여부)
-│
-├── 디스크 정보
-│   ├── 전체: 20GB
-│   ├── 사용: 15.6GB
-│   └── 여유: 4.4GB (22%)
-│
-├── [새 버전 배포] 섹션
-│   ├── 배포 버전 입력: [______]
-│   └── [배포 실행] 버튼 → POST /api/remote (action=deploy)
-│
-├── [환경 간 동기화] 섹션
-│   ├── 원본 사이트: [kiam-prod ▼]
-│   ├── 대상 사이트: [kiam-dev ▼]
-│   └── [동기화 실행] 버튼 → POST /api/remote (action=sync)
-│
-└── 최근 배포 로그 (테이블)
-    └── 날짜 | 사이트 | 버전 | 상태 | 상세</pre>
-
-<div class="notice"><strong>💡 핵심 포인트:</strong> 원격 서버 관리는 <code>/home/vermanager/api/remote.php</code> 파일 하나가 모든 기능(Ping, Status, Deploy, Sync, Deploy Log)을 처리합니다. <code>action</code> 파라미터로 기능을 구분하며, GET은 읽기 작업, POST는 쓰기 작업에 사용됩니다. 배포 로그는 100건까지 보관되고 초과 시 오래된 항목부터 자동 삭제됩니다.</div>
-
-</main>
+    <div class="prev-next"><a href="/manual/vermanager/changelog.html" class="next-link">← 이전: 체인지로그</a><a href="/manual/vermanager/git.html" class="next-link">다음: Git/GitHub 자동화 →</a></div>
+  </main>
 </div>
+<style>
+.lead{font-size:17px;color:var(--text2);margin-bottom:24px;line-height:1.8;}
+.code-block{background:var(--bg3);padding:20px;border-radius:8px;font-size:12px;line-height:1.6;overflow-x:auto;margin-bottom:20px;white-space:pre;font-family:monospace;}
+.m-table{width:100%;border-collapse:collapse;font-size:13px;margin-bottom:28px;}
+.m-table th{background:var(--bg3);padding:10px 12px;text-align:left;font-weight:600;border-bottom:2px solid var(--border);}
+.m-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+.feature-list{margin-bottom:20px;padding-left:20px;}
+.feature-list li{margin-bottom:8px;font-size:14px;}
+.prev-next{display:flex;justify-content:space-between;margin-top:40px;padding-top:20px;border-top:1px solid var(--border);}
+.next-link{color:var(--brand);text-decoration:none;font-weight:600;font-size:14px;}
+.next-link:hover{text-decoration:underline;}
+</style>
 <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
 <script src="/manual/assets/script.js"></script>
 </body>

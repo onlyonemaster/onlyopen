@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>API 레퍼런스 &#8212; VoiceGen AI &#47; kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VoiceGen AI 매뉴얼</div>
+      <a href="/manual/voicegen/" class="sb-link ">&#128266; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/voicegen/start.html" class="sb-link ">회원가입 &amp; 로그인</a>
+      <a href="/manual/voicegen/demo.html" class="sb-link ">데모 체험하기</a>
+      <a href="/manual/voicegen/start.html#apikey" class="sb-link">API 키 발급</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">API 연동</div>
+      <a href="/manual/voicegen/api.html" class="sb-link active">API 레퍼런스</a>
+      <a href="/manual/voicegen/voices.html" class="sb-link ">음성 프리셋 목록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/voicegen/clone.html" class="sb-link ">음성 클로닝</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/voicegen/plan.html" class="sb-link ">요금제 안내</a>
+      <a href="/manual/voicegen/faq.html" class="sb-link ">자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/voicegen/">VoiceGen AI</a><span class="sep">&#8250;</span><span>API 레퍼런스</span>
+    </div>
+    <h1>API 레퍼런스</h1>
+    <p class="lead">VoiceGen AI REST API로 텍스트를 음성 WAV 파일로 변환할 수 있습니다.</p>
+
+    <h2>기본 정보</h2>
+    <table>
+      <tbody>
+        <tr><td><strong>Base URL</strong></td><td><code>https://vg.kiam.kr</code></td></tr>
+        <tr><td><strong>인증 방식</strong></td><td>Bearer Token (API 키)</td></tr>
+        <tr><td><strong>요청 형식</strong></td><td><code>application/json</code></td></tr>
+        <tr><td><strong>응답 형식</strong></td><td><code>audio/wav</code> (성공) / <code>application/json</code> (에러)</td></tr>
+      </tbody>
+    </table>
+
+    <h2>인증 헤더</h2>
+    <div class="code-block"><pre><code>Authorization: Bearer YOUR_API_KEY</code></pre></div>
+
+    <h2>POST /api/v1/generate</h2>
+    <p>텍스트를 입력받아 음성 WAV 파일(바이너리)을 반환합니다.</p>
+
+    <h3>요청 파라미터</h3>
+    <table>
+      <thead><tr><th>파라미터</th><th>타입</th><th>필수</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><code>text</code></td><td>string</td><td>&#10003;</td><td>음성으로 변환할 텍스트</td></tr>
+        <tr><td><code>voice_id</code></td><td>string</td><td></td><td>음성 프리셋 ID (기본값: <code>ko_female_1</code>)</td></tr>
+        <tr><td><code>speed</code></td><td>float</td><td></td><td>재생 속도 0.5~2.0 (기본값: <code>1.0</code>)</td></tr>
+        <tr><td><code>language</code></td><td>string</td><td></td><td>언어 코드 <code>ko</code> / <code>en</code> (기본값: <code>ko</code>)</td></tr>
+      </tbody>
+    </table>
+
+    <h3>HTTP 상태 코드</h3>
+    <table>
+      <thead><tr><th>코드</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td><code>200</code></td><td>성공 &#8212; WAV 바이너리 반환</td></tr>
+        <tr><td><code>400</code></td><td>잘못된 요청 (파라미터 누락&#183;형식 오류)</td></tr>
+        <tr><td><code>401</code></td><td>인증 실패 (API 키 없음&#183;만료)</td></tr>
+        <tr><td><code>429</code></td><td>사용량 한도 초과</td></tr>
+        <tr><td><code>500</code></td><td>서버 오류</td></tr>
+      </tbody>
+    </table>
+
+    <h2>코드 예제</h2>
+    <h3>curl</h3>
+    <div class="code-block"><pre><code>curl -X POST https://vg.kiam.kr/api/v1/generate   -H "Authorization: Bearer YOUR_API_KEY"   -H "Content-Type: application/json"   -d '{"text":"안녕하세요. VoiceGen AI입니다.","voice_id":"ko_female_1","speed":1.0}'   --output output.wav</code></pre></div>
+
+    <h3>JavaScript (fetch)</h3>
+    <div class="code-block"><pre><code>const response = await fetch('https://vg.kiam.kr/api/v1/generate', {
+  method: 'POST',
+  headers: {
+    'Authorization': 'Bearer YOUR_API_KEY',
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    text: '안녕하세요. VoiceGen AI입니다.',
+    voice_id: 'ko_female_1',
+    speed: 1.0
+  })
+});
+const blob = await response.blob();
+const audio = new Audio(URL.createObjectURL(blob));
+audio.play();</code></pre></div>
+
+    <h3>PHP</h3>
+    <div class="code-block"><pre><code>$ch = curl_init('https://vg.kiam.kr/api/v1/generate');
+curl_setopt_array($ch, [
+    CURLOPT_POST           => true,
+    CURLOPT_RETURNTRANSFER => true,
+    CURLOPT_HTTPHEADER     => [
+        'Authorization: Bearer YOUR_API_KEY',
+        'Content-Type: application/json'
+    ],
+    CURLOPT_POSTFIELDS => json_encode([
+        'text'     => '안녕하세요. VoiceGen AI입니다.',
+        'voice_id' => 'ko_female_1',
+        'speed'    => 1.0
+    ])
+]);
+$wav = curl_exec($ch);
+file_put_contents('output.wav', $wav);</code></pre></div>
+
+    <div class="callout callout-blue">
+      <strong>&#128161; 전체 API 문서</strong><br>
+      더 자세한 엔드포인트와 예제는 <a href="https://vg.kiam.kr/docs.html" target="_blank">vg.kiam.kr/docs.html</a>에서 확인하세요.
+    </div>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="https://vg.kiam.kr" target="_blank" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128266; VoiceGen AI 바로가기 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

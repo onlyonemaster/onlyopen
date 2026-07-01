@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>시나리오 관리 — K-AIBA 관리자 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">관리자 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 홈</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/kaiba-admin/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/kaiba-admin/bot-manager.html" class="sb-link">🤖 봇 관리</a>
+      <a href="/manual/kaiba-admin/subscriber.html" class="sb-link">👥 구독자 관리</a>
+      <a href="/manual/kaiba-admin/scenario.html" class="sb-link active">🎯 시나리오 관리</a>
+      <a href="/manual/kaiba-admin/system-config.html" class="sb-link">🛠️ 시스템 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI · 분석</div>
+      <a href="/manual/kaiba-admin/ai-analytics.html" class="sb-link">📈 AI 분석</a>
+      <a href="/manual/kaiba-admin/ai-insight.html" class="sb-link">💡 AI 인사이트</a>
+      <a href="/manual/kaiba-admin/companion.html" class="sb-link">🧠 AI 컴패니언</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">운영 관리</div>
+      <a href="/manual/kaiba-admin/messages.html" class="sb-link">💬 메시지 관리</a>
+      <a href="/manual/kaiba-admin/operator.html" class="sb-link">🎧 상담원 관리</a>
+      <a href="/manual/kaiba-admin/contacts.html" class="sb-link">📇 연락처 관리</a>
+      <a href="/manual/kaiba-admin/payments.html" class="sb-link">💳 결제 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 사용자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba-admin/">K-AIBA 관리자</a><span class="sep">›</span>
+      <span>시나리오 관리</span>
+    </div>
+
+    <h1>시나리오 관리 (Scenario Manager)</h1>
+    <p class="page-desc">시나리오 기반 대화 캠페인을 생성·관리하고, 성과 지표를 분석하는 페이지입니다.</p>
+
+    <div class="notice">
+      📌 <strong>접속 경로:</strong> 좌측 메뉴 → <strong>"시나리오 관리"</strong> 클릭 또는 <code>/admin/onechat_scenario_manager.php</code>에 직접 접속합니다.
+    </div>
+
+    <h2 id="kpi">시나리오 KPI 패널</h2>
+    <p>페이지 상단에 4개의 핵심 성과 지표 카드가 표시됩니다.</p>
+    <table class="info-table">
+      <tr><th style="width:180px;">지표</th><th>설명</th><th style="width:80px;">단위</th></tr>
+      <tr><td><strong>전체 시나리오</strong></td><td>등록된 시나리오 캠페인 총 수</td><td>건</td></tr>
+      <tr><td><strong>활성 시나리오</strong></td><td>현재 실행 중인 시나리오 수</td><td>건</td></tr>
+      <tr><td><strong>평균 컨텍스트</strong></td><td>시나리오 평균 대화 맥락 깊이 (대화 턴 수)</td><td>턴</td></tr>
+      <tr><td><strong>평균 전환율</strong></td><td>시나리오 목표 달성 평균 비율</td><td>%</td></tr>
+    </table>
+
+    <h2 id="concept">시나리오 개념</h2>
+    <p>시나리오는 챗봇이 사용자와의 대화에서 미리 설계된 흐름을 따라 특정 목표(구매 전환, 정보 수집, 상담 연결 등)로 유도하는 구조화된 대화 캠페인입니다.</p>
+
+    <h3>시나리오 구성 요소</h3>
+    <table class="info-table">
+      <tr><th style="width:140px;">요소</th><th>설명</th></tr>
+      <tr><td>트리거</td><td>시나리오가 시작되는 조건 (키워드, 시간, 사용자 행동 등)</td></tr>
+      <tr><td>스텝</td><td>순차적으로 진행되는 대화 단계 (질문 → 응답 → 분기)</td></tr>
+      <tr><td>분기 조건</td><td>사용자 응답에 따라 다른 경로로 이동하는 조건</td></tr>
+      <tr><td>목표</td><td>시나리오의 최종 전환 목표 (구매, 예약, 문의 등)</td></tr>
+      <tr><td>폴백</td><td>예상 외 응답 시 대응 메시지 및 재시도 로직</td></tr>
+    </table>
+
+    <h2 id="list">시나리오 목록</h2>
+    <p>KPI 아래에 등록된 시나리오들이 테이블로 표시됩니다.</p>
+    <table class="info-table">
+      <tr><th style="width:140px;">컬럼</th><th>설명</th></tr>
+      <tr><td>시나리오명</td><td>캠페인 이름 (클릭 시 상세 편집)</td></tr>
+      <tr><td>상태</td><td>활성 / 비활성 / 초안 뱃지</td></tr>
+      <tr><td>트리거 유형</td><td>키워드 / 시간 기반 / 행동 기반</td></tr>
+      <tr><td>실행 횟수</td><td>해당 시나리오가 트리거된 총 횟수</td></tr>
+      <tr><td>전환율</td><td>목표 달성 비율 (%)</td></tr>
+      <tr><td>컨텍스트 깊이</td><td>평균 대화 턴 수</td></tr>
+      <tr><td>통계</td><td>"통계" 버튼 클릭 시 상세 분석 모달</td></tr>
+      <tr><td>작업</td><td>편집 / 복제 / 삭제 / 활성화 토글</td></tr>
+    </table>
+
+    <h2 id="create">시나리오 생성</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">새 시나리오 생성</div>
+          <div class="step-desc">우측 상단 <strong>"+ 새 시나리오"</strong> 버튼 클릭 → 시나리오 편집기 진입</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">기본 정보 설정</div>
+          <div class="step-desc">시나리오 이름, 설명, 대상 봇, 트리거 조건을 입력합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">스텝 설계</div>
+          <div class="step-desc">대화 흐름의 각 스텝을 순서대로 추가합니다. 각 스텝에 봇 메시지, 사용자 응답 옵션, 분기 조건을 설정합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">목표 및 폴백 설정</div>
+          <div class="step-desc">전환 목표(최종 도달점)와 예외 상황 대응(폴백 메시지)을 설정합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <div class="step-title">테스트 및 활성화</div>
+          <div class="step-desc">"시뮬레이션" 버튼으로 테스트 → 정상 확인 후 "활성화" 토글 ON → 실서비스 적용</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="stats">통계 분석</h2>
+    <p>각 시나리오의 "통계" 버튼 클릭 시 상세 성과 분석 모달이 표시됩니다.</p>
+    <table class="info-table">
+      <tr><th style="width:160px;">분석 항목</th><th>설명</th></tr>
+      <tr><td>퍼널 분석</td><td>각 스텝별 진행률 (어디서 이탈하는지 시각화)</td></tr>
+      <tr><td>전환 추세</td><td>일별/주별 전환율 추이 차트</td></tr>
+      <tr><td>평균 소요시간</td><td>시나리오 시작~완료까지 평균 시간</td></tr>
+      <tr><td>이탈 지점</td><td>사용자가 가장 많이 이탈하는 스텝 하이라이트</td></tr>
+      <tr><td>A/B 비교</td><td>동일 시나리오의 변형 버전 간 성과 비교</td></tr>
+    </table>
+
+    <h2 id="management">관리 작업</h2>
+    <table class="info-table">
+      <tr><th style="width:140px;">작업</th><th>설명</th></tr>
+      <tr><td>복제</td><td>기존 시나리오를 복사하여 새 시나리오로 생성 (변형 테스트에 유용)</td></tr>
+      <tr><td>A/B 테스트</td><td>두 시나리오를 동시 실행하여 성과 비교</td></tr>
+      <tr><td>일시 정지</td><td>실행 중인 시나리오를 일시 정지 (진행 중 대화는 완료까지 유지)</td></tr>
+      <tr><td>아카이브</td><td>더 이상 사용하지 않는 시나리오를 보관함으로 이동</td></tr>
+    </table>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> 전환율이 낮은 시나리오는 퍼널 분석에서 이탈 지점을 확인한 후, 해당 스텝의 메시지를 수정하거나 분기 조건을 조정하세요. 복제 후 A/B 테스트가 효과적입니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

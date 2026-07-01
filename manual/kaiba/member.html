@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>회원 관리 — K-AIBA 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr" class="btn-site" target="_blank">K-AIBA →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">K-AIBA 매뉴얼</div><a href="/manual/kaiba/" class="sb-link">🌐 K-AIBA 소개</a></div>
+    <div class="sb-section">
+      <div class="sb-section-title">사이트 안내</div>
+      <a href="/manual/kaiba/about.html" class="sb-link">🏢 협회 소개</a>
+      <a href="/manual/kaiba/news.html" class="sb-link">📰 AI 뉴스</a>
+      <a href="/manual/kaiba/policy.html" class="sb-link">📋 정책사업</a>
+      <a href="/manual/kaiba/business.html" class="sb-link">💼 비즈니스</a>
+      <a href="/manual/kaiba/ceoclub.html" class="sb-link">👔 CEO 클럽</a>
+      <a href="/manual/kaiba/battle.html" class="sb-link">⚔️ AI vs CEO</a>
+      <a href="/manual/kaiba/community.html" class="sb-link">👥 커뮤니티</a>
+      <a href="/manual/kaiba/support.html" class="sb-link">🎧 회원지원</a>
+      <a href="/manual/kaiba/member.html" class="sb-link active">👤 회원 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba/">K-AIBA</a><span class="sep">›</span>
+      <span>회원 관리</span>
+    </div>
+
+    <h1>회원 관리</h1>
+    <p class="page-desc">회원가입, 로그인, 비밀번호 찾기, 프로필 설정 등 계정 관련 기능을 안내합니다.</p>
+
+    <h2 id="pages">하위 페이지 구성</h2>
+    <table class="info-table">
+      <tr><th style="width:200px;">경로</th><th>페이지명</th><th>설명</th></tr>
+      <tr><td><code>/member/login</code></td><td>로그인</td><td>아이디/비밀번호 로그인</td></tr>
+      <tr><td><code>/member/register</code></td><td>회원가입</td><td>신규 회원 가입 양식</td></tr>
+    </table>
+
+    <h2 id="register">회원가입</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">회원가입 페이지 접속</div>
+          <div class="step-desc">상단 우측의 <strong>"회원가입"</strong> 버튼을 클릭하거나 <code>https://kaiba.kiam.kr/member/register</code>로 직접 접속합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">필수 정보 입력</div>
+          <div class="step-desc">이름, 이메일, 비밀번호, 연락처 등 필수 항목을 입력합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">이메일 인증</div>
+          <div class="step-desc">입력한 이메일로 인증 링크가 발송됩니다. 링크를 클릭하여 인증을 완료합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">가입 완료</div>
+          <div class="step-desc">인증 완료 후 모든 K-AIBA 서비스를 이용할 수 있습니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="login">로그인</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">"로그인" 클릭</div>
+          <div class="step-desc">상단 우측의 "로그인" 링크를 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">아이디/비밀번호 입력</div>
+          <div class="step-desc">가입 시 사용한 이메일(아이디)과 비밀번호를 입력하고 로그인 버튼을 클릭합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="password">비밀번호 찾기</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">로그인 페이지에서 "비밀번호 찾기" 클릭</div>
+          <div class="step-desc">로그인 양식 하단의 비밀번호 찾기 링크를 클릭합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">가입 이메일 입력</div>
+          <div class="step-desc">가입 시 사용한 이메일 주소를 입력합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">재설정 링크로 비밀번호 변경</div>
+          <div class="step-desc">이메일로 발송된 재설정 링크를 클릭하여 새 비밀번호를 설정합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="login-features">로그인 후 이용 가능 기능</h2>
+    <ul>
+      <li>비즈니스 프로젝트 등록/제안서 제출</li>
+      <li>CEO 클럽 가입 신청</li>
+      <li>AI vs CEO 배틀 참가</li>
+      <li>문의하기 작성</li>
+      <li>마이페이지 프로필 설정</li>
+    </ul>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> 회원가입 시 기업 정보를 함께 등록하면 즉시 AI 정책 매칭 서비스를 이용할 수 있습니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

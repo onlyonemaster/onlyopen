@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>발신자 정보 설정 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI 메시지</div>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aimessage/start.html" class="sb-link">AI 메시지 시작하기</a>
+      <a href="/manual/aimessage/sender-info.html" class="sb-link active">발신자 정보 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">메시지 설정</div>
+      <a href="/manual/aimessage/prompt.html" class="sb-link">프롬프트 설정</a>
+      <a href="/manual/aimessage/send.html" class="sb-link">메시지 발송하기</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 매뉴얼</a>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/aimessage/">AI 메시지</a><span class="sep">›</span>
+      <span>발신자 정보 설정</span>
+    </div>
+
+    <h1>발신자 정보 설정</h1>
+    <p class="page-desc">AI가 나를 대신해 메시지를 생성하려면 먼저 발신자(나·우리 사업체)에 대한 정보를 입력해야 합니다. 이 정보가 AI 메시지 품질에 직접 영향을 줍니다.</p>
+
+    <h2 id="access">기본정보 탭 접속</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">AI 메시지 화면으로 이동합니다</div>
+          <span class="step-url">https://kiam.kr/list_funnelmessages_details.php</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">상단 <strong>[기본정보]</strong> 탭을 선택합니다</div>
+          <div class="step-desc">AI 메시지 설정 화면의 첫 번째 탭입니다. 처음 접속 시 이 탭이 자동 선택됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="sender-fields">발신자 기본 정보 입력</h2>
+    <p>AI가 메시지를 생성할 때 발신자를 어떻게 표현할지 결정하는 핵심 정보입니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th><th>AI 활용 방식</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>발신자 이름</strong></td>
+          <td>수신자에게 표시될 보내는 사람 이름</td>
+          <td>메시지 서두에 자동 삽입 (예: "홍길동입니다")</td>
+        </tr>
+        <tr>
+          <td><strong>사업체명</strong></td>
+          <td>회사·브랜드·팀 이름</td>
+          <td>소개 문구, 신뢰감 형성에 활용</td>
+        </tr>
+        <tr>
+          <td><strong>업종·카테고리</strong></td>
+          <td>부동산, 교육, 건강, 보험 등</td>
+          <td>업종에 맞는 어휘와 톤 자동 적용</td>
+        </tr>
+        <tr>
+          <td><strong>발신 번호</strong></td>
+          <td>사전 등록된 휴대폰·사무용 번호</td>
+          <td>폰문자 발신 번호로 사용</td>
+        </tr>
+        <tr>
+          <td><strong>챗봇 링크</strong></td>
+          <td>원챗에서 발급받은 챗봇 URL</td>
+          <td>메시지 본문에 자동 삽입 (단축 URL 변환)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>챗봇 링크 입력 방법</strong><br>
+      원챗 → 상단 아바타 이미지 클릭 → <strong>[챗봇 설정]</strong> → 공유 링크를 복사하여 붙여넣으세요.<br>
+      형식 예시: <code>https://chatbot.kiam.kr/s/내아이디</code>
+    </div>
+
+    <h2 id="business-profile">사업체 소개 정보</h2>
+    <p>AI가 사업체에 대해 더 잘 이해할수록 메시지 품질이 높아집니다. 아래 항목을 최대한 상세하게 입력하세요.</p>
+
+    <h3 id="text-intro">소개 텍스트</h3>
+    <p>사업체의 핵심 가치·서비스·강점을 자유롭게 입력합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>추천 입력 내용</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td>핵심 서비스·상품</td><td>"저는 10년 경력의 부동산 전문가로, 수도권 아파트 매매·전세를 전문으로 합니다."</td></tr>
+        <tr><td>차별화 포인트</td><td>"다른 업체와 달리 고객이 원하는 지역을 직접 발로 뛰며 찾아드립니다."</td></tr>
+        <tr><td>고객 성공 사례</td><td>"지난 6개월간 30가구의 이사를 도와드렸으며, 재방문율 90%입니다."</td></tr>
+        <tr><td>서비스 지역·운영 시간</td><td>"서울·경기 전 지역 담당. 평일 오전 9시~오후 8시, 주말 상담 가능."</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="file-upload">소개 파일 업로드</h3>
+    <p>이미 만들어진 회사 소개서, 상품 안내서, 서비스 제안서가 있다면 파일로 업로드합니다. AI가 파일 내용을 직접 참고하여 더 정확한 메시지를 생성합니다.</p>
+    <table class="m-table">
+      <thead><tr><th>지원 형식</th><th>활용 예시</th></tr></thead>
+      <tbody>
+        <tr><td><strong>PDF</strong></td><td>회사 소개서, 서비스 안내서, 상품 카탈로그</td></tr>
+        <tr><td><strong>TXT</strong></td><td>FAQ 목록, 서비스 설명 텍스트</td></tr>
+        <tr><td><strong>CSV</strong></td><td>상품 목록, 가격표</td></tr>
+      </tbody>
+    </table>
+    <div class="notice">
+      📌 파일을 업로드하면 마이페이지 → 사업체 정보의 소개 파일과 동일하게 공유됩니다. 업로드한 파일은 AI 메시지 생성 시 자동으로 참고합니다.
+    </div>
+
+    <h2 id="send-settings">발송 기본 설정</h2>
+    <p>메시지 발송 방식에 관한 기본 설정입니다.</p>
+    <table class="m-table">
+      <thead><tr><th>설정 항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>발송 채널</strong></td>
+          <td>폰문자(SMS/LMS/MMS) 또는 웹문자(RCS) 선택</td>
+        </tr>
+        <tr>
+          <td><strong>수신거부 번호 (080)</strong></td>
+          <td>수신거부 처리용 080 번호. 미입력 시 시스템 공용 번호 사용</td>
+        </tr>
+        <tr>
+          <td><strong>발송 예약 시간</strong></td>
+          <td>즉시 발송 또는 날짜·시간 지정 예약</td>
+        </tr>
+        <tr>
+          <td><strong>메시지 생성 수량</strong></td>
+          <td>기본 30회치 자동 생성. 퍼널 단계별 1회씩 자동 발송</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="save-settings">설정 저장</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">모든 항목 입력 후 <strong>[저장]</strong> 버튼을 클릭합니다</div>
+          <div class="step-desc">저장된 정보는 이후 새 메시지 생성 시 자동으로 불러와집니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">저장 완료 후 <strong>[프롬프트 설정]</strong> 탭으로 이동합니다</div>
+          <a href="/manual/aimessage/prompt.html" style="color:var(--brand);font-size:14px;">→ 프롬프트 설정 보기</a>
+        </div>
+      </li>
+    </ul>
+    <div class="tip">
+      💡 <strong>마이페이지와 연동</strong><br>
+      마이페이지 → 사업체 정보에 입력한 내용이 AI 메시지 발신자 정보에 자동으로 반영됩니다. 사전에 마이페이지에서 입력해 두면 편리합니다.
+      <a href="/manual/account/settings.html#business" style="color:var(--brand);">→ 사업체 정보 등록 보기</a>
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aimessage/start.html"><span class="nav-label">← 이전</span><span class="nav-title">AI 메시지 시작하기</span></a>
+      <a href="/manual/aimessage/prompt.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">프롬프트 설정</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">기본정보 탭 접속</a></li>
+      <li><a href="#sender-fields">발신자 기본 정보</a></li>
+      <li><a href="#business-profile">사업체 소개 정보</a></li>
+      <li><a href="#text-intro" class="h3">소개 텍스트</a></li>
+      <li><a href="#file-upload" class="h3">소개 파일 업로드</a></li>
+      <li><a href="#send-settings">발송 기본 설정</a></li>
+      <li><a href="#save-settings">설정 저장</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

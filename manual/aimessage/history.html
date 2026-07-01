@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>AI 메시지 발송 내역 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI 메시지</div>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지 소개</a>
+      <a href="/manual/aimessage/start.html" class="sb-link">시작하기</a>
+      <a href="/manual/aimessage/sender-info.html" class="sb-link">발신자 정보 설정</a>
+      <a href="/manual/aimessage/prompt.html" class="sb-link">프롬프트 설정</a>
+      <a href="/manual/aimessage/send.html" class="sb-link">발송하기</a>
+      <a href="/manual/aimessage/rcs.html" class="sb-link">🌐 웹문자(RCS)</a>
+      <a href="/manual/aimessage/history.html" class="sb-link active">발송 내역</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/aimessage/">AI 메시지</a> › 발송 내역</nav>
+    <h1 class="page-title">📋 AI 메시지 발송 내역</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#access">내역 화면 접속</a></li>
+        <li><a href="#list">발송 목록 확인</a></li>
+        <li><a href="#detail">상세 통계 보기</a></li>
+        <li><a href="#funnel">퍼널 전환 분석</a></li>
+        <li><a href="#resend">재발송 & 복사</a></li>
+      </ul>
+    </div>
+    <section id="access">
+      <h2>내역 화면 접속</h2>
+      <p><a href="https://kiam.kr/mypage_send_list.php" target="_blank">마이페이지 → 발송 내역</a>에서 모든 AI 메시지 발송 결과를 확인할 수 있습니다.</p>
+      <p>또는 AI 메시지 화면 상단 탭에서 <strong>[발송 내역]</strong> 탭을 클릭합니다.</p>
+    </section>
+    <section id="list">
+      <h2>발송 목록 확인</h2>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>발송 제목</td><td>AI 메시지 프로젝트 이름</td></tr>
+          <tr><td>발송일시</td><td>실제 발송된 날짜·시각</td></tr>
+          <tr><td>총 발송 건</td><td>수신자 총 수</td></tr>
+          <tr><td>성공 / 실패</td><td>전달 성공 건수 및 실패 건수</td></tr>
+          <tr><td>링크 클릭</td><td>챗봇 링크를 클릭한 수신자 수</td></tr>
+          <tr><td>원챗 등록</td><td>원챗 퍼널에 자동 등록된 수</td></tr>
+          <tr><td>채널</td><td>SMS / LMS / MMS / RCS 구분</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="detail">
+      <h2>상세 통계 보기</h2>
+      <p>발송 항목 우측 [상세보기] 클릭 시 수신자별 결과를 확인할 수 있습니다.</p>
+      <ul class="m-list">
+        <li>개별 수신자의 발송 성공/실패 여부</li>
+        <li>링크 클릭 시각 및 접속 디바이스</li>
+        <li>원챗 등록 여부 및 챗봇 대화 시작 여부</li>
+        <li>AI 메시지 내용 (수신자별로 개인화된 내용 확인)</li>
+      </ul>
+      <p style="margin-top:12px;"><strong>엑셀 다운로드</strong>: [CSV 내보내기] 버튼으로 전체 결과를 다운로드합니다.</p>
+    </section>
+    <section id="funnel">
+      <h2>퍼널 전환 분석</h2>
+      <p>AI 메시지와 원챗이 연동된 경우, 6단계 퍼널별 전환율을 확인할 수 있습니다.</p>
+      <table class="m-table">
+        <thead><tr><th>단계</th><th>지표</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>Hook</td><td>발송 성공률</td><td>문자가 전달된 비율</td></tr>
+          <tr><td>Analysis</td><td>링크 클릭률</td><td>본문 링크를 클릭한 비율</td></tr>
+          <tr><td>Insight</td><td>챗봇 참여율</td><td>챗봇에서 대화를 시작한 비율</td></tr>
+          <tr><td>Solution</td><td>재방문율</td><td>챗봇을 2회 이상 방문한 비율</td></tr>
+          <tr><td>Retention</td><td>DM 전환율</td><td>원챗 DM으로 이어진 비율</td></tr>
+          <tr><td>Care</td><td>최종 전환율</td><td>구매·예약·신청 완료 비율</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="resend">
+      <h2>재발송 & 복사</h2>
+      <ul class="m-list">
+        <li><strong>재발송</strong>: 실패한 수신자에게만 자동으로 재발송합니다. [실패건 재발송] 버튼 클릭.</li>
+        <li><strong>복사 발송</strong>: 동일한 메시지 설정으로 새 수신자에게 발송합니다. [복사하기] 버튼.</li>
+        <li><strong>A/B 테스트</strong>: 이전 발송과 클릭률을 비교하여 최적 메시지를 찾습니다.</li>
+      </ul>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/aimessage/rcs.html" class="btn-prev">← 웹문자(RCS)</a>
+      <a href="/manual/" class="btn-next">매뉴얼 홈 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">내역 화면 접속</a></li>
+      <li><a href="#list">발송 목록 확인</a></li>
+      <li><a href="#detail">상세 통계 보기</a></li>
+      <li><a href="#funnel">퍼널 전환 분석</a></li>
+      <li><a href="#resend">재발송 & 복사</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>음성 클로닝 &#8212; VoiceGen AI &#47; kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VoiceGen AI 매뉴얼</div>
+      <a href="/manual/voicegen/" class="sb-link ">&#128266; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/voicegen/start.html" class="sb-link ">회원가입 &amp; 로그인</a>
+      <a href="/manual/voicegen/demo.html" class="sb-link ">데모 체험하기</a>
+      <a href="/manual/voicegen/start.html#apikey" class="sb-link">API 키 발급</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">API 연동</div>
+      <a href="/manual/voicegen/api.html" class="sb-link ">API 레퍼런스</a>
+      <a href="/manual/voicegen/voices.html" class="sb-link ">음성 프리셋 목록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/voicegen/clone.html" class="sb-link active">음성 클로닝</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/voicegen/plan.html" class="sb-link ">요금제 안내</a>
+      <a href="/manual/voicegen/faq.html" class="sb-link ">자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/voicegen/">VoiceGen AI</a><span class="sep">&#8250;</span><span>음성 클로닝</span>
+    </div>
+    <h1>음성 클로닝</h1>
+    <p class="lead">본인 목소리가 담긴 WAV 파일을 업로드하면 AI가 그 음색을 학습해<br>
+    비슷한 목소리로 음성을 합성합니다. Basic 플랜 이상에서 사용 가능합니다.</p>
+
+    <div class="callout callout-blue">
+      <strong>&#128204; 지원 플랜</strong>: Basic &#183; Pro &#183; Enterprise<br>
+      Free 플랜은 기본 음성 프리셋만 사용 가능합니다. &#8594; <a href="/manual/voicegen/plan.html">플랜 업그레이드</a>
+    </div>
+
+    <h2>참조 음성 파일 조건</h2>
+    <p>클로닝 품질은 업로드하는 참조 파일의 품질에 직접 영향받습니다.</p>
+    <table>
+      <thead><tr><th>항목</th><th>권장 사양</th></tr></thead>
+      <tbody>
+        <tr><td><strong>파일 형식</strong></td><td>WAV (권장) &#183; MP3 &#183; OGG &#183; FLAC &#183; M4A</td></tr>
+        <tr><td><strong>길이</strong></td><td>10초 &#126; 2분 (30초&#126;1분이 최적)</td></tr>
+        <tr><td><strong>샘플링 레이트</strong></td><td>22,050Hz 이상 (44,100Hz 권장)</td></tr>
+        <tr><td><strong>파일 크기</strong></td><td>최대 30MB</td></tr>
+        <tr><td><strong>배경 소음</strong></td><td>최대한 없을 것 (조용한 실내 녹음 권장)</td></tr>
+        <tr><td><strong>발화 내용</strong></td><td>자연스럽게 읽은 문장. 긴 침묵 구간 없어야 함</td></tr>
+      </tbody>
+    </table>
+
+    <div class="callout callout-yellow">
+      <strong>&#9888; 클로닝 품질에 영향을 주는 요소</strong><br>
+      &#183; 배경 소음이 있으면 클로닝 품질이 크게 저하됩니다<br>
+      &#183; 10초 미만 파일은 특징을 충분히 학습하지 못합니다<br>
+      &#183; 노래&#183;감정이 격한 목소리보다 평상시 말하는 목소리가 적합합니다
+    </div>
+
+    <h2>사용 방법</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong>음성 클로닝 페이지 접속</strong>
+        <p><a href="https://vg.kiam.kr/clone.php" target="_blank">vg.kiam.kr/clone.php</a> 접속<br>
+        또는 대시보드 상단 <strong>음성 클로닝</strong> 메뉴 클릭</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong>참조 음성 파일 업로드</strong>
+        <p>파일 업로드 영역에 WAV 파일을 드래그하거나 클릭하여 선택</p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong>변환할 텍스트 입력</strong>
+        <p>클로닝된 목소리로 읽을 텍스트를 입력합니다</p>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <strong>음성 생성</strong>
+        <p><strong>&#127908; 클로닝 음성 생성</strong> 버튼 클릭 &#8594; 수 초 내에 결과가 출력됩니다</p>
+      </div></div>
+    </div>
+
+    <h2>API로 클로닝 호출하기</h2>
+    <div class="code-block"><pre><code>curl -X POST https://vg.kiam.kr/api/v1/clone   -H "Authorization: Bearer YOUR_API_KEY"   -F "text=안녕하세요. 클로닝 테스트입니다."   -F "audio_file=@/path/to/my_voice.wav"   -F "speed=1.0"   --output cloned_output.wav</code></pre></div>
+
+    <div class="callout callout-yellow">
+      <strong>&#9888; 음성 클로닝 이용 약관</strong><br>
+      &#183; 본인 또는 사용 허가를 받은 목소리만 업로드할 수 있습니다<br>
+      &#183; 타인의 목소리를 무단 복제하는 것은 법적으로 금지됩니다<br>
+      &#183; 생성된 음성을 사기&#183;사칭 목적으로 사용하는 것은 금지됩니다
+    </div>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="https://vg.kiam.kr" target="_blank" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128266; VoiceGen AI 바로가기 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

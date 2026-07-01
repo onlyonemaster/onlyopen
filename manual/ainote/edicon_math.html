@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>∑ 수식 (LaTeX) 자동 렌더링 — 에디콘 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css" integrity="sha384-n8MVd4RsNIU0tAv4ct0nTaAbDJwPJzDEaqSD1odI+WdtXRGWt2kTvGFasHpSy3SV" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js" integrity="sha384-XjKyOOlGwcjNTAIQHIpgOno0Hl1YQqzUOEleOLALmuqehneUG+vnGctmUb0ZY0l8" crossorigin="anonymous"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js" integrity="sha384-+VBxd3r6XgURycqtZ117nYw44OOcIax56Z4dCRWbxyPt0Koah1uHoK0o4+/RRE05" crossorigin="anonymous"
+        onload="renderMathInElement(document.body, {delimiters:[{left:'$$',right:'$$',display:true},{left:'$',right:'$',display:false}]});"></script>
+<style>
+.flow-input-output { display: grid; grid-template-columns: 1fr auto 1fr; gap: 12px; align-items: stretch; margin: 20px 0; padding: 18px; background: var(--bg2); border: 1px solid var(--border); border-radius: 12px;}
+.flow-input-output .col-label { font-size: 11px; font-weight: 700; letter-spacing: 1px; color: var(--text3); margin-bottom: 6px; text-transform: uppercase;}
+.flow-input-output pre { background: var(--bg3); border: 1px dashed var(--border); border-radius: 8px; padding: 12px; font-size: 12px; color: var(--text2); margin: 0; overflow-x: auto; line-height: 1.6; white-space: pre; }
+.flow-input-output .result-box { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-size: 16px; color: var(--text); line-height: 1.8; }
+.flow-input-output .arrow-col { font-size: 24px; color: #a855f7; text-align: center; align-self: center; }
+@media(max-width:700px) { .flow-input-output { grid-template-columns: 1fr; } .flow-input-output .arrow-col { transform: rotate(90deg); } }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a></div>
+    <div class="sb-section"><div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a></div>
+    <div class="sb-section"><div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link active">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a></div>
+    <div class="sb-section"><div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a></div>
+    <div class="sb-section"><div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a></div>
+    <div class="sb-section"><div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a></div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <a href="/manual/ainote/edicon.html">에디콘</a><span class="sep">›</span>
+      <span>수식 (LaTeX)</span>
+    </div>
+
+    <h1>∑ 수식 (LaTeX) 자동 렌더링</h1>
+    <p class="page-desc">수학·물리·통계 노트를 만들 때 가장 답답한 게 <strong>수식 입력</strong>입니다. 아이노트는 <strong>LaTeX</strong> 표기법을 그대로 붙여넣기만 하면 KaTeX 엔진이 자동으로 아름다운 수식으로 렌더링합니다. ChatGPT·SuperAI 같은 AI도 LaTeX로 수식을 만들어주므로 그대로 복사·붙여넣기만 하면 됩니다.</p>
+
+    <h2 id="two-types">📐 두 가지 수식 모드</h2>
+
+    <div class="tab-grid">
+      <div class="tab-card" style="border-left:3px solid #a855f7;">
+        <span class="ti">$</span>
+        <div class="tn">인라인 수식 ($...$)</div>
+        <div class="td"><strong>달러 1개</strong>로 감싸면 문장 안에 작은 수식으로 들어갑니다. <em>예: 피타고라스 정리 $a^2+b^2=c^2$ 입니다.</em></div>
+      </div>
+      <div class="tab-card" style="border-left:3px solid #ec4899;">
+        <span class="ti">$$</span>
+        <div class="tn">블록 수식 ($$...$$)</div>
+        <div class="td"><strong>달러 2개</strong>로 감싸면 별도 줄에 중앙 정렬로 크게 표시됩니다. 복잡한 수식에 적합.</div>
+      </div>
+    </div>
+
+    <h2 id="example-inline">⚡ 예시 1: 인라인 수식</h2>
+
+    <div class="flow-input-output">
+      <div>
+        <div class="col-label">입력</div>
+        <pre>피타고라스 정리:
+$a^2 + b^2 = c^2$
+
+원의 둘레:
+$2\pi r$</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="col-label">렌더링 결과</div>
+        <div class="result-box">
+          피타고라스 정리: $a^2 + b^2 = c^2$<br><br>
+          원의 둘레: $2\pi r$
+        </div>
+      </div>
+    </div>
+
+    <h2 id="example-block">⚡ 예시 2: 블록 수식</h2>
+
+    <div class="flow-input-output">
+      <div>
+        <div class="col-label">입력</div>
+        <pre>$$
+\int_{0}^{\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2}
+$$</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="col-label">렌더링 결과</div>
+        <div class="result-box" style="text-align:center;">
+          $$ \int_{0}^{\infty} e^{-x^2} dx = \frac{\sqrt{\pi}}{2} $$
+        </div>
+      </div>
+    </div>
+
+    <h2 id="examples-real">🎓 실전 예시 모음</h2>
+    <p>자주 쓰는 수식 패턴을 모았습니다. AI에게 "이 수식을 LaTeX로 만들어 줘"라고 요청해도 됩니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>분류</th><th>입력</th><th>결과</th></tr></thead>
+      <tbody>
+        <tr><td>분수</td><td><code>$\frac{a}{b}$</code></td><td>$\frac{a}{b}$</td></tr>
+        <tr><td>제곱근</td><td><code>$\sqrt{x^2+y^2}$</code></td><td>$\sqrt{x^2+y^2}$</td></tr>
+        <tr><td>합·곱</td><td><code>$\sum_{i=1}^{n} i^2$</code></td><td>$\sum_{i=1}^{n} i^2$</td></tr>
+        <tr><td>극한</td><td><code>$\lim_{x \to 0} \frac{\sin x}{x}$</code></td><td>$\lim_{x \to 0} \frac{\sin x}{x}$</td></tr>
+        <tr><td>미분</td><td><code>$\frac{d}{dx} f(x)$</code></td><td>$\frac{d}{dx} f(x)$</td></tr>
+        <tr><td>적분</td><td><code>$\int_a^b f(x) dx$</code></td><td>$\int_a^b f(x) dx$</td></tr>
+        <tr><td>행렬</td><td><code>$\begin{pmatrix}a&b\\c&d\end{pmatrix}$</code></td><td>$\begin{pmatrix}a&b\\c&d\end{pmatrix}$</td></tr>
+        <tr><td>그리스 문자</td><td><code>$\alpha, \beta, \gamma, \pi, \theta$</code></td><td>$\alpha, \beta, \gamma, \pi, \theta$</td></tr>
+        <tr><td>아래첨자·위첨자</td><td><code>$x_{i,j}^{(n)}$</code></td><td>$x_{i,j}^{(n)}$</td></tr>
+        <tr><td>벡터·집합</td><td><code>$\vec{v} \in \mathbb{R}^3$</code></td><td>$\vec{v} \in \mathbb{R}^3$</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="physics">🔬 물리·통계 예시</h2>
+
+    <div class="flow-input-output">
+      <div>
+        <div class="col-label">입력 (아인슈타인 방정식 + 정규분포)</div>
+        <pre>아인슈타인의 질량-에너지 등가식:
+$$ E = mc^2 $$
+
+정규분포의 확률밀도함수:
+$$ f(x) = \frac{1}{\sigma\sqrt{2\pi}} 
+   e^{-\frac{(x-\mu)^2}{2\sigma^2}} $$</pre>
+      </div>
+      <div class="arrow-col">→</div>
+      <div>
+        <div class="col-label">렌더링 결과</div>
+        <div class="result-box" style="text-align:center;">
+          아인슈타인의 질량-에너지 등가식:<br>
+          $$ E = mc^2 $$
+          정규분포의 확률밀도함수:<br>
+          $$ f(x) = \frac{1}{\sigma\sqrt{2\pi}} e^{-\frac{(x-\mu)^2}{2\sigma^2}} $$
+        </div>
+      </div>
+    </div>
+
+    <h2 id="ai-prompt">🤖 AI에게 LaTeX 요청하는 방법</h2>
+    <p>ChatGPT나 DeepSeek에게 다음과 같이 요청하면 LaTeX 형식으로 답변해 줍니다.</p>
+
+    <div style="background: var(--bg2); border-left: 4px solid #a855f7; padding: 14px 18px; border-radius: 0 10px 10px 0; margin: 16px 0;">
+      <strong>프롬프트 예시:</strong><br>
+      <em style="color:var(--text2);">"베이즈 정리를 LaTeX 수식으로 표현해 줘. $...$ 또는 $$...$$로 감싸서."</em>
+    </div>
+
+    <p>그러면 AI가 아래처럼 답하고, 그걸 그대로 노트에 붙여넣으면 자동 렌더링됩니다:</p>
+
+    <div class="result-box" style="background:var(--bg2);">
+      베이즈 정리: $$ P(A|B) = \frac{P(B|A) P(A)}{P(B)} $$
+    </div>
+
+    <h2 id="tips">💡 잘 쓰는 팁</h2>
+
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>방법</th></tr></thead>
+      <tbody>
+        <tr><td>수식이 안 보이고 그냥 글자로</td><td>달러($) 짝이 안 맞음. 짝수개로 닫혀 있는지 확인.</td></tr>
+        <tr><td>달러 표시 자체를 쓰고 싶을 때</td><td>역슬래시로 이스케이프: <code>\$5,000</code></td></tr>
+        <tr><td>수식이 너무 작을 때</td><td>블록 수식($$)으로 바꾸기 — 자동으로 더 크게 표시됨</td></tr>
+        <tr><td>여러 줄 수식 정렬</td><td><code>\begin{aligned}...\end{aligned}</code> 사용</td></tr>
+        <tr><td>한글과 섞어 쓰기</td><td>인라인($)을 사용하면 자연스럽게 흐름에 녹아듦</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      ⚡ <strong>KaTeX 엔진</strong>: 아이노트는 무거운 MathJax 대신 빠른 <strong>KaTeX</strong>을 사용합니다. 수십 개 수식이 있어도 0.1초 안에 렌더링됩니다. <a href="https://katex.org/docs/supported.html" target="_blank">KaTeX 지원 명령어 전체 목록 →</a>
+    </div>
+
+    <h2 id="trouble">🛠️ 문제 해결</h2>
+
+    <table class="m-table">
+      <thead><tr><th>증상</th><th>원인 & 해결</th></tr></thead>
+      <tbody>
+        <tr><td>"$" 글자가 그대로 보임</td><td>닫는 달러 표시가 빠짐. <code>$a^2$</code>처럼 양쪽에 같은 개수의 달러.</td></tr>
+        <tr><td>수식이 깨진 채로 표시</td><td>지원되지 않는 LaTeX 명령. <a href="https://katex.org/docs/supported.html" target="_blank">KaTeX 지원 목록</a>에 있는지 확인.</td></tr>
+        <tr><td>"undefined control sequence" 에러</td><td><code>\xyz</code>가 정의되지 않은 명령. 오타 확인 또는 패키지 차이.</td></tr>
+        <tr><td>한글 수식 라벨이 깨짐</td><td>한글은 <code>\text{한글}</code> 안에 넣기: <code>$\text{면적} = \pi r^2$</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/edicon_code.html"><span class="nav-label">← 이전</span><span class="nav-title">💻 코드 블록</span></a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📐 다이어그램 (Mermaid)</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#two-types">두 가지 수식 모드</a></li>
+      <li><a href="#example-inline">인라인 예시</a></li>
+      <li><a href="#example-block">블록 예시</a></li>
+      <li><a href="#examples-real">실전 예시 모음</a></li>
+      <li><a href="#physics">물리·통계 예시</a></li>
+      <li><a href="#ai-prompt">AI에게 요청하기</a></li>
+      <li><a href="#tips">잘 쓰는 팁</a></li>
+      <li><a href="#trouble">문제 해결</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

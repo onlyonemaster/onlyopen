@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>DB 수집(온리원디버) 소개 — kiam.kr 매뉴얼</title>
+<title>DB 수집(온리원디버) — kiam.kr 매뉴얼</title>
 <link rel="stylesheet" href="/manual/assets/style.css">
 </head>
 <body>
@@ -13,25 +13,18 @@
   <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
   <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
 </header>
+
 <div class="m-layout">
   <nav class="m-sidebar">
     <div class="sb-section">
-      <div class="sb-section-title">DB 수집 (온리원디버)</div>
+      <div class="sb-section-title">DB 수집 (디버)</div>
       <a href="/manual/diver/" class="sb-link active">🔍 DB 수집 소개</a>
-      <a href="/manual/diver/install.html" class="sb-link">💿 설치 및 시작하기</a>
-      <a href="/manual/diver/search.html" class="sb-link">🔎 검색 기술 가이드</a>
-      <a href="/manual/diver/collect.html" class="sb-link">📊 디비 수집 방법</a>
-      <a href="/manual/diver/utilize.html" class="sb-link">📤 수집 DB 활용하기</a>
-      <a href="/manual/diver/updater.html" class="sb-link">🔄 디버 업데이터</a>
-      <a href="/manual/diver/troubleshoot.html" class="sb-link">🛠️ 문제 해결</a>
     </div>
     <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
       <div class="sb-section-title">연계 서비스</div>
       <a href="/manual/sms/" class="sb-link">📱 폰문자 SMS</a>
       <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
       <a href="/manual/onechat/" class="sb-link">💬 원챗</a>
-      <a href="/manual/callback/" class="sb-link">📞 IAM 콜백</a>
-      <a href="/manual/sharecallback/" class="sb-link">🔗 공유콜백</a>
     </div>
     <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
       <div class="sb-section-title">다른 매뉴얼</div>
@@ -40,17 +33,19 @@
       <a href="/manual/dashboard/" class="sb-link">📊 대시보드</a>
     </div>
   </nav>
+
   <main class="m-content">
     <div class="breadcrumb">
       <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
-      <span>DB 수집(온리원디버)</span>
+      <span>DB 수집(디버)</span>
     </div>
-    <h1>🔍 DB 수집 — 온리원디버</h1>
-    <p class="page-desc">온리원디버(OnlyOneDiver)는 온라인에 공개된 데이터를 타겟별로 빠르게 수집하여 SMS·AI 메시지·원챗 퍼널 발송 대상으로 활용하는 <strong>다채널 종합 DB 수집 솔루션</strong>입니다.</p>
 
-    <!-- 핵심 특징 카드 -->
+    <h1>🔍 DB 수집 — 온리원디버</h1>
+    <p class="page-desc">온라인 공개 데이터를 타겟별로 빠르게 수집하여 SMS·AI 메시지 발송 대상으로 활용하는 방법을 안내합니다.</p>
+
     <h2 id="what">온리원디버란?</h2>
-    <p><strong>온리원디버</strong>는 <strong>온리원연구소</strong>가 개발한 Windows 전용 DB 수집 프로그램(버전 1.0.1.0)으로, 네이버의 공개 웹페이지(지도, 블로그, 카페, 뉴스, 포스트, 쇼핑, 웹사이트)에서 휴대폰 번호, 이메일, 지역주소, 업체명, 담당자 이름 등을 자동으로 수집합니다.</p>
+    <p><strong>온리원디버(OnlyOneDiver)</strong>는 온라인에 공개된 데이터를 빠르게 수집하는 <strong>다채널 종합 DB 수집 솔루션</strong>입니다. 타겟 대상별, 웹 종류별로 공개·정보·모두 수집이 가능합니다.</p>
+
     <div class="tab-grid">
       <div class="tab-card">
         <span class="ti">🎯</span>
@@ -63,11 +58,6 @@
         <div class="td">수천~수만 건의 연락처를 빠르게 수집 및 정제</div>
       </div>
       <div class="tab-card">
-        <span class="ti">📊</span>
-        <div class="tn">8가지 웹종류</div>
-        <div class="td">지도·블로그·카페·뉴스·포스트·N쇼핑·G쇼핑·웹사이트</div>
-      </div>
-      <div class="tab-card">
         <span class="ti">🔗</span>
         <div class="tn">kiam.kr 연동</div>
         <div class="td">수집 즉시 SMS·AI 메시지·원챗 퍼널로 바로 연동</div>
@@ -77,188 +67,148 @@
         <div class="tn">공개 데이터만</div>
         <div class="td">합법적으로 공개된 비즈니스 연락처만 수집합니다</div>
       </div>
-      <div class="tab-card">
-        <span class="ti">🔄</span>
-        <div class="tn">자동 업데이트</div>
-        <div class="td">디버 업데이터가 최신 버전과 ChromeDriver를 자동 관리</div>
-      </div>
     </div>
 
-    <!-- 230911 버전 주요 변경사항 -->
-    <h2 id="v230911">v230911 주요 업데이트 (2023.09.11)</h2>
-    <table class="m-table">
-      <thead><tr><th>#</th><th>변경 사항</th><th>내용</th></tr></thead>
-      <tbody>
-        <tr><td>1</td><td>네이버 지도 010→0507</td><td>네이버 지도 개인정보 보호로 010번호가 0507로 대체되어 수집량 감소</td></tr>
-        <tr><td>2</td><td>지도 검색 지침 강화</td><td>정교한 디비 수집을 위한 규칙 세분화. 지도 [검색 키워드] 옆 물음표(?) 클릭 참조</td></tr>
-        <tr><td>3</td><td>이메일 무료 수집</td><td>휴대폰 수집 시 블로그·카페·뉴스·포스트·웹사이트에서 이메일 함께 수집</td></tr>
-        <tr><td>4</td><td>이메일 유료 수집</td><td>블로그 게시자/검색자 이메일 + 카페 이메일 고속 수집 (종량제)</td></tr>
-        <tr><td>5</td><td>이름 수집 기능</td><td>사람이름(변호사·목사·강사 등 직위 앞) / 단체이름(협회·식당·회사 등) 구분 수집</td></tr>
-        <tr><td>6</td><td>정확도 조정</td><td>정확도 1(최고)~3(최저) + 이름수집 여부 조합 가능</td></tr>
-        <tr><td>7</td><td>팝업 광고 기능</td><td>우측 하단 팝업으로 업그레이드·공지·광고 제공 (광고 문의: 본사 관리자)</td></tr>
-        <tr><td>8</td><td>수집건수 제한</td><td>왼쪽 중앙 수집건수 입력 시 해당 건수 도달 시 자동 중지</td></tr>
-      </tbody>
-    </table>
-
-    <!-- 수집 원칙 & 법적 지위 -->
-    <h2 id="legal">디비 수집의 법적 지위</h2>
-    <div class="notice">
+    <div class="notice" style="margin-top:16px;">
       📌 <strong>수집 원칙</strong>: 온리원디버는 온라인에 <em>공개된 데이터만</em> 추출합니다. 비공개 데이터나 무단 접근 데이터는 수집하지 않습니다.
     </div>
 
-    <h3>① 공개 정보 수집에 대한 대법원 판례</h3>
-    <p>대법원(2016.08.17)은 <strong>"이미 공개된 개인정보는 동의 없이 수집·제공이 가능하다"</strong>고 판결했습니다. 영리 목적의 DB 수집과 제3자 제공에 대해서도 합법으로 판단했습니다.</p>
-    <blockquote style="background:var(--card-bg);padding:16px;border-left:4px solid var(--brand);margin:12px 0;border-radius:0 8px 8px 0;">
-      <strong>판결 요지</strong><br>
-      "영리목적으로 개인정보를 수집해 제3자에게 제공했더라도 그로 인해 얻을 수 있는 <strong>'알권리'·'표현의 자유'·'영업의 자유'·'사회 전체의 경제적 효율성'</strong> 등이 정보처리를 막음으로써 얻을 수 있는 정보주체의 인격적 법익에 비해 우월하다."<br><br>
-      "이미 공개된 개인정보를 정보주체의 동의가 있었다고 객관적으로 인정되는 범위 내에서 수집·이용·제공 등 처리를 할 때는 정보주체의 별도의 동의는 불필요하다."
-    </blockquote>
-
-    <h3>② 행정안전부 '표준개인정보처리지침' (2017.7.26 시행)</h3>
+    <h2 id="legal">합법적 수집 원칙</h2>
     <table class="m-table">
-      <thead><tr><th>조항</th><th>내용</th></tr></thead>
+      <thead><tr><th>구분</th><th>내용</th></tr></thead>
       <tbody>
-        <tr><td><strong>제6조①</strong></td><td>명함 및 유사한 매체로 제공받거나 이와 유사한 정황이 있다고 판단될 때 수집 가능</td></tr>
-        <tr><td><strong>제6조②</strong></td><td>공개된 매체 또는 장소(홈페이지 등)에서 수집하는 경우 허용</td></tr>
-        <tr><td><strong>제6조③</strong></td><td>정보주체의 동의 의사가 명확하거나 통념상 동의 의사가 있었다고 인정되는 범위 내에서만 이용 가능</td></tr>
+        <tr>
+          <td>✅ 수집 가능</td>
+          <td>공개된 웹페이지의 비즈니스 연락처 (전화번호, 이메일), 공개 SNS 프로필, 공개 커뮤니티·포럼의 게시 정보</td>
+        </tr>
+        <tr>
+          <td>❌ 수집 불가</td>
+          <td>개인정보보호법 위반 데이터, 로그인이 필요한 비공개 데이터, 크롤링 금지(robots.txt) 사이트</td>
+        </tr>
       </tbody>
     </table>
-
-    <h3>③ 수집 후 발송 시 스팸법규 준수</h3>
-    <p>DB 수집 자체는 합법이지만, 수집된 DB로 <strong>문자·카톡 발송 시 수신 동의가 필요</strong>합니다.</p>
-    <table class="m-table">
-      <thead><tr><th>발송 채널</th><th>합법 조건</th><th>비고</th></tr></thead>
-      <tbody>
-        <tr><td>📞 전화</td><td>DB 수집 출처를 알리고 텔레마케팅</td><td>합법</td></tr>
-        <tr><td>💬 문자·카톡</td><td>수신동의 또는 거래관계 내 정보 전달</td><td>공익정보도 예외적 허용</td></tr>
-        <tr><td>📧 이메일</td><td>공개 목적에 부합하는 내용 발송</td><td>공개자가 원하는 메시지 → 신고 안 함</td></tr>
-      </tbody>
-    </table>
-
-    <!-- 전체 흐름 -->
-    <h2 id="flow">전체 이용 흐름</h2>
-    <div class="flow-steps" style="display:flex;flex-wrap:wrap;gap:16px;margin:16px 0;">
-      <div style="flex:1;min-width:140px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
-        <div style="font-size:28px;margin-bottom:8px;">1️⃣</div>
-        <strong>회원가입 & 결제</strong>
-        <p style="font-size:13px;color:var(--sub);">kiam.kr 가입 후 디버 요금제 결제</p>
-      </div>
-      <div style="flex:1;min-width:140px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
-        <div style="font-size:28px;margin-bottom:8px;">2️⃣</div>
-        <strong>디버 설치</strong>
-        <p style="font-size:13px;color:var(--sub);">Windows PC에 설치 후 드럼통 아이콘 실행</p>
-      </div>
-      <div style="flex:1;min-width:140px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
-        <div style="font-size:28px;margin-bottom:8px;">3️⃣</div>
-        <strong>검색 모델링</strong>
-        <p style="font-size:13px;color:var(--sub);">네이버에서 검색어 샘플링 후 최적 조건 도출</p>
-      </div>
-      <div style="flex:1;min-width:140px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
-        <div style="font-size:28px;margin-bottom:8px;">4️⃣</div>
-        <strong>디비 수집</strong>
-        <p style="font-size:13px;color:var(--sub);">조건 입력 후 자동 수집 → 엑셀 저장</p>
-      </div>
-      <div style="flex:1;min-width:140px;background:var(--card-bg);padding:16px;border-radius:8px;text-align:center;">
-        <div style="font-size:28px;margin-bottom:8px;">5️⃣</div>
-        <strong>플랫폼 연동</strong>
-        <p style="font-size:13px;color:var(--sub);">폰문자·AI 메시지·원챗으로 발송</p>
-      </div>
+    <div class="warn">
+      ⚠️ <strong>법적 주의사항</strong><br>
+      수집된 데이터는 개인정보보호법에 따라 적법하게 처리해야 합니다. 수신자 동의 없는 마케팅 발송은 법적 처벌을 받을 수 있습니다. 수집 전 반드시 법적 검토를 진행하세요.
     </div>
 
-    <!-- 빠른 시작 -->
-    <h2 id="quick">빠른 시작</h2>
-    <ol class="step-list">
+    <h2 id="install">설치 방법</h2>
+    <ul class="step-list">
       <li class="step-item">
         <div class="step-num">1</div>
         <div class="step-body">
-          <div class="step-title">회원가입 및 로그인</div>
-          <span class="step-url">https://kiam.kr/ma.php</span>
-          <div class="step-desc">kiam.kr에 회원가입 후 로그인합니다.</div>
+          <div class="step-title">디버 페이지에 접속합니다</div>
+          <span class="step-url">https://kiam.kr/sub_2.php</span>
         </div>
       </li>
       <li class="step-item">
         <div class="step-num">2</div>
         <div class="step-body">
-          <div class="step-title">디버 요금제 결제</div>
-          <div class="step-desc">상단 메뉴 마지막 [결제페이지] → 약정결제·정기결제·디버별도 중 선택 결제</div>
+          <div class="step-title">PC 버전 설치 파일을 다운로드합니다</div>
+          <div class="step-desc">Windows 전용 설치 파일을 다운로드 후 실행하여 설치합니다.</div>
         </div>
       </li>
       <li class="step-item">
         <div class="step-num">3</div>
         <div class="step-body">
-          <div class="step-title">디버 프로그램 설치</div>
-          <span class="step-url">https://kiam.kr/cliente_list.php?status=1&one_no=85</span>
-          <div class="step-desc">[온리원디버 정규판 다운로드] 클릭 후 설치. 보안 경고 시 [추가정보] → [계속 설치]</div>
+          <div class="step-title">kiam.kr 계정으로 로그인합니다</div>
+          <div class="step-desc">계정 로그인 시 포인트가 자동 연동됩니다.</div>
         </div>
       </li>
       <li class="step-item">
         <div class="step-num">4</div>
         <div class="step-body">
-          <div class="step-title">바탕화면 <strong>드럼통 아이콘</strong>으로 실행</div>
-          <div class="step-desc">드럼통 아이콘 = 디버 업데이터. 항상 이 아이콘으로 실행해야 ChromeDriver 최신 상태 유지</div>
+          <div class="step-title">수집 설정 후 시작합니다</div>
+          <div class="step-desc">수집 대상·키워드·지역을 설정하고 수집을 시작합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="collect">수집 방법</h2>
+    <table class="m-table">
+      <thead><tr><th>수집 타입</th><th>대상</th><th>결과물</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>타겟 대상별</strong></td>
+          <td>업종 키워드로 타겟 검색</td>
+          <td>사업체명, 전화번호, 주소</td>
+        </tr>
+        <tr>
+          <td><strong>웹 종류별</strong></td>
+          <td>네이버 플레이스, 카카오맵 등</td>
+          <td>연락처, 이메일</td>
+        </tr>
+        <tr>
+          <td><strong>SNS 수집</strong></td>
+          <td>인스타그램, 페이스북 공개 계정</td>
+          <td>닉네임, 연락처</td>
+        </tr>
+        <tr>
+          <td><strong>커뮤니티</strong></td>
+          <td>공개 카페·포럼</td>
+          <td>게시자 정보</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="use">수집 DB 활용</h2>
+    <p>수집된 DB는 kiam.kr 플랫폼과 직접 연동됩니다. 추천 워크플로우를 따라 바로 마케팅에 활용하세요.</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">수집 완료 → CSV 파일로 자동 저장</div>
+          <div class="step-desc">수집 결과를 CSV 형식으로 내보냅니다.</div>
         </div>
       </li>
       <li class="step-item">
-        <div class="step-num">5</div>
+        <div class="step-num">2</div>
         <div class="step-body">
-          <div class="step-title">검색 조건 설정 후 수집 시작</div>
-          <div class="step-desc">웹종류·검색어·기간·건수 설정 → [수집시작] 클릭</div>
+          <div class="step-title"><strong>폰문자</strong>에 수신자 파일로 업로드 → 대량 문자 발송</div>
+          <a href="/manual/sms/send.html" style="color:var(--brand);font-size:14px;">→ 폰문자 발송 매뉴얼 보기</a>
         </div>
       </li>
-    </ol>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title"><strong>AI 메시지</strong>에 업로드 → AI 맞춤 메시지 자동 생성·발송</div>
+          <a href="/manual/aimessage/start.html" style="color:var(--brand);font-size:14px;">→ AI 메시지 매뉴얼 보기</a>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">링크 클릭 고객 → <strong>원챗</strong> 퍼널 자동 등록 → AI 챗봇 응답</div>
+          <a href="/manual/onechat/funnel.html" style="color:var(--brand);font-size:14px;">→ 원챗 퍼널 매뉴얼 보기</a>
+        </div>
+      </li>
+    </ul>
 
-    <!-- 매뉴얼 구성 -->
-    <h2 id="manual-pages">매뉴얼 구성 (7페이지)</h2>
-    <div class="tab-grid">
-      <a href="/manual/diver/install.html" class="tab-card" style="text-decoration:none;color:inherit;">
-        <span class="ti">💿</span>
-        <div class="tn">설치 및 시작하기</div>
-        <div class="td">작동환경·회원가입·결제·설치·실행·무료체험</div>
-      </a>
-      <a href="/manual/diver/search.html" class="tab-card" style="text-decoration:none;color:inherit;">
-        <span class="ti">🔎</span>
-        <div class="tn">검색 기술 가이드</div>
-        <div class="td">네이버 검색지침 7가지·검색어 모델링·샘플링·사례</div>
-      </a>
-      <a href="/manual/diver/collect.html" class="tab-card" style="text-decoration:none;color:inherit;">
-        <span class="ti">📊</span>
-        <div class="tn">디비 수집 방법</div>
-        <div class="td">휴대폰·이메일·지역전화·지도·이름·정확도·저장</div>
-      </a>
-      <a href="/manual/diver/utilize.html" class="tab-card" style="text-decoration:none;color:inherit;">
-        <span class="ti">📤</span>
-        <div class="tn">수집 DB 활용하기</div>
-        <div class="td">폰문자·RCS·전화·이메일·SNS 연동 워크플로우</div>
-      </a>
-      <a href="/manual/diver/updater.html" class="tab-card" style="text-decoration:none;color:inherit;">
-        <span class="ti">🔄</span>
-        <div class="tn">디버 업데이터</div>
-        <div class="td">DberUpdater 구조·update.xml·MD5 검증·ChromeDriver</div>
-      </a>
-      <a href="/manual/diver/troubleshoot.html" class="tab-card" style="text-decoration:none;color:inherit;">
-        <span class="ti">🛠️</span>
-        <div class="tn">문제 해결</div>
-        <div class="td">자주 묻는 질문·오류 대처·검색기술 교육·위탁수집</div>
-      </a>
+    <div class="tip">
+      💡 <strong>추천 워크플로우</strong><br>
+      온리원디버 수집 → AI 메시지 개인화 발송 → 클릭 고객 원챗 자동 관리 → 시나리오 캠페인 전환<br>
+      이 흐름 하나로 DB 수집부터 계약·구매까지 전 과정을 자동화합니다.
     </div>
 
     <div class="page-nav">
       <a href="/manual/"><span class="nav-label">← 이전</span><span class="nav-title">매뉴얼 홈</span></a>
-      <a href="/manual/diver/install.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">💿 설치 및 시작하기</span></a>
+      <a href="/manual/sms/" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📱 폰문자 SMS</span></a>
     </div>
   </main>
+
   <aside class="m-toc">
     <div class="toc-title">이 페이지</div>
     <ul class="toc-list">
       <li><a href="#what">온리원디버란?</a></li>
-      <li><a href="#v230911">v230911 주요 업데이트</a></li>
-      <li><a href="#legal">디비 수집의 법적 지위</a></li>
-      <li><a href="#flow">전체 이용 흐름</a></li>
-      <li><a href="#quick">빠른 시작</a></li>
-      <li><a href="#manual-pages">매뉴얼 구성 (7페이지)</a></li>
+      <li><a href="#legal">합법적 수집 원칙</a></li>
+      <li><a href="#install">설치 방법</a></li>
+      <li><a href="#collect">수집 방법</a></li>
+      <li><a href="#use">수집 DB 활용</a></li>
     </ul>
   </aside>
 </div>
+
 <div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
 <script src="/manual/assets/script.js"></script>
 </body>

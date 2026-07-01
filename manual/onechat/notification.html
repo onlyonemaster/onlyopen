@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>알림 수신 설정 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">챗봇 설정</div>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+      <a href="/manual/onechat/prompt.html#llm" class="sb-link">LLM 기본지식 활용 모드</a>
+      <a href="/manual/onechat/wizard.html" class="sb-link">🤖 챗봇 자동 설정 위저드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📞 화상/음성 통화</div>
+      <a href="/manual/onechat/call.html" class="sb-link">통화 시작 &amp; 컨트롤</a>
+      <a href="/manual/onechat/call.html#multi" class="sb-link">다자통화 &amp; SFU</a>
+      <a href="/manual/onechat/call.html#ringtone" class="sb-link">벨소리 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타 &amp; 학습</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/avatar.html#rag" class="sb-link">RAG 벡터 검색 활용</a>
+      <a href="/manual/onechat/avatar.html#source" class="sb-link">AI 소스 자동 추천</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📅 예약 관리</div>
+      <a href="/manual/onechat/reserve.html" class="sb-link">예약 설정 &amp; 운영</a>
+      <a href="/manual/onechat/reserve.html#flow" class="sb-link">고객 예약 흐름</a>
+      <a href="/manual/onechat/reserve.html#notify" class="sb-link">3-Way 알림</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link active">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">💳 구독 &amp; 플랜</div>
+      <a href="/manual/onechat/subscribe.html" class="sb-link">구독 플랜 &amp; 사용량</a>
+      <a href="/manual/onechat/subscribe.html#quota" class="sb-link">사용량 한도 안내</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a><span class="sep">›</span>
+      <span>알림 수신 설정</span>
+    </div>
+
+    <h1>🔔 알림 수신 설정</h1>
+    <p class="page-desc">수신자가 내 챗봇으로 대화를 시작하면 운영자(나)에게 알림이 전달됩니다. 알림을 받으려면 먼저 원챗에서 알림을 허용해야 합니다.</p>
+
+    <h2 id="how-notif">알림이 오는 조건</h2>
+    <p>모든 방문자에게 무차별적으로 알림이 오지 않습니다. 다음 조건을 모두 만족해야 알림이 발생합니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>조건</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>① 링크 클릭 후 대화 시작</strong></td>
+          <td>수신자가 내 챗봇 링크를 클릭하고 <strong>첫 메시지를 보낸 시점</strong>부터 알림 대상이 됩니다</td>
+        </tr>
+        <tr>
+          <td><strong>② 내 챗봇에서 발생한 대화</strong></td>
+          <td>내 챗봇 링크(퍼널 또는 공유)로 접속한 방문자의 메시지만 알림이 옵니다</td>
+        </tr>
+        <tr>
+          <td><strong>③ 브라우저 알림 허용</strong></td>
+          <td>원챗 접속 브라우저에서 알림 권한을 허용해야 합니다 (최초 1회)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 <strong>핵심 원리</strong><br>
+      링크를 보냈지만 아직 클릭하지 않은 사람, 또는 링크만 보고 대화를 시작하지 않은 사람은 알림 대상에 포함되지 않습니다. 실제로 챗봇과 대화를 시작한 사람의 메시지에 대해서만 알림이 발생합니다.
+    </div>
+
+    <h2 id="enable">알림 허용 방법</h2>
+
+    <h3 id="first-time">최초 알림 허용 (브라우저)</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">원챗에 처음 접속하면 알림 허용 안내가 표시됩니다</div>
+          <div class="step-desc">브라우저 상단에 "알림을 허용하시겠습니까?" 팝업이 자동으로 나타납니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title"><strong>허용</strong> 버튼을 클릭합니다</div>
+          <div class="step-desc">"허용"을 클릭하면 이후 새 메시지가 올 때마다 브라우저 알림이 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>알림을 실수로 차단했다면?</strong><br>
+      브라우저 주소창 왼쪽의 🔒 자물쇠 아이콘 → <strong>사이트 설정</strong> → 알림 → <strong>허용</strong>으로 변경하세요.<br>
+      또는 브라우저 설정 → 개인 정보 및 보안 → 알림에서 kiam.kr을 허용 목록에 추가할 수 있습니다.
+    </div>
+
+    <h3 id="mobile">모바일에서 알림 받기</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">모바일 Chrome에서 원챗에 접속합니다</div>
+          <div class="step-desc">iOS Safari는 PWA 설치 후 알림을 지원합니다. Android Chrome은 바로 알림 허용이 가능합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">홈화면에 추가(PWA)하면 앱처럼 알림이 옵니다</div>
+          <div class="step-desc">Chrome 메뉴 → "홈 화면에 추가"를 선택하면 원챗이 앱 아이콘으로 저장됩니다. 앱을 열지 않아도 새 메시지 알림이 표시됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="notif-types">알림 종류</h2>
+
+    <table class="m-table">
+      <thead><tr><th>알림 종류</th><th>발생 조건</th><th>알림 내용</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>💬 새 메시지</td>
+          <td>퍼널/공유 수신자가 챗봇에 메시지 전송</td>
+          <td>보낸 사람 이름 + 메시지 미리보기</td>
+        </tr>
+        <tr>
+          <td>🔗 연결 요청</td>
+          <td>수신자가 "담당자 연결" 요청 시</td>
+          <td>"[이름]님이 담당자 연결을 요청했습니다"</td>
+        </tr>
+        <tr>
+          <td>↩ 공지 응답</td>
+          <td>HI 공지발송 후 수신자가 답장</td>
+          <td>공지에 대한 수신자 답장 내용</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="connect-request">연결 요청 알림</h2>
+    <p>수신자가 챗봇과 대화 중 <strong>"담당자와 직접 연결하고 싶다"</strong>는 의사를 표현하면, 챗봇이 다음과 같이 안내하고 운영자에게 알림이 전달됩니다.</p>
+
+    <div class="notice" style="background:var(--surface2);border-left:4px solid #7c3aed;">
+      <strong>챗봇 응답 예시:</strong><br>
+      <em>"예, 요청이나 제안사항을 작성하여 여기에 올려주시면 담당자에게 전달하겠습니다. 요청사항이 없는 경우 아무래도 답변이 늦어질 수 있으니 꼭 세부 내용을 제시해주시면 감사하겠습니다."</em>
+    </div>
+
+    <ul class="step-list" style="margin-top:16px;">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">수신자가 담당자 연결 요청 메시지를 챗봇에 입력합니다</div>
+          <div class="step-desc">챗봇이 위와 같은 안내 메시지를 자동으로 응답합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">운영자(나)에게 연결 요청 알림이 전달됩니다</div>
+          <div class="step-desc">원챗 화면에서 해당 수신자의 채팅방에 연결 요청 메시지가 표시되고 브라우저 알림이 옵니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">AI 아바타를 OFF하고 직접 대화합니다</div>
+          <div class="step-desc">채팅방에서 AI 아바타를 끄고 직접 메시지를 입력하여 1:1로 응대합니다. 대화가 끝나면 다시 AI를 켜두면 됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="respond">알림 수신 후 대응 방법</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">브라우저 알림을 클릭합니다</div>
+          <div class="step-desc">알림을 클릭하면 원챗이 열리고 해당 수신자의 채팅방으로 바로 이동합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">채팅 목록에서 빨간 배지(미읽음)를 확인합니다</div>
+          <div class="step-desc">알림을 놓쳤더라도 원챗 채팅 탭에서 빨간 숫자 배지가 표시된 대화를 찾아 확인할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">AI 아바타 상태를 확인하고 직접 답장합니다</div>
+          <div class="step-desc">AI가 이미 응답했다면 내용을 확인합니다. 직접 답장이 필요하면 AI를 OFF하고 메시지를 입력합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="tip">
+      💡 <strong>알림을 절대 놓치지 않으려면</strong><br>
+      1. 원챗을 브라우저 탭으로 항상 열어두세요 (새로고침 불필요)<br>
+      2. 모바일에 PWA로 설치하면 앱 알림으로 수신됩니다<br>
+      3. 원챗 화면의 채팅 탭(💬)에 빨간 배지가 있으면 미읽은 메시지가 있다는 뜻입니다
+    </div>
+
+    <h2 id="faq">자주 묻는 질문</h2>
+    <table class="m-table">
+      <thead><tr><th>질문</th><th>답변</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>링크를 보냈는데 알림이 안 와요</td>
+          <td>수신자가 아직 링크를 클릭하지 않았거나, 클릭했지만 메시지를 보내지 않은 상태입니다. 첫 메시지를 보낸 시점부터 알림이 발생합니다.</td>
+        </tr>
+        <tr>
+          <td>브라우저를 닫으면 알림이 안 오나요?</td>
+          <td>PWA로 설치했거나 서비스 워커가 활성화된 경우 브라우저를 닫아도 알림이 옵니다. 일반 브라우저 탭 방식은 탭이 열려 있어야 합니다.</td>
+        </tr>
+        <tr>
+          <td>AI가 자동 응답했는데도 알림이 오나요?</td>
+          <td>네, 수신자 메시지가 올 때 알림이 발생합니다. AI가 자동으로 응답했더라도 운영자는 대화 내용을 확인할 수 있습니다.</td>
+        </tr>
+        <tr>
+          <td>알림 소리를 끄고 싶어요</td>
+          <td>브라우저 또는 운영체제의 알림 소리 설정에서 조정하세요. kiam.kr 사이트 알림 설정에서 "무음" 옵션을 선택할 수도 있습니다.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/onechat/broadcast.html"><span class="nav-label">← 이전</span><span class="nav-title">HI 공지발송</span></a>
+      <a href="/manual/onechat/" class="next"><span class="nav-label">처음으로 →</span><span class="nav-title">원챗 소개</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#how-notif">알림이 오는 조건</a></li>
+      <li><a href="#enable">알림 허용 방법</a></li>
+      <li><a href="#first-time" class="h3">최초 허용 (브라우저)</a></li>
+      <li><a href="#mobile" class="h3">모바일 알림</a></li>
+      <li><a href="#notif-types">알림 종류</a></li>
+      <li><a href="#connect-request">연결 요청 알림</a></li>
+      <li><a href="#respond">대응 방법</a></li>
+      <li><a href="#faq">자주 묻는 질문</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>MY 챗봇 만들기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타 학습</div>
+      <a href="/manual/avatar/" class="sb-link">AI 아바타 소개</a>
+      <a href="/manual/avatar/makebot.html" class="sb-link active">🤖 MY 챗봇 만들기</a>
+      <a href="/manual/avatar/learn.html" class="sb-link">아바타 학습 방법</a>
+      <a href="/manual/avatar/settings.html" class="sb-link">챗봇 동작 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/avatar/">AI 아바타</a> › MY 챗봇 만들기</nav>
+    <h1 class="page-title">🤖 MY 챗봇 만들기</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">MY 챗봇이란?</a></li>
+        <li><a href="#access">진입 방법</a></li>
+        <li><a href="#step1">STEP 1 — 기본 정보 설정</a></li>
+        <li><a href="#step2">STEP 2 — AI 아바타 연결</a></li>
+        <li><a href="#step3">STEP 3 — 챗봇 외형 설정</a></li>
+        <li><a href="#step4">STEP 4 — 공개 & 배포</a></li>
+        <li><a href="#manage">챗봇 관리</a></li>
+      </ul>
+    </div>
+    <section id="what">
+      <h2>MY 챗봇이란?</h2>
+      <p><strong>MY 챗봇 만들기</strong>는 나만의 AI 챗봇을 생성하고 커스터마이징하는 기능입니다. 학습시킨 AI 아바타를 기반으로 챗봇의 이름, 아이콘, 환영 메시지, 응답 스타일을 설정하여 고객에게 배포할 수 있습니다.</p>
+      <div class="info-box">
+        <strong>원챗과의 관계</strong>: MY 챗봇은 원챗의 AI 아바타를 외부에 공개 배포하는 창구입니다. 챗봇 링크(<code>https://chatbot.kiam.kr/s/내아이디</code>)를 명함, 문자, SNS에 공유하세요.
+      </div>
+    </section>
+    <section id="access">
+      <h2>진입 방법</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><a href="https://kiam.kr" target="_blank">kiam.kr</a> 로그인</div></li>
+        <li><div class="step-num">2</div><div class="step-body">원챗 앱 실행 → 상단 아바타 버튼 클릭 → <strong>[MY 챗봇 만들기]</strong> 선택</div></li>
+        <li><div class="step-num">3</div><div class="step-body">또는 <a href="https://kiam.kr/mypage_chatbot_list.php" target="_blank">마이페이지 → 챗봇 목록</a> → [+ 새 챗봇 만들기]</div></li>
+      </ol>
+    </section>
+    <section id="step1">
+      <h2>STEP 1 — 기본 정보 설정</h2>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>설명</th><th>필수</th></tr></thead>
+        <tbody>
+          <tr><td>챗봇 이름</td><td>고객에게 표시될 AI 챗봇의 이름 (예: 김지영 AI)</td><td>✅</td></tr>
+          <tr><td>챗봇 ID</td><td>URL에 사용될 고유 아이디 (변경 불가)</td><td>✅</td></tr>
+          <tr><td>한 줄 소개</td><td>챗봇 소개 문구 (최대 50자)</td><td>선택</td></tr>
+          <tr><td>환영 메시지</td><td>고객이 처음 접속했을 때 표시되는 첫 메시지</td><td>✅</td></tr>
+          <tr><td>카테고리</td><td>업종 분류 (부동산, 병원, 쇼핑몰 등)</td><td>선택</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="step2">
+      <h2>STEP 2 — AI 아바타 연결</h2>
+      <p>학습된 AI 아바타를 이 챗봇에 연결합니다.</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">아바타 목록에서 연결할 아바타 선택</div></li>
+        <li><div class="step-num">2</div><div class="step-body">동기화 상태 확인 (✅ 완료 상태여야 활성화됨)</div></li>
+        <li><div class="step-num">3</div><div class="step-body">프롬프트 설정 — 기본 프롬프트 또는 맞춤 프롬프트 선택</div></li>
+      </ol>
+      <div class="notice-box">AI 아바타가 아직 학습되지 않았다면 먼저 <a href="/manual/avatar/learn.html">아바타 학습</a>을 완료하세요.</div>
+    </section>
+    <section id="step3">
+      <h2>STEP 3 — 챗봇 외형 설정</h2>
+      <table class="m-table">
+        <thead><tr><th>설정 항목</th><th>내용</th></tr></thead>
+        <tbody>
+          <tr><td>프로필 사진</td><td>챗봇 대표 이미지 (JPG/PNG, 권장 500×500px)</td></tr>
+          <tr><td>테마 색상</td><td>채팅 버블 및 UI 색상 커스터마이징</td></tr>
+          <tr><td>배경 이미지</td><td>채팅 화면 배경 이미지 (선택)</td></tr>
+          <tr><td>버튼 이름</td><td>"상담하기", "문의하기" 등 CTA 버튼 텍스트</td></tr>
+          <tr><td>하단 브랜딩</td><td>kiam.kr 로고 표시 여부 (유료 플랜 시 숨김 가능)</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="step4">
+      <h2>STEP 4 — 공개 & 배포</h2>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body"><strong>공개 설정</strong>: 전체공개 / 링크 소지자만 / 비공개 중 선택</div></li>
+        <li><div class="step-num">2</div><div class="step-body"><strong>저장 & 배포</strong>: [저장하기] 클릭 → 챗봇 URL 자동 생성</div></li>
+        <li><div class="step-num">3</div><div class="step-body"><strong>링크 복사</strong>: <code>https://chatbot.kiam.kr/s/내아이디</code> 복사</div></li>
+        <li><div class="step-num">4</div><div class="step-body"><strong>QR 코드 다운로드</strong>: 명함, 매장 포스터 등에 활용</div></li>
+      </ol>
+    </section>
+    <section id="manage">
+      <h2>챗봇 관리</h2>
+      <ul class="m-list">
+        <li><strong>여러 챗봇 운영</strong>: 상품별, 서비스별로 다른 챗봇을 만들어 운영할 수 있습니다.</li>
+        <li><strong>통계 확인</strong>: 각 챗봇별 방문자 수, 대화 수, 전환율을 <a href="/manual/onechat/dashboard.html">대시보드</a>에서 확인합니다.</li>
+        <li><strong>챗봇 복제</strong>: 기존 설정을 복사하여 새 챗봇을 빠르게 만들 수 있습니다.</li>
+        <li><strong>비활성화</strong>: 사용하지 않는 챗봇은 비공개로 전환하거나 삭제합니다.</li>
+      </ul>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/avatar/" class="btn-prev">← AI 아바타 소개</a>
+      <a href="/manual/avatar/learn.html" class="btn-next">아바타 학습 방법 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">MY 챗봇이란?</a></li>
+      <li><a href="#access">진입 방법</a></li>
+      <li><a href="#step1">STEP 1 — 기본 정보 설정</a></li>
+      <li><a href="#step2">STEP 2 — AI 아바타 연결</a></li>
+      <li><a href="#step3">STEP 3 — 챗봇 외형 설정</a></li>
+      <li><a href="#step4">STEP 4 — 공개 & 배포</a></li>
+      <li><a href="#manage">챗봇 관리</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

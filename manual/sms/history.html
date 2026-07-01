@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>발송 내역 확인 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">폰문자 SMS</div>
+      <a href="/manual/sms/" class="sb-link">📱 폰문자 소개</a>
+      <a href="/manual/sms/register.html" class="sb-link">발신번호 등록</a>
+      <a href="/manual/sms/send.html" class="sb-link">문자 발송하기</a>
+      <a href="/manual/sms/history.html" class="sb-link active">발송 내역 확인</a>
+      <a href="/manual/sms/callback.html" class="sb-link">콜백문자</a>
+      <a href="/manual/sms/daily.html" class="sb-link">일별 자동발송</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">AI 메시지</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/sms/">폰문자 SMS</a> › 발송 내역 확인</nav>
+    <h1 class="page-title">📊 발송 내역 확인</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#send-history">발신 내역</a></li>
+        <li><a href="#receive-history">수신 내역</a></li>
+        <li><a href="#status">발송 상태 이해</a></li>
+        <li><a href="#stats">통계 활용</a></li>
+      </ul>
+    </div>
+    <section id="send-history">
+      <h2>발신 내역</h2>
+      <p>발송한 문자의 결과를 확인하려면 <a href="https://kiam.kr/sub_4_return_.php" target="_blank">발신내역 페이지</a>로 이동하세요.</p>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>발송일시</td><td>문자가 발송된 날짜와 시각</td></tr>
+          <tr><td>발신번호</td><td>발송에 사용된 번호</td></tr>
+          <tr><td>수신자 수</td><td>총 발송 건수</td></tr>
+          <tr><td>성공 / 실패</td><td>실제 전달된 건수와 실패 건수</td></tr>
+          <tr><td>메시지 내용</td><td>클릭 시 전송된 내용 확인</td></tr>
+          <tr><td>채널</td><td>SMS / LMS / MMS 구분</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:12px;"><strong>상세 내역 다운로드</strong>: 각 발송 건의 우측 [엑셀 다운로드] 버튼을 클릭하면 수신자별 결과를 CSV로 내려받을 수 있습니다.</p>
+    </section>
+    <section id="receive-history">
+      <h2>수신 내역</h2>
+      <p>문자를 받은 수신자 정보와 링크 클릭 여부를 확인합니다.<br>
+      → <a href="https://kiam.kr/sub_4.php?status=5&status2=3" target="_blank">수신내역 페이지</a></p>
+      <table class="m-table">
+        <thead><tr><th>항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td>수신번호</td><td>문자를 받은 수신자 번호</td></tr>
+          <tr><td>수신일시</td><td>수신자 단말기에 도달한 시간</td></tr>
+          <tr><td>링크 클릭</td><td>본문 내 챗봇 링크 클릭 여부 (✅/❌)</td></tr>
+          <tr><td>원챗 등록</td><td>원챗 퍼널 자동 등록 여부</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="status">
+      <h2>발송 상태 이해</h2>
+      <table class="m-table">
+        <thead><tr><th>상태</th><th>의미</th><th>조치</th></tr></thead>
+        <tbody>
+          <tr><td>✅ 성공</td><td>수신자 단말기에 정상 전달됨</td><td>—</td></tr>
+          <tr><td>🔄 처리중</td><td>통신사 전송 대기 중</td><td>잠시 후 새로고침</td></tr>
+          <tr><td>❌ 실패</td><td>결번·수신 거부·오류</td><td>번호 확인 후 재발송</td></tr>
+          <tr><td>⏸ 예약</td><td>예약된 시간 대기 중</td><td>취소 가능 (2분 전까지)</td></tr>
+          <tr><td>🚫 차단</td><td>스팸 필터 또는 수신 거부 등록</td><td>재발송 불가</td></tr>
+        </tbody>
+      </table>
+    </section>
+    <section id="stats">
+      <h2>통계 활용</h2>
+      <ul class="m-list">
+        <li><strong>발송 성공률</strong>: 정상 전달 비율. 80% 미만이면 수신자 목록 품질을 점검하세요.</li>
+        <li><strong>링크 클릭률</strong>: 문자 내 챗봇 링크 클릭 비율. 마케팅 효과 측정에 활용하세요.</li>
+        <li><strong>수신 거부율</strong>: 높을수록 스팸으로 분류될 위험이 높아집니다.</li>
+        <li><strong>포인트 사용 내역</strong>: <a href="https://kiam.kr/mypage_payment.php" target="_blank">마이페이지 → 포인트 내역</a>에서 확인 가능합니다.</li>
+      </ul>
+    </section>
+    <nav class="page-nav">
+      <a href="/manual/sms/send.html" class="btn-prev">← 문자 발송하기</a>
+      <a href="/manual/sms/callback.html" class="btn-next">콜백문자 →</a>
+    </nav>
+  </main>
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#send-history">발신 내역</a></li>
+      <li><a href="#receive-history">수신 내역</a></li>
+      <li><a href="#status">발송 상태 이해</a></li>
+      <li><a href="#stats">통계 활용</a></li>
+    </ul>
+  </aside>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body></html>

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>인적자원관리 소개 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">인적자원관리</div>
+      <a href="/manual/mandata/" class="sb-link active">👥 소개</a>
+      <a href="/manual/mandata/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/mandata/list.html" class="sb-link">🔍 인물 목록·검색</a>
+      <a href="/manual/mandata/detail.html" class="sb-link">👤 인물 상세 정보</a>
+      <a href="/manual/mandata/ai-config.html" class="sb-link">🤖 AI 웹검색 설정</a>
+      <a href="/manual/mandata/ai-sites.html" class="sb-link">🌐 AI 검색 사이트 관리</a>
+      <a href="/manual/mandata/ai-log.html" class="sb-link">📋 AI 실행 로그</a>
+      <a href="/manual/mandata/ai-updated.html" class="sb-link">✨ AI 업데이트 정보</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/dashboard/" class="sb-link">대시보드 & 분석</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › 인적자원관리</nav>
+    <h1 class="page-title">👥 인적자원관리 소개</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#what">인적자원관리란?</a></li>
+        <li><a href="#features">주요 기능</a></li>
+        <li><a href="#ai">AI 웹검색 자동화</a></li>
+        <li><a href="#flow">업무 흐름</a></li>
+        <li><a href="#quickstart">빠른 시작</a></li>
+      </ul>
+    </div>
+
+    <section id="what">
+      <h2>인적자원관리란?</h2>
+      <p>인적자원관리(mandata)는 <strong>kiam.kr 플랫폼의 관리자 전용 인물 데이터베이스 시스템</strong>입니다. 3,684,333명(약 370만 명)의 인물 정보를 관리하며, AI 웹검색을 통해 이메일·회사·AI 분석 메모를 자동으로 수집·업데이트합니다.</p>
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>📍 접속 경로</strong>: <a href="https://kiam.kr/admin/mandata/dashboard.php" target="_blank">kiam.kr 관리자 → 인적자원관리</a><br>
+        관리자 계정으로만 접근 가능합니다.
+      </div>
+    </section>
+
+    <section id="features">
+      <h2>주요 기능</h2>
+      <div class="card-grid">
+        <div class="feature-card">
+          <div class="fc-icon">📊</div>
+          <div class="fc-title">대시보드 통계</div>
+          <div class="fc-desc">전체 인원, 완성도(이름/이메일/회사), AI 처리 현황을 한눈에 확인합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🔍</div>
+          <div class="fc-title">인물 검색·목록</div>
+          <div class="fc-desc">이름, 모바일, 이메일, 회사명으로 빠르게 검색하고 목록을 확인합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">👤</div>
+          <div class="fc-title">인물 상세 정보</div>
+          <div class="fc-desc">개인 프로필, AI 분석 메모, 점수, AI 큐 상태를 상세히 확인합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🤖</div>
+          <div class="fc-title">AI 웹검색 자동화</div>
+          <div class="fc-desc">Claude AI가 웹을 검색하여 이메일·회사 정보를 자동으로 채워줍니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">🌐</div>
+          <div class="fc-title">검색 사이트 관리</div>
+          <div class="fc-desc">AI가 정보를 수집할 웹사이트 목록을 등록·관리합니다.</div>
+        </div>
+        <div class="feature-card">
+          <div class="fc-icon">📋</div>
+          <div class="fc-title">AI 실행 로그</div>
+          <div class="fc-desc">AI 작업 이력, 처리 인원, Claude API 비용을 날짜별로 추적합니다.</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="ai">
+      <h2>AI 웹검색 자동화</h2>
+      <p>인적자원관리의 핵심 기능은 <strong>Claude AI를 활용한 인물 정보 자동 수집</strong>입니다. 이름과 모바일 번호만 있는 인물도 AI가 웹에서 이메일, 회사명, 직책 등을 자동으로 찾아서 채워줍니다.</p>
+      <table class="m-table" style="margin-top:12px;">
+        <thead><tr><th>AI 처리 상태</th><th>의미</th></tr></thead>
+        <tbody>
+          <tr><td><strong>pending</strong></td><td>AI 처리 대기 중 (큐에 등록됨)</td></tr>
+          <tr><td><strong>done</strong></td><td>AI 처리 완료</td></tr>
+          <tr><td><strong>none</strong></td><td>아직 AI 큐에 등록되지 않음</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="flow">
+      <h2>업무 흐름</h2>
+      <ol class="step-list">
+        <li>
+          <strong>인물 데이터 확인</strong><br>
+          대시보드에서 전체 인원, 이메일·회사 완성률, AI 처리 현황을 확인합니다.
+        </li>
+        <li>
+          <strong>인물 검색</strong><br>
+          목록 페이지에서 이름, 모바일, 이메일, 회사명으로 검색하여 원하는 인물을 찾습니다.
+        </li>
+        <li>
+          <strong>상세 정보 확인</strong><br>
+          인물 상세 페이지에서 개인 정보, AI 분석 메모, 점수를 확인합니다.
+        </li>
+        <li>
+          <strong>AI 자동 수집 설정</strong><br>
+          AI 웹검색 설정에서 pending 인물을 처리하거나, 검색 사이트를 추가·관리합니다.
+        </li>
+        <li>
+          <strong>결과 확인</strong><br>
+          AI 실행 로그에서 처리 완료 현황과 업데이트된 인물 정보를 확인합니다.
+        </li>
+      </ol>
+    </section>
+
+    <section id="quickstart">
+      <h2>빠른 시작</h2>
+      <ol class="step-list">
+        <li><a href="https://kiam.kr/admin/mandata/dashboard.php" target="_blank">관리자 → 인적자원관리 → 대시보드</a> 접속</li>
+        <li>전체 인원 및 완성도 통계 확인</li>
+        <li><a href="/manual/mandata/list.html">인물 목록·검색</a>에서 원하는 인물 검색</li>
+        <li><a href="/manual/mandata/ai-config.html">AI 웹검색 설정</a>에서 pending 처리 현황 확인</li>
+        <li>AI 처리가 완료되면 <a href="/manual/mandata/ai-updated.html">AI 업데이트 정보</a>에서 결과 확인</li>
+      </ol>
+    </section>
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>생성 문서 다운로드 — AI변리사 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link active">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <a href="/manual/aiip/">AI변리사</a> <span>›</span> <span>생성 문서 다운로드</span></div>
+    <h1>📥 생성 문서 다운로드</h1>
+    <p class="page-desc">AI 분석 후 자동 생성된 전략서·출원서 초안 등 문서를 다운로드하는 방법을 안내합니다.</p>
+
+    <h2 id="doc-types">생성되는 문서 종류</h2>
+    <p>분석 완료 후 분석 유형과 요금제에 따라 아래와 같은 문서가 자동 생성됩니다.</p>
+    <table class="m-table">
+      <thead><tr><th>분석 유형</th><th>생성 문서</th><th>제공 플랜</th></tr></thead>
+      <tbody>
+        <tr>
+          <td rowspan="3">⚖️ 특허</td>
+          <td>특허 전략 보고서 (PDF)</td>
+          <td>스탠다드 이상</td>
+        </tr>
+        <tr>
+          <td>청구항 초안 (DOCX)</td>
+          <td>스탠다드 이상</td>
+        </tr>
+        <tr>
+          <td>선행기술 분석표 (PDF)</td>
+          <td>프로</td>
+        </tr>
+        <tr>
+          <td rowspan="2">🏷️ 상표</td>
+          <td>상표 등록 가능성 보고서 (PDF)</td>
+          <td>스탠다드 이상</td>
+        </tr>
+        <tr>
+          <td>유사 상표 비교표 (PDF)</td>
+          <td>프로</td>
+        </tr>
+        <tr>
+          <td rowspan="2">©️ 저작권</td>
+          <td>저작권 보호 범위 보고서 (PDF)</td>
+          <td>스탠다드 이상</td>
+        </tr>
+        <tr>
+          <td>침해 위험 분석 보고서 (PDF)</td>
+          <td>프로</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      💡 무료 플랜에서는 분석 요약 텍스트만 제공되며, 문서 파일 다운로드는 스탠다드 이상 플랜에서 이용 가능합니다.
+    </div>
+
+    <h2 id="how-to-download">다운로드 방법</h2>
+
+    <h3 id="from-result">분석 결과 페이지에서 다운로드</h3>
+    <ol class="step-list">
+      <li>분석 완료 후 결과 화면 하단의 <strong>"생성 문서"</strong> 섹션을 찾습니다.</li>
+      <li>생성된 문서 목록이 표시됩니다.</li>
+      <li>원하는 문서의 <strong>📥 다운로드</strong> 버튼을 클릭합니다.</li>
+      <li>파일이 로컬 컴퓨터에 저장됩니다.</li>
+    </ol>
+
+    <h3 id="from-history">의뢰 목록에서 다운로드</h3>
+    <ol class="step-list">
+      <li><strong>의뢰 목록(/result)</strong> 페이지로 이동합니다.</li>
+      <li>다운로드할 의뢰를 찾아 클릭합니다.</li>
+      <li>상세 페이지 하단의 생성 문서 섹션에서 다운로드합니다.</li>
+    </ol>
+
+    <h2 id="preview">문서 미리보기</h2>
+    <p>다운로드 전 문서 내용을 먼저 확인하려면 파일명을 클릭합니다. 브라우저 내에서 PDF 미리보기가 열리거나, 텍스트 기반 문서는 모달 창으로 표시됩니다.</p>
+
+    <h2 id="retention">문서 보관 기간</h2>
+    <table class="m-table">
+      <thead><tr><th>플랜</th><th>문서 보관 기간</th><th>만료 후</th></tr></thead>
+      <tbody>
+        <tr><td>무료(Free)</td><td>7일</td><td>자동 삭제</td></tr>
+        <tr><td>스탠다드(Standard)</td><td>90일</td><td>자동 삭제</td></tr>
+        <tr><td>프로(Pro)</td><td>무제한</td><td>구독 해지 시까지 보관</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip">
+      ⚠️ <strong>중요한 문서는 즉시 다운로드</strong>하여 로컬에 보관하세요. 보관 기간이 만료되면 서버에서 영구 삭제되며 복구할 수 없습니다.
+    </div>
+
+    <h2 id="trouble">다운로드 문제 해결</h2>
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>원인</th><th>조치</th></tr></thead>
+      <tbody>
+        <tr><td>다운로드 버튼이 비활성화됨</td><td>현재 플랜에서 미지원 문서</td><td>플랜 업그레이드 후 이용</td></tr>
+        <tr><td>문서가 보이지 않음</td><td>보관 기간 만료</td><td>기간 내 재의뢰 필요</td></tr>
+        <tr><td>파일이 열리지 않음</td><td>PDF 뷰어 미설치</td><td>Adobe Acrobat Reader 설치</td></tr>
+        <tr><td>다운로드 속도가 느림</td><td>네트워크 또는 파일 크기</td><td>잠시 후 재시도</td></tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/aiip/06_result.html"><span class="nav-label">← 이전</span><span class="nav-title">📊 AI 분석 결과 읽기</span></a>
+      <a href="/manual/aiip/08_dashboard.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📋 대시보드</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#doc-types">생성되는 문서 종류</a></li>
+      <li><a href="#how-to-download">다운로드 방법</a></li>
+      <li><a href="#from-result" class="h3">결과 페이지에서</a></li>
+      <li><a href="#from-history" class="h3">의뢰 목록에서</a></li>
+      <li><a href="#preview">문서 미리보기</a></li>
+      <li><a href="#retention">문서 보관 기간</a></li>
+      <li><a href="#trouble">다운로드 문제 해결</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

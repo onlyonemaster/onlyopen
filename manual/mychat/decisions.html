@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>의사결정 추적 — 마이챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<div class="m-layout">
+  <!-- 사이드바 -->
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">마이챗 매뉴얼</div>
+      <a href="/manual/mychat/" class="sb-link ">🧠 마이챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/mychat/start.html" class="sb-link ">구독 &amp; 첫 진입</a>
+      <a href="/manual/mychat/subscribe.html" class="sb-link ">💳 구독 플랜 안내</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">나만의 AI 대화</div>
+      <a href="/manual/mychat/chat.html" class="sb-link ">💬 AI와 대화하기</a>
+      <a href="/manual/mychat/voice.html" class="sb-link ">🎙️ 음성 대화</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">학습 데이터</div>
+      <a href="/manual/mychat/learn.html" class="sb-link ">📚 데이터 입력하기</a>
+      <a href="/manual/mychat/learn.html#channels" class="sb-link">14개 채널 설명</a>
+      <a href="/manual/mychat/learn.html#scope" class="sb-link">공개 범위 설정</a>
+      <a href="/manual/mychat/phone.html" class="sb-link ">📱 폰 데이터 연동</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">아바타 스튜디오</div>
+      <a href="/manual/mychat/avatar.html" class="sb-link ">😊 얼굴 아바타 만들기</a>
+      <a href="/manual/mychat/avatar.html#voice" class="sb-link">🎙️ 목소리 설정</a>
+      <a href="/manual/mychat/avatar.html#heygen" class="sb-link">🎬 화상 아바타 (HeyGen)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">분석 &amp; 의사결정</div>
+      <a href="/manual/mychat/dashboard.html" class="sb-link ">📊 인생 분석 대시보드</a>
+      <a href="/manual/mychat/decisions.html" class="sb-link active">🧭 의사결정 추적</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">설정 &amp; 보안</div>
+      <a href="/manual/mychat/settings.html" class="sb-link ">⚙️ 설정 &amp; API키</a>
+      <a href="/manual/mychat/settings.html#vault" class="sb-link">🔒 데이터 저장 방식</a>
+      <a href="/manual/mychat/settings.html#panic" class="sb-link">🚨 긴급 차단</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a>
+      <span class="sep">›</span>
+      <a href="/manual/mychat/">마이챗</a>
+      <span class="sep">›</span>
+      <span>의사결정 추적</span>
+    </div>
+
+    <h1>🧭 의사결정 추적</h1>
+    <p class="page-desc">중요한 결정을 AI와 함께 분석하고 결과를 추적해 예측 정확도를 높이는 강화학습 루프입니다.</p>
+
+    <div class="notice">📍 접근 경로: 마이챗 메뉴(≡) → 의사결정 추적 또는 <code>/aimessage/mychat/decisions.html</code></div>
+
+    <h2 id="loop">3단계 강화학습 루프</h2>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>PREDICT (예측)</strong><br>
+          상황을 입력하면 AI가 선택지 3~5개 + 예측 결과를 생성
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>DECIDE (결정)</strong><br>
+          AI 선택지 중 하나를 선택 → 기록 저장. 30일 후 회고 알림 자동 설정.
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>REFLECT (회고)</strong><br>
+          실제 결과 입력 → 적중/부분/빗나감 평가 → AI가 가중치 자동 조정
+        </div>
+      </li>
+    </ol>
+
+    <h2 id="status">상태 구분</h2>
+    <table>
+      <tr><th>상태</th><th>의미</th></tr>
+      <tr><td>⏳ 대기</td><td>선택지 생성됨, 아직 결정 안 함</td></tr>
+      <tr><td>✅ 결정함</td><td>선택 완료, 결과 추적 중</td></tr>
+      <tr><td>🔍 회고완료</td><td>실제 결과 입력 완료, AI 학습에 반영됨</td></tr>
+    </table>
+
+    <h2 id="accuracy">예측 정확도</h2>
+    <p>회고를 많이 쌓을수록 AI의 예측 정확도(%)가 올라갑니다. 대시보드에서 원형 그래프로 확인할 수 있습니다.</p>
+    <table>
+      <tr><th>평가</th><th>점수</th></tr>
+      <tr><td>🎯 적중</td><td>100%</td></tr>
+      <tr><td>△ 부분</td><td>50%</td></tr>
+      <tr><td>✗ 빗나감</td><td>0%</td></tr>
+    </table>
+
+    <div class="tip">💡 최소 3건 이상 회고를 완료해야 의미 있는 예측 정확도가 산출됩니다. 꾸준히 기록할수록 AI가 나의 판단 패턴을 더 잘 이해합니다.</div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

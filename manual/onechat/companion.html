@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 동행 기능 — 원챗 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+/* ── 흐름도 ── */
+.flow-wrap { display:flex; flex-direction:column; gap:0; margin:20px 0; max-width:480px; }
+.flow-step {
+  display:flex; align-items:flex-start; gap:14px;
+  padding:14px 16px; background:var(--bg2);
+  border:1px solid var(--border); border-radius:0;
+  position:relative;
+}
+.flow-step:first-child { border-radius:12px 12px 0 0; }
+.flow-step:last-child  { border-radius:0 0 12px 12px; border-top:none; }
+.flow-step + .flow-step { border-top:none; }
+.flow-arrow {
+  text-align:center; color:var(--brand); font-size:18px;
+  padding:4px 0; background:var(--bg2);
+  border-left:1px solid var(--border);
+  border-right:1px solid var(--border);
+}
+.flow-icon {
+  width:36px; height:36px; border-radius:10px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  font-size:16px; color:white;
+}
+.flow-body {}
+.flow-title { font-size:14px; font-weight:700; color:var(--text); }
+.flow-desc  { font-size:12px; color:var(--text2); margin-top:2px; }
+
+/* ── 설정 패널 미리보기 ── */
+.cp-preview {
+  background: #0f172a; border-radius:16px;
+  overflow:hidden; max-width:340px;
+  border:1px solid #334155;
+}
+.cp-header {
+  display:flex; align-items:center; justify-content:space-between;
+  padding:14px 16px; border-bottom:1px solid #1e293b;
+}
+.cp-header-title { color:#f1f5f9; font-size:15px; font-weight:700; }
+.cp-save-btn {
+  background:linear-gradient(135deg,#f43f5e,#e11d48);
+  color:white; border:none; border-radius:8px;
+  padding:6px 14px; font-size:12px; font-weight:700;
+}
+.cp-section {
+  padding:14px 16px; border-bottom:1px solid #1e293b;
+}
+.cp-section:last-child { border-bottom:none; }
+.cp-section-title {
+  font-size:12px; font-weight:700; color:#94a3b8;
+  text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px;
+}
+.cp-switch-row {
+  display:flex; align-items:center; justify-content:space-between;
+}
+.cp-switch-label { color:#e2e8f0; font-size:14px; font-weight:600; }
+.cp-switch-desc  { color:#64748b; font-size:11px; margin-top:2px; }
+.cp-switch {
+  width:44px; height:24px; border-radius:12px;
+  background:#334155; position:relative; cursor:pointer;
+  transition:background .2s;
+}
+.cp-switch.on { background:linear-gradient(135deg,#f43f5e,#e11d48); }
+.cp-switch-knob {
+  position:absolute; top:2px; left:2px;
+  width:20px; height:20px; background:white;
+  border-radius:50%; transition:left .2s;
+}
+.cp-switch.on .cp-switch-knob { left:22px; }
+.cp-stats-row {
+  display:grid; grid-template-columns:repeat(2,1fr); gap:8px;
+}
+.cp-stat {
+  background:#1e293b; border-radius:8px; padding:8px 10px; text-align:center;
+}
+.cp-stat-val { color:#f1f5f9; font-size:18px; font-weight:800; }
+.cp-stat-lbl { color:#64748b; font-size:10px; margin-top:2px; }
+
+/* ── 메시지 유형 카드 ── */
+.msg-type-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0;
+}
+.msg-type-card {
+  padding:14px; border-radius:12px; border:1px solid var(--border);
+  background:var(--bg2);
+}
+.msg-type-icon { font-size:24px; margin-bottom:6px; }
+.msg-type-name { font-size:14px; font-weight:700; color:var(--text); }
+.msg-type-desc { font-size:12px; color:var(--text2); margin-top:4px; }
+.msg-type-ex   { font-size:11px; color:var(--text3); margin-top:6px; font-style:italic; }
+
+/* ── AI 동행 말풍선 미리보기 ── */
+.companion-bubble {
+  background:linear-gradient(135deg,#fff0f3,#ffe4e6);
+  border:1.5px solid #fda4af;
+  border-radius:0 14px 14px 14px;
+  padding:12px 14px; max-width:280px;
+  position:relative; margin:16px 0;
+}
+.companion-bubble::before {
+  content:'🤝 AI 동행';
+  display:inline-block;
+  background:linear-gradient(135deg,#f43f5e,#e11d48);
+  color:white; font-size:10px; font-weight:700;
+  padding:2px 8px; border-radius:10px;
+  margin-bottom:8px;
+}
+.companion-bubble-text { font-size:13px; color:#374151; line-height:1.6; }
+.companion-bubble-time { font-size:10px; color:#9ca3af; margin-top:6px; text-align:right; }
+
+/* ── 안전 규칙 ── */
+.safety-grid {
+  display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:16px 0;
+}
+.safety-card {
+  padding:12px 14px; border-radius:10px;
+  background:var(--bg2); border:1px solid var(--border);
+  display:flex; gap:10px; align-items:flex-start;
+}
+.safety-icon { font-size:20px; flex-shrink:0; }
+.safety-title { font-size:13px; font-weight:700; color:var(--text); }
+.safety-desc  { font-size:11px; color:var(--text2); margin-top:2px; }
+</style>
+</head>
+<body>
+
+<!-- 헤더 -->
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo">
+    <div class="logo-box">K</div>
+    <span class="logo-text">kiam.kr</span>
+    <span class="logo-sub">매뉴얼</span>
+  </a>
+  <div class="search-wrap">
+    <span class="si">🔍</span>
+    <input type="text" placeholder="문서 검색..." class="m-search-input">
+  </div>
+  <div class="hright">
+    <button class="btn-theme" id="themeBtn">🌙</button>
+    <a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a>
+  </div>
+</header>
+
+<div class="m-layout">
+  <!-- 사이드바 -->
+      <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">원챗 매뉴얼</div>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/onechat/start.html" class="sb-link">접속 &amp; 화면 구성</a>
+      <a href="/manual/onechat/sidebar.html" class="sb-link">☰ 사이드바 메뉴</a>
+      <a href="/manual/onechat/profile.html" class="sb-link">내 프로필 설정</a>
+      <a href="/manual/onechat/share.html" class="sb-link">챗봇 링크 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">챗봇 설정</div>
+      <a href="/manual/onechat/prompt.html" class="sb-link">프롬프팅 설정</a>
+      <a href="/manual/onechat/prompt.html#llm" class="sb-link">LLM 기본지식 활용 모드</a>
+      <a href="/manual/onechat/wizard.html" class="sb-link">🤖 챗봇 자동 설정 위저드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">대화 관리</div>
+      <a href="/manual/onechat/chat.html" class="sb-link">채팅 화면 사용법</a>
+      <a href="/manual/onechat/ai-toggle.html" class="sb-link">AI 아바타 ON/OFF</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📞 화상/음성 통화</div>
+      <a href="/manual/onechat/call.html" class="sb-link">통화 시작 &amp; 컨트롤</a>
+      <a href="/manual/onechat/call.html#multi" class="sb-link">다자통화 &amp; SFU</a>
+      <a href="/manual/onechat/call.html#ringtone" class="sb-link">벨소리 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">발신(퍼널) 탭</div>
+      <a href="/manual/onechat/funnel.html" class="sb-link">📤 발신탭 사용법</a>
+      <a href="/manual/onechat/funnel.html#sms" class="sb-link">SMS 퍼널 링크</a>
+      <a href="/manual/onechat/funnel.html#share-visitor" class="sb-link">공유 방문자 보기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">수신(공유) 탭</div>
+      <a href="/manual/onechat/received.html" class="sb-link">📥 수신탭 사용법</a>
+      <a href="/manual/onechat/received.html#pwa" class="sb-link">PWA 앱 설치 유도</a>
+      <a href="/manual/onechat/received.html#dm" class="sb-link">DM 채팅으로 전환</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">DM 채팅</div>
+      <a href="/manual/onechat/dm.html" class="sb-link">DM 채팅 사용법</a>
+      <a href="/manual/onechat/dm.html#group" class="sb-link">그룹 채팅 만들기</a>
+      <a href="/manual/onechat/dm.html#features" class="sb-link">메시지 기능 모음</a>
+      <a href="/manual/onechat/dm.html#poll" class="sb-link">투표 만들기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 아바타 &amp; 학습</div>
+      <a href="/manual/onechat/avatar.html" class="sb-link">아바타 학습시키기</a>
+      <a href="/manual/onechat/avatar.html#rag" class="sb-link">RAG 벡터 검색 활용</a>
+      <a href="/manual/onechat/avatar.html#source" class="sb-link">AI 소스 자동 추천</a>
+      <a href="/manual/onechat/dashboard.html" class="sb-link">대시보드 &amp; 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">📅 예약 관리</div>
+      <a href="/manual/onechat/reserve.html" class="sb-link">예약 설정 &amp; 운영</a>
+      <a href="/manual/onechat/reserve.html#flow" class="sb-link">고객 예약 흐름</a>
+      <a href="/manual/onechat/reserve.html#notify" class="sb-link">3-Way 알림</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 동행</div>
+      <a href="/manual/onechat/companion.html" class="sb-link active">❤️ AI 동행 기능</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시나리오 캠페인</div>
+      <a href="/manual/onechat/scenario.html" class="sb-link">🎯 시나리오 시스템 소개</a>
+      <a href="/manual/onechat/scenario.html#step1" class="sb-link">STEP 1 유입 메시지</a>
+      <a href="/manual/onechat/scenario.html#step2" class="sb-link">STEP 2 챗봇 캠페인</a>
+      <a href="/manual/onechat/scenario.html#step3" class="sb-link">STEP 3 후속 관리</a>
+      <a href="/manual/onechat/scenario.html#step4" class="sb-link">STEP 4 AI 동행</a>
+      <a href="/manual/onechat/scenario.html#step5" class="sb-link">STEP 5 상품 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">공지 &amp; 알림</div>
+      <a href="/manual/onechat/broadcast.html" class="sb-link">📢 HI 공지발송</a>
+      <a href="/manual/onechat/notification.html" class="sb-link">🔔 알림 수신 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">💳 구독 &amp; 플랜</div>
+      <a href="/manual/onechat/subscribe.html" class="sb-link">구독 플랜 &amp; 사용량</a>
+      <a href="/manual/onechat/subscribe.html#quota" class="sb-link">사용량 한도 안내</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <!-- 콘텐츠 -->
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a>
+      <span class="sep">›</span>
+      <a href="/manual/onechat/">원챗</a>
+      <span class="sep">›</span>
+      <span>AI 동행</span>
+    </div>
+
+    <h1>❤️ AI 동행 기능</h1>
+    <p class="page-desc">고객이 챗봇 대화를 마치고 떠난 뒤에도, AI가 자동으로 안부·정보·응원 메시지를 보내 관계를 오래 유지시켜 줍니다.</p>
+
+    <div class="tip">
+      <strong>💡 AI 동행이란?</strong><br>
+      마치 카페 사장님이 단골손님에게 "요즘 어떻게 지내세요? 😊" 하고 먼저 연락하는 것처럼,
+      <strong>AI가 대신 고객에게 재접촉 메시지를 자동으로 보내주는 기능</strong>입니다.
+      운영자가 아무것도 하지 않아도 AI가 설정한 간격에 맞춰 스스로 움직입니다.
+    </div>
+
+    <!-- 접근 방법 -->
+    <h2 id="access">접근 방법</h2>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">☰ 햄버거 버튼 클릭</div>
+          <div class="step-desc">원챗 화면 왼쪽 위의 ☰ 버튼을 누릅니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">❤️ AI 동행 메뉴 선택</div>
+          <div class="step-desc">사이드바 서랍에서 <strong>❤️ AI 동행</strong> 항목을 누릅니다. 오른쪽에 ON/OFF 상태가 표시됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">설정 패널이 열림</div>
+          <div class="step-desc">화면 오른쪽에서 AI 동행 설정 패널이 슬라이드로 나타납니다.</div>
+        </div>
+      </li>
+    </ol>
+
+    <!-- 전체 동작 흐름 -->
+    <h2 id="flow">전체 동작 흐름</h2>
+    <p>AI 동행이 ON 상태일 때 자동으로 진행되는 전체 과정입니다.</p>
+
+    <div class="flow-wrap">
+      <div class="flow-step">
+        <div class="flow-icon" style="background:linear-gradient(135deg,#3b82f6,#1d4ed8);">💬</div>
+        <div class="flow-body">
+          <div class="flow-title">고객이 챗봇과 대화</div>
+          <div class="flow-desc">고객이 내 챗봇 링크로 들어와 대화를 나눕니다.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon" style="background:linear-gradient(135deg,#8b5cf6,#6d28d9);">📅</div>
+        <div class="flow-body">
+          <div class="flow-title">자동 재접촉 일정 예약</div>
+          <div class="flow-desc">대화가 끝나면 AI가 "X일 후에 연락하겠다"고 일정을 자동 저장합니다 (설정한 최소~최대 범위 내 랜덤).</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon" style="background:linear-gradient(135deg,#f59e0b,#d97706);">⏰</div>
+        <div class="flow-body">
+          <div class="flow-title">매 시간 자동 확인 (크론)</div>
+          <div class="flow-desc">시스템이 1시간마다 "보낼 시간이 된 메시지"를 확인합니다.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon" style="background:linear-gradient(135deg,#10b981,#059669);">🤖</div>
+        <div class="flow-body">
+          <div class="flow-title">DeepSeek AI가 대화 분석 후 메시지 생성</div>
+          <div class="flow-desc">지난 대화 내용을 AI가 분석해서 그 고객에게 딱 맞는 메시지를 작성합니다.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon" style="background:linear-gradient(135deg,#f43f5e,#e11d48);">💌</div>
+        <div class="flow-body">
+          <div class="flow-title">고객 채팅창에 핑크 카드로 발송</div>
+          <div class="flow-desc">고객의 채팅창에 🤝 AI 동행 배지가 달린 핑크 말풍선 카드로 메시지가 나타납니다.</div>
+        </div>
+      </div>
+      <div class="flow-step" style="border-radius:0 0 12px 12px;">
+        <div class="flow-icon" style="background:linear-gradient(135deg,#06b6d4,#0284c7);">🔄</div>
+        <div class="flow-body">
+          <div class="flow-title">답장하면 다음 일정 자동 생성</div>
+          <div class="flow-desc">고객이 답장하면 응답을 기록하고, 다음 재접촉 일정을 새로 예약합니다.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 설정 패널 구성 -->
+    <h2 id="settings">설정 패널 구성</h2>
+    <p>AI 동행 설정 패널에는 아래 항목들이 있습니다. <strong>위에서 아래 순서</strong>로 설명합니다.</p>
+
+    <!-- ① ON/OFF -->
+    <h3 id="toggle" style="margin-top:24px;">① AI 동행 ON / OFF</h3>
+
+    <div class="cp-preview" style="max-width:320px;margin:12px 0;">
+      <div class="cp-header">
+        <span class="cp-header-title">AI 동행 설정</span>
+        <button class="cp-save-btn">✔ 저장</button>
+      </div>
+      <div class="cp-section">
+        <div class="cp-section-title">⚡ AI 동행 기능</div>
+        <div class="cp-switch-row">
+          <div>
+            <div class="cp-switch-label">AI 동행 활성화</div>
+            <div class="cp-switch-desc">대화 종료 후 AI가 자동으로 재접촉합니다</div>
+          </div>
+          <div class="cp-switch on"><div class="cp-switch-knob"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="m-table">
+      <thead><tr><th>상태</th><th>동작</th></tr></thead>
+      <tbody>
+        <tr><td>🟢 <strong>ON</strong></td><td>AI가 설정에 따라 자동으로 고객에게 메시지 발송</td></tr>
+        <tr><td>⚫ <strong>OFF</strong></td><td>모든 자동 발송 중단 (기존 예약도 일시정지)</td></tr>
+      </tbody>
+    </table>
+
+    <!-- ② 동행 현황 -->
+    <h3 id="stats" style="margin-top:28px;">② 동행 현황 (통계 카드)</h3>
+    <p>지금까지 AI 동행이 얼마나 활동했는지 4가지 숫자로 보여줍니다.</p>
+
+    <div class="cp-preview" style="max-width:320px;margin:12px 0;">
+      <div class="cp-section">
+        <div class="cp-section-title">📊 동행 현황</div>
+        <div class="cp-stats-row">
+          <div class="cp-stat"><div class="cp-stat-val">2</div><div class="cp-stat-lbl">발송 횟수</div></div>
+          <div class="cp-stat"><div class="cp-stat-val">1</div><div class="cp-stat-lbl">유저 응답</div></div>
+          <div class="cp-stat"><div class="cp-stat-val">50%</div><div class="cp-stat-lbl">응답률</div></div>
+          <div class="cp-stat"><div class="cp-stat-val">5</div><div class="cp-stat-lbl">예약 대기</div></div>
+        </div>
+      </div>
+    </div>
+
+    <table class="m-table">
+      <thead><tr><th>카드</th><th>의미</th></tr></thead>
+      <tbody>
+        <tr><td><strong>발송 횟수</strong></td><td>AI가 고객에게 보낸 메시지 총 수</td></tr>
+        <tr><td><strong>유저 응답</strong></td><td>고객이 AI 동행 메시지에 답장한 횟수</td></tr>
+        <tr><td><strong>응답률</strong></td><td>발송 대비 답장 비율 (%)</td></tr>
+        <tr><td><strong>예약 대기</strong></td><td>앞으로 보낼 예정으로 예약된 메시지 수</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice" style="margin-top:10px;">
+      📋 <strong>[상세보기]</strong> 버튼을 누르면 최근 30일 동안 보낸 메시지 목록이 펼쳐집니다.<br>
+      ✅ 초록 카드 = 고객이 답장함 &nbsp;|&nbsp; ⏳ 회색 카드 = 아직 답장 없음
+    </div>
+
+    <!-- ③ 재접촉 간격 -->
+    <h3 id="interval" style="margin-top:28px;">③ 재접촉 간격</h3>
+    <p>고객이 대화를 마친 후 <strong>며칠 뒤에 AI가 다시 연락할지</strong> 범위를 설정합니다. 실제 발송일은 이 범위 안에서 랜덤으로 정해집니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>슬라이더</th><th>범위</th><th>권장값</th></tr></thead>
+      <tbody>
+        <tr><td><strong>최소</strong> (min)</td><td>1 ~ 14일</td><td>2일</td></tr>
+        <tr><td><strong>최대</strong> (max)</td><td>1 ~ 21일</td><td>5일</td></tr>
+      </tbody>
+    </table>
+
+    <div class="tip" style="margin-top:10px;">
+      💡 최소 2일, 최대 5일로 설정하면 AI가 2~5일 사이 어느 날에 메시지를 보냅니다. 너무 자주 보내면 고객이 부담스러울 수 있으니 최소 2일 이상 권장합니다.
+    </div>
+
+    <!-- ④ 발송 가능 시간 -->
+    <h3 id="send-time" style="margin-top:28px;">④ 발송 가능 시간</h3>
+    <p>메시지를 보낼 수 있는 <strong>시간대</strong>를 설정합니다. 이 범위를 벗어난 시간에는 AI가 절대 메시지를 보내지 않습니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>기본값</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>시작 시간</strong></td><td>09시</td><td>이 시간 이후부터 발송 가능</td></tr>
+        <tr><td><strong>종료 시간</strong></td><td>21시</td><td>이 시간 이후에는 발송 불가</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice" style="margin-top:10px;">
+      ⚠️ 새벽이나 야간에 메시지가 오면 고객이 불편할 수 있습니다. <strong>09시~21시</strong> 범위를 유지하는 것을 권장합니다.
+    </div>
+
+    <!-- ⑤ AI 역할 프롬프트 -->
+    <h3 id="role-prompt" style="margin-top:28px;">⑤ AI 역할 프롬프트</h3>
+    <p>AI에게 <strong>"어떤 친구·전문가 역할을 해달라"</strong>고 설명하는 텍스트입니다. 이 내용이 AI 동행 메시지의 말투와 전문성을 결정합니다.</p>
+
+    <div class="notice" style="margin-top:10px;">
+      <strong>작성 예시 — 선거 챗봇의 경우:</strong><br>
+      <em>"당신은 선거 전략 전문가이자 따뜻한 멘토입니다. 대화 상대의 정치적 목표를 응원하고 유익한 정보를 친근하게 전달하는 AI 동행 친구입니다. 반드시 첫 문장에 상대방 이름을 자연스럽게 부르며 시작하세요."</em>
+    </div>
+
+    <div class="tip" style="margin-top:10px;">
+      💡 <strong>좋은 프롬프트 작성 팁</strong><br>
+      • AI의 역할(전문가? 친구? 코치?)을 명확히 적어주세요<br>
+      • 고객 이름을 부르도록 지시하면 더 친근한 메시지가 만들어집니다<br>
+      • 내 챗봇 주제(건강, 쇼핑, 선거 등)를 구체적으로 언급할수록 좋습니다
+    </div>
+
+    <!-- ⑥ 주제 키워드 태그 -->
+    <h3 id="keywords" style="margin-top:28px;">⑥ 주제 키워드 태그</h3>
+    <p>AI가 <strong>정보형 메시지를 작성할 때 검색할 주제</strong>를 태그로 등록합니다.</p>
+
+    <ol class="step-list" style="margin:12px 0;">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">키워드 입력창 클릭</div>
+          <div class="step-desc">태그 영역 오른쪽의 입력창에 키워드를 입력합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Enter 또는 콤마(,)로 추가</div>
+          <div class="step-desc">입력 후 <code>Enter</code>나 <code>,</code>를 누르면 태그가 추가됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">× 버튼으로 삭제</div>
+          <div class="step-desc">필요 없는 태그 오른쪽의 × 를 눌러 삭제합니다.</div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="notice">
+      예시 키워드: <code>선거</code> &nbsp;<code>정치</code> &nbsp;<code>공약</code> &nbsp;<code>캠페인</code> &nbsp;<code>유권자</code>
+    </div>
+
+    <!-- ⑦ 메시지 유형 -->
+    <h3 id="msg-types" style="margin-top:28px;">⑦ 메시지 유형 4가지</h3>
+    <p>AI가 어떤 <strong>종류의 메시지</strong>를 보낼 수 있는지 선택합니다. 체크된 유형만 실제로 발송됩니다.</p>
+
+    <div class="msg-type-grid">
+      <div class="msg-type-card">
+        <div class="msg-type-icon">😊</div>
+        <div class="msg-type-name">안부형</div>
+        <div class="msg-type-desc">지난 대화를 기억하며 안부 인사</div>
+        <div class="msg-type-ex">"지난번 대화 생각나서 연락드렸어요~"</div>
+      </div>
+      <div class="msg-type-card">
+        <div class="msg-type-icon">💡</div>
+        <div class="msg-type-name">정보형</div>
+        <div class="msg-type-desc">키워드 기반 유용한 정보 전달</div>
+        <div class="msg-type-ex">"관련 유용한 소식이 있어서 공유해요!"</div>
+      </div>
+      <div class="msg-type-card">
+        <div class="msg-type-icon">📰</div>
+        <div class="msg-type-name">뉴스형</div>
+        <div class="msg-type-desc">주제와 관련된 최신 소식 전달</div>
+        <div class="msg-type-ex">"오늘 관련 뉴스 보셨나요?"</div>
+      </div>
+      <div class="msg-type-card">
+        <div class="msg-type-icon">💪</div>
+        <div class="msg-type-name">응원형</div>
+        <div class="msg-type-desc">고객의 목표를 응원하는 메시지</div>
+        <div class="msg-type-ex">"열심히 하고 계신 거 알아요! 파이팅! 🔥"</div>
+      </div>
+    </div>
+
+    <div class="tip">
+      💡 처음에는 <strong>4가지 모두 체크</strong>해두는 것을 권장합니다. AI가 대화 맥락에 따라 가장 적합한 유형을 선택해서 보냅니다.
+    </div>
+
+    <!-- ⑧ 테스트 발송 -->
+    <h3 id="test-send" style="margin-top:28px;">⑧ 테스트 발송</h3>
+    <p>설정을 저장하기 전에 <strong>AI가 실제로 어떤 메시지를 생성하는지 미리 확인</strong>할 수 있습니다.</p>
+
+    <ol class="step-list" style="margin:12px 0;">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">설정 저장</div>
+          <div class="step-desc">오른쪽 위 [저장] 버튼을 눌러 현재 설정을 먼저 저장합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">[지금 테스트 발송] 클릭</div>
+          <div class="step-desc">설정 패널 하단의 테스트 발송 버튼을 누릅니다. AI가 분석을 시작합니다 (약 7~15초 소요).</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">채팅창에서 결과 확인</div>
+          <div class="step-desc">가장 최근에 대화한 고객의 채팅창에 핑크색 AI 동행 카드가 나타납니다.</div>
+        </div>
+      </li>
+    </ol>
+
+    <div class="notice">
+      ⚠️ 테스트 발송은 <strong>실제로 채팅 내역에 기록</strong>됩니다. 고객도 볼 수 있으므로 어색한 메시지가 나오면 역할 프롬프트를 수정 후 다시 저장하세요.
+    </div>
+
+    <!-- 채팅창의 AI 동행 카드 -->
+    <h2 id="bubble" style="margin-top:36px;">채팅창의 AI 동행 카드</h2>
+    <p>AI 동행 메시지는 일반 메시지와 다르게 <strong>핑크 그라데이션 카드</strong>로 표시됩니다.</p>
+
+    <div class="companion-bubble">
+      <div class="companion-bubble-text">
+        조은님, 오랜만이에요! 😊<br>
+        지난번에 궁금해하셨던 AI 아바타 기능에 대해 더 좋은 정보가 생겨서 연락드렸어요. 선거 캠페인에서 AI를 활용한 최신 사례를 공유해 드릴게요!
+      </div>
+      <div class="companion-bubble-time">🤖 AI 동행 · 오후 2:30</div>
+    </div>
+
+    <table class="m-table">
+      <thead><tr><th>표시 요소</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td>🤝 <strong>AI 동행 배지</strong></td><td>AI 동행 기능으로 생성된 메시지임을 표시</td></tr>
+        <tr><td><strong>핑크 그라데이션</strong></td><td>일반 채팅과 구별되는 특별한 카드 디자인</td></tr>
+        <tr><td><strong>발송 시간</strong></td><td>메시지가 채팅에 삽입된 시각</td></tr>
+      </tbody>
+    </table>
+
+    <!-- 안전 규칙 -->
+    <h2 id="safety" style="margin-top:36px;">🛡️ 자동 안전 규칙</h2>
+    <p>AI 동행은 고객이 불편하지 않도록 아래 규칙을 <strong>자동으로 지킵니다.</strong> 별도 설정 없이도 항상 적용됩니다.</p>
+
+    <div class="safety-grid">
+      <div class="safety-card">
+        <div class="safety-icon">⏰</div>
+        <div>
+          <div class="safety-title">발송 시간 제한</div>
+          <div class="safety-desc">설정한 시간대(기본 09~21시)에만 발송. 야간·새벽 발송 없음.</div>
+        </div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon">📅</div>
+        <div>
+          <div class="safety-title">하루 1회 제한</div>
+          <div class="safety-desc">같은 고객에게 하루에 최대 1개 메시지만 발송.</div>
+        </div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon">🚫</div>
+        <div>
+          <div class="safety-title">무응답 5회 자동 중단</div>
+          <div class="safety-desc">5번 연속 무응답이면 해당 고객에게 자동으로 발송 중지.</div>
+        </div>
+      </div>
+      <div class="safety-card">
+        <div class="safety-icon">🙅</div>
+        <div>
+          <div class="safety-title">거부 의사 자동 인식</div>
+          <div class="safety-desc">"그만" "그만 보내줘" 등의 거부 메시지를 감지하면 즉시 중단.</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 저장하기 -->
+    <h2 id="save" style="margin-top:36px;">설정 저장 & 활성화</h2>
+    <ol class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">ON 스위치 켜기</div>
+          <div class="step-desc">설정 패널 상단의 AI 동행 스위치를 ON으로 설정합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">각 항목 입력</div>
+          <div class="step-desc">재접촉 간격, 발송 시간, AI 역할 프롬프트, 키워드, 메시지 유형을 설정합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">[저장] 버튼 클릭</div>
+          <div class="step-desc">오른쪽 위 저장 버튼을 누르면 설정이 저장되고, 기존 고객들에 대한 재접촉 일정이 자동으로 생성됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">사이드바에서 상태 확인</div>
+          <div class="step-desc">☰ 사이드바를 다시 열면 AI 동행 항목 옆에 🟢 ON 이 표시됩니다.</div>
+        </div>
+      </li>
+    </ol>
+
+    <!-- 자주 묻는 질문 -->
+    <h2 id="faq" style="margin-top:36px;">자주 묻는 질문</h2>
+
+    <div class="notice" style="margin-bottom:12px;">
+      <strong>Q. ON으로 켰는데 메시지가 바로 안 가요.</strong><br>
+      A. 정상입니다. AI 동행은 설정한 <strong>최소 간격(최소 2일) 이후</strong>에 발송됩니다. 바로 테스트하려면 [지금 테스트 발송] 버튼을 사용하세요.
+    </div>
+    <div class="notice" style="margin-bottom:12px;">
+      <strong>Q. 어떤 고객에게 발송되나요?</strong><br>
+      A. 내 챗봇과 <strong>대화 이력이 있는 고객</strong>에게 발송됩니다. 한 번도 대화하지 않은 사람에게는 보내지 않습니다.
+    </div>
+    <div class="notice" style="margin-bottom:12px;">
+      <strong>Q. 메시지 내용을 직접 입력할 수 있나요?</strong><br>
+      A. AI가 자동으로 생성합니다. <strong>AI 역할 프롬프트</strong>를 자세히 작성할수록 원하는 스타일의 메시지가 만들어집니다.
+    </div>
+    <div class="notice">
+      <strong>Q. 고객이 답장하면 AI가 이어서 대화하나요?</strong><br>
+      A. 아니요. AI 동행은 재접촉 메시지를 <strong>보내는 역할</strong>만 합니다. 답장이 오면 기존 AI 아바타 챗봇이 대화를 이어갑니다.
+    </div>
+
+    <!-- 이전/다음 -->
+    <div class="page-nav">
+      <a href="/manual/onechat/dashboard.html">
+        <span class="nav-label">← 이전</span>
+        <span class="nav-title">대시보드 & 분석</span>
+      </a>
+      <a href="/manual/onechat/broadcast.html" class="next">
+        <span class="nav-label">다음 →</span>
+        <span class="nav-title">HI 공지발송</span>
+      </a>
+    </div>
+  </main>
+
+  <!-- 우측 TOC -->
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">접근 방법</a></li>
+      <li><a href="#flow">전체 동작 흐름</a></li>
+      <li><a href="#settings">설정 패널 구성</a></li>
+      <li><a href="#toggle">① ON/OFF</a></li>
+      <li><a href="#stats">② 동행 현황</a></li>
+      <li><a href="#interval">③ 재접촉 간격</a></li>
+      <li><a href="#send-time">④ 발송 시간</a></li>
+      <li><a href="#role-prompt">⑤ AI 역할 프롬프트</a></li>
+      <li><a href="#keywords">⑥ 키워드 태그</a></li>
+      <li><a href="#msg-types">⑦ 메시지 유형</a></li>
+      <li><a href="#test-send">⑧ 테스트 발송</a></li>
+      <li><a href="#bubble">채팅창 카드</a></li>
+      <li><a href="#safety">안전 규칙</a></li>
+      <li><a href="#save">저장 & 활성화</a></li>
+      <li><a href="#faq">자주 묻는 질문</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

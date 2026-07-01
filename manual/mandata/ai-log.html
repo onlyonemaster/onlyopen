@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 실행 로그 — 인적자원관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">인적자원관리</div>
+      <a href="/manual/mandata/" class="sb-link">👥 소개</a>
+      <a href="/manual/mandata/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/mandata/list.html" class="sb-link">🔍 인물 목록·검색</a>
+      <a href="/manual/mandata/detail.html" class="sb-link">👤 인물 상세 정보</a>
+      <a href="/manual/mandata/ai-config.html" class="sb-link">🤖 AI 웹검색 설정</a>
+      <a href="/manual/mandata/ai-sites.html" class="sb-link">🌐 AI 검색 사이트 관리</a>
+      <a href="/manual/mandata/ai-log.html" class="sb-link active">📋 AI 실행 로그</a>
+      <a href="/manual/mandata/ai-updated.html" class="sb-link">✨ AI 업데이트 정보</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/dashboard/" class="sb-link">대시보드 & 분석</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/mandata/">인적자원관리</a> › AI 실행 로그</nav>
+    <h1 class="page-title">📋 AI 실행 로그</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#overview">화면 구성</a></li>
+        <li><a href="#log-columns">로그 컬럼 설명</a></li>
+        <li><a href="#daily-stats">일별 통계</a></li>
+        <li><a href="#cost">API 비용 추적</a></li>
+        <li><a href="#filter">기간 필터</a></li>
+      </ul>
+    </div>
+
+    <section id="overview">
+      <h2>화면 구성</h2>
+      <p>AI 실행 로그 페이지에서는 <strong>Claude AI가 인물 정보를 처리한 모든 이력</strong>을 확인할 수 있습니다. 언제, 누구에 대해, 어떤 결과로 처리했는지 추적합니다.</p>
+      <p style="margin-top:8px;">접속 경로: <a href="https://kiam.kr/admin/mandata/ai_log.php" target="_blank">관리자 → 인적자원관리 → AI 실행 로그</a></p>
+    </section>
+
+    <section id="log-columns">
+      <h2>로그 컬럼 설명</h2>
+      <table class="m-table">
+        <thead><tr><th>컬럼</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>실행 일시</strong></td><td>AI가 해당 인물을 처리한 날짜·시각</td></tr>
+          <tr><td><strong>인물 ID</strong></td><td>처리된 인물의 Gn_mandata ID</td></tr>
+          <tr><td><strong>이름</strong></td><td>처리된 인물 이름</td></tr>
+          <tr><td><strong>업데이트 필드 수</strong></td><td>AI가 실제로 채운 필드 개수 (fields_updated)</td></tr>
+          <tr><td><strong>AI 비용</strong></td><td>해당 처리에 사용된 Claude API 비용 (USD)</td></tr>
+          <tr><td><strong>결과</strong></td><td>처리 성공/실패 여부</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="daily-stats">
+      <h2>일별 통계</h2>
+      <p>로그 목록 위에 <strong>날짜별 처리 건수 통계</strong>가 표시됩니다. 하루에 몇 명을 처리했는지, 그 중 실제로 정보가 업데이트된 인물이 몇 명인지 한눈에 확인할 수 있습니다.</p>
+      <table class="m-table" style="margin-top:12px;">
+        <thead><tr><th>통계 항목</th><th>설명</th></tr></thead>
+        <tbody>
+          <tr><td><strong>총 처리 인원</strong></td><td>해당 날짜에 AI가 처리한 전체 인물 수</td></tr>
+          <tr><td><strong>업데이트 인원</strong></td><td>fields_updated > 0인 인물 수 (실제로 정보 변경됨)</td></tr>
+          <tr><td><strong>당일 API 비용</strong></td><td>해당 날짜 claude_cost_usd 합계</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="cost">
+      <h2>API 비용 추적</h2>
+      <p>각 AI 처리마다 Claude API 사용 비용이 기록됩니다. <code>claude_cost_usd</code> 컬럼에 달러(USD) 단위로 저장됩니다.</p>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>💡 비용 절감 팁</strong><br>
+        • 이름이 있는 인물만 AI 처리 대상으로 설정하면 불필요한 API 소비를 줄일 수 있습니다.<br>
+        • 이미 이메일·회사가 채워진 인물(done 상태)은 재처리하지 않도록 설정을 확인하세요.<br>
+        • 일별 통계에서 비용 추이를 모니터링하고 예산을 관리하세요.
+      </div>
+    </section>
+
+    <section id="filter">
+      <h2>기간 필터</h2>
+      <p>로그는 기간 설정으로 필터링할 수 있습니다. 시작일·종료일을 선택하면 해당 기간의 로그만 표시됩니다.</p>
+      <p style="margin-top:8px;">데이터가 많은 경우 최근 7일, 30일 등 단기 필터를 사용하는 것을 권장합니다.</p>
+    </section>
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

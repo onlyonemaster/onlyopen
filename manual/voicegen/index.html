@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VoiceGen AI 소개 &#8212; VoiceGen AI &#47; kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VoiceGen AI 매뉴얼</div>
+      <a href="/manual/voicegen/" class="sb-link active">&#128266; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/voicegen/start.html" class="sb-link ">회원가입 &amp; 로그인</a>
+      <a href="/manual/voicegen/demo.html" class="sb-link ">데모 체험하기</a>
+      <a href="/manual/voicegen/start.html#apikey" class="sb-link">API 키 발급</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">API 연동</div>
+      <a href="/manual/voicegen/api.html" class="sb-link ">API 레퍼런스</a>
+      <a href="/manual/voicegen/voices.html" class="sb-link ">음성 프리셋 목록</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">고급 기능</div>
+      <a href="/manual/voicegen/clone.html" class="sb-link ">음성 클로닝</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/voicegen/plan.html" class="sb-link ">요금제 안내</a>
+      <a href="/manual/voicegen/faq.html" class="sb-link ">자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/voicegen/">VoiceGen AI</a>
+    </div>
+    <h1>&#128266; VoiceGen AI</h1>
+    <p class="lead">REST API 한 줄로 텍스트를 자연스러운 한국어&#183;영어 음성으로 변환합니다.<br>
+    음성 클로닝으로 내 목소리를 AI에게 학습시키는 것도 가능합니다.</p>
+
+    <div class="callout callout-blue">
+      <strong>서비스 주소</strong>: <a href="https://vg.kiam.kr" target="_blank">https://vg.kiam.kr</a> &nbsp;|&nbsp;
+      <strong>API Docs</strong>: <a href="https://vg.kiam.kr/docs.html" target="_blank">https://vg.kiam.kr/docs.html</a>
+    </div>
+
+    <h2>주요 특징</h2>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:14px;margin:20px 0 32px;">
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:8px;">&#127897;</div>
+        <div style="font-weight:700;margin-bottom:6px;">고품질 음성 합성</div>
+        <div style="font-size:13px;color:var(--text2);">XTTS v2 로컬 GPU 모델 기반. 48kHz 스튜디오급 음질</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:8px;">&#127760;</div>
+        <div style="font-weight:700;margin-bottom:6px;">다국어 지원</div>
+        <div style="font-size:13px;color:var(--text2);">한국어&#183;영어 기본 제공. OpenAI&#183;Google&#183;ElevenLabs 엔진 선택 가능</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:8px;">&#128268;</div>
+        <div style="font-weight:700;margin-bottom:6px;">REST API</div>
+        <div style="font-size:13px;color:var(--text2);">curl 한 줄로 연동. PHP&#183;JS&#183;Python 예제 제공</div>
+      </div>
+      <div style="background:var(--bg2);border:1px solid var(--border);border-radius:12px;padding:20px;">
+        <div style="font-size:28px;margin-bottom:8px;">&#127908;</div>
+        <div style="font-weight:700;margin-bottom:6px;">음성 클로닝</div>
+        <div style="font-size:13px;color:var(--text2);">WAV 파일 업로드만으로 내 목소리 닮은 AI 음성 생성</div>
+      </div>
+    </div>
+
+    <h2>퀵스타트 &#8212; 4단계로 시작</h2>
+    <div class="steps">
+      <div class="step"><div class="step-num">1</div><div class="step-body">
+        <strong><a href="/manual/voicegen/start.html">회원가입 &amp; 로그인</a></strong>
+        <p>vg.kiam.kr에서 무료 회원가입. 이메일 인증 후 대시보드 접속</p>
+      </div></div>
+      <div class="step"><div class="step-num">2</div><div class="step-body">
+        <strong><a href="/manual/voicegen/start.html#apikey">API 키 발급</a></strong>
+        <p>대시보드 &#8594; API 키 관리에서 키 생성. 무료 플랜은 월 10,000자 제공</p>
+      </div></div>
+      <div class="step"><div class="step-num">3</div><div class="step-body">
+        <strong><a href="/manual/voicegen/api.html">API 호출</a></strong>
+        <p>Authorization 헤더에 Bearer 키를 넣고 POST /api/v1/generate 호출</p>
+      </div></div>
+      <div class="step"><div class="step-num">4</div><div class="step-body">
+        <strong><a href="/manual/voicegen/demo.html">데모로 먼저 체험</a></strong>
+        <p>회원가입 없이도 vg.kiam.kr 메인에서 200자까지 무료 체험 가능</p>
+      </div></div>
+    </div>
+
+    <h2>요금제 한눈에 보기</h2>
+    <table>
+      <thead><tr><th>플랜</th><th>월 사용량</th><th>가격</th><th>특징</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Free</strong></td><td>10,000자</td><td>무료</td><td>API 키 1개, 기본 음성 6종</td></tr>
+        <tr><td><strong>Basic</strong></td><td>100,000자</td><td>&#8361;9,900/월</td><td>API 키 3개, 음성 클로닝 포함</td></tr>
+        <tr><td><strong>Pro</strong></td><td>500,000자</td><td>&#8361;29,900/월</td><td>API 키 10개, 우선 처리</td></tr>
+        <tr><td><strong>Enterprise</strong></td><td>무제한</td><td>별도 문의</td><td>전용 서버, SLA 보장</td></tr>
+      </tbody>
+    </table>
+    <p style="font-size:13px;color:var(--text2);margin-top:8px;">&#8594; 자세한 내용은 <a href="/manual/voicegen/plan.html">요금제 안내</a> 페이지 참고</p>
+    <div style="margin-top:40px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="https://vg.kiam.kr" target="_blank" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#128266; VoiceGen AI 바로가기 &#8594;</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

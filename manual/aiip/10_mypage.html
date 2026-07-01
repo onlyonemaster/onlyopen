@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>내 계정 설정 — AI변리사 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">AI변리사 매뉴얼</div>
+      <a href="/manual/aiip/" class="sb-link">🤖 AI변리사 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/aiip/01_intro.html" class="sb-link">🏠 서비스 소개</a>
+      <a href="/manual/aiip/02_auth.html" class="sb-link">👤 회원가입 &amp; 로그인</a>
+      <a href="/manual/aiip/03_pricing.html" class="sb-link">💳 요금제 &amp; 결제</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI 컨설팅 의뢰</div>
+      <a href="/manual/aiip/04_input.html" class="sb-link">📤 자료 입력 방법</a>
+      <a href="/manual/aiip/05_helper.html" class="sb-link">✨ AI 요청사항 도우미</a>
+      <a href="/manual/aiip/06_result.html" class="sb-link">📊 AI 분석 결과 읽기</a>
+      <a href="/manual/aiip/07_download.html" class="sb-link">📥 생성 문서 다운로드</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">내 계정 관리</div>
+      <a href="/manual/aiip/08_dashboard.html" class="sb-link">📋 대시보드</a>
+      <a href="/manual/aiip/09_history.html" class="sb-link">📜 의뢰 결과 목록</a>
+      <a href="/manual/aiip/10_mypage.html" class="sb-link active">⚙️ 내 계정 설정</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> <span>›</span> <a href="/manual/aiip/">AI변리사</a> <span>›</span> <span>내 계정 설정</span></div>
+    <h1>⚙️ 내 계정 설정</h1>
+    <p class="page-desc">마이페이지(/mypage)에서 계정 정보 수정, 비밀번호 변경, 구독 관리 방법을 안내합니다.</p>
+
+    <h2 id="access">마이페이지 접속</h2>
+    <p>로그인 후 상단 내비게이션의 사용자 이름을 클릭하면 드롭다운 메뉴가 나타납니다. <strong>"마이페이지"</strong>를 선택하거나, <a href="https://ps.kiam.kr/mypage" target="_blank">ps.kiam.kr/mypage</a>로 직접 접속합니다.</p>
+
+    <h2 id="profile">프로필 정보 수정</h2>
+    <p>마이페이지의 <strong>"프로필 정보"</strong> 섹션에서 계정 정보를 수정할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>수정 가능 여부</th><th>비고</th></tr></thead>
+      <tbody>
+        <tr><td><strong>이름</strong></td><td>✅ 가능</td><td>언제든지 변경 가능</td></tr>
+        <tr><td><strong>이메일</strong></td><td>❌ 불가</td><td>로그인 ID로 사용되므로 변경 불가</td></tr>
+      </tbody>
+    </table>
+    <ol class="step-list">
+      <li>이름 입력 필드에서 새로운 이름을 입력합니다.</li>
+      <li><strong>"저장"</strong> 버튼을 클릭합니다.</li>
+      <li>"프로필이 업데이트되었습니다" 메시지가 표시되면 완료입니다.</li>
+    </ol>
+
+    <h2 id="password">비밀번호 변경</h2>
+    <p>마이페이지의 <strong>"비밀번호 변경"</strong> 섹션에서 변경합니다.</p>
+    <ol class="step-list">
+      <li><strong>현재 비밀번호</strong>를 입력합니다.</li>
+      <li><strong>새 비밀번호</strong>를 입력합니다. (8자 이상, 영문+숫자 조합 권장)</li>
+      <li><strong>새 비밀번호 확인</strong>을 동일하게 입력합니다.</li>
+      <li><strong>"비밀번호 변경"</strong> 버튼을 클릭합니다.</li>
+      <li>"비밀번호가 변경되었습니다" 메시지가 표시되면 완료입니다.</li>
+    </ol>
+
+    <h3 id="password-errors">비밀번호 변경 오류</h3>
+    <table class="m-table">
+      <thead><tr><th>오류 메시지</th><th>원인</th><th>조치</th></tr></thead>
+      <tbody>
+        <tr><td>현재 비밀번호가 일치하지 않습니다</td><td>기존 비밀번호 오입력</td><td>현재 비밀번호 재확인</td></tr>
+        <tr><td>새 비밀번호가 일치하지 않습니다</td><td>새 비밀번호와 확인 입력 불일치</td><td>동일하게 재입력</td></tr>
+        <tr><td>비밀번호는 8자 이상이어야 합니다</td><td>최소 길이 미충족</td><td>8자 이상으로 설정</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="subscription">구독 관리</h2>
+    <p>마이페이지의 <strong>"구독 관리"</strong> 섹션에서 현재 플랜 정보와 구독 해지를 관리합니다.</p>
+
+    <h3 id="subscription-info">현재 구독 정보</h3>
+    <table class="m-table">
+      <thead><tr><th>항목</th><th>설명</th></tr></thead>
+      <tbody>
+        <tr><td><strong>현재 플랜</strong></td><td>이용 중인 플랜명 (Free / Standard / Pro)</td></tr>
+        <tr><td><strong>구독 시작일</strong></td><td>구독을 시작한 날짜</td></tr>
+        <tr><td><strong>구독 만료일</strong></td><td>현재 구독이 자동 갱신 또는 만료되는 날짜</td></tr>
+        <tr><td><strong>이번 달 사용량</strong></td><td>이번 달 사용한 분석 크레딧 / 허용 크레딧</td></tr>
+      </tbody>
+    </table>
+
+    <h3 id="cancel-subscription">구독 해지</h3>
+    <p>구독을 해지하려면 <strong>"구독 해지"</strong> 버튼을 클릭합니다. 해지 확인 모달이 나타나면 내용을 확인 후 <strong>"해지 확인"</strong>을 클릭합니다.</p>
+
+    <div class="tip">
+      ⚠️ <strong>구독 해지 시 주의사항</strong><br>
+      - 해지 후에도 현재 구독 기간 만료일까지는 플랜 혜택이 유지됩니다.<br>
+      - 만료일 이후에는 자동으로 무료 플랜으로 전환됩니다.<br>
+      - 무료 플랜에서는 문서 보관 기간이 7일로 단축됩니다.
+    </div>
+
+    <h2 id="account-delete">계정 탈퇴</h2>
+    <p>마이페이지 하단의 <strong>"계정 탈퇴"</strong> 버튼을 통해 계정을 삭제할 수 있습니다. 탈퇴 시 모든 의뢰 내역, 생성 문서, 계정 정보가 영구 삭제됩니다.</p>
+    <div class="tip">
+      ⚠️ <strong>계정 탈퇴는 되돌릴 수 없습니다.</strong> 탈퇴 전 필요한 문서를 모두 다운로드하세요.
+    </div>
+
+    <div class="page-nav">
+      <a href="/manual/aiip/09_history.html"><span class="nav-label">← 이전</span><span class="nav-title">📜 의뢰 결과 목록</span></a>
+      <a href="/manual/aiip/" class="next"><span class="nav-label">처음으로 →</span><span class="nav-title">🤖 AI변리사 소개</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#access">마이페이지 접속</a></li>
+      <li><a href="#profile">프로필 정보 수정</a></li>
+      <li><a href="#password">비밀번호 변경</a></li>
+      <li><a href="#password-errors" class="h3">변경 오류 해결</a></li>
+      <li><a href="#subscription">구독 관리</a></li>
+      <li><a href="#subscription-info" class="h3">현재 구독 정보</a></li>
+      <li><a href="#cancel-subscription" class="h3">구독 해지</a></li>
+      <li><a href="#account-delete">계정 탈퇴</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

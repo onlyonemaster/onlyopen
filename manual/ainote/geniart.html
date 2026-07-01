@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🎨 아트콘 (ArtCon) — AI 인포그래픽 매뉴얼 · 아이노트</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.geniart-hero {
+  background: linear-gradient(135deg, #1e1b4b 0%, #312e81 50%, #1e1b4b 100%);
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin: 24px 0;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.geniart-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 60% 40% at 50% 50%, rgba(139,92,246,.2) 0%, transparent 70%);
+}
+.geniart-hero h3 {
+  font-size: 22px;
+  font-weight: 800;
+  margin-bottom: 10px;
+  position: relative;
+}
+.geniart-hero p {
+  font-size: 14px;
+  opacity: .85;
+  line-height: 1.7;
+  position: relative;
+}
+.stage-flow {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+.stage-item {
+  flex: 1;
+  min-width: 140px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-right: none;
+  padding: 18px 16px;
+  text-align: center;
+  position: relative;
+}
+.stage-item:last-child { border-right: 1px solid var(--border); border-radius: 0 10px 10px 0; }
+.stage-item:first-child { border-radius: 10px 0 0 10px; }
+.stage-item::after {
+  content: '→';
+  position: absolute;
+  right: -12px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: var(--text3);
+  z-index: 1;
+  background: var(--bg);
+  padding: 2px 3px;
+}
+.stage-item:last-child::after { display: none; }
+.stage-num { font-size: 11px; font-weight: 700; color: var(--text3); margin-bottom: 6px; letter-spacing: 1px; }
+.stage-icon { font-size: 24px; margin-bottom: 8px; display: block; }
+.stage-title { font-size: 13px; font-weight: 700; color: var(--text); margin-bottom: 4px; }
+.stage-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.world-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(245,158,11,.12);
+  border: 1px solid rgba(245,158,11,.3);
+  color: #d97706;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 5px 14px;
+  border-radius: 50px;
+  margin-bottom: 16px;
+}
+.theme-preview {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 8px;
+  margin: 16px 0;
+}
+.theme-dot {
+  height: 36px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 700;
+  color: white;
+}
+@media(max-width:700px) {
+  .stage-flow { flex-direction: column; }
+  .stage-item { border-right: 1px solid var(--border); border-bottom: none; border-radius: 0; }
+  .stage-item:first-child { border-radius: 10px 10px 0 0; }
+  .stage-item:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 10px 10px; }
+  .stage-item::after { content: '↓'; right: 50%; bottom: -12px; top: auto; transform: translateX(50%); }
+  .theme-preview { grid-template-columns: repeat(3, 1fr); }
+}
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a></div>
+    <div class="sb-section"><div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a></div>
+    <div class="sb-section"><div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a></div>
+    <div class="sb-section"><div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link active">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a></div>
+    <div class="sb-section"><div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link">브리핑·시각화</a></div>
+    <div class="sb-section"><div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a></div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <span>아트콘 (아트콘)</span>
+    </div>
+
+    <div class="world-badge">⭐ World First · 세계 최초 기능</div>
+
+    <h1>🎨 아트콘 (ArtCon) — AI 인포그래픽</h1>
+    <p class="page-desc"><strong>아트콘(ArtCon)은 콘-트리니티의 "꽃"</strong>입니다. 텍스트(표·흐름도·다이어그램)를 AI가 예술 수준의 HTML 인포그래픽으로 자동 변환합니다. <strong>Notion·에버노트·MS Teams·네이버 메모 어디서도 구현하지 못한 세계 최초 기능</strong>입니다.</p>
+
+    <div style="background:linear-gradient(135deg,rgba(236,72,153,.08),rgba(245,158,11,.08));border:1px solid rgba(236,72,153,.25);border-radius:12px;padding:18px 22px;margin:20px 0;">
+      <div style="font-size:11px;font-weight:800;letter-spacing:1.5px;color:#ec4899;margin-bottom:8px;">🎨 NAMING UNIFICATION · 명칭 통합 (2026-05)</div>
+      <div style="font-size:15px;font-weight:700;color:var(--text);margin-bottom:6px;">옛 이름 "지니아트(GeniArt)" → 새 이름 "아트콘 (ArtCon)"</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;">
+        2026년 5월 콘-트리니티(에디콘·아트콘·브리콘) 체계 도입과 함께 <strong>"지니아트(GeniArt)"</strong>는 공식적으로 <strong>"아트콘(ArtCon)"</strong>으로 명칭이 통합되었습니다. 동일한 엔진·동일한 기능이며 <strong>URL(<code>/manual/ainote/geniart.html</code>)과 데이터베이스 슬러그(<code>geniart</code>)는 호환성을 위해 그대로 유지</strong>됩니다. 이전 자료에서 "지니아트"라고 표기된 부분이 보이면 모두 "아트콘"으로 읽어 주세요.
+      </div>
+    </div>
+
+    <div class="geniart-hero">
+      <h3>🌍 왜 세계 최초인가요?</h3>
+      <p>전 세계 수천만 명이 사용하는 Notion, 에버노트, MS Teams 메모, 네이버 메모 — 이 모든 서비스들이 텍스트를 자동으로 예쁜 인포그래픽으로 바꿔주는 기능을 구현하지 못했습니다. 아이노트는 SuperAI와 독자적인 4단계 안전망 기술을 결합해 이 불가능했던 기능을 세계 최초로 구현했습니다. 특허 출원 완료된 독점 기술입니다.</p>
+    </div>
+
+    <h2 id="what">아트콘이란?</h2>
+    <p>ChatGPT나 SuperAI 같은 AI에게 무언가를 물어보면, AI가 종종 텍스트로 된 표·흐름도·다이어그램을 만들어줍니다. 이런 텍스트들을 보통 그냥 복사해서 노트에 붙여넣으면 예쁘지 않고 읽기도 불편합니다.</p>
+
+    <p><strong>아트콘은 이 텍스트를 자동으로 아름다운 인포그래픽 그림으로 바꿔줍니다!</strong></p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">📊</span>
+        <div class="tn">지원하는 콘텐츠 유형</div>
+        <div class="td">
+          • AI 생성 표 (ASCII 테이블)<br>
+          • 흐름도 (Flow chart)<br>
+          • 다이어그램<br>
+          • 단계별 프로세스<br>
+          • 비교 분석표<br>
+          • 통계·수치 요약
+        </div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">🎨</span>
+        <div class="tn">변환 결과</div>
+        <div class="td">
+          • 완전한 HTML 인포그래픽<br>
+          • 5가지 테마 자동 지원<br>
+          • 반응형 (PC·모바일 모두)<br>
+          • 원본 내용 100% 보존<br>
+          • 재변환(↻) 가능<br>
+          • 원본 텍스트 보기 전환
+        </div>
+      </div>
+    </div>
+
+    <h2 id="how-to-use">사용 방법</h2>
+    <p>아주 간단합니다. 딱 3단계입니다!</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">AI에서 텍스트 복사하기</div>
+          <div class="step-desc">
+            ChatGPT, SuperAI, Claude 등 AI에게 질문해서 표나 다이어그램을 받은 후, 그 내용을 전체 선택(Ctrl+A)해서 복사(Ctrl+C)합니다.<br><br>
+            <em>예: "마케팅 전략을 표로 정리해줘"라고 AI에게 물어보고, 받은 표를 복사</em>
+          </div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">아이노트 에디터에 붙여넣기 (Ctrl+V)</div>
+          <div class="step-desc">
+            아이노트 편집 화면을 열고 에디터 안에 붙여넣습니다 (Ctrl+V).<br>
+            시스템이 AI가 만든 텍스트를 자동으로 감지합니다.
+          </div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">팝업에서 "아트콘으로 변환" 클릭</div>
+          <div class="step-desc">
+            "이 내용을 AI 인포그래픽으로 변환할까요?" 팝업이 나타납니다.<br>
+            <strong>"변환"</strong> 버튼을 클릭하면 AI가 자동으로 인포그래픽을 만들어줍니다.<br>
+            변환이 완료되면 텍스트가 아름다운 인포그래픽으로 바뀌어 있습니다! 🎉
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      ⏱ <strong>변환 시간은 약 10~30초 정도 걸립니다.</strong><br>
+      AI가 내용을 분석하고 디자인하는 시간이 필요합니다. 변환 중에 ↻ 버튼 옆에 스피너(로딩 표시)가 보입니다.
+    </div>
+
+    <div style="background:rgba(99,102,241,.08);border-left:4px solid #6366f1;border-radius:0 10px 10px 0;padding:14px 18px;margin:18px 0;">
+      <div style="font-weight:800;color:#4338ca;margin-bottom:6px;">🔗 에디콘(EdiCon) ↔ 아트콘(ArtCon) 연동</div>
+      <div style="font-size:13px;color:var(--text2);line-height:1.7;">
+        에디콘이 만든 <a href="/manual/ainote/edicon_mermaid.html">Mermaid 다이어그램</a>·<a href="/manual/ainote/edicon_table.html">표</a>·<a href="/manual/ainote/edicon_math.html">수식</a>도 아트콘으로 다시 변환할 수 있습니다. 에디콘이 <strong>형식</strong>을 잡고, 아트콘이 <strong>예술</strong>을 더하는 구조입니다. 두 엔진을 함께 쓰면 결과 품질이 극대화됩니다.
+      </div>
+    </div>
+
+    <h2 id="how-it-works">아트콘 4단계 안전망 (내부 작동 원리)</h2>
+    <p>아트콘은 단순히 AI에 한 번 물어보는 게 아닙니다. <strong>4단계 안전망</strong>을 거쳐 최고 품질의 인포그래픽을 만들어냅니다.</p>
+
+    <div class="stage-flow">
+      <div class="stage-item">
+        <div class="stage-num">1단계</div>
+        <span class="stage-icon">🤖</span>
+        <div class="stage-title">AI 1차 생성</div>
+        <div class="stage-desc">SuperAI가 원본 텍스트를 분석해 HTML 인포그래픽 초안을 만듭니다</div>
+      </div>
+      <div class="stage-item">
+        <div class="stage-num">2단계</div>
+        <span class="stage-icon">🔧</span>
+        <div class="stage-title">자동 변수화</div>
+        <div class="stage-desc">고정된 색상 코드를 CSS 변수로 자동 변환. 5가지 테마 지원을 위해 필요합니다</div>
+      </div>
+      <div class="stage-item">
+        <div class="stage-num">3단계</div>
+        <span class="stage-icon">🔍</span>
+        <div class="stage-title">색상 검수</div>
+        <div class="stage-desc">고정 색상이 5개를 넘으면 자동으로 3단계 AI 재검수 호출</div>
+      </div>
+      <div class="stage-item">
+        <div class="stage-num">4단계</div>
+        <span class="stage-icon">✅</span>
+        <div class="stage-title">테마 주입</div>
+        <div class="stage-desc">5가지 테마 CSS 변수와 테마 전환 스크립트를 최종 삽입해 완성</div>
+      </div>
+    </div>
+
+    <h3>테마 색상 변수 시스템</h3>
+    <p>완성된 인포그래픽은 5가지 테마 CSS 변수를 모두 포함합니다. 테마가 바뀌면 인포그래픽도 자동으로 함께 바뀝니다!</p>
+
+    <div class="theme-preview">
+      <div class="theme-dot" style="background:#0f172a;">🌙 다크</div>
+      <div class="theme-dot" style="background:#1e3a8a;">📘 클래식</div>
+      <div class="theme-dot" style="background:#0a1128;">🌊 딥플로트</div>
+      <div class="theme-dot" style="background:linear-gradient(135deg,#4338ca,#7c3aed);">🌈 그래디언트</div>
+      <div class="theme-dot" style="background:#7c2d12;">🍂 웜</div>
+    </div>
+
+    <h2 id="reconvert">재변환하기 (↻ 버튼)</h2>
+    <p>변환 결과가 마음에 들지 않거나, 다시 생성하고 싶을 때는 <strong>재변환</strong>을 사용합니다.</p>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">인포그래픽 위에 마우스를 올리기</div>
+          <div class="step-desc">인포그래픽에 마우스를 가져가면 위쪽에 작은 바(bar)가 나타납니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">↻ (재변환) 버튼 클릭</div>
+          <div class="step-desc">버튼 옆에 "AI 변환 중..." 표시가 나타나며 재변환이 시작됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">새 인포그래픽 확인</div>
+          <div class="step-desc">약 10~30초 후 새로운 디자인의 인포그래픽이 완성됩니다. AI가 매번 조금씩 다른 디자인으로 만들어줍니다!</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="tabs">아트콘 탭 전환</h2>
+    <p>인포그래픽 위에 마우스를 올리면 두 개의 탭이 나타납니다.</p>
+
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">🎨</span>
+        <div class="tn">아트콘 탭</div>
+        <div class="td">AI가 만든 인포그래픽이 보입니다. 기본값입니다.</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📄</span>
+        <div class="tn">원본 탭</div>
+        <div class="td">원래 텍스트가 그대로 보입니다. 내용을 확인하거나 복사할 때 사용합니다.</div>
+      </div>
+    </div>
+
+    <div class="notice">
+      🔒 <strong>원본은 항상 보존됩니다!</strong><br>
+      아트콘으로 변환해도 원래 텍스트는 삭제되지 않습니다. 언제든지 "원본" 탭에서 확인할 수 있습니다. 재변환도 원본 텍스트를 기반으로 새로 만드는 것입니다.
+    </div>
+
+    <h2 id="tips">아트콘 잘 쓰는 팁</h2>
+
+    <table class="m-table">
+      <thead><tr><th>상황</th><th>방법</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>결과가 마음에 안 들 때</td>
+          <td>↻ 버튼으로 재변환. 매번 다른 디자인이 나옵니다.</td>
+        </tr>
+        <tr>
+          <td>텍스트 내용을 확인하고 싶을 때</td>
+          <td>"원본" 탭 클릭</td>
+        </tr>
+        <tr>
+          <td>인포그래픽이 너무 좁을 때</td>
+          <td>자동으로 내용 길이에 맞게 높이가 조절됩니다.</td>
+        </tr>
+        <tr>
+          <td>테마와 함께 보고 싶을 때</td>
+          <td>상단 테마 버튼으로 테마를 바꾸면 인포그래픽도 함께 바뀝니다.</td>
+        </tr>
+        <tr>
+          <td>더 좋은 결과를 원할 때</td>
+          <td>AI에게 더 명확하게 구조화된 내용을 받은 후 붙여넣어 보세요.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h2 id="patent">특허 정보</h2>
+    <p>아트콘의 핵심 기술은 <strong>특허 출원이 완료</strong>된 독점 기술입니다. 투자자 및 파트너사는 아래 자료를 참고하세요.</p>
+    <a href="https://ainote.kiam.kr/investor_briefing.html" target="_blank" style="display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-decoration:none;color:var(--text);font-size:14px;font-weight:600;margin-top:8px;">
+      📊 투자자 브리핑 자료 (특허·기술 상세) 보기 →
+    </a>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/edicon_mermaid.html"><span class="nav-label">← 이전</span><span class="nav-title">📐 다이어그램 (Mermaid)</span></a>
+      <a href="/manual/ainote/bricon.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">📊 브리콘 (BriCon)</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#what">아트콘이란?</a></li>
+      <li><a href="#how-to-use">사용 방법</a></li>
+      <li><a href="#how-it-works">4단계 안전망</a></li>
+      <li><a href="#reconvert">재변환 (↻)</a></li>
+      <li><a href="#tabs">탭 전환</a></li>
+      <li><a href="#tips">잘 쓰는 팁</a></li>
+      <li><a href="#patent">특허 정보</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

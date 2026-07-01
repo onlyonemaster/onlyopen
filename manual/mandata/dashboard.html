@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 — 인적자원관리 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">인적자원관리</div>
+      <a href="/manual/mandata/" class="sb-link">👥 소개</a>
+      <a href="/manual/mandata/dashboard.html" class="sb-link active">📊 대시보드</a>
+      <a href="/manual/mandata/list.html" class="sb-link">🔍 인물 목록·검색</a>
+      <a href="/manual/mandata/detail.html" class="sb-link">👤 인물 상세 정보</a>
+      <a href="/manual/mandata/ai-config.html" class="sb-link">🤖 AI 웹검색 설정</a>
+      <a href="/manual/mandata/ai-sites.html" class="sb-link">🌐 AI 검색 사이트 관리</a>
+      <a href="/manual/mandata/ai-log.html" class="sb-link">📋 AI 실행 로그</a>
+      <a href="/manual/mandata/ai-updated.html" class="sb-link">✨ AI 업데이트 정보</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">문자 발송</a>
+      <a href="/manual/dashboard/" class="sb-link">대시보드 & 분석</a>
+      <a href="/manual/namecard/" class="sb-link">명함 관리</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/mandata/">인적자원관리</a> › 대시보드</nav>
+    <h1 class="page-title">📊 대시보드</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#overview">화면 구성</a></li>
+        <li><a href="#stats">통계 카드</a></li>
+        <li><a href="#score-dist">완성도 분포</a></li>
+        <li><a href="#import">임포트 이력</a></li>
+        <li><a href="#cache">캐시 갱신 주기</a></li>
+      </ul>
+    </div>
+
+    <section id="overview">
+      <h2>화면 구성</h2>
+      <p>대시보드는 <strong>인적자원관리의 전체 현황을 한눈에 파악</strong>하는 메인 화면입니다. 약 370만 명의 인물 데이터 통계가 10분마다 자동으로 갱신됩니다.</p>
+      <p style="margin-top:8px;">접속 경로: <a href="https://kiam.kr/admin/mandata/dashboard.php" target="_blank">관리자 → 인적자원관리 → 대시보드</a></p>
+    </section>
+
+    <section id="stats">
+      <h2>통계 카드</h2>
+      <p>대시보드 상단에는 6개의 통계 카드가 표시됩니다.</p>
+      <table class="m-table" style="margin-top:12px;">
+        <thead><tr><th>카드 이름</th><th>내용</th><th>비고</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><strong>전체 인원</strong></td>
+            <td>status='active'인 전체 인물 수</td>
+            <td>약 368만 명</td>
+          </tr>
+          <tr>
+            <td><strong>이름 있음</strong></td>
+            <td>이름(name) 필드가 채워진 인원 수 및 비율</td>
+            <td>완성도 지표</td>
+          </tr>
+          <tr>
+            <td><strong>이메일 있음</strong></td>
+            <td>이메일(email) 필드가 채워진 인원 수 및 비율</td>
+            <td>완성도 지표</td>
+          </tr>
+          <tr>
+            <td><strong>회사 있음</strong></td>
+            <td>회사(company) 필드가 채워진 인원 수 및 비율</td>
+            <td>완성도 지표</td>
+          </tr>
+          <tr>
+            <td><strong>오늘 등록</strong></td>
+            <td>오늘 날짜에 새로 등록된 인물 수</td>
+            <td>당일 기준</td>
+          </tr>
+          <tr>
+            <td><strong>평균 점수</strong></td>
+            <td>전체 인물의 score 필드 평균값</td>
+            <td>0~100점</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <div class="notice-box" style="margin-top:16px;">
+        <strong>💡 AI 처리 현황</strong><br>
+        통계 카드 아래에는 AI 큐 현황도 표시됩니다.<br>
+        • <strong>AI 처리 완료</strong>: ai_queue_status='done' 인원 수<br>
+        • <strong>AI 대기 중</strong>: pending 상태(활성·이름 있음) 인원 수<br>
+        • <strong>AI 메모 있음</strong>: AI가 분석 메모를 작성한 인원 수<br>
+        • <strong>AI 업데이트 인원</strong>: AI가 정보를 실제로 수정한 누적 인원 수
+      </div>
+    </section>
+
+    <section id="score-dist">
+      <h2>완성도 분포</h2>
+      <p>점수(score) 필드를 기준으로 인물을 5개 등급으로 분류하여 표시합니다.</p>
+      <table class="m-table" style="margin-top:12px;">
+        <thead><tr><th>등급</th><th>점수 범위</th><th>의미</th></tr></thead>
+        <tbody>
+          <tr><td>우수</td><td>80~100점</td><td>정보가 매우 충실하게 채워진 인물</td></tr>
+          <tr><td>양호</td><td>60~79점</td><td>주요 정보가 대부분 입력된 인물</td></tr>
+          <tr><td>보통</td><td>40~59점</td><td>기본 정보만 있는 인물</td></tr>
+          <tr><td>부족</td><td>20~39점</td><td>일부 정보만 있는 인물</td></tr>
+          <tr><td>미흡</td><td>0~19점</td><td>정보가 거의 없는 인물</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="import">
+      <h2>임포트 이력</h2>
+      <p>대시보드 하단에는 <strong>인물 데이터 일괄 임포트 이력</strong>이 표시됩니다. 날짜, 임포트 건수, 결과(성공/실패)를 확인할 수 있습니다.</p>
+    </section>
+
+    <section id="cache">
+      <h2>캐시 갱신 주기</h2>
+      <p>대시보드 통계는 <strong>매 10분마다 자동으로 갱신</strong>됩니다. 약 370만 건의 데이터를 실시간으로 집계하면 수십 분이 걸리기 때문에, 백그라운드에서 미리 계산한 캐시 파일을 사용합니다.</p>
+      <div class="notice-box" style="margin-top:12px;">
+        <strong>📌 최근 업데이트 시각</strong><br>
+        대시보드 상단에 "기준 시각: YYYY-MM-DD HH:MM:SS" 형식으로 마지막 캐시 갱신 시각이 표시됩니다. 이 시각 이후에 등록된 인물은 다음 갱신(최대 10분)까지 통계에 반영되지 않을 수 있습니다.
+      </div>
+    </section>
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

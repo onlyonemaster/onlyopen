@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>📊 브리콘 (BriCon) — 브리핑·시각화 엔진 — 아이노트 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.bri-hero {
+  background: linear-gradient(135deg, #064e3b 0%, #047857 50%, #0d9488 100%);
+  border-radius: 16px;
+  padding: 36px 32px;
+  margin: 24px 0;
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+.bri-hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse 70% 50% at 30% 30%, rgba(16,185,129,.3) 0%, transparent 70%);
+}
+.bri-hero h3 {
+  font-size: 24px;
+  font-weight: 800;
+  margin-bottom: 12px;
+  position: relative;
+}
+.bri-hero p {
+  font-size: 14px;
+  opacity: .9;
+  line-height: 1.75;
+  position: relative;
+}
+.bri-hero .bri-tag {
+  display: inline-block;
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.3);
+  padding: 4px 12px;
+  border-radius: 50px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1.5px;
+  margin-bottom: 14px;
+  position: relative;
+}
+
+.feat-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 14px;
+  margin: 20px 0;
+}
+.feat-card {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-top: 4px solid #10b981;
+  border-radius: 12px;
+  padding: 18px 16px;
+  transition: .2s;
+}
+.feat-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(16,185,129,.15);
+}
+.feat-card.investor { border-top-color: #f59e0b; }
+.feat-card.hr { border-top-color: #6366f1; }
+.feat-card.auto { border-top-color: #ec4899; }
+.feat-icon { font-size: 28px; margin-bottom: 8px; display: block; }
+.feat-name { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 6px; }
+.feat-desc { font-size: 12.5px; color: var(--text2); line-height: 1.6; }
+
+.stat-row {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  margin: 20px 0;
+}
+.stat-box {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 12px;
+  text-align: center;
+}
+.stat-num {
+  font-size: 26px;
+  font-weight: 900;
+  background: linear-gradient(135deg, #10b981, #0d9488);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 4px;
+}
+.stat-label { font-size: 11px; color: var(--text3); font-weight: 600; letter-spacing: .5px; }
+@media(max-width:700px) { .stat-row { grid-template-columns: repeat(2, 1fr); } }
+
+.flow-pipeline {
+  display: flex;
+  align-items: stretch;
+  gap: 0;
+  margin: 24px 0;
+  flex-wrap: wrap;
+}
+.pl-item {
+  flex: 1;
+  min-width: 130px;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-right: none;
+  padding: 18px 14px;
+  text-align: center;
+  position: relative;
+}
+.pl-item:last-child { border-right: 1px solid var(--border); border-radius: 0 10px 10px 0; }
+.pl-item:first-child { border-radius: 10px 0 0 10px; }
+.pl-item::after {
+  content: '→';
+  position: absolute;
+  right: -10px; top: 50%;
+  transform: translateY(-50%);
+  font-size: 16px;
+  color: #10b981;
+  background: var(--bg);
+  padding: 2px 3px;
+  z-index: 1;
+}
+.pl-item:last-child::after { display: none; }
+.pl-num { font-size: 10px; font-weight: 800; color: #10b981; letter-spacing: 1.5px; margin-bottom: 6px; }
+.pl-icon { font-size: 24px; margin-bottom: 6px; display: block; }
+.pl-title { font-size: 13px; font-weight: 700; margin-bottom: 4px; color: var(--text); }
+.pl-desc { font-size: 11.5px; color: var(--text2); line-height: 1.5; }
+@media(max-width:700px) {
+  .flow-pipeline { flex-direction: column; }
+  .pl-item { border-right: 1px solid var(--border); border-bottom: none; border-radius: 0; }
+  .pl-item:first-child { border-radius: 10px 10px 0 0; }
+  .pl-item:last-child { border-bottom: 1px solid var(--border); border-radius: 0 0 10px 10px; }
+  .pl-item::after { content: '↓'; right: 50%; bottom: -12px; top: auto; transform: translateX(50%); }
+}
+
+.scenario {
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-left: 4px solid #10b981;
+  border-radius: 0 12px 12px 0;
+  padding: 18px 22px;
+  margin: 14px 0;
+}
+.scenario.investor { border-left-color: #f59e0b; }
+.scenario.hr { border-left-color: #6366f1; }
+.scenario .sc-title { font-size: 15px; font-weight: 800; color: var(--text); margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.scenario .sc-input { font-size: 12.5px; color: var(--text2); font-style: italic; background: var(--bg3); border-radius: 6px; padding: 8px 12px; margin: 8px 0; }
+.scenario .sc-output { font-size: 13px; color: var(--text); line-height: 1.7; }
+.scenario .sc-output strong { color: #10b981; }
+
+.demo-widget {
+  background: linear-gradient(135deg, #f0fdf4, #ecfdf5);
+  border: 1px solid #86efac;
+  border-radius: 14px;
+  padding: 24px;
+  margin: 20px 0;
+  position: relative;
+  overflow: hidden;
+}
+[data-theme="dark"] .demo-widget {
+  background: linear-gradient(135deg, rgba(16,185,129,.08), rgba(13,148,136,.08));
+  border-color: rgba(16,185,129,.3);
+}
+.demo-widget::before {
+  content: 'LIVE PREVIEW';
+  position: absolute;
+  top: 12px; right: 12px;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #047857;
+  background: rgba(16,185,129,.15);
+  padding: 3px 10px;
+  border-radius: 4px;
+}
+.demo-widget .dw-title { font-size: 18px; font-weight: 800; color: #064e3b; margin-bottom: 6px; }
+[data-theme="dark"] .demo-widget .dw-title { color: #34d399; }
+.demo-widget .dw-sub { font-size: 12px; color: #047857; margin-bottom: 18px; }
+[data-theme="dark"] .demo-widget .dw-sub { color: #6ee7b7; }
+.demo-widget .dw-metrics {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 14px;
+}
+.demo-widget .dw-metric {
+  background: white;
+  border-radius: 10px;
+  padding: 14px 10px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(16,185,129,.08);
+}
+[data-theme="dark"] .demo-widget .dw-metric { background: var(--bg2); }
+.demo-widget .dw-metric .num { font-size: 22px; font-weight: 900; color: #047857; }
+[data-theme="dark"] .demo-widget .dw-metric .num { color: #34d399; }
+.demo-widget .dw-metric .lbl { font-size: 10.5px; color: var(--text3); letter-spacing: .5px; }
+.demo-widget .dw-bar {
+  background: white;
+  border-radius: 10px;
+  padding: 14px;
+  box-shadow: 0 2px 8px rgba(16,185,129,.08);
+}
+[data-theme="dark"] .demo-widget .dw-bar { background: var(--bg2); }
+.dw-bar-row { display: flex; align-items: center; gap: 10px; margin: 6px 0; font-size: 12px; }
+.dw-bar-row .lbl { width: 80px; color: var(--text2); }
+.dw-bar-row .bar { flex: 1; height: 14px; background: rgba(16,185,129,.12); border-radius: 4px; overflow: hidden; }
+.dw-bar-row .bar > div { height: 100%; background: linear-gradient(90deg, #10b981, #0d9488); border-radius: 4px; }
+.dw-bar-row .val { width: 50px; text-align: right; font-weight: 700; color: var(--text); }
+
+.compare-callout {
+  background: linear-gradient(135deg, rgba(99,102,241,.06), rgba(236,72,153,.06));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin: 16px 0;
+  font-size: 13px;
+  line-height: 1.7;
+  color: var(--text2);
+}
+.compare-callout strong { color: var(--text); }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">아이노트 (AI Note)</div>
+      <a href="/manual/ainote/" class="sb-link">🏠 아이노트 소개</a>
+      <a href="/manual/ainote/trinity.html" class="sb-link">🔱 콘-트리니티란?</a></div>
+    <div class="sb-section"><div class="sb-section-title">시작하기</div>
+      <a href="/manual/ainote/start.html" class="sb-link">1장: 처음 시작하기</a>
+      <a href="/manual/ainote/notes.html" class="sb-link">2장: 노트 목록 화면</a>
+      <a href="/manual/ainote/write.html" class="sb-link">3장: 노트 쓰기</a></div>
+    <div class="sb-section"><div class="sb-section-title">✏️ 에디콘 (EdiCon)</div>
+      <a href="/manual/ainote/edicon.html" class="sb-link">에디콘 개요</a>
+      <a href="/manual/ainote/edicon_url.html" class="sb-link">URL → 카드</a>
+      <a href="/manual/ainote/edicon_table.html" class="sb-link">표 자동 변환</a>
+      <a href="/manual/ainote/edicon_code.html" class="sb-link">코드 블록</a>
+      <a href="/manual/ainote/edicon_math.html" class="sb-link">수식 (LaTeX)</a>
+      <a href="/manual/ainote/edicon_mermaid.html" class="sb-link">다이어그램 (Mermaid)</a></div>
+    <div class="sb-section"><div class="sb-section-title">🎨 아트콘 (ArtCon)</div>
+      <a href="/manual/ainote/geniart.html" class="sb-link">아트콘 (AI 인포그래픽)</a>
+      <a href="/manual/ainote/theme.html" class="sb-link">5가지 테마</a></div>
+    <div class="sb-section"><div class="sb-section-title">📊 브리콘 (BriCon)</div>
+      <a href="/manual/ainote/bricon.html" class="sb-link active">브리핑·시각화</a></div>
+    <div class="sb-section"><div class="sb-section-title">공유</div>
+      <a href="/manual/ainote/share.html" class="sb-link">공유하기</a></div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a></div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/ainote/">아이노트</a><span class="sep">›</span>
+      <span>브리콘 (BriCon)</span>
+    </div>
+
+    <h1>📊 브리콘 (BriCon) — 브리핑·시각화 엔진</h1>
+    <p class="page-desc"><strong>브리콘(BriCon)은 콘-트리니티의 "열매"</strong>입니다. 데이터·노트·문서를 모아서 <strong>1페이지 임원 브리핑</strong>·<strong>인터랙티브 위젯</strong>·<strong>60페이지 자동 브리핑북</strong>으로 만들어주는 엔진입니다. 에디콘이 형식을 잡고, 아트콘이 예술을 더하면, 마지막에 브리콘이 <strong>"보여줄 수 있는 결과물"</strong>로 완성합니다.</p>
+
+    <div class="bri-hero">
+      <span class="bri-tag">🌱 SEED · TRINITY FINAL STAGE</span>
+      <h3>왜 브리콘인가?</h3>
+      <p>AI가 만들어준 노트가 100개 쌓여도, <strong>"투자자한테 5분 안에 보여줘"</strong> 라는 요청 앞에서는 다 무용지물입니다. 슬라이드 만들고, 표 정리하고, 차트 그리고… 한나절이 갑니다.<br><br>
+      브리콘은 이 마지막 마일을 자동화합니다. 노트들을 모아서 <strong>임원 브리핑·HR 대시보드·투자 자료</strong>로 <strong>버튼 한 번에</strong> 변환합니다. 평균 60페이지짜리 브리핑북을 <strong>약 3분</strong>에 완성합니다.</p>
+    </div>
+
+    <div class="stat-row">
+      <div class="stat-box"><div class="stat-num">60</div><div class="stat-label">PAGES / BRIEFING</div></div>
+      <div class="stat-box"><div class="stat-num">3분</div><div class="stat-label">평균 생성 시간</div></div>
+      <div class="stat-box"><div class="stat-num">12</div><div class="stat-label">위젯 템플릿</div></div>
+      <div class="stat-box"><div class="stat-num">∞</div><div class="stat-label">데이터 소스</div></div>
+    </div>
+
+    <h2 id="features">🎯 핵심 기능 4가지</h2>
+
+    <div class="feat-grid">
+      <div class="feat-card investor">
+        <span class="feat-icon">💼</span>
+        <div class="feat-name">투자자 브리핑 자동화</div>
+        <div class="feat-desc">노트·표·다이어그램·재무 데이터를 모아 <strong>60페이지 PDF</strong>로 자동 생성. 특허·기술·시장 분석 섹션 포함.</div>
+      </div>
+      <div class="feat-card hr">
+        <span class="feat-icon">👥</span>
+        <div class="feat-name">HR 인사 위젯</div>
+        <div class="feat-desc">조직도·직무·KPI를 <strong>실시간 대시보드 위젯</strong>으로 표시. 노트 안에 임베드 가능.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📈</span>
+        <div class="feat-name">1페이지 임원 요약</div>
+        <div class="feat-desc">100페이지 노트를 <strong>1페이지 Executive Summary</strong>로 압축. 핵심 메트릭·차트·결론.</div>
+      </div>
+      <div class="feat-card auto">
+        <span class="feat-icon">🤖</span>
+        <div class="feat-name">자동 시각화 위젯</div>
+        <div class="feat-desc">메트릭 박스·진행률 바·KPI 트래커·로드맵 — <strong>12종 위젯</strong>이 데이터에 맞춰 자동 생성.</div>
+      </div>
+    </div>
+
+    <h2 id="pipeline">⚙️ 브리콘 4단계 파이프라인</h2>
+    <p>브리콘은 단순히 "예쁘게 만드는" 게 아닙니다. 4단계 자동화 파이프라인을 거쳐 <strong>발표 가능한 수준</strong>의 결과물을 만들어냅니다.</p>
+
+    <div class="flow-pipeline">
+      <div class="pl-item">
+        <div class="pl-num">1단계</div>
+        <span class="pl-icon">📥</span>
+        <div class="pl-title">데이터 수집</div>
+        <div class="pl-desc">노트·표·차트·외부 API에서 자동 추출</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-num">2단계</div>
+        <span class="pl-icon">🧠</span>
+        <div class="pl-title">AI 요약·구조화</div>
+        <div class="pl-desc">DeepSeek가 핵심 인사이트 추출, 섹션별 분류</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-num">3단계</div>
+        <span class="pl-icon">🎨</span>
+        <div class="pl-title">위젯 매칭</div>
+        <div class="pl-desc">12종 템플릿 중 데이터에 맞는 위젯 자동 선택</div>
+      </div>
+      <div class="pl-item">
+        <div class="pl-num">4단계</div>
+        <span class="pl-icon">📤</span>
+        <div class="pl-title">출력 (HTML/PDF)</div>
+        <div class="pl-desc">웹 임베드·다운로드·공유 링크 즉시 생성</div>
+      </div>
+    </div>
+
+    <h2 id="live-demo">🎬 라이브 위젯 미리보기</h2>
+    <p>아래는 브리콘이 자동 생성하는 <strong>HR 인사 위젯</strong>의 실제 예시입니다 (가상 데이터).</p>
+
+    <div class="demo-widget">
+      <div class="dw-title">🏢 2026 Q2 인사 현황 요약</div>
+      <div class="dw-sub">자동 생성 · 마지막 업데이트 3분 전</div>
+
+      <div class="dw-metrics">
+        <div class="dw-metric"><div class="num">142</div><div class="lbl">TOTAL HEADCOUNT</div></div>
+        <div class="dw-metric"><div class="num">+18</div><div class="lbl">QoQ NEW HIRE</div></div>
+        <div class="dw-metric"><div class="num">94%</div><div class="lbl">RETENTION</div></div>
+      </div>
+
+      <div class="dw-bar">
+        <div style="font-size:12px;font-weight:700;color:#047857;margin-bottom:8px;">부서별 인원 분포</div>
+        <div class="dw-bar-row"><div class="lbl">엔지니어링</div><div class="bar"><div style="width:70%;"></div></div><div class="val">62명</div></div>
+        <div class="dw-bar-row"><div class="lbl">디자인</div><div class="bar"><div style="width:30%;"></div></div><div class="val">28명</div></div>
+        <div class="dw-bar-row"><div class="lbl">영업</div><div class="bar"><div style="width:35%;"></div></div><div class="val">31명</div></div>
+        <div class="dw-bar-row"><div class="lbl">운영</div><div class="bar"><div style="width:23%;"></div></div><div class="val">21명</div></div>
+      </div>
+    </div>
+
+    <div class="compare-callout">
+      💡 <strong>이 위젯은 노트 한 줄로 호출됩니다.</strong> 노트에 <code>@bricon:hr-summary q=2026Q2</code> 같은 명령만 적으면 위젯이 자동으로 임베드됩니다. 데이터는 실시간 갱신.
+    </div>
+
+    <h2 id="scenarios">📖 실전 시나리오</h2>
+
+    <div class="scenario investor">
+      <div class="sc-title">💼 시나리오 1 — 투자자 미팅 30분 전</div>
+      <div class="sc-input">"내일 시리즈 A 투자자 미팅인데, 우리 회사 6개월 데이터·기술 자료·재무 다 보여줘야 해. 자료 만들 시간이 없어."</div>
+      <div class="sc-output">
+        아이노트 노트 60개를 선택 → <strong>"브리콘 → 투자자 브리핑 모드"</strong> 클릭. 3분 후 <strong>60페이지 PDF</strong>가 완성됩니다. 특허·기술 스택·시장 규모·재무 차트·로드맵까지 자동 구성. 표지·목차·페이지 번호 포함. <strong>그대로 인쇄·이메일·발표 가능.</strong>
+      </div>
+    </div>
+
+    <div class="scenario hr">
+      <div class="sc-title">👥 시나리오 2 — CEO 주간 인사 보고</div>
+      <div class="sc-input">"매주 월요일 9시 임원회의 전에 인사 현황 요약 1페이지 필요. 매주 똑같은 거 만들기 지겨워."</div>
+      <div class="sc-output">
+        브리콘에서 <strong>"HR Weekly"</strong> 위젯 한 번 설정. 이후 매주 월요일 8시에 자동 갱신, 노트에 임베드. CEO는 노트 열기만 하면 <strong>실시간 인사 대시보드</strong>를 봅니다. 인원·이직률·신규 채용·부서별 분포까지 한눈에.
+      </div>
+    </div>
+
+    <div class="scenario">
+      <div class="sc-title">📊 시나리오 3 — 분기 실적 보고서</div>
+      <div class="sc-input">"분기마다 실적 자료 만드는데, 차트·표 정리만 이틀씩 걸려."</div>
+      <div class="sc-output">
+        분기 동안 작성한 영업·재무·고객 노트를 모두 선택 → <strong>"브리콘 → 분기 보고서 모드"</strong>. 매출·고객 수·NPS·이슈를 자동 추출해 <strong>임원 1페이지 요약 + 상세 30페이지</strong>로 구성. 표지·결론 포함.
+      </div>
+    </div>
+
+    <h2 id="widgets">🧩 12종 브리콘 위젯 라이브러리</h2>
+
+    <table class="m-table">
+      <thead><tr><th>위젯</th><th>호출 명령</th><th>용도</th></tr></thead>
+      <tbody>
+        <tr><td>📈 KPI 카드</td><td><code>@bricon:kpi name=&quot;매출&quot; value=&quot;1.2억&quot;</code></td><td>핵심 수치 강조</td></tr>
+        <tr><td>📊 진행률 바</td><td><code>@bricon:progress value=72</code></td><td>목표 대비 달성률</td></tr>
+        <tr><td>🏢 인사 요약</td><td><code>@bricon:hr-summary q=2026Q2</code></td><td>인원·이직·채용</td></tr>
+        <tr><td>💰 재무 차트</td><td><code>@bricon:finance period=6M</code></td><td>매출·비용 추이</td></tr>
+        <tr><td>🗓️ 로드맵</td><td><code>@bricon:roadmap year=2026</code></td><td>분기별 마일스톤</td></tr>
+        <tr><td>👥 조직도</td><td><code>@bricon:org-chart</code></td><td>부서·리더십 구조</td></tr>
+        <tr><td>🎯 OKR 트래커</td><td><code>@bricon:okr q=2026Q2</code></td><td>분기 OKR 진척</td></tr>
+        <tr><td>⏰ 타임라인</td><td><code>@bricon:timeline from=2026-01</code></td><td>이벤트 시계열</td></tr>
+        <tr><td>📋 체크리스트</td><td><code>@bricon:checklist id=launch</code></td><td>출시 준비 상태</td></tr>
+        <tr><td>🔥 핫이슈 알림</td><td><code>@bricon:alerts severity=high</code></td><td>긴급 이슈 강조</td></tr>
+        <tr><td>📞 고객 NPS</td><td><code>@bricon:nps period=Q2</code></td><td>고객 만족도 추이</td></tr>
+        <tr><td>📝 1페이지 요약</td><td><code>@bricon:summary notes=&quot;n1,n2,n3&quot;</code></td><td>여러 노트 1페이지 요약</td></tr>
+      </tbody>
+    </table>
+
+    <h2 id="output-formats">📤 출력 형식 — 어디서나 사용</h2>
+
+    <div class="feat-grid">
+      <div class="feat-card">
+        <span class="feat-icon">🌐</span>
+        <div class="feat-name">HTML 임베드</div>
+        <div class="feat-desc">노트 안에 직접 임베드, 실시간 갱신. 테마(다크/그래디언트 등)도 자동 적용.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📄</span>
+        <div class="feat-name">PDF 다운로드</div>
+        <div class="feat-desc">표지·목차·페이지 번호 포함된 인쇄 가능 PDF. 60페이지 보고서도 3분에.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">🔗</span>
+        <div class="feat-name">공유 링크</div>
+        <div class="feat-desc">URL 한 줄로 외부에 공유. 접근 권한·만료일·비밀번호 지원.</div>
+      </div>
+      <div class="feat-card">
+        <span class="feat-icon">📧</span>
+        <div class="feat-name">자동 이메일 발송</div>
+        <div class="feat-desc">매주·매월 정기 보고서를 임원·팀원에게 자동 발송. 스케줄 설정 가능.</div>
+      </div>
+    </div>
+
+    <h2 id="tri-integration">🔱 트리니티 통합 시너지</h2>
+    <p>브리콘이 진가를 발휘하는 순간은 <strong>에디콘·아트콘과 결합</strong>할 때입니다.</p>
+
+    <table class="m-table">
+      <thead><tr><th>역할</th><th>엔진</th><th>예시</th></tr></thead>
+      <tbody>
+        <tr><td>📥 데이터 입력</td><td><a href="/manual/ainote/edicon.html"><strong>에디콘</strong></a></td><td>표·코드·다이어그램·수식을 깔끔히 정리</td></tr>
+        <tr><td>🎨 시각 디자인</td><td><a href="/manual/ainote/geniart.html"><strong>아트콘</strong></a></td><td>차트·인포그래픽으로 변환</td></tr>
+        <tr><td>📊 최종 합성</td><td><strong>브리콘</strong></td><td>여러 노트를 1개 브리핑 문서로 통합</td></tr>
+      </tbody>
+    </table>
+
+    <div class="notice">
+      🌟 <strong>"노트 → 자료 → 발표"가 한 줄로</strong><br>
+      에디콘으로 정리하고 → 아트콘으로 꾸미고 → 브리콘으로 묶으면, <strong>"내일 발표 자료 만들어야 해"</strong>가 <strong>"내일 발표 자료 다운로드 받았어"</strong>로 바뀝니다.
+    </div>
+
+    <h2 id="howto">🚀 시작하기 — 3단계</h2>
+
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">노트에 위젯 명령 작성</div>
+          <div class="step-desc">노트 안에 <code>@bricon:hr-summary q=2026Q2</code> 같은 한 줄을 적습니다. 12종 위젯 중 원하는 것을 선택.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">자동 변환·임베드</div>
+          <div class="step-desc">에디터가 명령을 감지해 즉시 위젯으로 변환. 데이터는 실시간 갱신됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">브리핑북 모드 또는 공유</div>
+          <div class="step-desc">개별 위젯으로 노트 안에서 쓰거나, "브리핑북 만들기" 버튼으로 여러 노트를 묶어 60페이지 PDF로 출력.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="patent">🏆 특허·기술 정보</h2>
+    <p>브리콘의 <strong>"노트 → 자동 브리핑북"</strong> 파이프라인은 특허 출원 중인 독자 기술입니다. 더 자세한 자료는 투자자 브리핑을 참고하세요.</p>
+    <a href="https://ainote.kiam.kr/investor_briefing.html" target="_blank" style="display:inline-block;background:var(--bg2);border:1px solid var(--border);border-radius:10px;padding:14px 20px;text-decoration:none;color:var(--text);font-size:14px;font-weight:600;margin-top:8px;">
+      📊 투자자 브리핑 자료 (특허·기술 상세) 보기 →
+    </a>
+
+    <div class="page-nav">
+      <a href="/manual/ainote/geniart.html"><span class="nav-label">← 이전</span><span class="nav-title">🎨 아트콘 (아트콘)</span></a>
+      <a href="/manual/ainote/theme.html" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🎭 5가지 테마</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#features">핵심 기능 4가지</a></li>
+      <li><a href="#pipeline">4단계 파이프라인</a></li>
+      <li><a href="#live-demo">라이브 위젯 미리보기</a></li>
+      <li><a href="#scenarios">실전 시나리오</a></li>
+      <li><a href="#widgets">12종 위젯 라이브러리</a></li>
+      <li><a href="#output-formats">출력 형식</a></li>
+      <li><a href="#tri-integration">트리니티 통합</a></li>
+      <li><a href="#howto">시작하기</a></li>
+      <li><a href="#patent">특허·기술</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

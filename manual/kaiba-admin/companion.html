@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 컴패니언 — K-AIBA 관리자 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">관리자 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 홈</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/kaiba-admin/dashboard.html" class="sb-link">📊 대시보드</a>
+      <a href="/manual/kaiba-admin/bot-manager.html" class="sb-link">🤖 봇 관리</a>
+      <a href="/manual/kaiba-admin/subscriber.html" class="sb-link">👥 구독자 관리</a>
+      <a href="/manual/kaiba-admin/scenario.html" class="sb-link">🎯 시나리오 관리</a>
+      <a href="/manual/kaiba-admin/system-config.html" class="sb-link">🛠️ 시스템 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI · 분석</div>
+      <a href="/manual/kaiba-admin/ai-analytics.html" class="sb-link">📈 AI 분석</a>
+      <a href="/manual/kaiba-admin/ai-insight.html" class="sb-link">💡 AI 인사이트</a>
+      <a href="/manual/kaiba-admin/companion.html" class="sb-link active">🧠 AI 컴패니언</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">운영 관리</div>
+      <a href="/manual/kaiba-admin/messages.html" class="sb-link">💬 메시지 관리</a>
+      <a href="/manual/kaiba-admin/operator.html" class="sb-link">🎧 상담원 관리</a>
+      <a href="/manual/kaiba-admin/contacts.html" class="sb-link">📇 연락처 관리</a>
+      <a href="/manual/kaiba-admin/payments.html" class="sb-link">💳 결제 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 사용자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba-admin/">K-AIBA 관리자</a><span class="sep">›</span>
+      <span>AI 컴패니언</span>
+    </div>
+
+    <h1>AI 컴패니언 (AI Companion)</h1>
+    <p class="page-desc">AI 어시스턴트의 성격, 대화 시나리오, 학습 데이터를 설정하고 실시간 성능을 모니터링하는 페이지입니다.</p>
+
+    <div class="notice">
+      📌 <strong>접속 경로:</strong> 좌측 메뉴 → <strong>"AI 컴패니언"</strong> 클릭합니다.
+    </div>
+
+    <h2 id="concept">컴패니언 개념</h2>
+    <p>AI 컴패니언은 단순 질의응답을 넘어 사용자와 지속적 관계를 형성하는 고급 AI 어시스턴트입니다. 사용자의 대화 이력, 선호도, 행동 패턴을 학습하여 개인화된 응답을 제공합니다.</p>
+
+    <h2 id="persona">페르소나 설정</h2>
+    <p>컴패니언의 성격과 커뮤니케이션 스타일을 정의합니다.</p>
+    <table class="info-table">
+      <tr><th style="width:140px;">설정 항목</th><th>설명</th><th style="width:120px;">예시</th></tr>
+      <tr><td>이름</td><td>컴패니언의 표시 이름</td><td>AIBA 도우미</td></tr>
+      <tr><td>성격 유형</td><td>대화 스타일의 기본 성격</td><td>친절/전문/유머러스</td></tr>
+      <tr><td>어조</td><td>말투와 격식 수준</td><td>격식/반말/혼합</td></tr>
+      <tr><td>전문 분야</td><td>주로 답변할 도메인</td><td>AI 기술, 정책사업</td></tr>
+      <tr><td>금지 사항</td><td>컴패니언이 하지 말아야 할 행동</td><td>정치적 발언, 경쟁사 언급</td></tr>
+      <tr><td>아바타</td><td>채팅창에 표시될 프로필 이미지</td><td>커스텀 이미지 업로드</td></tr>
+    </table>
+
+    <h2 id="scenarios">대화 시나리오 관리</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">인사 시나리오</div>
+          <div class="step-desc">첫 방문 / 재방문 / 시간대별 인사말을 각각 설정합니다. 개인화 변수(이름, 마지막 대화 주제 등)를 삽입할 수 있습니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">주제별 대화 흐름</div>
+          <div class="step-desc">FAQ, 상품 안내, 일정 예약 등 주제별로 최적화된 대화 흐름을 사전 정의합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">감성 대응</div>
+          <div class="step-desc">사용자의 감성(화남, 급함, 기쁨 등)을 감지하고 적절한 톤으로 전환하는 규칙을 설정합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">에스컬레이션 조건</div>
+          <div class="step-desc">상담원 전환이 필요한 조건(반복 실패, 불만 감지, 특정 키워드)을 정의합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="learning">학습 데이터 관리</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">데이터 유형</th><th>설명</th><th style="width:120px;">관리 방법</th></tr>
+      <tr><td>지식베이스 문서</td><td>FAQ, 매뉴얼, 정책 문서 등 RAG에 활용되는 문서</td><td>업로드/삭제</td></tr>
+      <tr><td>대화 이력 학습</td><td>과거 성공적인 대화 사례를 기반으로 패턴 학습</td><td>자동/수동 선별</td></tr>
+      <tr><td>피드백 데이터</td><td>사용자 평가(좋아요/싫어요)를 반영한 응답 개선</td><td>자동 반영</td></tr>
+      <tr><td>커스텀 예시</td><td>관리자가 직접 작성한 이상적 질답 쌍</td><td>추가/편집</td></tr>
+    </table>
+
+    <h3>학습 데이터 업로드</h3>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">파일 업로드</div>
+          <div class="step-desc">"학습 데이터" 탭 → "업로드" 버튼 → PDF, DOCX, TXT, CSV 파일 선택 → 자동 청킹 및 인덱싱</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">URL 크롤링</div>
+          <div class="step-desc">웹페이지 URL 입력 → 자동으로 콘텐츠 추출 → 지식베이스에 추가</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">수동 입력</div>
+          <div class="step-desc">"새 항목 추가" → 질문/답변 쌍 직접 입력 → 즉시 학습 반영</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="monitoring">성능 모니터링</h2>
+    <table class="info-table">
+      <tr><th style="width:160px;">모니터링 항목</th><th>설명</th></tr>
+      <tr><td>응답 정확도</td><td>RAG 기반 응답의 관련성 점수 (0~1.0)</td></tr>
+      <tr><td>할루시네이션율</td><td>지식베이스에 없는 정보를 생성한 비율</td></tr>
+      <tr><td>컨텍스트 유지율</td><td>장기 대화에서 맥락을 정확히 유지한 비율</td></tr>
+      <tr><td>개인화 효과</td><td>개인화 응답에 대한 만족도 vs 일반 응답 만족도 비교</td></tr>
+      <tr><td>토큰 사용량</td><td>일별/월별 AI API 토큰 소비량</td></tr>
+    </table>
+
+    <h2 id="test">테스트 모드</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">샌드박스 채팅</div>
+          <div class="step-desc">"테스트" 버튼 클릭 → 실제 사용자에게 영향 없이 컴패니언과 대화 테스트. 설정 변경 즉시 반영 확인.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">시나리오 시뮬레이션</div>
+          <div class="step-desc">사전 정의된 테스트 시나리오를 자동 실행하여 각 경로의 응답 품질을 검증합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> 할루시네이션율이 높다면 지식베이스 문서의 커버리지를 확인하세요. 사용자가 자주 묻는 질문 중 지식베이스에 없는 항목을 우선 추가하면 정확도가 빠르게 개선됩니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

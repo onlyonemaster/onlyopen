@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>명함 공유하기 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">명함 관리</div>
+      <a href="/manual/namecard/" class="sb-link">📇 명함 관리 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 만들기</div>
+      <a href="/manual/namecard/add.html" class="sb-link">명함 등록하는 방법</a>
+      <a href="/manual/namecard/edit.html" class="sb-link">명함 수정 &amp; 관리</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 공유</div>
+      <a href="/manual/namecard/share.html" class="sb-link active">명함 공유하기</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">명함 콘텐츠</div>
+      <a href="/manual/namecard/iammall.html" class="sb-link">🛒 IAM몰 연동</a>
+      <a href="/manual/namecard/westory.html" class="sb-link">📸 위스토리</a>
+      <a href="/manual/namecard/landing.html" class="sb-link">🎯 인포랜딩</a>
+      <a href="/manual/namecard/linkapply.html" class="sb-link">🔗 링크 신청</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+      <a href="/manual/onechat/" class="sb-link">💬 원챗</a>
+      <a href="/manual/aimessage/" class="sb-link">✉️ AI 메시지</a>
+      <a href="/manual/avatar/" class="sb-link">🤖 AI 아바타</a>
+    </div>
+  </nav>
+
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/namecard/">명함 관리</a><span class="sep">›</span>
+      <span>명함 공유하기</span>
+    </div>
+
+    <h1>명함 공유하기</h1>
+    <p class="page-desc">만들어진 명함을 다양한 방법으로 상대방에게 전달하는 방법을 설명합니다.</p>
+
+    <h2 id="share-methods">공유 방법 종류</h2>
+    <div class="tab-grid">
+      <div class="tab-card">
+        <span class="ti">🔗</span>
+        <div class="tn">URL 링크 공유</div>
+        <div class="td">명함 URL을 복사해서 문자·카카오톡·이메일로 전송</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📷</span>
+        <div class="tn">QR코드 공유</div>
+        <div class="td">QR코드를 이미지로 저장·인쇄하거나 화면에 보여주기</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">📱</span>
+        <div class="tn">카카오톡 공유</div>
+        <div class="td">카카오톡 미리보기 카드 형태로 직접 공유</div>
+      </div>
+      <div class="tab-card">
+        <span class="ti">💬</span>
+        <div class="tn">SMS 문자 발송</div>
+        <div class="td">AI 메시지와 함께 명함 링크를 문자로 대량 발송</div>
+      </div>
+    </div>
+
+    <h2 id="url-share">URL 링크로 공유</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">명함 화면 상단 <strong>⋮ → [링크 복사]</strong> 클릭</div>
+          <div class="step-desc">내 명함 URL이 클립보드에 복사됩니다.</div>
+          <span class="step-url">https://kiam.kr/내아이디</span>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">원하는 채널에 붙여넣기합니다</div>
+          <div class="step-desc">카카오톡, 문자, 이메일, 인스타그램 DM 등 어디서나 사용 가능합니다.</div>
+        </div>
+      </li>
+    </ul>
+    <div class="tip">
+      💡 링크를 받은 상대방이 클릭하면 내 명함이 바로 열립니다. 별도 앱 설치 없이 모바일 브라우저에서 바로 확인 가능합니다.
+    </div>
+
+    <h2 id="qr-share">QR코드 공유</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">명함 화면 <strong>⋮ → [QR코드]</strong> 클릭</div>
+          <div class="step-desc">내 명함 URL에 연결된 QR코드가 생성됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">QR코드를 저장하거나 화면에 보여줍니다</div>
+          <div class="step-desc">
+            <table class="m-table">
+              <thead><tr><th>활용 방법</th><th>설명</th></tr></thead>
+              <tbody>
+                <tr><td>이미지 저장</td><td>갤러리에 저장 후 SNS·이메일에 첨부</td></tr>
+                <tr><td>종이명함 인쇄</td><td>QR코드를 종이명함에 인쇄하여 오프라인 배포</td></tr>
+                <tr><td>현장 화면 제시</td><td>스마트폰 화면을 상대방에게 보여주면 즉시 스캔</td></tr>
+                <tr><td>발표 자료 삽입</td><td>PPT·PDF에 QR코드를 삽입하여 청중과 공유</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="kakao-share">카카오톡으로 공유</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">명함 화면에서 <strong>[카카오 공유]</strong> 버튼 클릭</div>
+          <div class="step-desc">카카오 미리보기 카드(OG 카드) 형태로 메시지가 구성됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">공유할 카카오톡 대화방이나 친구를 선택합니다</div>
+          <div class="step-desc">선택한 대화방에 명함 미리보기 카드가 전송됩니다. 수신자가 카드를 탭하면 명함 페이지가 열립니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="sms-share">SMS 문자로 대량 발송</h2>
+    <p>명함 링크를 AI가 생성한 맞춤 메시지와 함께 대량 문자로 발송할 수 있습니다. 이 기능은 <strong>AI 메시지</strong> 서비스와 연계됩니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">AI 메시지 → 발신자 정보에 챗봇 링크를 설정합니다</div>
+          <a href="/manual/aimessage/sender-info.html" style="color:var(--brand);font-size:14px;">→ AI 메시지 발신자 설정 보기</a>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">수신자 목록을 업로드하고 발송합니다</div>
+          <div class="step-desc">발송된 문자의 링크를 클릭한 수신자는 원챗 <strong>발신 탭</strong>에 자동 등록됩니다.</div>
+        </div>
+      </li>
+    </ul>
+    <div class="notice">
+      📌 <strong>링크 추적</strong><br>
+      SMS 발송 시 각 수신자에게 개인화된 단축 링크가 생성됩니다. 누가 링크를 클릭했는지 원챗 발신 탭에서 실시간 확인할 수 있습니다.
+      <a href="/manual/onechat/funnel.html" style="color:var(--brand);">→ 발신탭 상세 매뉴얼</a>
+    </div>
+
+    <h2 id="share-stat">공유 후 방문자 관리</h2>
+    <p>명함 링크를 공유한 뒤 방문자 현황을 추적하고 관리할 수 있습니다.</p>
+    <table class="m-table">
+      <thead><tr><th>방문 경로</th><th>등록 위치</th><th>관리 방법</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>SMS 링크 클릭</td>
+          <td>원챗 <strong>발신 탭 → 퍼널</strong></td>
+          <td>대화 여부 확인, AI 동행 자동 발송</td>
+        </tr>
+        <tr>
+          <td>카카오·SNS·QR 클릭</td>
+          <td>원챗 <strong>수신 탭</strong></td>
+          <td>구독자 목록 확인, DM 전환, PWA 설치 유도</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="page-nav">
+      <a href="/manual/namecard/edit.html"><span class="nav-label">← 이전</span><span class="nav-title">명함 수정 &amp; 관리</span></a>
+      <a href="/manual/avatar/" class="next"><span class="nav-label">다음 →</span><span class="nav-title">🤖 AI 아바타 소개</span></a>
+    </div>
+  </main>
+
+  <aside class="m-toc">
+    <div class="toc-title">이 페이지</div>
+    <ul class="toc-list">
+      <li><a href="#share-methods">공유 방법 종류</a></li>
+      <li><a href="#url-share">URL 링크로 공유</a></li>
+      <li><a href="#qr-share">QR코드 공유</a></li>
+      <li><a href="#kakao-share">카카오톡으로 공유</a></li>
+      <li><a href="#sms-share">SMS 문자로 대량 발송</a></li>
+      <li><a href="#share-stat">공유 후 방문자 관리</a></li>
+    </ul>
+  </aside>
+</div>
+
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>자주 묻는 질문 &#8212; VAG 영상팩토리 / kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">&#9776;</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">&#128269;</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">&#127769;</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr &#8594;</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">VAG 영상팩토리</div>
+      <a href="/manual/vag/" class="sb-link">&#127916; 서비스 소개</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">시작하기</div>
+      <a href="/manual/vag/quickstart.html" class="sb-link">&#9889; 빠른 시작 (5분)</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">파이프라인</div>
+      <a href="/manual/vag/pipeline.html" class="sb-link">&#9881; 영상 생성 파이프라인</a>
+      <a href="/manual/vag/engines.html" class="sb-link">&#129302; AI 엔진 비교</a>
+      <a href="/manual/vag/audio.html" class="sb-link">&#127925; 음성 &middot; 자막 &middot; 환경음</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">트렌드 분석</div>
+      <a href="/manual/vag/trend.html" class="sb-link">&#128200; YouTube 트렌드 분석</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">요금 &amp; 관리</div>
+      <a href="/manual/vag/pricing.html" class="sb-link">&#128181; 요금제 안내</a>
+      <a href="/manual/vag/faq.html" class="sb-link active">&#10067; 자주 묻는 질문</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">&#8592; 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">&#8250;</span>
+      <a href="/manual/vag/">VAG 영상팩토리</a><span class="sep">&#8250;</span>
+      자주 묻는 질문
+    </div>
+    <h1>&#10067; 자주 묻는 질문</h1>
+    <p class="lead">VAG 영상팩토리 사용 중 자주 묻는 질문과 답변입니다.</p>
+
+    <h2>기본 사용법</h2>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 처음 사용하면 어떤 엔진을 써야 하나요?</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        <strong>FFmpeg (로컬) 엔진을 권장합니다.</strong><br>
+        별도 API 키가 없어도 무료로 즉시 결과를 확인할 수 있습니다.
+        영상 구성과 내용이 마음에 들면 그때 AI 엔진으로 재생성하세요.
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 한글로 주제를 입력해도 되나요?</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        <strong>네, 한글 입력을 완벽하게 지원합니다.</strong><br>
+        한글 감지 시 DeepSeek AI가 이미지 검색 키워드를 자동으로 영문으로 번역하여 처리합니다.
+        나레이션과 자막은 한국어로 생성됩니다.
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 브라우저를 닫아도 영상 생성이 계속 되나요?</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        <strong>네, 계속 진행됩니다.</strong><br>
+        영상 생성은 서버의 백그라운드 워커 프로세스(PHP CLI)가 처리합니다.
+        브라우저를 닫은 후 다시 접속해도 완료된 영상을 확인할 수 있습니다.
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 영상 길이는 얼마나 설정할 수 있나요?</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        30초 ~ 300초(5분) 범위를 권장합니다.<br>
+        영상 길이에 따라 장면 수가 자동으로 결정됩니다 (약 8~10초/장면).
+        예: 60초 → 6~7장면, 120초 → 12~15장면.
+      </div>
+    </div>
+
+    <h2>오디오 관련</h2>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 나레이션(음성)이 들어가지 않습니다.</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        서버 설정에 <code>[OpenAI API 키]</code>가 설정되어 있어야 TTS 나레이션이 생성됩니다.<br>
+        키가 없는 경우 나레이션 없이 환경음 + 배경음악만 포함된 영상이 생성됩니다.
+        이는 오류가 아닌 정상 동작입니다.
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 환경음(바람, 바다 소리 등)이 들어가지 않습니다.</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        <code>[SFX 디렉토리]</code>에 SFX 파일이 존재해야 합니다.<br>
+        파일이 없으면 환경음 단계를 자동으로 건너뜁니다.
+        서버 관리자에게 SFX 파일 생성을 요청하거나, 직접 MP3 파일을 해당 폴더에 업로드하세요.
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 나레이션이 영상 타이밍과 맞지 않습니다.</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        각 장면의 <code>duration_sec</code> 값과 실제 TTS 음성 길이 차이가 원인일 수 있습니다.<br>
+        스크립트의 나레이션 텍스트가 너무 길면 해당 장면 시간을 초과할 수 있습니다.
+        이 경우 주제 입력 시 짧고 명확한 나레이션을 생성하도록 추가 설명(Prompt)에 요청을 추가하세요.<br>
+        예: <code>"각 장면 나레이션은 10초 이내로 짧게 작성해주세요"</code>
+      </div>
+    </div>
+
+    <h2>AI 엔진 관련</h2>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; AI 엔진으로 생성했는데 일부 장면이 FFmpeg로 대체되었습니다.</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        정상 동작입니다. AI 엔진이 특정 장면 생성에 실패(API 오류, 타임아웃, 파일 크기 미달)할 경우<br>
+        자동으로 FFmpeg로 폴백하여 영상 생성이 완료됩니다.
+        완료 메시지에서 <code>AI N/M장면, FFmpeg N장면</code> 형식으로 결과를 확인할 수 있습니다.
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; AI 엔진 생성이 너무 오래 걸립니다.</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        AI 엔진(Kling, WAN, MiniMax, Luma)은 장면당 최대 2~3분이 소요됩니다.<br>
+        10장면 영상 기준 최대 20~30분이 걸릴 수 있습니다.
+        빠른 결과가 필요하다면 FFmpeg 엔진을 사용하세요.
+      </div>
+    </div>
+
+    <h2>이미지 관련</h2>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 이미지가 주제와 맞지 않게 나옵니다.</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        Pexels 이미지 검색은 AI가 생성한 영문 키워드로 이루어지며, 검색 결과는 Pexels 데이터베이스에 따라 달라집니다.<br>
+        더 적합한 이미지를 원한다면 직접 이미지를 업로드하는 방법을 사용하세요.
+        업로드 이미지는 장면 수만큼 순환 배분됩니다.
+      </div>
+    </div>
+
+    <h2>영상 활용</h2>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 생성된 영상을 상업적으로 사용해도 되나요?</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        Pexels 이미지는 Pexels 라이선스에 따라 상업적 사용이 가능합니다.<br>
+        단, AI 엔진(Kling, fal.ai 등) 사용 시 각 API 제공사의 서비스 약관을 확인하세요.
+        직접 업로드한 이미지는 해당 이미지의 저작권 정책을 따릅니다.
+      </div>
+    </div>
+
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;margin:12px 0;">
+      <div style="background:var(--bg2);padding:14px 16px;font-weight:700;">&#10067; 완성된 영상 파일은 어디서 다운로드하나요?</div>
+      <div style="padding:14px 16px;font-size:14px;">
+        영상 생성 완료 후 화면에 플레이어와 다운로드 버튼이 표시됩니다.<br>
+        갤러리 메뉴에서 이전에 생성한 영상 목록과 썸네일을 확인하고 다운로드할 수 있습니다.
+        파일은 <code>[업로드경로]/[작업ID]/final.mp4</code> 형식으로 서버에 저장됩니다.
+      </div>
+    </div>
+
+    <div style="margin-top:32px;padding-top:24px;border-top:1px solid var(--border);">
+      <a href="/manual/vag/" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--brand);color:white;font-weight:700;font-size:14px;">&#127916; VAG 영상팩토리 소개로 &#8594;</a>
+      &nbsp;
+      <a href="/manual/vag/quickstart.html" style="text-decoration:none;display:inline-block;padding:10px 22px;border-radius:8px;background:var(--bg2);border:1px solid var(--border);color:var(--text);font-weight:700;font-size:14px;">&#9889; 빠른 시작 가이드</a>
+    </div>
+  </main>
+</div>
+<div id="sidebarOverlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:140;" onclick="closeSidebar()"></div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

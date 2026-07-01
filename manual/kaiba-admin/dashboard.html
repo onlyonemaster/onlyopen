@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>대시보드 — K-AIBA 관리자 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr/admin" class="btn-site" target="_blank">Admin →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">관리자 매뉴얼</div>
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 홈</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">핵심 기능</div>
+      <a href="/manual/kaiba-admin/dashboard.html" class="sb-link active">📊 대시보드</a>
+      <a href="/manual/kaiba-admin/bot-manager.html" class="sb-link">🤖 봇 관리</a>
+      <a href="/manual/kaiba-admin/subscriber.html" class="sb-link">👥 구독자 관리</a>
+      <a href="/manual/kaiba-admin/scenario.html" class="sb-link">🎯 시나리오 관리</a>
+      <a href="/manual/kaiba-admin/system-config.html" class="sb-link">🛠️ 시스템 설정</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">AI · 분석</div>
+      <a href="/manual/kaiba-admin/ai-analytics.html" class="sb-link">📈 AI 분석</a>
+      <a href="/manual/kaiba-admin/ai-insight.html" class="sb-link">💡 AI 인사이트</a>
+      <a href="/manual/kaiba-admin/companion.html" class="sb-link">🧠 AI 컴패니언</a>
+    </div>
+    <div class="sb-section">
+      <div class="sb-section-title">운영 관리</div>
+      <a href="/manual/kaiba-admin/messages.html" class="sb-link">💬 메시지 관리</a>
+      <a href="/manual/kaiba-admin/operator.html" class="sb-link">🎧 상담원 관리</a>
+      <a href="/manual/kaiba-admin/contacts.html" class="sb-link">📇 연락처 관리</a>
+      <a href="/manual/kaiba-admin/payments.html" class="sb-link">💳 결제 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">관련 매뉴얼</div>
+      <a href="/manual/kaiba/" class="sb-link">🌐 사용자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba-admin/">K-AIBA 관리자</a><span class="sep">›</span>
+      <span>대시보드</span>
+    </div>
+
+    <h1>대시보드 (Dashboard v2)</h1>
+    <p class="page-desc">K-AIBA 관리자 대시보드는 OneChat 시스템의 핵심 지표를 한눈에 확인하고 후보 봇을 관리하는 통합 관제 화면입니다.</p>
+
+    <div class="notice">
+      📌 <strong>접속 경로:</strong> 로그인 후 좌측 메뉴 → <strong>"대시보드"</strong> 클릭 또는 <code>/admin/onechat_dashboard_v2.php</code>에 직접 접속합니다.
+    </div>
+
+    <h2 id="kpi">KPI 패널</h2>
+    <p>대시보드 상단에는 6개의 핵심 성과 지표(KPI) 카드가 표시됩니다.</p>
+    <table class="info-table">
+      <tr><th style="width:160px;">지표명</th><th>설명</th><th style="width:100px;">아이콘</th></tr>
+      <tr><td><strong>총 봇 수</strong></td><td>등록된 전체 챗봇 수 (활성/비활성 포함)</td><td>🤖</td></tr>
+      <tr><td><strong>Bridge Active</strong></td><td>Context Bridge 연결이 활성 상태인 봇 수</td><td>🔗</td></tr>
+      <tr><td><strong>Layer Complete</strong></td><td>4-Layer 설정이 모두 완료된 봇 수</td><td>✅</td></tr>
+      <tr><td><strong>총 대화 수</strong></td><td>시스템 전체 누적 대화(채팅) 수</td><td>💬</td></tr>
+      <tr><td><strong>평균 평점</strong></td><td>사용자들이 부여한 챗봇 응답 평균 평점 (5점 만점)</td><td>⭐</td></tr>
+      <tr><td><strong>RAG Chunks</strong></td><td>RAG(검색 증강 생성)에 활용 중인 총 문서 청크 수</td><td>📄</td></tr>
+    </table>
+
+    <h2 id="candidate">후보 리스트 (Candidate List)</h2>
+    <p>KPI 아래에는 등록된 봇 후보 목록이 테이블로 표시됩니다. 각 항목에서 4-Layer 설정 상태를 확인할 수 있습니다.</p>
+
+    <h3>4-Layer 설정 구조</h3>
+    <table class="info-table">
+      <tr><th style="width:120px;">레이어</th><th>역할</th><th style="width:100px;">상태 표시</th></tr>
+      <tr><td><strong>Layer 1</strong></td><td>기본 정보 (봇 이름, 설명, 카테고리)</td><td>✅ / ⬜</td></tr>
+      <tr><td><strong>Layer 2</strong></td><td>프롬프트 설정 (톤, 관계, 목적, 프롬프트 모드)</td><td>✅ / ⬜</td></tr>
+      <tr><td><strong>Layer 3</strong></td><td>RAG 연결 (지식베이스, 문서 연동)</td><td>✅ / ⬜</td></tr>
+      <tr><td><strong>Layer 4</strong></td><td>채널 배포 (웹, 카카오, 네이버톡톡 등)</td><td>✅ / ⬜</td></tr>
+    </table>
+
+    <h3>후보 리스트 컬럼</h3>
+    <table class="info-table">
+      <tr><th style="width:140px;">컬럼</th><th>설명</th></tr>
+      <tr><td>봇 이름</td><td>후보 봇의 이름 (클릭 시 상세 편집)</td></tr>
+      <tr><td>카테고리</td><td>봇 분류 (고객지원, 영업, 마케팅 등)</td></tr>
+      <tr><td>4-Layer 상태</td><td>각 레이어 완료 여부를 아이콘으로 표시</td></tr>
+      <tr><td>Context Bridge</td><td>브릿지 연결 상태 (Active / Inactive)</td></tr>
+      <tr><td>생성일</td><td>봇 최초 등록 일시</td></tr>
+      <tr><td>작업</td><td>편집 · 삭제 · 활성화 버튼</td></tr>
+    </table>
+
+    <h2 id="context-bridge">Context Bridge 상태</h2>
+    <p>Context Bridge는 챗봇이 대화 맥락을 유지하기 위한 핵심 연결 모듈입니다.</p>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">Active (활성)</div>
+          <div class="step-desc">봇이 대화 컨텍스트를 정상적으로 유지하며 이전 대화 내용을 기반으로 응답을 생성합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">Inactive (비활성)</div>
+          <div class="step-desc">컨텍스트 연결이 끊어진 상태. 대화마다 독립적 응답을 생성합니다. Bridge 재연결이 필요합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">Pending (대기)</div>
+          <div class="step-desc">초기 설정 중이거나 연결 시도 중인 상태. 자동으로 Active로 전환됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="actions">주요 조작법</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">새 봇 후보 추가</div>
+          <div class="step-desc">우측 상단 <strong>"+ 새 후보"</strong> 버튼 클릭 → 기본 정보 입력 → Layer 1 자동 완료</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">레이어 설정 진행</div>
+          <div class="step-desc">후보 행의 ⬜ 아이콘 클릭 → 해당 레이어 설정 모달 열림 → 정보 입력 후 저장</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">봇 활성화</div>
+          <div class="step-desc">4-Layer 모두 ✅ 완료 시 "활성화" 버튼 활성 → 클릭하면 봇이 실서비스에 배포됩니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">KPI 새로고침</div>
+          <div class="step-desc">KPI 패널 우측의 🔄 아이콘 클릭 시 실시간 데이터로 갱신됩니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <div class="notice">
+      💡 <strong>팁:</strong> Bridge Active 수가 총 봇 수보다 현저히 낮다면, 연결 끊김 봇을 점검하세요. 봇 관리 페이지에서 일괄 재연결이 가능합니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

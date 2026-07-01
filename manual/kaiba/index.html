@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>K-AIBA 사용자 매뉴얼 — kaiba.kiam.kr</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+<style>
+.hero {
+  background: linear-gradient(135deg,#0066CC 0%,#00D4FF 60%,#7c3aed 100%);
+  padding: 64px 40px; text-align:center; color:white;
+}
+.hero h1 { font-size:38px; font-weight:800; margin-bottom:12px; letter-spacing:-1px; }
+.hero p  { font-size:17px; opacity:.85; max-width:520px; margin:0 auto 28px; }
+main { max-width:1060px; margin:0 auto; padding:48px 40px 80px; }
+.sec-label { font-size:12px; font-weight:700; text-transform:uppercase; letter-spacing:1px; color:var(--text3); margin-bottom:14px; }
+.card-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; margin-bottom:48px; }
+.doc-card {
+  background:var(--bg2); border:1px solid var(--border);
+  border-radius:14px; padding:22px; text-decoration:none; display:block; transition:.2s;
+}
+.doc-card:hover { border-color:var(--brand); transform:translateY(-2px); box-shadow:0 6px 20px rgba(37,99,235,.1); }
+.doc-card .ci { font-size:28px; margin-bottom:10px; display:block; }
+.doc-card .ct { font-size:15px; font-weight:700; color:var(--text); margin-bottom:5px; }
+.doc-card .cd { font-size:13px; color:var(--text2); line-height:1.6; }
+.doc-card .cb { display:inline-block; margin-top:10px; background:var(--brand-light); color:var(--brand); border-radius:4px; padding:2px 8px; font-size:11px; font-weight:600; }
+@media(max-width:900px) { .card-grid{grid-template-columns:1fr 1fr;} }
+@media(max-width:600px) { .hero{padding:40px 20px;} .hero h1{font-size:26px;} main{padding:32px 20px 60px;} .card-grid{grid-template-columns:1fr;} }
+</style>
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr" class="btn-site" target="_blank">K-AIBA →</a></div>
+</header>
+
+<div class="hero" style="margin-top:60px;">
+  <h1>🌐 K-AIBA 사용자 매뉴얼</h1>
+  <p>한국AI비즈협회(kaiba.kiam.kr) 웹사이트의<br>모든 기능을 단계별로 안내합니다</p>
+</div>
+
+<main>
+  <div class="sec-label">📂 전체 기능 매뉴얼</div>
+  <div class="card-grid">
+    <a href="/manual/kaiba/about.html" class="doc-card">
+      <span class="ci">🏢</span>
+      <div class="ct">협회 소개</div>
+      <div class="cd">K-AIBA 비전, 미션, 핵심가치와 주요 사업 소개. 조직도 및 사업소개 페이지 안내</div>
+      <span class="cb">소개</span>
+    </a>
+    <a href="/manual/kaiba/news.html" class="doc-card">
+      <span class="ci">📰</span>
+      <div class="ct">AI 뉴스</div>
+      <div class="cd">메인 화면의 AI 뉴스 피드. 카테고리 필터, 검색 기능, 뉴스 카드 구조</div>
+      <span class="cb">메인 기능</span>
+    </a>
+    <a href="/manual/kaiba/policy.html" class="doc-card">
+      <span class="ci">📋</span>
+      <div class="ct">정책사업</div>
+      <div class="cd">정부/공공기관 AI 정책사업 공고 목록. 모집상태, 기간, 기관별 필터링</div>
+      <span class="cb">핵심 기능</span>
+    </a>
+    <a href="/manual/kaiba/business.html" class="doc-card">
+      <span class="ci">💼</span>
+      <div class="ct">비즈니스</div>
+      <div class="cd">AI 프로젝트 찾기/등록/매칭. 기술스택, 예산, 근무형태별 프로젝트 탐색</div>
+      <span class="cb">핵심 기능</span>
+    </a>
+    <a href="/manual/kaiba/ceoclub.html" class="doc-card">
+      <span class="ci">👔</span>
+      <div class="ct">CEO 클럽</div>
+      <div class="cd">AI 기반 정책 매칭, 일일/주간 브리핑, AI 비서, 대시보드, 프로필 관리</div>
+      <span class="cb">프리미엄</span>
+    </a>
+    <a href="/manual/kaiba/battle.html" class="doc-card">
+      <span class="ci">⚔️</span>
+      <div class="ct">AI vs CEO</div>
+      <div class="cd">비즈니스 시나리오 배틀. 전략 제출, 투표, 리더보드, XP/다이아 보상 시스템</div>
+      <span class="cb">게임</span>
+    </a>
+    <a href="/manual/kaiba/community.html" class="doc-card">
+      <span class="ci">👥</span>
+      <div class="ct">커뮤니티</div>
+      <div class="cd">AI뉴스 보기, 행사 일정, 온리원카페 연결. 회원간 교류 공간</div>
+      <span class="cb">소통</span>
+    </a>
+    <a href="/manual/kaiba/support.html" class="doc-card">
+      <span class="ci">🎧</span>
+      <div class="ct">회원지원</div>
+      <div class="cd">문의하기, FAQ, 공지사항, 채용정보. 고객센터 안내</div>
+      <span class="cb">지원</span>
+    </a>
+    <a href="/manual/kaiba/member.html" class="doc-card">
+      <span class="ci">👤</span>
+      <div class="ct">회원 관리</div>
+      <div class="cd">회원가입, 로그인, 비밀번호 찾기. 프로필 설정 및 마이페이지</div>
+      <span class="cb">계정</span>
+    </a>
+  </div>
+
+  <div class="sec-label">🔗 관련 매뉴얼</div>
+  <div class="card-grid">
+    <a href="/manual/kaiba-admin/" class="doc-card">
+      <span class="ci">⚙️</span>
+      <div class="ct">K-AIBA 관리자 매뉴얼</div>
+      <div class="cd">관리자 대시보드, 챗봇 관리, 구독자 관리, 시스템 설정 등 Admin 전용 기능</div>
+      <span class="cb">관리자</span>
+    </a>
+  </div>
+</main>
+
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

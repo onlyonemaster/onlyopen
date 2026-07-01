@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI vs CEO — K-AIBA 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kaiba.kiam.kr" class="btn-site" target="_blank">K-AIBA →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section"><div class="sb-section-title">K-AIBA 매뉴얼</div><a href="/manual/kaiba/" class="sb-link">🌐 K-AIBA 소개</a></div>
+    <div class="sb-section">
+      <div class="sb-section-title">사이트 안내</div>
+      <a href="/manual/kaiba/about.html" class="sb-link">🏢 협회 소개</a>
+      <a href="/manual/kaiba/news.html" class="sb-link">📰 AI 뉴스</a>
+      <a href="/manual/kaiba/policy.html" class="sb-link">📋 정책사업</a>
+      <a href="/manual/kaiba/business.html" class="sb-link">💼 비즈니스</a>
+      <a href="/manual/kaiba/ceoclub.html" class="sb-link">👔 CEO 클럽</a>
+      <a href="/manual/kaiba/battle.html" class="sb-link active">⚔️ AI vs CEO</a>
+      <a href="/manual/kaiba/community.html" class="sb-link">👥 커뮤니티</a>
+      <a href="/manual/kaiba/support.html" class="sb-link">🎧 회원지원</a>
+      <a href="/manual/kaiba/member.html" class="sb-link">👤 회원 관리</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <a href="/manual/kaiba-admin/" class="sb-link">⚙️ 관리자 매뉴얼</a>
+      <a href="/manual/" class="sb-link">← 전체 매뉴얼 홈</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <div class="breadcrumb">
+      <a href="/manual/">매뉴얼 홈</a><span class="sep">›</span>
+      <a href="/manual/kaiba/">K-AIBA</a><span class="sep">›</span>
+      <span>AI vs CEO</span>
+    </div>
+
+    <h1>AI vs CEO (배틀)</h1>
+    <p class="page-desc">AI와 CEO가 비즈니스 위기 시나리오에서 전략을 겨루는 게임형 콘텐츠입니다.</p>
+
+    <h2 id="pages">하위 페이지 구성</h2>
+    <table class="info-table">
+      <tr><th style="width:200px;">경로</th><th>페이지명</th><th>설명</th></tr>
+      <tr><td><code>/battle</code></td><td>메인</td><td>현재 진행 중인 시나리오, 참가 현황, 게임 방법</td></tr>
+      <tr><td><code>/battle/submit</code></td><td>전략 제출</td><td>나만의 해결 전략 작성 및 제출</td></tr>
+      <tr><td><code>/battle/vote</code></td><td>투표하기</td><td>AI vs CEO 전략 중 더 나은 전략에 투표</td></tr>
+      <tr><td><code>/battle/leaderboard</code></td><td>리더보드</td><td>TOP 10 CEO 순위표 (승률, 연승, XP)</td></tr>
+      <tr><td><code>/battle/my-stats</code></td><td>내 전적</td><td>개인 전적 및 획득 보상 확인</td></tr>
+    </table>
+
+    <h2 id="how-to-play">게임 진행 방법</h2>
+    <ul class="step-list">
+      <li class="step-item">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <div class="step-title">시나리오 확인</div>
+          <div class="step-desc">매주 새로운 비즈니스 위기 상황이 제시됩니다. (예: 핵심 인력 이탈 위기, 현금 흐름 악화 등)</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <div class="step-title">전략 제출</div>
+          <div class="step-desc">나만의 해결 전략을 작성하여 제출합니다. AI도 동일한 시나리오에 대해 전략을 생성합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <div class="step-title">커뮤니티 투표</div>
+          <div class="step-desc">다른 회원들이 AI 전략과 CEO 전략 중 더 우수한 전략에 투표합니다.</div>
+        </div>
+      </li>
+      <li class="step-item">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <div class="step-title">보상 획득</div>
+          <div class="step-desc">승리 시 XP(경험치)와 다이아(포인트)를 획득합니다.</div>
+        </div>
+      </li>
+    </ul>
+
+    <h2 id="rewards">보상 시스템</h2>
+    <table class="info-table">
+      <tr><th style="width:120px;">보상 종류</th><th>설명</th></tr>
+      <tr><td>XP (경험치)</td><td>승리 시 500 XP 획득. 레벨업에 사용</td></tr>
+      <tr><td>다이아</td><td>승리 시 20 다이아 획득. 프리미엄 기능에 사용</td></tr>
+      <tr><td>배지</td><td>연승, 최다 승리 등 특별 업적 달성 시 배지 부여</td></tr>
+    </table>
+
+    <h2 id="leaderboard">리더보드</h2>
+    <p>리더보드에는 다음 정보가 표시됩니다:</p>
+    <ul>
+      <li><strong>순위</strong> — 전체 순위</li>
+      <li><strong>CEO 이름</strong> — 참가자 닉네임</li>
+      <li><strong>승률</strong> — AI 대비 승률 (%)</li>
+      <li><strong>승리 횟수</strong> — 총 승리 횟수</li>
+      <li><strong>연승</strong> — 현재 연속 승리 기록</li>
+      <li><strong>총 XP</strong> — 누적 경험치</li>
+    </ul>
+
+    <div class="notice">
+      📌 <strong>참가 조건:</strong> AI vs CEO에 참가하려면 K-AIBA 회원 로그인이 필요합니다.
+    </div>
+
+  </main>
+</div>
+<script src="/manual/assets/script.js"></script>
+</body>
+</html>

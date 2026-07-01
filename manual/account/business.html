@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="ko" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>사업체 정보 등록 — kiam.kr 매뉴얼</title>
+<link rel="stylesheet" href="/manual/assets/style.css">
+</head>
+<body>
+<header class="m-header">
+  <button class="btn-hamburger" id="hamburgerBtn">☰</button>
+  <a href="/manual/" class="logo"><div class="logo-box">K</div><span class="logo-text">kiam.kr</span><span class="logo-sub">매뉴얼</span></a>
+  <div class="search-wrap"><span class="si">🔍</span><input type="text" placeholder="문서 검색..." class="m-search-input"></div>
+  <div class="hright"><button class="btn-theme" id="themeBtn">🌙</button><a href="https://kiam.kr" class="btn-site" target="_blank">kiam.kr →</a></div>
+</header>
+<div class="m-layout">
+  <nav class="m-sidebar">
+    <div class="sb-section">
+      <div class="sb-section-title">계정 관리</div>
+      <a href="/manual/account/" class="sb-link">👤 계정 개요</a>
+      <a href="/manual/account/signup.html" class="sb-link">회원가입</a>
+      <a href="/manual/account/settings.html" class="sb-link">회원정보 수정</a>
+      <a href="/manual/account/payment.html" class="sb-link">💳 포인트·결제</a>
+      <a href="/manual/account/business.html" class="sb-link active">🏢 사업체 정보</a>
+      <a href="/manual/account/referral.html" class="sb-link">추천·리셀러</a>
+      <a href="/manual/account/lecture.html" class="sb-link">강연·교육 관리</a>
+      <a href="/manual/account/coaching.html" class="sb-link">코칭 신청</a>
+      <a href="/manual/account/policy.html" class="sb-link">이용 정책</a>
+      <a href="/manual/account/pwa.html" class="sb-link">앱 설치(PWA)</a>
+    </div>
+    <div class="sb-section" style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border);">
+      <div class="sb-section-title">다른 매뉴얼</div>
+      <a href="/manual/" class="sb-link">← 매뉴얼 홈</a>
+      <a href="/manual/sms/" class="sb-link">폰문자 SMS</a>
+      <a href="/manual/funnel/" class="sb-link">원퍼널문자</a>
+      <a href="/manual/onechat/" class="sb-link">원챗</a>
+    </div>
+  </nav>
+  <main class="m-content">
+    <nav class="breadcrumb"><a href="/manual/">매뉴얼 홈</a> › <a href="/manual/account/">계정 관리</a> › 사업체 정보</nav>
+    <h1 class="page-title">🏢 사업체 정보 등록</h1>
+    <div class="toc-box">
+      <div class="toc-title">목차</div>
+      <ul>
+        <li><a href="#why">사업체 정보 등록이 필요한 이유</a></li>
+        <li><a href="#how">등록 방법</a></li>
+        <li><a href="#fields">입력 항목 안내</a></li>
+        <li><a href="#edit">수정 방법</a></li>
+        <li><a href="#address">주소 자동완성</a></li>
+      </ul>
+    </div>
+
+    <section id="why">
+      <h2>사업체 정보 등록이 필요한 이유</h2>
+      <p>사업체 정보는 다음 용도로 활용됩니다.</p>
+      <ul>
+        <li>세금계산서 발행 및 정산 처리</li>
+        <li>리셀러 수당 지급 시 사업자 확인</li>
+        <li>명함(아이엠카드) 사업체 정보 자동 연동</li>
+        <li>고객에게 표시되는 발송자 정보(기업 채널 사용 시)</li>
+      </ul>
+    </section>
+
+    <section id="how">
+      <h2>등록 방법</h2>
+      <ol class="step-list">
+        <li>
+          <div class="step-num">1</div>
+          <div class="step-body">
+            <a href="https://kiam.kr/mypage_business.php" target="_blank">마이페이지 → 사업체 정보</a>로 이동합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">2</div>
+          <div class="step-body">
+            아래 안내에 따라 각 항목을 입력합니다.
+          </div>
+        </li>
+        <li>
+          <div class="step-num">3</div>
+          <div class="step-body">
+            <strong>[저장]</strong> 버튼을 클릭하여 저장합니다.
+          </div>
+        </li>
+      </ol>
+    </section>
+
+    <section id="fields">
+      <h2>입력 항목 안내</h2>
+      <table class="m-table">
+        <thead>
+          <tr><th>항목</th><th>설명</th><th>필수</th></tr>
+        </thead>
+        <tbody>
+          <tr><td>대표자명</td><td>사업체 대표자 이름</td><td>✅</td></tr>
+          <tr><td>사업자등록번호</td><td>10자리 사업자번호 (000-00-00000)</td><td>✅</td></tr>
+          <tr><td>상호명</td><td>사업체 공식 명칭</td><td>✅</td></tr>
+          <tr><td>업태/업종</td><td>사업 분류 (예: 서비스업 / 정보통신)</td><td>권장</td></tr>
+          <tr><td>사업장 주소</td><td>주소 검색 후 상세주소 입력</td><td>✅</td></tr>
+          <tr><td>대표 전화번호</td><td>사업체 대표 전화</td><td>권장</td></tr>
+          <tr><td>이메일</td><td>세금계산서 수신 이메일</td><td>권장</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <section id="edit">
+      <h2>수정 방법</h2>
+      <p>동일 페이지에서 정보를 수정한 후 <strong>[저장]</strong> 버튼을 다시 클릭합니다.</p>
+      <div class="notice-box warning" style="margin-top:12px;">
+        <strong>⚠️ 주의:</strong> 사업자등록번호는 등록 후 임의로 변경이 어렵습니다. 잘못 입력한 경우 고객센터에 문의하세요.
+      </div>
+    </section>
+
+    <section id="address">
+      <h2>주소 자동완성</h2>
+      <p>주소 입력란의 <strong>[주소 검색]</strong> 버튼을 클릭하면 도로명/지번 주소 검색 팝업이 열립니다.</p>
+      <ol class="step-list">
+        <li><div class="step-num">1</div><div class="step-body">주소 검색 팝업에서 사업장 주소를 검색합니다.</div></li>
+        <li><div class="step-num">2</div><div class="step-body">검색 결과를 클릭하면 기본 주소가 자동 입력됩니다.</div></li>
+        <li><div class="step-num">3</div><div class="step-body">상세 주소(동/호수)를 직접 입력합니다.</div></li>
+      </ol>
+      <div class="notice-box info" style="margin-top:12px;">
+        <strong>💡 팁:</strong> 주소가 복사되었습니다 메시지가 나타나면 붙여넣기로 상세 주소란에 활용할 수 있습니다.
+      </div>
+    </section>
+
+    <nav class="page-nav">
+      <a href="/manual/account/payment.html" class="btn-prev">← 포인트·결제</a>
+      <a href="/manual/account/referral.html" class="btn-next">추천·리셀러 →</a>
+    </nav>
+  </main>
+</div>
+<script>
+  document.getElementById('themeBtn').addEventListener('click',function(){
+    var h=document.documentElement;
+    var t=h.getAttribute('data-theme')==='light'?'dark':'light';
+    h.setAttribute('data-theme',t);
+    this.textContent=t==='light'?'🌙':'☀️';
+  });
+  document.getElementById('hamburgerBtn').addEventListener('click',function(){
+    document.querySelector('.m-sidebar').classList.toggle('open');
+  });
+</script>
+</body>
+</html>
