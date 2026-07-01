@@ -65,6 +65,8 @@ if [ -f /usr/local/bin/git ]; then
   ok "기존 git(shim) 백업 + immutable 해제"
 fi
 cp "$SELF_DIR/git-shim.v4.sh" /usr/local/bin/git
+# 보호 대상을 이 서비스로 설정 (멀티리포 목록/단일 REPO 모두 갱신)
+sed -i "s#^PROTECTED_REPOS=.*#PROTECTED_REPOS=\"$SVC_ROOT\"#" /usr/local/bin/git
 sed -i "s#^REPO=.*#REPO=$SVC_ROOT#" /usr/local/bin/git
 chmod +x /usr/local/bin/git
 hash -r 2>/dev/null || true
