@@ -1,8 +1,9 @@
 #!/bin/bash
 # =============================================================================
 # git 보호 shim  v4  (설치 위치: /usr/local/bin/git — PATH 우선)  [iamserver판]
-#   모든 `git` 호출을 가로채, /home/webapp (및 그 하위 중첩 git 저장소)
+#   모든 `git` 호출을 가로채, /home/kiam (메인 서비스 및 그 하위 중첩 git 저장소)
 #   안에서 파괴적 명령을 방어한다.
+#   (/home/webapp 은 아리의 작업/버전관리용 폴더이므로 보호 대상이 아니다.)
 #
 #   [BLOCK]  clean / reflog expire·delete / gc --prune·--aggressive /
 #            filter-branch / filter-repo            → 완전 차단
@@ -21,7 +22,8 @@
 #   그 외 명령은 그대로 통과. GitHub 통신과 무관하게 로컬에서만 방어.
 #
 #   ── iamserver 조정 (CentOS 7 / git 1.8.3.1) ─────────────────────────────
-#   * REPO=/home/webapp
+#   * 보호 대상 REPO=/home/kiam (메인 서비스)
+#   * 보호용 로그/스냅샷은 서비스 폴더를 오염하지 않도록 /home/git-safety 에 기록
 #   * REAL_GIT 폴백: /usr/local/lib/git-guard/realgit/git → /usr/libexec/git-core/git → /usr/bin/git
 #   * git 1.8.3.1 호환: `stash push` 없음 → `stash save` 폴백,
 #     `-C <path>` 없음(1.8.5+) → 서브셸 ( cd DIR && git ... ) 사용.
@@ -34,22 +36,37 @@ for cand in /usr/local/lib/git-guard/realgit/git /usr/libexec/git-core/git /usr/
 done
 [ -n "$REAL_GIT" ] || REAL_GIT=/usr/bin/git
 
-REPO=/home/webapp
-SNAP_ROOT="$REPO/_safety/snapshots"
-LOG="$REPO/_safety/logs/git-guard.log"
+# ── 보호 대상 저장소 목록 (공백으로 구분, 여러 개 가능) ──────────────────────
+#   메인 서비스 /home/kiam 만 보호한다.
+#   (/home/webapp 은 아리 작업/버전관리용 — 보호 제외, 정상 git 동작)
+PROTECTED_REPOS="/home/kiam"
+# 보호용 로그/스냅샷은 서비스 폴더 밖(/home/git-safety)에 남겨 서비스를 오염하지 않는다.
+REPO=/home/kiam
+SAFETY_ROOT="/home/git-safety"
+SNAP_ROOT="$SAFETY_ROOT/snapshots"
+LOG="$SAFETY_ROOT/logs/git-guard.log"
 
 _ts()  { date '+%Y-%m-%d %H:%M:%S'; }
 _log() { mkdir -p "$(dirname "$LOG")" 2>/dev/null; echo "[$(_ts)] pid=$$ user=${SUDO_USER:-$USER} pwd=$PWD :: $*" >> "$LOG" 2>/dev/null; }
 
 sub="$1"
 
-# 이 git 호출이 보호 대상 트리(/home/webapp) 안에 대한 것인지 판별
+# 이 git 호출이 보호 대상 트리(PROTECTED_REPOS 중 하나) 안에 대한 것인지 판별.
+# 매칭된 저장소 경로를 전역 MATCHED_REPO 에 담는다.
+MATCHED_REPO=""
 _in_repo() {
-  case "$PWD/" in "$REPO"/*|"$REPO"/) return 0 ;; esac
+  local r
+  # 1) 현재 작업 디렉토리 기준
+  for r in $PROTECTED_REPOS; do
+    case "$PWD/" in "$r"/*|"$r"/) MATCHED_REPO="$r"; return 0 ;; esac
+  done
+  # 2) -C <path> 로 지정된 경로 기준
   local prev=""
   for a in "$@"; do
     if [ "$prev" = "-C" ]; then
-      case "$a/" in "$REPO"/*|"$REPO"/) return 0 ;; esac
+      for r in $PROTECTED_REPOS; do
+        case "$a/" in "$r"/*|"$r"/) MATCHED_REPO="$r"; return 0 ;; esac
+      done
     fi
     prev="$a"
   done
@@ -64,7 +81,7 @@ _target_toplevel() {
     if [ "$prev" = "-C" ]; then dir="$a"; fi
     prev="$a"
   done
-  ( cd "$dir" 2>/dev/null && "$REAL_GIT" rev-parse --show-toplevel 2>/dev/null ) || echo "$REPO"
+  ( cd "$dir" 2>/dev/null && "$REAL_GIT" rev-parse --show-toplevel 2>/dev/null ) || echo "${MATCHED_REPO:-$REPO}"
 }
 
 # 대상 저장소에서 stash 스냅샷 (git 1.8.3.1: stash push 없음 → stash save 폴백)
@@ -86,8 +103,8 @@ fi
 # ---- 1) 완전 차단 그룹 -----------------------------------------------------
 _block() {
   echo "⛔ git $1 은(는) 차단됐습니다. (사유: $2)" >&2
-  echo "   /home/webapp 유실 방어 정책. 꼭 필요하면 관리자가 $REAL_GIT 로 직접 실행하세요." >&2
-  _log "BLOCKED: git ${*:3}"
+  echo "   ${MATCHED_REPO:-보호 저장소} 유실 방어 정책. 꼭 필요하면 관리자가 $REAL_GIT 로 직접 실행하세요." >&2
+  _log "BLOCKED: (repo=${MATCHED_REPO}) git ${*:3}"
   exit 1
 }
 
@@ -155,7 +172,7 @@ if [ -n "$danger" ]; then
 
   # 기본 정책: 거부. 단, 거부 전에 복구원본 스냅샷(stash)을 남겨 안전망 확보.
   echo "⛔ [git-shim v4] '$danger' 는(은) 차단됐습니다." >&2
-  echo "   사유: 이 명령은 서버(/home/webapp)의 실제 파일을 삭제/덮어쓸 수 있습니다." >&2
+  echo "   사유: 이 명령은 메인 서비스(${MATCHED_REPO:-/home/kiam})의 실제 파일을 삭제/덮어쓸 수 있습니다." >&2
   echo "   서비스 파일 유실 방어 정책(사장님 지시)에 따라 실행을 거부합니다." >&2
   _log "GUARD-v4: 위험명령 [$danger] 차단 (target=$TARGET) : git $*"
 

@@ -7,7 +7,8 @@
 
 ## ⭐ v4 변경점 (2026-07-02, bigserver 참사 재발 방지 최종판)
 1. **파괴 명령 = 실행 자체 BLOCK** (기존 v3 는 "대피 후 진행"). `reset --hard`/`checkout -f`/`rm` 등은 **아예 실행되지 않는다.** BLOCK 직전 stash 스냅샷을 남겨 복구원본 확보.
-2. **`.git` 물리 분리**: `.git` 본체를 서비스 폴더 밖(`/home/git-repos/webapp.git`)으로 이동, `/home/webapp/.git` 은 35byte 포인터 파일만 남김. → 서비스 폴더 사고 ↔ 저장소가 상호 안전.
+2. **보호 대상 = 메인 서비스 `/home/kiam`** (2026-07-02 정정). `/home/webapp` 은 아리 작업/버전관리용 폴더라 보호 대상이 아니다(정상 git 동작). 보호용 로그/스냅샷은 서비스 폴더 밖 `/home/git-safety` 에 기록.
+3. **`.git` 물리 분리(webapp)**: `/home/webapp` 의 `.git` 본체는 이미 `/home/git-repos/webapp.git` 으로 분리됨. `/home/kiam` 의 물리 분리는 217G 라이브가라 백업 검증 후 진행하는 2단계로 보류.
    - 설치본: `_safety/bin/git-shim.v4.sh` (→ `/usr/local/bin/git`), 자동설치: `_safety/bin/install-git-safety.sh`
 
 ## 왜 필요한가 (한 줄)
@@ -20,7 +21,7 @@ GitHub가 아니라 **서버 로컬에서 실행되는 `git reset --hard`** 가,
 |------|-----------|---------------------|
 | OS | Ubuntu 22.04 | **CentOS 7** |
 | git 버전 | 2.34.1 | **1.8.3.1** (구버전) |
-| 보호 저장소 | `/var/www/webapp` | **`/home/webapp`** (onlyopen) |
+| 보호 저장소 | `/var/www/webapp` | **`/home/kiam`** (메인 PHP 서비스, kiammain) — `/home/webapp`은 작업용으로 보호 제외 |
 | 진짜 git 경로 | `/usr/bin/git` | **`/usr/local/lib/git-guard/realgit/git`** (기존 git-guard 독립 복사본) |
 | 기존 방어 | clean 4중차단(사고後 reset 추가) | **clean 4중차단만 존재** → reset 무방비였음 (이번에 확장) |
 | 백업 | `/root/scripts/webapp_backup.sh` | **`/etc/cron.d/kiam_backup`** (기존 kiam 백업 존중) |
@@ -36,7 +37,7 @@ iamserver 의 git 은 매우 구형이라 다음을 폴백 처리했다 (검증 
 
 ### 🛡️ 방어막 1 — `git` 보호 shim (v4)  → `/usr/local/bin/git`
 - 원본: **`_safety/bin/git-shim.v4.sh`** (구 v3: `_safety/bin/git-shim.sh` 는 참고용 보존)
-- 모든 `git` 호출을 PATH 우선순위로 가로챔. **보호 저장소(/home/webapp) 안에서만** 방어 발동.
+- 모든 `git` 호출을 PATH 우선순위로 가로챔. **보호 저장소(/home/kiam) 안에서만** 방어 발동. (`/home/webapp` 등 그 외 경로는 영향 없음)
 - shim 자체는 `chattr +i`(불변속성)로 잠금.
 - **v4 정책 (파괴 명령 = 실행 거부):**
 
@@ -55,7 +56,7 @@ iamserver 의 git 은 매우 구형이라 다음을 폴백 처리했다 (검증 
 
 - **예외 실행(관리자 책임)**: `GITSHIM_ALLOW=1 git reset --hard ...` (사전 stash 대피됨) 또는 `/usr/local/lib/git-guard/realgit/git ...` 직접 호출.
 - BLOCK 시 남긴 스냅샷 복원: `git stash list` → `git stash pop`
-- 로그: `_safety/logs/git-guard.log`
+- 로그: `/home/git-safety/logs/git-guard.log` (서비스 폴더 밖)
 
 ### 🛡️ 방어막 2 — Git 훅 (조기경보) → `.git/hooks/{post-checkout,post-merge,post-rewrite}`
 - 실행: `_safety/bin/integrity-check.sh`
@@ -82,7 +83,7 @@ iamserver 의 git 은 매우 구형이라 다음을 폴백 처리했다 (검증 
 
 ### 🧰 백업 (기존 kiam 백업 존중)
 iamserver 는 이미 `/etc/cron.d/kiam_backup` 으로 소스/DB/설정을 매일 백업 중(변경시만, 7개 보관, `/disk/backup`).
-- 이 방어체계는 기존 백업을 **건드리지 않고**, webapp 은 방어막4 미러 + GitHub 로 이중 보호.
+- 이 방어체계는 기존 백업을 **건드리지 않고**, kiam 은 shim BLOCK(1단계) + 기존 kiam_backup 으로 보호. (물리 분리·미러는 2단계 예정)
 
 ## 사고 발생 시 복구 순서
 1. `git stash list` — 방어막1이 대피시킨 변경/미추적 파일 확인 (중첩 저장소면 **그 폴더 안에서** 실행)
