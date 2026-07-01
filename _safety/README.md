@@ -1,7 +1,14 @@
 # `_safety` — 유실 방어 시스템 (Data-Loss Guard) [iamserver / kiam]
 
-> 설치: 아리 2026-07-01 · 목적: `git reset --hard`/`clean` 등이 사이트 파일을 삭제하는 사고 원천 차단
+> 설치: 아리 2026-07-01 · **v4 업그레이드 + 물리분리: 2026-07-02** · 목적: `git reset --hard`/`clean` 등이 사이트 파일을 삭제하는 사고 원천 차단
 > bigserver(175.126.232.229)에 구축·검증된 방어체계를 iamserver(222.239.248.226)에 이식.
+>
+> **📖 상세 매뉴얼**: `_safety/GIT_SAFETY_MANUAL.md` · **분리 구조도**: `_safety/SPLIT_LAYOUT.md`
+
+## ⭐ v4 변경점 (2026-07-02, bigserver 참사 재발 방지 최종판)
+1. **파괴 명령 = 실행 자체 BLOCK** (기존 v3 는 "대피 후 진행"). `reset --hard`/`checkout -f`/`rm` 등은 **아예 실행되지 않는다.** BLOCK 직전 stash 스냅샷을 남겨 복구원본 확보.
+2. **`.git` 물리 분리**: `.git` 본체를 서비스 폴더 밖(`/home/git-repos/webapp.git`)으로 이동, `/home/webapp/.git` 은 35byte 포인터 파일만 남김. → 서비스 폴더 사고 ↔ 저장소가 상호 안전.
+   - 설치본: `_safety/bin/git-shim.v4.sh` (→ `/usr/local/bin/git`), 자동설치: `_safety/bin/install-git-safety.sh`
 
 ## 왜 필요한가 (한 줄)
 
@@ -27,12 +34,11 @@ iamserver 의 git 은 매우 구형이라 다음을 폴백 처리했다 (검증 
 
 ## 구성 (설치된 방어막)
 
-### 🛡️ 방어막 1 — `git` 보호 shim  → `/usr/local/bin/git`
-- 원본: `_safety/bin/git-shim.sh`
+### 🛡️ 방어막 1 — `git` 보호 shim (v4)  → `/usr/local/bin/git`
+- 원본: **`_safety/bin/git-shim.v4.sh`** (구 v3: `_safety/bin/git-shim.sh` 는 참고용 보존)
 - 모든 `git` 호출을 PATH 우선순위로 가로챔. **보호 저장소(/home/webapp) 안에서만** 방어 발동.
-- 기존 Layer1(`/usr/local/bin/git` clean차단) 을 **전체 위험명령 방어로 교체·확장**. Layer3(`/usr/bin/git` 가드)·Layer4(inotify watcher)는 그대로 유지.
 - shim 자체는 `chattr +i`(불변속성)로 잠금.
-- **3등급 정책:**
+- **v4 정책 (파괴 명령 = 실행 거부):**
 
   | 등급 | 명령 | 동작 | 사유 |
   |------|------|------|------|
@@ -40,15 +46,15 @@ iamserver 의 git 은 매우 구형이라 다음을 폴백 처리했다 (검증 
   | ⛔ 완전차단 | `git reflog expire` / `delete` | 차단 | 복구 안전망(reflog) 제거 |
   | ⛔ 완전차단 | `git gc --prune=now/--aggressive` | 차단 | stash/reset 복구원본(도달불가 객체) 즉시 삭제 |
   | ⛔ 완전차단 | `git filter-branch` / `filter-repo` | 차단 | 히스토리 파괴적 재작성 |
-  | 🛡 **스냅샷 후 진행** | `git reset --hard/--merge/--keep` | stash -u 대피 | 미추적/변경 파일 삭제 |
-  | 🛡 스냅샷 후 진행 | `git checkout -f`, `switch -f/--discard-changes` | stash -u 대피 | 강제 덮어쓰기 |
-  | 🛡 스냅샷 후 진행 | `git restore -W/--worktree` | stash -u 대피 | 로컬 변경분 덮어쓰기 |
-  | 🛡 스냅샷 후 진행 | `git submodule -f/--force/--checkout` | stash -u 대피 | 하위리포 삭제 위험 |
-  | 🛡 스냅샷 후 진행 | `git rm`, `git worktree remove/prune`, `git read-tree -u/--reset` | stash -u 대피 | 파일/워크트리 삭제·워킹 덮어쓰기 |
+  | ⛔ **실행거부(v4)** | `git reset --hard/--merge/--keep` | **BLOCK**(전 stash 스냅샷) | 미추적/변경 파일 삭제 |
+  | ⛔ 실행거부(v4) | `git checkout -f`, `switch -f/--discard-changes` | **BLOCK** | 강제 덮어쓰기 |
+  | ⛔ 실행거부(v4) | `git restore -W/--worktree` | **BLOCK** | 로컬 변경분 덮어쓰기 |
+  | ⛔ 실행거부(v4) | `git submodule -f/--force/--checkout` | **BLOCK** | 하위리포 삭제 위험 |
+  | ⛔ 실행거부(v4) | `git rm`, `git worktree remove/prune`, `git read-tree -u/--reset` | **BLOCK** | 파일/워크트리 삭제·워킹 덮어쓰기 |
   | ⚠️ **경고 후 진행** | `git branch -D/-M`, `push -f/--delete/--force-with-lease`, `update-ref -d` | 로그+경고 | 참조 삭제/원격 덮어쓰기(파일유실 아님) |
 
-- 대피 후 복원: `git stash list` → `git stash pop`
-- 차단 명령이 꼭 필요하면 **관리자가 `/usr/local/lib/git-guard/realgit/git` 로 직접** 실행 (shim 우회).
+- **예외 실행(관리자 책임)**: `GITSHIM_ALLOW=1 git reset --hard ...` (사전 stash 대피됨) 또는 `/usr/local/lib/git-guard/realgit/git ...` 직접 호출.
+- BLOCK 시 남긴 스냅샷 복원: `git stash list` → `git stash pop`
 - 로그: `_safety/logs/git-guard.log`
 
 ### 🛡️ 방어막 2 — Git 훅 (조기경보) → `.git/hooks/{post-checkout,post-merge,post-rewrite}`
@@ -63,9 +69,11 @@ iamserver 의 git 은 매우 구형이라 다음을 폴백 처리했다 (검증 
 - **3-B 중첩 저장소**: `_safety/bin/protect-nested.sh [--commit] [site]` — 자체 `.git`을 가진 사이트의 미추적 소스만 안전 커밋(시크릿·백업·런타임·5MB초과 자동 제외).
 - shim v3 가 중첩 저장소를 대상으로 stash 대피하므로, 중첩 저장소 안 reset 도 보호됨(검증 완료).
 
-### 🛡️ 방어막 4 — 서빙↔git-work 물리 분리 (오프트리 미러)
+### 🛡️ 방어막 4 — 서빙↔git-work 물리 분리 (저장소 본체 분리 + 오프트리 미러)
+**★ v4 물리 분리:** `.git` 본체를 서비스 폴더 밖 `/home/git-repos/webapp.git` 로 이동, `/home/webapp/.git` 은 포인터 파일. (`SPLIT_LAYOUT.md` 참조)
 서빙 디렉토리(`/home/webapp`) 안에서 무슨 일이 나도 손댈 수 없는 **격리 백업**을 둔다.
-- 미러 위치: `/var/git-mirrors/*.git` (부모 webapp + 중첩 저장소, 압축된 bare)
+- 저장소 본체: `/home/git-repos/webapp.git` (같은 FS — 원자적 이동), 분리 전 백업: `/home/backups/git_split/`
+- 미러 위치: `/var/git-mirrors/*.git` (다른 FS — 부모 webapp + 중첩 저장소, bare)
 - 동기화: `_safety/bin/mirror-sync.sh` (fetch 방식이라 서빙 쪽 명령/훅을 건드리지 않음)
   - **크론 자동화**: `*/30 * * * *` (30분마다)
   - 무결성 점검: `mirror-sync.sh --verify`

@@ -68,7 +68,8 @@ _log "===== 미러 동기화 시작 ====="
 # 1) 부모(서빙) 저장소
 sync_one "$REPO" "webapp"
 # 2) 중첩 저장소들 (gitlink=160000 인 하위 경로)
-for name in $("$REAL_GIT" -C "$REPO" ls-files -s 2>/dev/null | awk '$1==160000 {print $4}'); do
+#    ★ git 1.8.3.1 호환: `-C` 옵션 없음 → 서브셸 cd 로 대체
+for name in $( ( cd "$REPO" 2>/dev/null && "$REAL_GIT" ls-files -s 2>/dev/null ) | awk '$1==160000 {print $4}'); do
   [ -d "$REPO/$name/.git" ] && sync_one "$REPO/$name" "nested_$name"
 done
 _log "===== 미러 동기화 종료 ====="
